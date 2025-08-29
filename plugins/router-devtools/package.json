@@ -32,7 +32,7 @@
     "react-dom": ">=16.8.0",
     "react-router-dom": ">=6.0.0"
   },
-  "dependencies": {
+  "dependencies": {    "@sucoza/devtools-common": "workspace:*",    "@sucoza/plugin-core": "workspace:*",    "@sucoza/shared-components": "workspace:*",
     "@tanstack/devtools-event-client": "^0.2.2",
     "@tanstack/react-devtools": "latest"
   },

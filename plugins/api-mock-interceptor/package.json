@@ -36,6 +36,9 @@
   },
   "dependencies": {
     "@tanstack/devtools": "^0.6.1",
+    "@sucoza/devtools-common": "workspace:*",
+    "@sucoza/plugin-core": "workspace:*",
+    "@sucoza/shared-components": "workspace:*",
     "clsx": "^2.1.0",
     "lucide-react": "^0.263.1",
     "use-sync-external-store": "^1.2.0"

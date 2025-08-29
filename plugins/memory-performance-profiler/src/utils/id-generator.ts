@@ -1,9 +1,14 @@
-/**
- * Utility functions for generating unique IDs
- */
+// Re-export shared ID generation utilities
+export { 
+  generateId as baseGenerateId, 
+  generateUUID, 
+  generateShortId, 
+  generateTimestampId, 
+  getTimestamp 
+} from '@sucoza/devtools-common';
 
 /**
- * Generate a unique ID with optional prefix
+ * Generate a unique ID with optional prefix (plugin-specific)
  */
 export function generateId(prefix: string = ''): string {
   const timestamp = Date.now().toString(36);

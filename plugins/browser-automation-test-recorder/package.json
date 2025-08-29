@@ -57,6 +57,9 @@
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
+    "@sucoza/devtools-common": "workspace:*",
+    "@sucoza/plugin-core": "workspace:*",
+    "@sucoza/shared-components": "workspace:*",
     "@tanstack/devtools": "^0.6.1",
     "@tanstack/devtools-event-client": "^0.2.2",
     "@tanstack/react-devtools": "latest",

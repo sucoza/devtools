@@ -35,7 +35,7 @@
     "react-i18next": ">=11.0.0",
     "i18next": ">=20.0.0"
   },
-  "dependencies": {
+  "dependencies": {    "@sucoza/devtools-common": "workspace:*",    "@sucoza/plugin-core": "workspace:*",    "@sucoza/shared-components": "workspace:*",
     "@tanstack/devtools": "^0.6.1",
     "clsx": "^2.1.0",
     "lucide-react": "^0.263.1",

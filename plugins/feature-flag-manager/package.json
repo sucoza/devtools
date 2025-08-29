@@ -35,7 +35,7 @@
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
-  "dependencies": {
+  "dependencies": {    "@sucoza/devtools-common": "workspace:*",    "@sucoza/plugin-core": "workspace:*",    "@sucoza/shared-components": "workspace:*",
     "@tanstack/devtools": "^0.6.1",
     "clsx": "^2.1.0",
     "d3": "^7.8.5",

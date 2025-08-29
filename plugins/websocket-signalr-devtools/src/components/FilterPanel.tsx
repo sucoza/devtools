@@ -1,4 +1,5 @@
 import React from 'react';
+import { FilterPanel as SharedFilterPanel, FilterConfig } from '@sucoza/shared-components';
 import { useDevToolsSelector } from '../core/devtools-store';
 import { createWebSocketSignalRDevToolsClient } from '../core/devtools-client';
 
@@ -10,47 +11,7 @@ export function FilterPanel() {
   const signalrConnections = useDevToolsSelector(state => Array.from(state.signalr.connections.values()));
   
   const client = createWebSocketSignalRDevToolsClient();
-
   const filter = selectedTab === 'websocket' ? websocketFilter : signalrFilter;
-
-  const handleFilterChange = (updates: any) => {
-    client.updateFilter(selectedTab as 'websocket' | 'signalr', updates);
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleFilterChange({ searchText: e.target.value || undefined });
-  };
-
-  const handleTimeRangeChange = (field: 'start' | 'end', value: string) => {
-    if (!value) {
-      handleFilterChange({ timeRange: undefined });
-      return;
-    }
-
-    const timestamp = new Date(value).getTime();
-    const currentRange = filter.timeRange || { start: 0, end: Date.now() };
-    
-    handleFilterChange({
-      timeRange: {
-        ...currentRange,
-        [field]: timestamp
-      }
-    });
-  };
-
-  const clearFilters = () => {
-    handleFilterChange({
-      connectionIds: undefined,
-      urls: undefined,
-      hubUrls: undefined,
-      states: undefined,
-      messageTypes: undefined,
-      hubMethods: undefined,
-      transports: undefined,
-      timeRange: undefined,
-      searchText: undefined,
-    });
-  };
 
   const getAvailableStates = () => {
     if (selectedTab === 'websocket') {
@@ -72,26 +33,6 @@ export function FilterPanel() {
     return ['WebSockets', 'ServerSentEvents', 'LongPolling'];
   };
 
-  const getUniqueUrls = () => {
-    if (selectedTab === 'websocket') {
-      return [...new Set(websocketConnections.map(conn => {
-        try {
-          return new URL(conn.url).hostname;
-        } catch {
-          return conn.url;
-        }
-      }))];
-    } else {
-      return [...new Set(signalrConnections.map(conn => {
-        try {
-          return new URL(conn.hubUrl).hostname;
-        } catch {
-          return conn.hubUrl;
-        }
-      }))];
-    }
-  };
-
   const getHubMethods = () => {
     if (selectedTab !== 'signalr') return [];
     
@@ -101,234 +42,106 @@ export function FilterPanel() {
         methods.add(methodName);
       });
     });
-    return Array.from(methods);
+    return Array.from(methods).slice(0, 10); // Limit for UI performance
+  };
+
+  // Configure filter options for the shared component
+  const filterConfig: FilterConfig = {
+    searchText: filter.searchText,
+    timeRange: filter.timeRange,
+    options: [
+      {
+        key: 'states',
+        label: 'Connection States',
+        values: getAvailableStates().map(state => ({ value: state, label: state })),
+        multiple: true,
+      },
+      {
+        key: 'messageTypes',
+        label: 'Message Types',
+        values: getAvailableMessageTypes().map(type => ({ value: type, label: type })),
+        multiple: true,
+      },
+      ...(selectedTab === 'signalr' ? [
+        {
+          key: 'transports',
+          label: 'Transports',
+          values: getAvailableTransports().map(transport => ({ value: transport, label: transport })),
+          multiple: true,
+        },
+        {
+          key: 'hubMethods',
+          label: 'Hub Methods',
+          values: getHubMethods().map(method => ({ 
+            value: method, 
+            label: method.length > 20 ? method.substring(0, 20) + '...' : method 
+          })),
+          multiple: true,
+        }
+      ] : []),
+    ],
+    // Pass current filter values
+    states: filter.states,
+    messageTypes: filter.messageTypes,
+    ...(selectedTab === 'signalr' ? {
+      transports: (signalrFilter as any).transports,
+      hubMethods: (signalrFilter as any).hubMethods,
+    } : {}),
+  };
+
+  const handleFilterChange = (updates: Partial<FilterConfig>) => {
+    // Map shared component updates back to plugin-specific filter format
+    const pluginUpdates: any = {};
+    
+    if ('searchText' in updates) {
+      pluginUpdates.searchText = updates.searchText;
+    }
+    
+    if ('timeRange' in updates) {
+      pluginUpdates.timeRange = updates.timeRange;
+    }
+
+    // Handle other filter updates
+    Object.entries(updates).forEach(([key, value]) => {
+      if (key !== 'searchText' && key !== 'timeRange' && key !== 'options') {
+        pluginUpdates[key] = value;
+      }
+    });
+
+    client.updateFilter(selectedTab as 'websocket' | 'signalr', pluginUpdates);
+  };
+
+  const clearAllFilters = () => {
+    client.updateFilter(selectedTab as 'websocket' | 'signalr', {
+      connectionIds: undefined,
+      urls: undefined,
+      hubUrls: undefined,
+      states: undefined,
+      messageTypes: undefined,
+      hubMethods: undefined,
+      transports: undefined,
+      timeRange: undefined,
+      searchText: undefined,
+    });
   };
 
   return (
-    <div className="filter-panel">
-      <div className="filter-section">
-        <div className="filter-row">
-          <div className="filter-group">
-            <label htmlFor="search">Search:</label>
-            <input
-              id="search"
-              type="text"
-              placeholder="Search messages..."
-              value={filter.searchText || ''}
-              onChange={handleSearchChange}
-              className="filter-input"
-            />
-          </div>
-
-          <div className="filter-group">
-            <label htmlFor="timeStart">From:</label>
-            <input
-              id="timeStart"
-              type="datetime-local"
-              value={filter.timeRange?.start ? new Date(filter.timeRange.start).toISOString().slice(0, 16) : ''}
-              onChange={(e) => handleTimeRangeChange('start', e.target.value)}
-              className="filter-input"
-            />
-          </div>
-
-          <div className="filter-group">
-            <label htmlFor="timeEnd">To:</label>
-            <input
-              id="timeEnd"
-              type="datetime-local"
-              value={filter.timeRange?.end ? new Date(filter.timeRange.end).toISOString().slice(0, 16) : ''}
-              onChange={(e) => handleTimeRangeChange('end', e.target.value)}
-              className="filter-input"
-            />
-          </div>
-
-          <button onClick={clearFilters} className="clear-btn">
-            Clear Filters
-          </button>
-        </div>
-
-        <div className="filter-row">
-          <div className="filter-group">
-            <label>States:</label>
-            <div className="checkbox-group">
-              {getAvailableStates().map(state => (
-                <label key={state} className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={filter.states?.includes(state as any) || false}
-                    onChange={(e) => {
-                      const currentStates = filter.states || [];
-                      const newStates = e.target.checked
-                        ? [...currentStates, state]
-                        : currentStates.filter(s => s !== state);
-                      handleFilterChange({ states: newStates.length > 0 ? newStates : undefined });
-                    }}
-                  />
-                  {state}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <div className="filter-group">
-            <label>Message Types:</label>
-            <div className="checkbox-group">
-              {getAvailableMessageTypes().map(type => (
-                <label key={type} className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={filter.messageTypes?.includes(type as any) || false}
-                    onChange={(e) => {
-                      const currentTypes = filter.messageTypes || [];
-                      const newTypes = e.target.checked
-                        ? [...currentTypes, type]
-                        : currentTypes.filter(t => t !== type);
-                      handleFilterChange({ messageTypes: newTypes.length > 0 ? newTypes : undefined });
-                    }}
-                  />
-                  {type}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {selectedTab === 'signalr' && (
-            <>
-              <div className="filter-group">
-                <label>Transports:</label>
-                <div className="checkbox-group">
-                  {getAvailableTransports().map(transport => (
-                    <label key={transport} className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={(signalrFilter as any).transports?.includes(transport) || false}
-                        onChange={(e) => {
-                          const currentTransports = (signalrFilter as any).transports || [];
-                          const newTransports = e.target.checked
-                            ? [...currentTransports, transport]
-                            : currentTransports.filter((t: any) => t !== transport);
-                          handleFilterChange({ transports: newTransports.length > 0 ? newTransports : undefined });
-                        }}
-                      />
-                      {transport}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div className="filter-group">
-                <label>Hub Methods:</label>
-                <div className="checkbox-group">
-                  {getHubMethods().slice(0, 10).map(method => (
-                    <label key={method} className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        checked={(signalrFilter as any).hubMethods?.includes(method) || false}
-                        onChange={(e) => {
-                          const currentMethods = (signalrFilter as any).hubMethods || [];
-                          const newMethods = e.target.checked
-                            ? [...currentMethods, method]
-                            : currentMethods.filter((m: any) => m !== method);
-                          handleFilterChange({ hubMethods: newMethods.length > 0 ? newMethods : undefined });
-                        }}
-                      />
-                      <span title={method}>
-                        {method.length > 20 ? method.substring(0, 20) + '...' : method}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-        </div>
+    <div className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="font-medium text-gray-900 dark:text-white">
+          {selectedTab === 'websocket' ? 'WebSocket' : 'SignalR'} Filters
+        </h3>
       </div>
-
-      <style jsx>{`
-        .filter-panel {
-          padding: 16px;
-          background: var(--devtools-panel-bg);
-        }
-
-        .filter-section {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .filter-row {
-          display: flex;
-          align-items: flex-start;
-          gap: 24px;
-          flex-wrap: wrap;
-        }
-
-        .filter-group {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-          min-width: 200px;
-        }
-
-        .filter-group label:first-child {
-          font-size: 12px;
-          font-weight: 600;
-          color: var(--devtools-color);
-          margin-bottom: 4px;
-        }
-
-        .filter-input {
-          padding: 6px 8px;
-          border: 1px solid var(--devtools-border);
-          border-radius: 4px;
-          background: var(--devtools-bg);
-          color: var(--devtools-color);
-          font-size: 12px;
-        }
-
-        .filter-input:focus {
-          outline: none;
-          border-color: var(--devtools-accent);
-        }
-
-        .checkbox-group {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-          max-height: 120px;
-          overflow-y: auto;
-        }
-
-        .checkbox-label {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          font-size: 11px;
-          color: var(--devtools-color);
-          cursor: pointer;
-        }
-
-        .checkbox-label input[type="checkbox"] {
-          margin: 0;
-        }
-
-        .clear-btn {
-          padding: 6px 12px;
-          border: 1px solid var(--devtools-border);
-          border-radius: 4px;
-          background: var(--devtools-button-bg);
-          color: var(--devtools-color);
-          cursor: pointer;
-          font-size: 12px;
-          white-space: nowrap;
-          height: fit-content;
-          margin-top: 20px;
-        }
-
-        .clear-btn:hover {
-          background: var(--devtools-button-hover-bg);
-        }
-      `}</style>
+      
+      <SharedFilterPanel
+        filter={filterConfig}
+        onFilterChange={handleFilterChange}
+        onClearFilters={clearAllFilters}
+        placeholder="Search messages..."
+        className="bg-transparent border-0 p-0"
+      />
     </div>
   );
 }
+
+export default FilterPanel;

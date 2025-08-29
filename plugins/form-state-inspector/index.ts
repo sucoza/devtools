@@ -79,3 +79,6 @@ export function initializeFormStateInspector() {
 if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   initializeFormStateInspector();
 }
+
+// Default export - main panel component
+export { FormStateDevToolsPanel as default } from './FormStateDevToolsPanel';

@@ -10,3 +10,6 @@ export type {
   LoggingEventMap
 } from './loggingEventClient';
 export type { LoggerOptions } from './DevToolsLogger';
+
+// Default export - main panel component
+export { LoggerDevToolsPanel as default } from './LoggerDevToolsPanel';

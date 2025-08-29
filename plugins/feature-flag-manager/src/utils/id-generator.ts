@@ -1,24 +1,14 @@
-/**
- * Generate a unique ID using crypto.randomUUID if available, otherwise fallback to timestamp + random
- */
-export function generateId(): string {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID();
-  }
-  
-  // Fallback for environments without crypto.randomUUID
-  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-}
+// Re-export shared ID generation utilities
+export { 
+  generateId, 
+  generateUUID, 
+  generateShortId, 
+  generateTimestampId, 
+  getTimestamp 
+} from '@sucoza/devtools-common';
 
 /**
- * Generate a short ID for display purposes
- */
-export function generateShortId(): string {
-  return Math.random().toString(36).substr(2, 8);
-}
-
-/**
- * Generate a deterministic ID from a string
+ * Generate a deterministic ID from a string (plugin-specific)
  */
 export function generateDeterministicId(input: string): string {
   let hash = 0;

@@ -8,3 +8,6 @@ export {
   useRegisterZustandStore,
   devtoolsMiddleware,
 } from './zustandDevtoolsIntegration';
+
+// Default export - main panel component
+export { ZustandDevToolsPanel as default } from './ZustandDevToolsPanel';

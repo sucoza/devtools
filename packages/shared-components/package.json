@@ -1,0 +1,34 @@
+{
+  "name": "@sucoza/shared-components",
+  "version": "1.0.0",
+  "description": "Shared UI components for TanStack DevTools plugins",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "test": "vitest"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "dependencies": {
+    "clsx": "^2.0.0",
+    "lucide-react": "^0.263.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.2",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "rollup": "^3.29.0",
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.0"
+  }
+}
