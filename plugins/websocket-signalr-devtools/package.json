@@ -38,6 +38,7 @@
     "@sucoza/plugin-core": "workspace:*",
     "@sucoza/shared-components": "workspace:*",
     "@tanstack/devtools": "^0.6.2",
+    "@tanstack/devtools-event-client": "^0.2.3",
     "clsx": "^2.1.0",
     "lucide-react": "^0.542.0",
     "recharts": "^3.1.2",

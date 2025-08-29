@@ -1,4 +1,4 @@
-import type { DevToolsEventClient } from '@tanstack/devtools';
+import { EventClient } from '@tanstack/devtools-event-client';
 import type { DevToolsState, DevToolsAction } from '../types';
 import { devToolsStore } from './devtools-store';
 
@@ -7,7 +7,7 @@ export interface WebSocketSignalREvents {
   'websocket-signalr:action': DevToolsAction;
 }
 
-export class WebSocketSignalRDevToolsClient implements DevToolsEventClient<WebSocketSignalREvents> {
+export class WebSocketSignalRDevToolsClient implements EventClient<WebSocketSignalREvents> {
   private unsubscribe?: () => void;
 
   constructor() {

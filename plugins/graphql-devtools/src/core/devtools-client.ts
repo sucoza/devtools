@@ -1,11 +1,11 @@
-import type { DevToolsEventClient } from '@tanstack/devtools';
+import { EventClient } from '@tanstack/devtools-event-client'
 import type { GraphQLDevToolsEvents, GraphQLDevToolsState, GraphQLDevToolsAction } from '../types';
 import { getGraphQLDevToolsStore, GraphQLDevToolsStore } from './devtools-store';
 
 /**
  * GraphQL DevTools client for TanStack DevTools integration
  */
-export class GraphQLDevToolsClient implements DevToolsEventClient<GraphQLDevToolsEvents> {
+export class GraphQLDevToolsClient implements EventClient<GraphQLDevToolsEvents> {
   private unsubscribe?: () => void;
   private store: GraphQLDevToolsStore;
 
