@@ -1,0 +1,25 @@
+{
+  "name": "@your-scope/tanstack-devtools-importer",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/react.js",
+      "types": "./dist/react.d.ts"
+    }
+  },
+  "peerDependencies": {
+    "vite": ">=5.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "@tanstack/react-devtools": ">=1.0.0",
+    "@tanstack/devtools-vite": ">=1.0.0"
+  }
+}
