@@ -1,4 +1,4 @@
-import type { EventClient } from '@tanstack/devtools-event-client';
+import { EventClient } from '@tanstack/devtools-event-client';
 import type { DevToolsState, DevToolsAction } from '../types';
 import { devToolsStore } from './devtools-store';
 
@@ -7,10 +7,14 @@ export interface WebSocketSignalREvents {
   'websocket-signalr:action': DevToolsAction;
 }
 
-export class WebSocketSignalRDevToolsClient implements EventClient<WebSocketSignalREvents> {
+export class WebSocketSignalRDevToolsClient extends EventClient<WebSocketSignalREvents> {
   private unsubscribe?: () => void;
 
   constructor() {
+    super({
+      pluginId: 'websocket-signalr'
+    });
+
     // Enable interceptors when client is created
     devToolsStore.enableWebSocketInterception();
     devToolsStore.enableSignalRInterception();
