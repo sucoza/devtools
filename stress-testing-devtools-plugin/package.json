@@ -1,0 +1,34 @@
+{
+  "name": "@sucoza/tanstack-devtools-stress-testing",
+  "version": "1.0.0",
+  "description": "TanStack DevTools plugin for API stress testing and performance monitoring",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@tanstack/devtools": "^1.0.0",
+    "react": "^18.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "tanstack",
+    "devtools",
+    "stress-testing",
+    "performance",
+    "api-testing",
+    "curl-import",
+    "validation-engine"
+  ]
+}

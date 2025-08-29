@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stress Testing Plugin Example</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .devtools-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: 80vh;
+            overflow: hidden;
+        }
+        
+        .devtools-header {
+            background: #2563eb;
+            color: white;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .devtools-content {
+            height: calc(100% - 60px);
+        }
+    </style>
+</head>
+<body>
+    <div class="devtools-container">
+        <div class="devtools-header">
+            TanStack DevTools - Stress Testing Plugin (@sucoza/tanstack-devtools-stress-testing)
+        </div>
+        <div class="devtools-content">
+            <div id="stress-test-root"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Mock localStorage and cookies for the example
+        if (!window.localStorage.getItem('jwtToken')) {
+            window.localStorage.setItem('jwtToken', 'example-jwt-token-12345');
+        }
+        
+        if (!document.cookie.includes('XSRF-TOKEN-WEBAPI')) {
+            document.cookie = 'XSRF-TOKEN-WEBAPI=example-xsrf-token; path=/';
+        }
+        
+        // Mock fetch for demonstration
+        const originalFetch = window.fetch;
+        window.fetch = async function(url, options) {
+            // Simulate API responses for demo purposes
+            if (url.includes('/api/users/userInfo')) {
+                return {
+                    ok: true,
+                    json: async () => ({
+                        tenantId: 'demo-tenant-123',
+                        regionId: 'demo-region-456',
+                        userName: 'demo-user'
+                    })
+                };
+            }
+            
+            // Simulate random response times and occasional failures
+            const delay = Math.random() * 500 + 50; // 50-550ms
+            await new Promise(resolve => setTimeout(resolve, delay));
+            
+            const shouldFail = Math.random() < 0.05; // 5% failure rate
+            
+            if (shouldFail) {
+                throw new Error('Network error');
+            }
+            
+            return {
+                ok: true,
+                status: 200,
+                headers: {
+                    get: () => 'application/json'
+                },
+                json: async () => {
+                    // Return different mock responses based on endpoint
+                    if (url.includes('RegionPath')) {
+                        return ['region', 'path', 'data'];
+                    } else if (url.includes('Enrollments')) {
+                        return { enrollmentInfo: { count: 42 } };
+                    } else if (url.includes('MatchEvents')) {
+                        return { data: [{ id: 1 }, { id: 2 }] };
+                    } else if (url.includes('Tags')) {
+                        return { tags: ['tag1', 'tag2'] };
+                    } else if (url.includes('SearchUsersList')) {
+                        return { totalCount: 15 };
+                    }
+                    return { success: true, data: [] };
+                }
+            };
+        };
+        
+        // Load and initialize the stress testing plugin
+        // In a real implementation, this would be loaded from the built plugin
+        console.log('Stress Testing Plugin Example loaded successfully!');
+        console.log('In a real implementation, the plugin would be rendered here.');
+        
+        // For now, show a placeholder
+        document.getElementById('stress-test-root').innerHTML = `
+            <div style="padding: 40px; text-align: center; color: #6b7280;">
+                <h2>🔥 Stress Testing Plugin</h2>
+                <p>This is where the TanStack DevTools stress testing plugin would be rendered.</p>
+                <p>Run <code>npm run build</code> to build the plugin and see the full interface.</p>
+                <div style="margin-top: 30px; padding: 20px; background: #f3f4f6; border-radius: 8px; text-align: left;">
+                    <h3>Features included:</h3>
+                    <ul>
+                        <li>✅ Fixed count testing with concurrency control</li>
+                        <li>✅ Timed rate-based testing</li>
+                        <li>✅ Configurable request suites with JSON validation</li>
+                        <li>✅ Real-time metrics (avg, percentiles, RPS, failures)</li>
+                        <li>✅ Test history and result comparison</li>
+                        <li>✅ Token-based authentication handling</li>
+                        <li>✅ Improved error tracking and visualization</li>
+                        <li>✅ Better UX with proper React components</li>
+                    </ul>
+                </div>
+            </div>
+        `;
+    </script>
+</body>
+</html>
