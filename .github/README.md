@@ -2,6 +2,14 @@
 
 This directory contains GitHub Actions workflows for the TanStack DevTools Plugin Ecosystem.
 
+## Package Manager
+
+All workflows use **pnpm** as the primary package manager for:
+- ⚡ **Faster installs** - Content-addressed storage and hard links
+- 🔒 **Better security** - Strict node_modules structure prevents phantom dependencies
+- 📦 **Efficient caching** - Smart pnpm store caching across workflow runs
+- 🎯 **Precise filtering** - Advanced workspace filtering with `pnpm --filter`
+
 ## Workflows
 
 ### 🔄 CI Workflow (`ci.yml`)
@@ -10,15 +18,16 @@ This directory contains GitHub Actions workflows for the TanStack DevTools Plugi
 **Purpose:** Continuous Integration testing across multiple environments
 
 **Jobs:**
-- **test**: Run tests on Node.js 18, 20, 21
-- **build-plugins**: Build and test each plugin individually
-- **build-matrix**: Test builds across Ubuntu, Windows, macOS
-- **security**: Run security audits and vulnerability checks
+- **test**: Run tests on Node.js 18, 20, 21 with pnpm
+- **build-plugins**: Build and test each plugin individually using pnpm filters
+- **build-matrix**: Test builds across Ubuntu, Windows, macOS with pnpm caching
+- **security**: Run `pnpm audit` and vulnerability checks
 
 **Key Features:**
 - Matrix testing across Node.js versions and operating systems
-- Individual plugin validation  
-- Comprehensive security scanning
+- Individual plugin validation with `pnpm --filter <plugin>` 
+- Comprehensive security scanning with pnpm audit
+- Optimized pnpm store caching for faster builds
 - Parallel execution for faster feedback
 
 ### 📦 Publish Workflow (`publish.yml`)
@@ -33,11 +42,11 @@ This directory contains GitHub Actions workflows for the TanStack DevTools Plugi
 - **create-release**: Generate GitHub release with changelog
 
 **Key Features:**
-- Smart dependency-aware publishing order
-- Dry-run capability for testing
-- Selective package publishing
-- Automatic version bumping
-- Changelog generation
+- Smart dependency-aware publishing order with pnpm filters
+- Dry-run capability for testing (`pnpm publish --dry-run`)
+- Selective package publishing using pnpm workspace filters
+- Automatic version bumping with `pnpm version`
+- Changelog generation and GitHub releases
 
 **Usage:**
 ```bash

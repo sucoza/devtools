@@ -47,15 +47,34 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Determine packages to publish
         id: packages
@@ -82,26 +101,20 @@ jobs:
       - name: Build all packages
         run: |
           # Build shared packages first
-          npm run build --workspace=packages/devtools-common
-          npm run build --workspace=packages/plugin-core
-          npm run build --workspace=packages/shared-components
-          npm run build --workspace=packages/devtools-importer
+          pnpm --filter devtools-common build
+          pnpm --filter plugin-core build
+          pnpm --filter shared-components build
+          pnpm --filter devtools-importer build
           
           # Build all plugins
-          for plugin in plugins/*/; do
-            if [ -f "$plugin/package.json" ]; then
-              plugin_name=$(basename "$plugin")
-              echo "Building plugin: $plugin_name"
-              npm run build --workspace=plugins/$plugin_name || true
-            fi
-          done
+          pnpm --filter "./plugins/*" build
 
       - name: Run tests
         run: |
           # Test shared packages
-          npm run test --workspace=packages/devtools-common || echo "No tests for devtools-common"
-          npm run test --workspace=packages/plugin-core || echo "No tests for plugin-core"  
-          npm run test --workspace=packages/shared-components || echo "No tests for shared-components"
+          pnpm --filter devtools-common test || echo "No tests for devtools-common"
+          pnpm --filter plugin-core test || echo "No tests for plugin-core"  
+          pnpm --filter shared-components test || echo "No tests for shared-components"
 
   publish-shared:
     name: Publish Shared Packages
@@ -121,31 +134,50 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build dependencies
         run: |
           # Build in dependency order
           if [ "${{ matrix.package.name }}" != "devtools-common" ]; then
-            npm run build --workspace=packages/devtools-common
+            pnpm --filter devtools-common build
           fi
           if [ "${{ matrix.package.name }}" != "devtools-common" ] && [ "${{ matrix.package.name }}" != "plugin-core" ]; then
-            npm run build --workspace=packages/plugin-core
+            pnpm --filter plugin-core build
           fi
           if [ "${{ matrix.package.name }}" = "shared-components" ] || [ "${{ matrix.package.name }}" = "devtools-importer" ]; then
-            npm run build --workspace=packages/shared-components
+            pnpm --filter shared-components build
           fi
 
       - name: Build package
-        run: npm run build --workspace=${{ matrix.package.path }}
+        run: pnpm --filter ${{ matrix.package.name }} build
 
       - name: Check if package should be published
         id: check
@@ -160,19 +192,19 @@ jobs:
         if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true'
         working-directory: ${{ matrix.package.path }}
         run: |
-          npm version ${{ needs.validate.outputs.version }} --no-git-tag-version
+          pnpm version ${{ needs.validate.outputs.version }} --no-git-tag-version
 
       - name: Publish package (Dry Run)
         if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run == 'true'
         working-directory: ${{ matrix.package.path }}
-        run: npm publish --dry-run
+        run: pnpm publish --dry-run
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish package
         if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true'
         working-directory: ${{ matrix.package.path }}
-        run: npm publish --access public
+        run: pnpm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -210,25 +242,44 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
 
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build shared packages
         run: |
-          npm run build --workspace=packages/devtools-common
-          npm run build --workspace=packages/plugin-core
-          npm run build --workspace=packages/shared-components
-          npm run build --workspace=packages/devtools-importer
+          pnpm --filter devtools-common build
+          pnpm --filter plugin-core build
+          pnpm --filter shared-components build
+          pnpm --filter devtools-importer build
 
       - name: Build plugin
-        run: npm run build --workspace=plugins/${{ matrix.plugin }}
+        run: pnpm --filter ${{ matrix.plugin }} build
 
       - name: Check if plugin should be published
         id: check
@@ -243,19 +294,19 @@ jobs:
         if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true'
         working-directory: plugins/${{ matrix.plugin }}
         run: |
-          npm version ${{ needs.validate.outputs.version }} --no-git-tag-version
+          pnpm version ${{ needs.validate.outputs.version }} --no-git-tag-version
 
       - name: Publish plugin (Dry Run)
         if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run == 'true'
         working-directory: plugins/${{ matrix.plugin }}
-        run: npm publish --dry-run
+        run: pnpm publish --dry-run
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish plugin
         if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true'
         working-directory: plugins/${{ matrix.plugin }}
-        run: npm publish --access public
+        run: pnpm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

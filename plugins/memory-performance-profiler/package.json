@@ -1,79 +1,82 @@
 {
-  "name": "@sucoza/memory-performance-profiler-devtools-plugin",
-  "version": "0.1.0",
-  "description": "Memory and Performance Profiler plugin for TanStack DevTools - React-specific memory analysis and optimization",
-  "author": "tyevco",
-  "license": "MIT",
-  "main": "dist/index.js",
-  "module": "dist/index.esm.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/index.esm.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
-  "files": [
-    "dist",
-    "README.md"
-  ],
-  "keywords": [
-    "tanstack",
-    "devtools",
-    "react",
-    "memory",
-    "performance",
-    "profiler",
-    "debugging",
-    "optimization"
-  ],
-  "scripts": {
-    "build": "rollup -c",
-    "dev": "rollup -c -w",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint src --ext .ts,.tsx",
-    "format": "prettier --write src",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "example": "cd example && npm run dev"
-  },
-  "peerDependencies": {
-    "react": ">=16.8.0",
-    "react-dom": ">=16.8.0",
-    "@tanstack/devtools": ">=0.1.0"
-  },
-  "dependencies": {    "@sucoza/devtools-common": "workspace:*",    "@sucoza/plugin-core": "workspace:*",    "@sucoza/shared-components": "workspace:*",
-    "@tanstack/devtools-event-client": "^0.1.0",
-    "zustand": "^4.0.0",
-    "clsx": "^2.0.0",
-    "lucide-react": "^0.400.0",
-    "use-sync-external-store": "^1.2.0"
-  },
-  "devDependencies": {
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "@rollup/plugin-commonjs": "^25.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.0",
-    "@rollup/plugin-typescript": "^11.0.0",
-    "eslint": "^8.0.0",
-    "eslint-plugin-react": "^7.0.0",
-    "eslint-plugin-react-hooks": "^4.0.0",
-    "postcss": "^8.0.0",
-    "prettier": "^3.0.0",
-    "rollup": "^4.0.0",
-    "rollup-plugin-postcss": "^4.0.0",
-    "typescript": "^5.0.0",
-    "vitest": "^1.0.0",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/jest-dom": "^6.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/tanstack/devtools",
-    "directory": "packages/memory-performance-profiler-devtools"
-  },
-  "homepage": "https://tanstack.com/devtools"
+    "name": "@sucoza/memory-performance-profiler-devtools-plugin",
+    "version": "0.1.0",
+    "description": "Memory and Performance Profiler plugin for TanStack DevTools - React-specific memory analysis and optimization",
+    "author": "tyevco",
+    "license": "MIT",
+    "main": "dist/index.js",
+    "module": "dist/index.esm.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.esm.js",
+            "require": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "keywords": [
+        "tanstack",
+        "devtools",
+        "react",
+        "memory",
+        "performance",
+        "profiler",
+        "debugging",
+        "optimization"
+    ],
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w",
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint src --ext .ts,.tsx",
+        "format": "prettier --write src",
+        "test": "vitest",
+        "test:ui": "vitest --ui",
+        "example": "cd example && npm run dev"
+    },
+    "peerDependencies": {
+        "react": ">=18.0.0",
+        "react-dom": ">=18.0.0",
+        "@tanstack/devtools": "^0.6.2"
+    },
+    "dependencies": {
+        "@sucoza/devtools-common": "workspace:*",
+        "@sucoza/plugin-core": "workspace:*",
+        "@sucoza/shared-components": "workspace:*",
+        "@tanstack/devtools-event-client": "^0.2.3",
+        "zustand": "^5.0.8",
+        "clsx": "^2.1.1",
+        "lucide-react": "^0.542.0",
+        "use-sync-external-store": "^1.5.0"
+    },
+    "devDependencies": {
+        "@types/react": "^19.1.12",
+        "@types/react-dom": "^19.1.9",
+        "@typescript-eslint/eslint-plugin": "^8.41.0",
+        "@typescript-eslint/parser": "^8.41.0",
+        "@rollup/plugin-commonjs": "^28.0.6",
+        "@rollup/plugin-node-resolve": "^16.0.1",
+        "@rollup/plugin-typescript": "^12.1.4",
+        "eslint": "^9.34.0",
+        "eslint-plugin-react": "^7.37.5",
+        "eslint-plugin-react-hooks": "^5.2.0",
+        "postcss": "^8.5.6",
+        "prettier": "^3.6.2",
+        "rollup": "^4.49.0",
+        "rollup-plugin-postcss": "^4.0.2",
+        "typescript": "^5.9.2",
+        "vitest": "^3.2.4",
+        "@testing-library/react": "^16.3.0",
+        "@testing-library/jest-dom": "^6.8.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tanstack/devtools",
+        "directory": "packages/memory-performance-profiler-devtools"
+    },
+    "homepage": "https://tanstack.com/devtools"
 }

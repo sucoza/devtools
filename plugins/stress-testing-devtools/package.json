@@ -11,13 +11,13 @@
     "type-check": "tsc --noEmit"
   },
   "peerDependencies": {
-    "@tanstack/devtools": "^1.0.0",
+    "@tanstack/devtools": "^0.6.2",
     "react": "^18.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.0.0",
-    "tsup": "^8.0.0",
-    "typescript": "^5.0.0"
+    "@types/react": "^19.1.12",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2"
   },
   "files": [
     "dist"

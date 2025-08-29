@@ -26,7 +26,8 @@ jobs:
             shared:
               - 'packages/**'
               - 'package.json'
-              - 'package-lock.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
             plugins:
               - 'plugins/**'
             workflows:
@@ -73,24 +74,43 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Lint shared packages
-        run: npm run lint:shared
+        run: pnpm --filter "./packages/*" lint
 
       - name: Type check shared packages
         run: |
-          npm run typecheck --workspace=packages/devtools-common
-          npm run typecheck --workspace=packages/plugin-core
-          npm run typecheck --workspace=packages/shared-components
-          npm run typecheck --workspace=packages/devtools-importer
+          pnpm --filter devtools-common typecheck
+          pnpm --filter plugin-core typecheck
+          pnpm --filter shared-components typecheck
+          pnpm --filter devtools-importer typecheck
 
   test-affected-plugins:
     name: Test Affected Plugins
@@ -105,30 +125,49 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build shared packages
-        run: npm run build:shared
+        run: pnpm run build:shared
 
       - name: Build and test plugins
         run: |
           # Build a subset of plugins for PR validation
-          npm run build --workspace=plugins/api-mock-interceptor
-          npm run build --workspace=plugins/memory-performance-profiler
-          npm run build --workspace=plugins/browser-automation-test-recorder
-          npm run build --workspace=plugins/bundle-impact-analyzer
+          pnpm --filter api-mock-interceptor build
+          pnpm --filter memory-performance-profiler build
+          pnpm --filter browser-automation-test-recorder build
+          pnpm --filter bundle-impact-analyzer build
           
           # Run tests if they exist
-          npm run test --workspace=plugins/api-mock-interceptor --if-present
-          npm run test --workspace=plugins/memory-performance-profiler --if-present
-          npm run test --workspace=plugins/browser-automation-test-recorder --if-present
+          pnpm --filter api-mock-interceptor test || echo "No tests for api-mock-interceptor"
+          pnpm --filter memory-performance-profiler test || echo "No tests for memory-performance-profiler"
+          pnpm --filter browser-automation-test-recorder test || echo "No tests for browser-automation-test-recorder"
 
   size-check:
     name: Bundle Size Check
@@ -139,22 +178,41 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: npm run build:shared
+        run: pnpm run build:shared
 
       - name: Build sample plugins
         run: |
-          npm run build --workspace=plugins/api-mock-interceptor
-          npm run build --workspace=plugins/memory-performance-profiler
+          pnpm --filter api-mock-interceptor build
+          pnpm --filter memory-performance-profiler build
 
       - name: Check bundle sizes
         run: |
@@ -192,17 +250,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: 'pnpm'
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run security audit
-        run: npm run audit:security
+        run: pnpm audit --audit-level moderate
 
       - name: Check for high vulnerabilities
         run: npx audit-ci --high

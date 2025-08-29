@@ -7,7 +7,7 @@ Thank you for your interest in contributing to the TanStack DevTools Plugin Ecos
 ### Prerequisites
 
 - Node.js (>=18.0.0)
-- npm (>=9.0.0)
+- pnpm (>=8.0.0) - recommended, or npm (>=9.0.0)
 - Git
 
 ### Getting Started
@@ -18,13 +18,19 @@ Thank you for your interest in contributing to the TanStack DevTools Plugin Ecos
    cd tndt
    ```
 
-2. **Install dependencies**
+2. **Install dependencies** (pnpm recommended)
    ```bash
+   pnpm install
+   
+   # Or with npm
    npm install
    ```
 
 3. **Build all packages**
    ```bash
+   pnpm run build:all
+   
+   # Or with npm
    npm run build:all
    ```
 
@@ -58,17 +64,20 @@ tndt/
 
 2. **Start development mode**
    ```bash
-   npm run dev
+   pnpm run dev
+   # or: npm run dev
    ```
 
 3. **Run example application**
    ```bash
-   npm run example
+   pnpm run example
+   # or: npm run example
    ```
 
 4. **Run tests**
    ```bash
-   npm test
+   pnpm test
+   # or: npm test
    ```
 
 ### Working on Shared Packages
@@ -80,12 +89,14 @@ tndt/
 
 2. **Build in watch mode**
    ```bash
-   npm run dev
+   pnpm run dev
+   # or: npm run dev
    ```
 
 3. **Run tests**
    ```bash
-   npm test
+   pnpm test
+   # or: npm test
    ```
 
 ## Plugin Architecture
@@ -149,41 +160,68 @@ plugin-name/
 
 ```bash
 # Build plugin
-npm run build
+pnpm run build
+# or: npm run build
 
 # Development mode with watch
-npm run dev
+pnpm run dev
+# or: npm run dev
 
 # Type checking
-npm run typecheck
+pnpm run typecheck
+# or: npm run typecheck
 
 # Linting
-npm run lint
+pnpm run lint
+# or: npm run lint
 
 # Format code
-npm run format
+pnpm run format
+# or: npm run format
 
 # Run tests
-npm test
+pnpm test
+# or: npm test
 
 # Test with UI
-npm run test:ui
+pnpm run test:ui
+# or: npm run test:ui
 
 # Run example app
-npm run example
+pnpm run example
+# or: npm run example
 ```
 
 ### Monorepo Commands
 
 ```bash
 # Build all packages and plugins
-npm run build:all
+pnpm run build:all
+# or: npm run build:all
+
+# Build only shared packages
+pnpm run build:shared
+
+# Build only plugins
+pnpm run build:plugins
 
 # Run tests across all packages
-npm run test:all
+pnpm run test:all
+# or: npm run test:all
 
 # Lint all code
-npm run lint:all
+pnpm run lint
+# or: npm run lint
+
+# Type check all packages
+pnpm run typecheck
+# or: npm run typecheck
+
+# Clean build outputs
+pnpm run clean:dist
+
+# Update all dependencies
+pnpm run update:deps
 ```
 
 ## Pull Request Process
