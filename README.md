@@ -123,7 +123,7 @@ Each plugin follows a consistent architecture:
 ### Prerequisites
 
 - Node.js (>=18.0.0)
-- npm (>=9.0.0)
+- pnpm (>=8.0.0) - recommended, or npm (>=9.0.0)
 
 ### Setup
 
@@ -132,11 +132,15 @@ Each plugin follows a consistent architecture:
 git clone <repository-url>
 cd tndt
 
-# Install dependencies
+# Install dependencies (pnpm recommended)
+pnpm install
+
+# Or with npm
 npm install
 
 # Build all packages
-npm run build:all
+pnpm run build:all
+# or: npm run build:all
 ```
 
 ### Working with Plugins
@@ -146,7 +150,7 @@ npm run build:all
 cd plugins/<plugin-name>
 
 # Start development mode
-npm run dev
+pnpm run dev
 
 # Run example application
 npm run example
