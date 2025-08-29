@@ -1,4 +1,4 @@
-import { EventClient } from '@tanstack/devtools-event-client';
+import type { EventClient } from '@tanstack/devtools-event-client';
 import type { DevToolsState, DevToolsAction } from '../types';
 import { devToolsStore } from './devtools-store';
 
