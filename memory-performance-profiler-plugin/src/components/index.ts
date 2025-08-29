@@ -1,0 +1,1 @@
+export { MemoryProfilerPanel } from './MemoryProfilerPanel';

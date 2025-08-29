@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Intentionally insecure for testing -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' http://example.com;">
+    <title>Security Audit Panel Example</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Intentionally vulnerable for testing -->
+    <script>
+      // Exposed API key (for testing secret detection)
+      const API_KEY = 'AKIA1234567890123456';
+      const password = 'secret123';
+      
+      // Unsafe DOM manipulation
+      function updateContent(userInput) {
+        document.getElementById('content').innerHTML = userInput;
+      }
+      
+      // Mixed content (if served over HTTPS)
+      const wsConnection = new WebSocket('ws://example.com/socket');
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
