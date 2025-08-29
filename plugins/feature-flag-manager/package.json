@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@sucoza/devtools-common": "workspace:*",
+    "@sucoza/feature-flags": "workspace:*",
     "@sucoza/plugin-core": "workspace:*",
     "@sucoza/shared-components": "workspace:*",
     "@tanstack/devtools": "^0.6.2",
