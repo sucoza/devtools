@@ -1,5 +1,5 @@
 {
-  "name": "@sucoza/feature-flag-manager-devtools",
+  "name": "@sucoza/feature-flag-manager-devtools-plugin",
   "version": "1.0.0",
   "description": "DevTools plugin for managing and testing feature flags at runtime",
   "main": "dist/index.js",

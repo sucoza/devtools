@@ -1,5 +1,5 @@
 {
-  "name": "@sucoza/websocket-signalr-devtools",
+  "name": "@sucoza/websocket-signalr-devtools-plugin",
   "version": "1.0.0",
   "description": "DevTools plugin for monitoring WebSocket and SignalR connections",
   "main": "dist/index.js",

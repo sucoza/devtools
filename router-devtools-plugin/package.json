@@ -1,5 +1,5 @@
 {
-  "name": "@sucoza/router-devtools-enhanced",
+  "name": "@sucoza/router-devtools-plugin",
   "version": "1.0.0",
   "description": "Enhanced router debugging plugin for TanStack DevTools with live parameter editing and navigation timeline",
   "main": "dist/index.js",

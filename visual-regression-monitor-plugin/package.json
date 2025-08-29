@@ -1,5 +1,5 @@
 {
-  "name": "@sucoza/visual-regression-monitor-devtools",
+  "name": "@sucoza/visual-regression-monitor-devtools-plugin",
   "version": "1.0.0",
   "description": "DevTools plugin for visual regression testing with screenshot capture, comparison, and Playwright integration",
   "main": "dist/index.js",

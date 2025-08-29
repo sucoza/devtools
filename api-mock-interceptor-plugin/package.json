@@ -1,5 +1,5 @@
 {
-  "name": "@sucoza/api-mock-interceptor-devtools",
+  "name": "@sucoza/api-mock-interceptor-devtools-plugin",
   "version": "1.0.0",
   "description": "DevTools plugin for intercepting, mocking, and modifying API responses",
   "main": "dist/index.js",

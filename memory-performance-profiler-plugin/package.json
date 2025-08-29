@@ -1,5 +1,5 @@
 {
-  "name": "@tanstack/memory-performance-profiler-devtools",
+  "name": "@sucoza/memory-performance-profiler-devtools-plugin",
   "version": "0.1.0",
   "description": "Memory and Performance Profiler plugin for TanStack DevTools - React-specific memory analysis and optimization",
   "author": "TanStack DevTools Team",

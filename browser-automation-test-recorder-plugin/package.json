@@ -1,5 +1,5 @@
 {
-  "name": "@tanstack/browser-automation-test-recorder",
+  "name": "@sucoza/browser-automation-test-recorder-devtools-plugin",
   "version": "1.0.0",
   "type": "module",
   "description": "DevTools plugin for recording browser interactions and generating test cases with smart selector generation and playback capabilities",

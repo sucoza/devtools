@@ -1,5 +1,5 @@
 {
-  "name": "@sucoza/accessibility-devtools",
+  "name": "@sucoza/accessibility-devtools-plugin",
   "version": "1.0.0",
   "description": "DevTools plugin for real-time accessibility auditing and WCAG compliance testing",
   "main": "dist/index.js",

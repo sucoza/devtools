@@ -1,5 +1,5 @@
 {
-  "name": "@sucoza/zustand-devtools",
+  "name": "@sucoza/zustand-devtools-plugin",
   "version": "1.0.0",
   "description": "Zustand store inspector plugin for TanStack DevTools",
   "main": "dist/index.js",

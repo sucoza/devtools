@@ -1,5 +1,5 @@
 {
-  "name": "@sucoza/design-system-inspector-plugin",
+  "name": "@sucoza/design-system-inspector-devtools-plugin",
   "version": "0.0.1",
   "description": "Design System Inspector plugin for TanStack DevTools",
   "main": "dist/index.js",

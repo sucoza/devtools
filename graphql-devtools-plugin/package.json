@@ -1,5 +1,5 @@
 {
-  "name": "@sucoza/graphql-devtools-enhanced",
+  "name": "@sucoza/graphql-devtools-plugin",
   "version": "1.0.0",
   "description": "Enhanced GraphQL DevTools plugin for TanStack DevTools with schema exploration, query building, and performance monitoring",
   "main": "dist/index.js",

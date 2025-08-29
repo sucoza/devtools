@@ -33,7 +33,7 @@ A comprehensive TanStack DevTools plugin for visual regression testing with scre
 ## Installation
 
 ```bash
-npm install @sucoza/visual-regression-monitor-devtools
+npm install @sucoza/visual-regression-monitor-devtools-plugin
 ```
 
 ## Usage
@@ -41,7 +41,7 @@ npm install @sucoza/visual-regression-monitor-devtools
 ### Basic Setup
 
 ```typescript
-import { PluginPanel } from '@sucoza/visual-regression-monitor-devtools';
+import { PluginPanel } from '@sucoza/visual-regression-monitor-devtools-plugin';
 
 // Use as a standalone component
 function DevTools() {
@@ -56,7 +56,7 @@ function DevTools() {
 ### With TanStack DevTools
 
 ```typescript
-import { createVisualRegressionDevToolsClient } from '@sucoza/visual-regression-monitor-devtools';
+import { createVisualRegressionDevToolsClient } from '@sucoza/visual-regression-monitor-devtools-plugin';
 
 const client = createVisualRegressionDevToolsClient();
 
@@ -67,7 +67,7 @@ const { screenshots, visualDiffs, settings } = client.getState();
 ### Hooks API
 
 ```typescript
-import { useScreenshots, useVisualDiff, useResponsiveTesting } from '@sucoza/visual-regression-monitor-devtools';
+import { useScreenshots, useVisualDiff, useResponsiveTesting } from '@sucoza/visual-regression-monitor-devtools-plugin';
 
 function MyComponent() {
   const { screenshots, actions } = useScreenshots();

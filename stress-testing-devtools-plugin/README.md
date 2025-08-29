@@ -45,7 +45,7 @@ A comprehensive TanStack DevTools plugin that allows you to perform load testing
 ## Installation
 
 ```bash
-npm install @sucoza/tanstack-devtools-stress-testing
+npm install @sucoza/stress-testing-devtools-plugin
 ```
 
 ## Quick Start Guide
@@ -99,7 +99,7 @@ Monitor real-time metrics:
 ### Basic Setup
 
 ```typescript
-import { createStressTestPlugin } from '@sucoza/tanstack-devtools-stress-testing'
+import { createStressTestPlugin } from '@sucoza/stress-testing-devtools-plugin'
 
 // Create the plugin with default configuration
 const stressTestPlugin = createStressTestPlugin()
@@ -115,7 +115,7 @@ const devtools = new TanStackDevtools({
 ### Advanced Configuration
 
 ```typescript
-import { createStressTestPlugin } from '@sucoza/tanstack-devtools-stress-testing'
+import { createStressTestPlugin } from '@sucoza/stress-testing-devtools-plugin'
 
 const stressTestPlugin = createStressTestPlugin({
   initialConfigs: [

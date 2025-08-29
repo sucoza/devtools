@@ -1,5 +1,5 @@
 {
-  "name": "@tanstack/bundle-impact-analyzer",
+  "name": "@sucoza/bundle-impact-analyzer-devtools-plugin",
   "version": "1.0.0",
   "type": "module",
   "description": "DevTools plugin for analyzing bundle size impact, tree-shaking effectiveness, and providing optimization recommendations",
