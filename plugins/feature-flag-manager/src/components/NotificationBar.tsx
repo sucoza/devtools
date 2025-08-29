@@ -42,7 +42,7 @@ export const NotificationBar: React.FC<NotificationBarProps> = ({
         </div>
       ))}
 
-      <style jsx>{`
+      <style>{`
         .notification-bar {
           position: relative;
           z-index: 1000;

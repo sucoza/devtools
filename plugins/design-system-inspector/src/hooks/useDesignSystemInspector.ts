@@ -10,8 +10,9 @@ export function useDesignSystemInspector() {
   
   const state = useSyncExternalStore(
     store.subscribe.bind(store),
-    store.getSnapshot.bind(store)
-  );
+    store.getSnapshot.bind(store),
+    store.getSnapshot.bind(store) // SSR fallback
+  ) as DesignSystemState;
 
   const actions = {
     // Analysis control

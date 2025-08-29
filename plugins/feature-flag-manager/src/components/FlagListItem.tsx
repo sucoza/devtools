@@ -248,7 +248,7 @@ export const FlagListItem: React.FC<FlagListItemProps> = ({
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .flag-item {
           border: 1px solid #e5e7eb;
           border-radius: 8px;

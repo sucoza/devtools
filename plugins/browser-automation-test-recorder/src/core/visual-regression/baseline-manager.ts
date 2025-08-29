@@ -492,3 +492,13 @@ export interface DiffRegion {
   pixelDiff: number;
   severity: 'low' | 'medium' | 'high';
 }
+
+// Re-export types from diff-engine for convenience
+export type {
+  DiffOptions,
+  DiffResult,
+  DiffAnalysis,
+  DetailedDiffRegion,
+  IgnoreRegion,
+  ChangeType,
+} from './diff-engine';

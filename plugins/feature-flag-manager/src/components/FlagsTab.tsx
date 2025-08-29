@@ -259,7 +259,7 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
         )}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .flags-tab {
           display: flex;
           flex-direction: column;

@@ -250,7 +250,7 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
         )}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .feature-flag-manager-panel {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
           font-size: 14px;

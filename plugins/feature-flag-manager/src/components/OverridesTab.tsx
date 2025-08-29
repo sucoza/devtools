@@ -51,7 +51,7 @@ export const OverridesTab: React.FC<OverridesTabProps> = ({
           </p>
         </div>
 
-        <style jsx>{`
+        <style>{`
           .overrides-tab {
             padding: 32px;
             height: 100%;
@@ -179,7 +179,7 @@ export const OverridesTab: React.FC<OverridesTabProps> = ({
         ))}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .overrides-tab {
           height: 100%;
           display: flex;

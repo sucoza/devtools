@@ -140,7 +140,7 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
         })}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .segments-tab {
           height: 100%;
           display: flex;

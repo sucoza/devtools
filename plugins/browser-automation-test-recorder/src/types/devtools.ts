@@ -90,6 +90,8 @@ export interface BrowserAutomationEvents {
   'recorder:test-generated': GeneratedTest;
   'recorder:selector-highlight': { selector: string | null };
   'recorder:error': { message: string; stack?: string };
+  'recorder:processing-complete': { success: boolean; message?: string; originalCount?: number; processedCount?: number; optimizations?: any };
+  'recorder:cdp-connected': { connected: boolean };
 }
 
 /**
@@ -425,6 +427,7 @@ export type TestFramework =
   | 'jasmine'
   | 'qunit'
   | 'vitest'
+  | 'playwright'
   | 'custom';
 
 /**
@@ -488,37 +491,7 @@ export interface TestAssertion {
   description: string;
 }
 
-/**
- * Playback performance metrics
- */
-export interface PlaybackMetrics {
-  // Execution metrics
-  totalEvents: number;
-  completedEvents: number;
-  failedEvents: number;
-  skippedEvents: number;
-  
-  // Timing metrics
-  totalExecutionTime: number;
-  averageEventTime: number;
-  minEventTime: number;
-  maxEventTime: number;
-  
-  // Error metrics
-  errorRate: number;
-  recoveryRate: number;
-  criticalErrors: number;
-  
-  // Performance metrics
-  memoryUsage: number;
-  cpuUsage: number;
-  networkLatency: number;
-  
-  // Reliability metrics
-  selectorSuccessRate: number;
-  healingSuccessRate: number;
-  retryCount: number;
-}
+// PlaybackMetrics is exported from playback-monitor.ts via core exports
 
 /**
  * Assertion types
@@ -553,6 +526,82 @@ export interface BrowserAutomationDevToolsPanelProps {
   onEvent?: (event: BrowserAutomationAction) => void;
   children?: ReactNode;
 }
+
+// Export missing types that are referenced but not exported
+export type { 
+  EventType, 
+  RecordedEvent, 
+  ElementInfo, 
+  ViewportInfo, 
+  ActionTiming, 
+  EventMetadata,
+  CSSSelector,
+  XPathSelector,
+  DataTestIdSelector,
+  AriaSelector,
+} from './automation';
+
+/**
+ * Missing interface definitions
+ */
+export interface RecordingOptions {
+  captureScreenshots: boolean;
+  captureSelectors: boolean;
+  captureTimings: boolean;
+  selectorOptions: {
+    mode: SelectorMode;
+    strategy: SelectorStrategy;
+    timeout: number;
+    retries: number;
+    includeId: boolean;
+    includeClass: boolean;
+    includeAttributes: boolean;
+    includeText: boolean;
+    includePosition: boolean;
+    optimize: boolean;
+    unique: boolean;
+    stable: boolean;
+    generateAlternatives: boolean;
+    maxAlternatives: number;
+  };
+}
+
+export type ScreenshotMode = 'none' | 'on-error' | 'all' | 'key-events';
+
+export interface PerformanceTracker {
+  enabled: boolean;
+  collectMetrics: boolean;
+  trackMemory: boolean;
+  trackNetwork: boolean;
+}
+
+export type CDPClientStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
+
+export interface DataValidation {
+  enabled: boolean;
+  strict: boolean;
+  failOnValidationError: boolean;
+}
+
+export interface CollaborationPanel {
+  sync: boolean;
+  currentTeam: string | null;
+  stats: {
+    totalTests: number;
+    sharedTests: number;
+    reviewsPending: number;
+  };
+}
+
+export interface PlaybackError {
+  id: string;
+  message: string;
+  stack?: string;
+  timestamp: number;
+  eventId?: string;
+}
+
+// PlaybackMetrics is exported from playback-monitor.ts
 
 /**
  * Component props for individual tabs
@@ -609,6 +658,8 @@ export interface CollaborationState {
   // Current user and team
   currentUser: CollaborationUser | null;
   team: CollaborationTeam | null;
+  sync: boolean;
+  currentTeam: string | null;
   
   // Notifications and shared data
   notifications: CollaborationNotification[];
@@ -633,6 +684,11 @@ export interface CollaborationState {
     sortBy: string;
     sortOrder: 'asc' | 'desc';
     viewMode: 'grid' | 'list';
+    stats: {
+      totalTests: number;
+      sharedTests: number;
+      reviewsPending: number;
+    };
   };
   
   // Comments and reviews
@@ -648,7 +704,7 @@ export interface CollaborationState {
  * Collaboration UI state
  */
 export interface CollaborationUIState {
-  activePanel: CollaborationPanel;
+  activePanel: CollaborationPanelType;
   selectedTestId: string | null;
   selectedCommentId: string | null;
   showNotifications: boolean;
@@ -661,7 +717,7 @@ export interface CollaborationUIState {
 /**
  * Collaboration panels
  */
-export type CollaborationPanel = 
+export type CollaborationPanelType = 
   | 'library'
   | 'shared'
   | 'comments'

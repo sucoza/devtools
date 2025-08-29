@@ -27,7 +27,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({
         </button>
       ))}
 
-      <style jsx>{`
+      <style>{`
         .tab-navigation {
           display: flex;
           background-color: #f9fafb;

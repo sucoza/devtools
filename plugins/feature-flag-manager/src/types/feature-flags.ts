@@ -60,7 +60,7 @@ export interface TargetingRule {
   id: string;
   attribute: string;
   operator: 'equals' | 'not_equals' | 'in' | 'not_in' | 'greater_than' | 'less_than' | 'contains';
-  values: (string | number)[];
+  values: (string | number | boolean)[];
   enabled: boolean;
 }
 
@@ -115,7 +115,7 @@ export interface UserSegment {
 export interface SegmentRule {
   attribute: string;
   operator: 'equals' | 'not_equals' | 'in' | 'not_in' | 'greater_than' | 'less_than' | 'contains';
-  values: (string | number)[];
+  values: (string | number | boolean)[];
 }
 
 // Experiment tracking

@@ -46,7 +46,7 @@ export const ExperimentsTab: React.FC<ExperimentsTabProps> = ({
           </p>
         </div>
 
-        <style jsx>{`
+        <style>{`
           .experiments-tab {
             padding: 32px;
             height: 100%;
@@ -197,7 +197,7 @@ export const ExperimentsTab: React.FC<ExperimentsTabProps> = ({
                           <div 
                             className="conversion-fill"
                             style={{ 
-                              width: `${Math.min(parseFloat(conversionRate) * 2, 100)}%`,
+                              width: `${Math.min(parseFloat(String(conversionRate)) * 2, 100)}%`,
                               backgroundColor: isWinning ? '#10b981' : '#6b7280'
                             }}
                           />
@@ -250,7 +250,7 @@ export const ExperimentsTab: React.FC<ExperimentsTabProps> = ({
         })}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .experiments-tab {
           height: 100%;
           display: flex;

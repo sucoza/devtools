@@ -63,7 +63,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
           </p>
         </div>
 
-        <style jsx>{`
+        <style>{`
           .history-tab {
             padding: 32px;
             height: 100%;
@@ -242,7 +242,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
         })}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .history-tab {
           height: 100%;
           display: flex;

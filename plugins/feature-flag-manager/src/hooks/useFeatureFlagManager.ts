@@ -108,7 +108,7 @@ export function useFeatureFlagManager(
 
   // Initialize client
   useEffect(() => {
-    if (!autoCreate) return;
+    if (!autoCreate) return undefined;
 
     let mounted = true;
 

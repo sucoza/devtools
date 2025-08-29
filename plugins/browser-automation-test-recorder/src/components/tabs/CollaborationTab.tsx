@@ -28,7 +28,7 @@ import type {
   TestLibrary,
   TestComment,
   TestReview,
-  CollaborationPanel,
+  CollaborationState,
   BrowserAutomationState
 } from '../../types';
 
@@ -56,7 +56,7 @@ export const CollaborationTab: React.FC<CollaborationTabProps> = ({
   compact = false
 }) => {
   // Local state
-  const [activePanel, setActivePanel] = useState<CollaborationPanel>('library');
+  const [activePanel, setActivePanel] = useState<string>('library');
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -68,7 +68,7 @@ export const CollaborationTab: React.FC<CollaborationTabProps> = ({
   const currentTeam = collaboration?.currentTeam;
 
   // Handle panel switching
-  const handlePanelChange = (panel: CollaborationPanel) => {
+  const handlePanelChange = (panel: string) => {
     setActivePanel(panel);
     dispatch({
       type: 'collaboration/ui/panel/set',
@@ -118,7 +118,7 @@ export const CollaborationTab: React.FC<CollaborationTabProps> = ({
   // Render panel navigation
   const renderPanelNavigation = () => {
     const panels: Array<{
-      id: CollaborationPanel;
+      id: string;
       label: string;
       icon: React.ComponentType<any>;
       badge?: number;

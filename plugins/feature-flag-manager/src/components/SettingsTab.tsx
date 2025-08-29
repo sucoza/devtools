@@ -422,7 +422,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .settings-tab {
           height: 100%;
           overflow-y: auto;

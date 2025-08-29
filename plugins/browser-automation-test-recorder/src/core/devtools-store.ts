@@ -1007,3 +1007,13 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
 export function getBrowserAutomationStore() {
   return useBrowserAutomationStore.getState();
 }
+
+/**
+ * Get browser automation store API (for subscribe/getState access)
+ */
+// Store instance for direct API access
+const browserAutomationStore = useBrowserAutomationStore;
+
+export function getBrowserAutomationStoreApi() {
+  return browserAutomationStore;
+}

@@ -77,6 +77,11 @@ export interface FeatureFlagDevToolsClient {
   // Provider integration
   addProvider(provider: ProviderSettings): Promise<void>;
   removeProvider(name: string): Promise<void>;
+  
+  // Additional utility methods
+  getState(): FeatureFlagDevToolsState;
+  refreshFlags(): Promise<void>;
+  cleanup(): void;
 }
 
 // Event types for DevTools communication

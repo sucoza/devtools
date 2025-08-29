@@ -182,7 +182,7 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
 
   // Global error handling
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) return undefined
 
     const handleGlobalError = (event: ErrorEvent) => {
       const error: ErrorInfo = {
@@ -235,14 +235,14 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
 
   // React DevTools hook integration
   useEffect(() => {
-    if (!enabled || !trackComponentTree) return
+    if (!enabled || !trackComponentTree) return undefined
 
     const global = window as any as ReactDevToolsGlobal
     const devToolsHook = global.__REACT_DEVTOOLS_GLOBAL_HOOK__
 
     if (!devToolsHook) {
       console.warn('React DevTools not detected. Component tree tracking may be limited.')
-      return
+      return undefined
     }
 
     // Hook into React DevTools to get fiber tree updates
@@ -287,7 +287,7 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
 
   // React Error Boundary integration
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) return undefined
 
     // Patch React error boundaries to capture errors
     const originalConsoleError = console.error
@@ -348,7 +348,7 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
 
   // Keyboard shortcuts
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) return undefined
 
     const handleKeyDown = (event: KeyboardEvent) => {
       const { shortcuts } = store.config

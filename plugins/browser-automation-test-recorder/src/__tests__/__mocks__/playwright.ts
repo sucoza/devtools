@@ -135,7 +135,7 @@ const mockPage = {
   
   // Context
   context: vi.fn().mockReturnValue({
-    newPage: vi.fn().mockResolvedValue(mockPage),
+    newPage: vi.fn().mockResolvedValue(null), // Will be set after mockPage is fully defined
     close: vi.fn().mockResolvedValue(undefined),
   }),
   
@@ -145,12 +145,8 @@ const mockPage = {
 };
 
 export const mockBrowser = {
-  newContext: vi.fn().mockResolvedValue({
-    newPage: vi.fn().mockResolvedValue(mockPage),
-    pages: vi.fn().mockReturnValue([mockPage]),
-    close: vi.fn().mockResolvedValue(undefined),
-  }),
-  newPage: vi.fn().mockResolvedValue(mockPage),
+  newContext: vi.fn(),
+  newPage: vi.fn(),
   contexts: vi.fn().mockReturnValue([]),
   close: vi.fn().mockResolvedValue(undefined),
   isConnected: vi.fn().mockReturnValue(true),
@@ -160,13 +156,30 @@ export const mockBrowserType = {
   launch: vi.fn().mockResolvedValue(mockBrowser),
   connect: vi.fn().mockResolvedValue(mockBrowser),
   connectOverCDP: vi.fn().mockResolvedValue(mockBrowser),
-  launchPersistentContext: vi.fn().mockResolvedValue({
-    newPage: vi.fn().mockResolvedValue(mockPage),
-    close: vi.fn().mockResolvedValue(undefined),
-  }),
+  launchPersistentContext: vi.fn(),
   name: vi.fn().mockReturnValue('chromium'),
   executablePath: vi.fn().mockReturnValue('/mock/path/to/browser'),
 };
+
+// Set up circular references after all objects are created
+mockBrowser.newContext.mockResolvedValue({
+  newPage: vi.fn().mockResolvedValue(mockPage),
+  pages: vi.fn().mockReturnValue([mockPage]),
+  close: vi.fn().mockResolvedValue(undefined),
+});
+
+mockBrowser.newPage.mockResolvedValue(mockPage);
+
+mockBrowserType.launchPersistentContext.mockResolvedValue({
+  newPage: vi.fn().mockResolvedValue(mockPage),
+  close: vi.fn().mockResolvedValue(undefined),
+});
+
+// Fix mockPage context reference
+mockPage.context = vi.fn().mockReturnValue({
+  newPage: vi.fn().mockResolvedValue(mockPage),
+  close: vi.fn().mockResolvedValue(undefined),
+});
 
 export const mockPlaywright = {
   chromium: mockBrowserType,

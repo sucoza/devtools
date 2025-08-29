@@ -21,8 +21,8 @@ import type {
   TabComponentProps, 
   PlaybackError, 
   EventExecutionResult,
-  PlaybackMetrics 
 } from '../../types';
+import type { PlaybackMetrics } from '../../core';
 
 /**
  * Enhanced playback control tab component with real-time monitoring
@@ -56,7 +56,7 @@ export default function PlaybackTab({ state, dispatch, compact }: TabComponentPr
           errorRate: playback.errors.length / Math.max(playback.status.currentStep, 1),
           recoveryRate: 0.8,
           criticalErrors: 0,
-          memoryUsage: 45 * 1024 * 1024, // 45MB
+          memoryUsage: 45 * 1024 * 1024,
           cpuUsage: 15,
           networkLatency: 120,
           selectorSuccessRate: 0.95,
@@ -72,6 +72,9 @@ export default function PlaybackTab({ state, dispatch, compact }: TabComponentPr
       
       return () => clearInterval(interval);
     }
+    
+    // Always return a cleanup function, even if it's empty
+    return () => {};
   }, [playback.isPlaying, events.length, playback.status, playback.errors.length]);
   
   // Handle playback control actions

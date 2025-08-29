@@ -350,7 +350,7 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         )}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .flag-details-panel {
           display: flex;
           flex-direction: column;

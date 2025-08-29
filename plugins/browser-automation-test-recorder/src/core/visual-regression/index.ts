@@ -5,6 +5,8 @@
 
 export { BaselineManager } from './baseline-manager';
 export { DiffEngine } from './diff-engine';
+
+// Types from baseline-manager
 export type {
   BaselineImage,
   BaselineMetadata,
@@ -13,14 +15,16 @@ export type {
   BaselineStorageConfig,
   VisualComparisonResult,
   DiffRegion,
+} from './baseline-manager';
+
+// Types from diff-engine
+export type {
   DiffOptions,
   DiffResult,
   DiffAnalysis,
   DetailedDiffRegion,
   IgnoreRegion,
   ChangeType,
-} from './baseline-manager';
-export type {
   PixelMatchOptions,
   LayoutShift,
   LayoutShiftSource,

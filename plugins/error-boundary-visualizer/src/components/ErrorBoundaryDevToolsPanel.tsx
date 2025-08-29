@@ -70,6 +70,8 @@ export const ErrorBoundaryDevToolsPanel: React.FC = () => {
         document.removeEventListener('mouseup', handleMouseUp)
       }
     }
+    // Return undefined explicitly for when isDragging is false
+    return undefined
   }, [isDragging])
 
   const handleResize = (e: React.MouseEvent) => {

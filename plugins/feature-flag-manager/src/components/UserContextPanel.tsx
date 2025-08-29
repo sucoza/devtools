@@ -244,7 +244,7 @@ export const UserContextPanel: React.FC<UserContextPanelProps> = ({
         </button>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .user-context-panel {
           color: inherit;
         }

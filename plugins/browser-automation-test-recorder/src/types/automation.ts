@@ -1391,6 +1391,7 @@ export type TestFramework =
   | 'qunit'
   | 'vitest'
   | 'playwright'
+  | 'playwright'
   | 'custom';
 
 /**

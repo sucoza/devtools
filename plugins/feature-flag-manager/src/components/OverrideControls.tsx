@@ -206,7 +206,7 @@ export const OverrideControls: React.FC<OverrideControlsProps> = ({
         )}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .override-controls {
           color: inherit;
         }

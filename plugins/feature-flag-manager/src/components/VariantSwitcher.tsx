@@ -58,7 +58,7 @@ export const VariantSwitcher: React.FC<VariantSwitcherProps> = ({
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .variant-switcher {
           position: relative;
         }

@@ -29,6 +29,7 @@ export interface PixelMatchOptions {
   aaColor: [number, number, number];
   diffColor: [number, number, number];
   diffColorAlt?: [number, number, number];
+  ignoreColors?: boolean;
 }
 
 export interface DiffResult {
@@ -74,6 +75,23 @@ export interface ChangeType {
   count: number;
   severity: 'low' | 'medium' | 'high' | 'critical';
   examples: Array<{ x: number; y: number; description: string }>;
+}
+
+export interface LayoutShift {
+  element: string;
+  selector: string;
+  beforeRect: DOMRect;
+  afterRect: DOMRect;
+  distance: number;
+  impact: number;
+  source: LayoutShiftSource;
+}
+
+export interface LayoutShiftSource {
+  type: 'insertion' | 'removal' | 'dimension-change' | 'position-change';
+  element: string;
+  selector: string;
+  description: string;
 }
 
 export class DiffEngine {

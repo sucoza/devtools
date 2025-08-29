@@ -86,6 +86,7 @@ export const ErrorBoundaryDevTools: React.FC<ErrorBoundaryDevToolsProps> = ({
       window.addEventListener('error', handleError)
       return () => window.removeEventListener('error', handleError)
     }
+    return undefined
   }, [onError])
 
   if (!enabled) return null
@@ -136,8 +137,8 @@ export function withErrorBoundary<P extends object>(
   fallbackComponent?: React.ComponentType<{ error: Error; resetErrorBoundary: () => void }>
 ) {
   const WrappedComponent = React.forwardRef<any, P>((props, ref) => (
-    <ErrorBoundaryWrapper fallbackComponent={fallbackComponent}>
-      <Component {...props} ref={ref} />
+    <ErrorBoundaryWrapper fallback={fallbackComponent}>
+      <Component {...(props as P)} ref={ref} />
     </ErrorBoundaryWrapper>
   ))
 

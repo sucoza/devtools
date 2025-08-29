@@ -187,7 +187,7 @@ export class FlagEvaluator {
   private evaluateRuleCondition(
     contextValue: any, 
     operator: string, 
-    ruleValues: (string | number)[]
+    ruleValues: (string | number | boolean)[]
   ): boolean {
     switch (operator) {
       case 'equals':
