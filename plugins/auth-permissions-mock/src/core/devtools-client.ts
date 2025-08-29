@@ -36,8 +36,9 @@ export class AuthMockDevToolsClient {
     };
 
     // Listen for auth state changes from the application
-    window.addEventListener('auth-state-change', (event: CustomEvent) => {
-      this.handleAuthStateChange(event.detail);
+    window.addEventListener('auth-state-change', (event: Event) => {
+      const customEvent = event as CustomEvent;
+      this.handleAuthStateChange(customEvent.detail);
     });
   }
 

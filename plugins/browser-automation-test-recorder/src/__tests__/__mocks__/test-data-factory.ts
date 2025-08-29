@@ -292,56 +292,71 @@ export const createMockRecordedEvent = (
 /**
  * Create mock recording session
  */
-export const createMockRecordingSession = (overrides: Partial<RecordingSession> = {}): RecordingSession => ({
-  id: generateId('session'),
-  name: `Test Session ${sessionCounter++}`,
-  startTime: Date.now() - 60000, // 1 minute ago
-  url: 'https://example.com/test-page',
-  viewport: createMockViewport(),
-  userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-  events: [
-    createMockRecordedEvent('navigation'),
-    createMockRecordedEvent('click'),
-    createMockRecordedEvent('input'),
-    createMockRecordedEvent('submit'),
-  ],
-  metadata: {
-    tags: ['e2e', 'form-submission'],
-    description: 'Test recording session',
-    category: 'user-flow',
-  },
-  ...overrides,
-});
+export const createMockRecordingSession = (overrides: Partial<RecordingSession> = {}): RecordingSession => {
+  // Create event IDs instead of full events
+  const eventIds = [
+    generateId('event'),
+    generateId('event'),
+    generateId('event'),
+    generateId('event'),
+  ];
+
+  return {
+    id: generateId('session'),
+    name: `Test Session ${sessionCounter++}`,
+    startTime: Date.now() - 60000, // 1 minute ago
+    url: 'https://example.com/test-page',
+    viewport: createMockViewport(),
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+    events: eventIds,
+    metadata: {
+      tags: ['e2e', 'form-submission'],
+      description: 'Test recording session',
+      category: 'user-flow',
+    },
+    ...overrides,
+  };
+};
 
 /**
  * Create mock test case
  */
-export const createMockTestCase = (overrides: Partial<TestCase> = {}): TestCase => ({
-  id: generateId('testcase'),
-  name: `Test Case ${testCounter++}`,
-  description: 'Generated test case from recorded events',
-  events: [
-    createMockRecordedEvent('navigation'),
-    createMockRecordedEvent('click'),
-    createMockRecordedEvent('input'),
-    createMockRecordedEvent('submit'),
-  ],
-  assertions: [
-    {
-      type: 'element-visible',
-      selector: '#success-message',
-      expected: true,
-      description: 'Success message should be visible',
+export const createMockTestCase = (overrides: Partial<TestCase> = {}): TestCase => {
+  const eventIds = [
+    generateId('event'),
+    generateId('event'),
+    generateId('event'),
+    generateId('event'),
+  ];
+
+  return {
+    id: generateId('testcase'),
+    name: `Test Case ${testCounter++}`,
+    description: 'Generated test case from recorded events',
+    events: eventIds,
+    assertions: [
+      {
+        id: generateId('assertion'),
+        type: 'visible',
+        selector: '#success-message',
+        expected: true,
+        description: 'Success message should be visible',
+      },
+    ],
+    metadata: {
+      sessionId: generateId('session'),
+      eventCount: eventIds.length,
+      duration: 5000,
+      url: 'https://example.com/test-page',
+      viewport: createMockViewport(),
+      assertions: 1,
+      selectors: eventIds.length,
     },
-  ],
-  metadata: {
-    framework: 'playwright',
     createdAt: Date.now(),
-    tags: ['smoke', 'critical-path'],
-    estimatedDuration: 5000,
-  },
-  ...overrides,
-});
+    updatedAt: Date.now(),
+    ...overrides,
+  };
+};
 
 /**
  * Create mock generated test
@@ -349,7 +364,7 @@ export const createMockTestCase = (overrides: Partial<TestCase> = {}): TestCase 
 export const createMockGeneratedTest = (overrides: Partial<GeneratedTest> = {}): GeneratedTest => ({
   id: generateId('generated'),
   name: `Generated Test ${testCounter++}`,
-  format: 'typescript',
+  format: 'playwright',
   framework: 'playwright',
   code: `
 import { test, expect } from '@playwright/test';

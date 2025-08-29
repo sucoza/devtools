@@ -716,8 +716,8 @@ export interface CollaborationConflict {
   timestamp: number;
 }
 
-// Re-export collaboration types from automation.ts
-export type {
+// Import types from automation.ts for use in devtools types
+import type {
   CollaborationUser,
   UserRole,
   UserPermissions,
@@ -735,8 +735,5 @@ export type {
   ActivityFeedItem,
   CollaborationNotification,
   EventType,
-  RecordedEvent,
-  TestCase,
-  GeneratedTest,
-  RecordingSession
+  RecordedEvent
 } from './automation';

@@ -385,13 +385,15 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     
     // Add temporary highlight
-    element.style.outline = '3px solid #ef4444';
-    element.style.outlineOffset = '2px';
-    
-    setTimeout(() => {
-      element.style.outline = '';
-      element.style.outlineOffset = '';
-    }, 2000);
+    if (element instanceof HTMLElement) {
+      element.style.outline = '3px solid #ef4444';
+      element.style.outlineOffset = '2px';
+      
+      setTimeout(() => {
+        element.style.outline = '';
+        element.style.outlineOffset = '';
+      }, 2000);
+    }
   };
 
   const filteredIssues = issues.filter(issue => {

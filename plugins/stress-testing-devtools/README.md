@@ -1,4 +1,4 @@
-# TanStack DevTools Stress Testing Plugin
+# Stress Testing DevTools Plugin
 
 A comprehensive TanStack DevTools plugin that allows you to perform load testing on your APIs directly from the browser developer tools. Easily import requests from browser Network tabs, cURL commands, and other formats.
 
@@ -350,6 +350,10 @@ See the `example/` directory for a complete working example of the plugin in act
 ## License
 
 MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.
 
 ## Contributing
 

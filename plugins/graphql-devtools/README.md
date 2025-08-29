@@ -1,4 +1,4 @@
-# GraphQL DevTools Enhanced
+# GraphQL DevTools Plugin
 
 A comprehensive GraphQL DevTools plugin for TanStack DevTools that provides advanced schema exploration, visual query building, operation monitoring, and performance analytics.
 
@@ -40,7 +40,7 @@ A comprehensive GraphQL DevTools plugin for TanStack DevTools that provides adva
 ## Installation
 
 ```bash
-npm install @tanstack/graphql-devtools-enhanced
+npm install @sucoza/graphql-devtools-plugin
 ```
 
 ## Quick Start
@@ -48,7 +48,7 @@ npm install @tanstack/graphql-devtools-enhanced
 ### Basic Setup
 
 ```tsx
-import { GraphQLDevToolsPanel, createGraphQLDevToolsClient } from '@tanstack/graphql-devtools-enhanced';
+import { GraphQLDevToolsPanel, createGraphQLDevToolsClient } from '@sucoza/graphql-devtools-plugin';
 
 // Create the DevTools client
 const graphqlDevToolsClient = createGraphQLDevToolsClient();
@@ -70,7 +70,7 @@ function App() {
 
 ```tsx
 import { TanStackDevtools } from '@tanstack/react-devtools';
-import { GraphQLDevToolsPanel } from '@tanstack/graphql-devtools-enhanced';
+import { GraphQLDevToolsPanel } from '@sucoza/graphql-devtools-plugin';
 
 function App() {
   return (
@@ -92,7 +92,7 @@ function App() {
 Configure endpoints for automatic schema introspection:
 
 ```tsx
-import { createGraphQLDevToolsClient } from '@tanstack/graphql-devtools-enhanced';
+import { createGraphQLDevToolsClient } from '@sucoza/graphql-devtools-plugin';
 
 const client = createGraphQLDevToolsClient();
 
@@ -163,7 +163,7 @@ client.updateFilters(filters);
 ### React Hooks
 
 ```tsx
-import { useGraphQLDevToolsStore } from '@tanstack/graphql-devtools-enhanced';
+import { useGraphQLDevToolsStore } from '@sucoza/graphql-devtools-plugin';
 
 function CustomComponent() {
   const state = useGraphQLDevToolsStore();
@@ -251,7 +251,11 @@ const server = new ApolloServer({
 
 ## License
 
-MIT License - see LICENSE file for details.
+MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.
 
 ## Changelog
 

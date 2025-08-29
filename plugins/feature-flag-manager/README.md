@@ -41,7 +41,7 @@ A comprehensive TanStack DevTools plugin for managing and testing feature flags 
 ### Installation
 
 ```bash
-npm install @tanstack/feature-flag-manager-devtools
+npm install @sucoza/feature-flag-manager-devtools-plugin
 ```
 
 ### Basic Usage
@@ -51,7 +51,7 @@ import React from 'react';
 import { 
   FeatureFlagManagerPanel, 
   createFeatureFlagDevToolsClient 
-} from '@tanstack/feature-flag-manager-devtools';
+} from '@sucoza/feature-flag-manager-devtools-plugin';
 
 // Create a client instance
 const client = createFeatureFlagDevToolsClient();
@@ -79,7 +79,7 @@ function App() {
 
 ```tsx
 import React from 'react';
-import { useFeatureFlagManager } from '@tanstack/feature-flag-manager-devtools';
+import { useFeatureFlagManager } from '@sucoza/feature-flag-manager-devtools-plugin';
 
 function MyComponent() {
   const { 
@@ -131,7 +131,7 @@ function MyComponent() {
 ### Setting up LaunchDarkly Integration
 
 ```tsx
-import { createFeatureFlagDevToolsClient } from '@tanstack/feature-flag-manager-devtools';
+import { createFeatureFlagDevToolsClient } from '@sucoza/feature-flag-manager-devtools-plugin';
 
 const client = createFeatureFlagDevToolsClient();
 
@@ -416,7 +416,11 @@ npm test
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.
 
 ## 🙏 Acknowledgments
 
@@ -433,4 +437,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Made with ❤️ by the TanStack team**
+**Part of the @sucoza TanStack DevTools ecosystem**

@@ -1,4 +1,4 @@
-# @tanstack/auth-permissions-mock-devtools
+# Auth Permissions Mock DevTools Plugin
 
 A TanStack DevTools plugin for mocking authentication states and permissions testing during development.
 
@@ -18,7 +18,7 @@ A TanStack DevTools plugin for mocking authentication states and permissions tes
 ## Installation
 
 ```bash
-npm install @tanstack/auth-permissions-mock-devtools
+npm install @sucoza/auth-permissions-mock-devtools-plugin
 ```
 
 ## Usage
@@ -26,7 +26,7 @@ npm install @tanstack/auth-permissions-mock-devtools
 ### Basic Integration
 
 ```tsx
-import { AuthPermissionsMockPanel } from '@tanstack/auth-permissions-mock-devtools';
+import { AuthPermissionsMockPanel } from '@sucoza/auth-permissions-mock-devtools-plugin';
 
 function MyDevToolsPanel() {
   return (
@@ -40,7 +40,7 @@ function MyDevToolsPanel() {
 ### Using the Client API
 
 ```tsx
-import { useAuthMockClient } from '@tanstack/auth-permissions-mock-devtools';
+import { useAuthMockClient } from '@sucoza/auth-permissions-mock-devtools-plugin';
 
 function MyComponent() {
   const { state, client } = useAuthMockClient();
@@ -94,7 +94,7 @@ window.addEventListener('auth-mock-update', (event) => {
 Configure which storage keys the plugin should monitor and modify:
 
 ```tsx
-import { devtoolsStore } from '@tanstack/auth-permissions-mock-devtools';
+import { devtoolsStore } from '@sucoza/auth-permissions-mock-devtools-plugin';
 
 // Configure storage settings
 devtoolsStore.importConfig({
@@ -188,3 +188,7 @@ The plugin displays warnings when mock mode is active to remind developers that 
 ## License
 
 MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.

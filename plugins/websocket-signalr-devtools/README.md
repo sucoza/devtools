@@ -41,7 +41,7 @@ A comprehensive DevTools plugin for monitoring and debugging WebSocket and Signa
 ## Installation
 
 ```bash
-npm install @tanstack/websocket-signalr-devtools
+npm install @sucoza/websocket-signalr-devtools-plugin
 ```
 
 ## Quick Start
@@ -50,7 +50,7 @@ npm install @tanstack/websocket-signalr-devtools
 
 ```tsx
 import React from 'react';
-import { WebSocketSignalRDevToolsPanel } from '@tanstack/websocket-signalr-devtools';
+import { WebSocketSignalRDevToolsPanel } from '@sucoza/websocket-signalr-devtools-plugin';
 
 function App() {
   return (
@@ -74,7 +74,7 @@ import React from 'react';
 import { 
   WebSocketSignalRDevToolsPanel,
   createWebSocketSignalRDevToolsClient 
-} from '@tanstack/websocket-signalr-devtools';
+} from '@sucoza/websocket-signalr-devtools-plugin';
 
 function App() {
   const client = React.useMemo(() => 
@@ -96,7 +96,7 @@ function App() {
 ### Programmatic Control
 
 ```tsx
-import { createWebSocketSignalRDevToolsClient } from '@tanstack/websocket-signalr-devtools';
+import { createWebSocketSignalRDevToolsClient } from '@sucoza/websocket-signalr-devtools-plugin';
 
 const client = createWebSocketSignalRDevToolsClient();
 
@@ -249,7 +249,11 @@ npm run build
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.
 
 ## Changelog
 

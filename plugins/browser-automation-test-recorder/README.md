@@ -2,7 +2,7 @@
 
 A comprehensive TanStack DevTools plugin for recording, analyzing, and generating browser automation tests with intelligent selector generation and advanced playback capabilities.
 
-[![npm version](https://img.shields.io/npm/v/@tanstack/browser-automation-test-recorder.svg)](https://www.npmjs.com/package/@tanstack/browser-automation-test-recorder)
+[![npm version](https://img.shields.io/npm/v/@sucoza/browser-automation-test-recorder-devtools-plugin.svg)](https://www.npmjs.com/package/@sucoza/browser-automation-test-recorder-devtools-plugin)
 [![Build Status](https://img.shields.io/github/workflow/status/tanstack/browser-automation-test-recorder-plugin/CI)](https://github.com/tanstack/browser-automation-test-recorder-plugin/actions)
 [![Coverage](https://img.shields.io/codecov/c/github/tanstack/browser-automation-test-recorder-plugin)](https://codecov.io/gh/tanstack/browser-automation-test-recorder-plugin)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -28,13 +28,13 @@ The Browser Automation Test Recorder Plugin transforms browser interactions into
 ### Installation
 
 ```bash
-npm install @tanstack/browser-automation-test-recorder
+npm install @sucoza/browser-automation-test-recorder-devtools-plugin
 ```
 
 ### Basic Usage
 
 ```typescript
-import { BrowserAutomationPanel } from '@tanstack/browser-automation-test-recorder';
+import { BrowserAutomationPanel } from '@sucoza/browser-automation-test-recorder-devtools-plugin';
 
 // Add to your DevTools setup
 function DevTools() {
@@ -350,7 +350,11 @@ Upcoming features and improvements:
 
 ## License
 
-MIT © [TanStack](https://tanstack.com)
+MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.
 
 ---
 

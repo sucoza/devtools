@@ -3,7 +3,7 @@ import type {
   AccessibilityDevToolsAction,
   AccessibilityDevToolsEvents,
 } from '../types';
-import { getAccessibilityDevToolsStore } from './devtools-store';
+import { useAccessibilityDevToolsStore } from './devtools-store';
 
 /**
  * Event client interface following TanStack DevTools patterns
@@ -28,18 +28,15 @@ export interface AccessibilityEventClient {
  */
 export class AccessibilityDevToolsEventClient implements AccessibilityEventClient {
   private unsubscribe?: () => void;
-  private store = getAccessibilityDevToolsStore();
+  private store = useAccessibilityDevToolsStore;
   private subscribers = new Set<(
     event: AccessibilityDevToolsEvents[keyof AccessibilityDevToolsEvents],
     type: keyof AccessibilityDevToolsEvents
   ) => void>();
   
   constructor() {
-    // Auto-start scanning if configured
-    const state = this.store.getState();
-    if (state.settings.autoScan) {
-      this.store.startScanning();
-    }
+    // Skip auto-start in constructor to avoid hook issues
+    // Let the UI components handle auto-start
   }
   
   /**
@@ -54,8 +51,7 @@ export class AccessibilityDevToolsEventClient implements AccessibilityEventClien
     this.subscribers.add(callback);
     
     // Subscribe to store changes
-    this.unsubscribe = this.store.subscribe(() => {
-      const state = this.store.getState();
+    this.unsubscribe = this.store.subscribe((state) => {
       callback(state, 'accessibility:state');
     });
     
@@ -67,7 +63,8 @@ export class AccessibilityDevToolsEventClient implements AccessibilityEventClien
       this.subscribers.delete(callback);
       if (this.subscribers.size === 0) {
         this.unsubscribe?.();
-        this.store.stopScanning();
+        const currentState = this.store.getState();
+        currentState.stopScanning();
       }
     };
   };
@@ -95,7 +92,8 @@ export class AccessibilityDevToolsEventClient implements AccessibilityEventClien
    * Dispatch action to store
    */
   dispatch = (action: AccessibilityDevToolsAction): void => {
-    this.store.dispatch(action);
+    const state = this.store.getState();
+    state.dispatch(action);
     
     // Emit action event
     this.emit('accessibility:action', action);
@@ -134,7 +132,7 @@ export class AccessibilityDevToolsEventClient implements AccessibilityEventClien
   /**
    * Update scan options
    */
-  updateScanOptions = (options: Parameters<AccessibilityDevToolsAction>['payload']): void => {
+  updateScanOptions = (options: any): void => {
     this.dispatch({ type: 'options/update', payload: options });
   };
   
@@ -196,7 +194,7 @@ export class AccessibilityDevToolsEventClient implements AccessibilityEventClien
   /**
    * Import audit data
    */
-  importData = (data: Parameters<AccessibilityDevToolsAction>['payload']): void => {
+  importData = (data: any): void => {
     this.dispatch({ type: 'history/import', payload: data });
   };
   
@@ -247,7 +245,8 @@ export class AccessibilityDevToolsEventClient implements AccessibilityEventClien
    */
   destroy = (): void => {
     this.unsubscribe?.();
-    this.store.stopScanning();
+    const state = this.store.getState();
+    state.stopScanning();
     this.subscribers.clear();
   };
 }

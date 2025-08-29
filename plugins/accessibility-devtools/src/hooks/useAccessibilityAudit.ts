@@ -18,6 +18,7 @@ export function useAccessibilityAudit() {
   const auditHistory = store.auditHistory;
   const scanState = store.scanState;
   const scanOptions = store.scanOptions;
+  const ui = store.ui;
   const selectedIssue = store.ui.selectedIssue;
   const filters = store.filters;
   const settings = store.settings;
@@ -56,6 +57,13 @@ export function useAccessibilityAudit() {
   const updateSettings = useCallback(
     (newSettings: Partial<AccessibilityDevToolsState['settings']>) => {
       store.dispatch({ type: 'settings/update', payload: newSettings });
+    },
+    [store]
+  );
+
+  const selectTab = useCallback(
+    (tab: AccessibilityDevToolsState['ui']['activeTab']) => {
+      store.dispatch({ type: 'ui/tab/select', payload: tab });
     },
     [store]
   );
@@ -191,6 +199,7 @@ export function useAccessibilityAudit() {
       
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, [settings.autoScan, settings.scanDelay, scanState.isScanning, startScan]);
   
   // Keyboard shortcuts
@@ -249,6 +258,7 @@ export function useAccessibilityAudit() {
     auditHistory,
     scanState,
     scanOptions,
+    ui,
     selectedIssue,
     filteredIssues,
     filters,
@@ -261,6 +271,7 @@ export function useAccessibilityAudit() {
     resumeScan,
     updateScanOptions,
     updateSettings,
+    selectTab,
     
     // Issue management
     selectIssue,

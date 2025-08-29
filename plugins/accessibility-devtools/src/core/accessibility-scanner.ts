@@ -81,13 +81,16 @@ export class AccessibilityScanner {
     
     try {
       // Prepare axe options
-      const axeOptions = {
+      const axeOptions: any = {
         elementRef: this.config.elementRef,
         ancestry: this.config.ancestry || false,
         xpath: this.config.xpath || false,
         reporter: this.config.reporter || 'v2',
-        runOnly: this.config.tags ? { type: 'tag', values: this.config.tags } : undefined,
       };
+
+      if (this.config.tags) {
+        axeOptions.runOnly = { type: 'tag', values: this.config.tags };
+      }
       
       // Run axe scan
       const results = await axe.run(element, axeOptions);
@@ -99,23 +102,23 @@ export class AccessibilityScanner {
       const auditResult: AccessibilityAuditResult = {
         url: window.location.href,
         timestamp: Date.now(),
-        violations: results.violations.map(this.transformAxeResult),
-        incomplete: results.incomplete.map(this.transformAxeResult),
-        passes: results.passes.map(this.transformAxeResult),
-        inapplicable: results.inapplicable.map(this.transformAxeResult),
+        violations: (results as any).violations?.map(this.transformAxeResult) || [],
+        incomplete: (results as any).incomplete?.map(this.transformAxeResult) || [],
+        passes: (results as any).passes?.map(this.transformAxeResult) || [],
+        inapplicable: (results as any).inapplicable?.map(this.transformAxeResult) || [],
         testEngine: {
-          name: results.testEngine.name,
-          version: results.testEngine.version,
+          name: (results as any).testEngine?.name || 'axe-core',
+          version: (results as any).testEngine?.version || '4.0.0',
         },
         testRunner: {
-          name: results.testRunner.name,
+          name: (results as any).testRunner?.name || 'accessibility-scanner',
         },
         testEnvironment: {
-          userAgent: results.testEnvironment.userAgent,
-          windowWidth: results.testEnvironment.windowWidth,
-          windowHeight: results.testEnvironment.windowHeight,
-          orientationAngle: results.testEnvironment.orientationAngle,
-          orientationType: results.testEnvironment.orientationType,
+          userAgent: (results as any).testEnvironment?.userAgent || navigator.userAgent,
+          windowWidth: (results as any).testEnvironment?.windowWidth || window.innerWidth,
+          windowHeight: (results as any).testEnvironment?.windowHeight || window.innerHeight,
+          orientationAngle: (results as any).testEnvironment?.orientationAngle,
+          orientationType: (results as any).testEnvironment?.orientationType,
         },
       };
       

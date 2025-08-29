@@ -1,4 +1,4 @@
-# Security Audit Panel - TanStack DevTools Plugin
+# Security Audit Panel DevTools Plugin
 
 A comprehensive security auditing plugin for TanStack DevTools that helps developers identify and fix security vulnerabilities in web applications during development.
 
@@ -39,7 +39,7 @@ A comprehensive security auditing plugin for TanStack DevTools that helps develo
 ## Installation
 
 ```bash
-npm install @tanstack/security-audit-panel-devtools
+npm install @sucoza/security-audit-panel-devtools-plugin
 ```
 
 ## Usage
@@ -47,7 +47,7 @@ npm install @tanstack/security-audit-panel-devtools
 ### Basic Setup
 
 ```typescript
-import { SecurityAuditPanel } from '@tanstack/security-audit-panel-devtools';
+import { SecurityAuditPanel } from '@sucoza/security-audit-panel-devtools-plugin';
 
 function App() {
   return (
@@ -68,7 +68,7 @@ import {
   SecurityAuditPanel, 
   createSecurityAuditDevToolsClient,
   initializeSecurityScanEngine 
-} from '@tanstack/security-audit-panel-devtools';
+} from '@sucoza/security-audit-panel-devtools-plugin';
 
 // Initialize with custom configuration
 const config = {
@@ -106,7 +106,7 @@ import {
   XSSScanner, 
   CSPAnalyzer, 
   SecretDetector 
-} from '@tanstack/security-audit-panel-devtools';
+} from '@sucoza/security-audit-panel-devtools-plugin';
 
 // Use scanners individually
 const xssScanner = new XSSScanner();
@@ -120,7 +120,7 @@ const vulnerabilities = await xssScanner.scan();
 ### Programmatic API
 
 ```typescript
-import { useSecurityAudit } from '@tanstack/security-audit-panel-devtools';
+import { useSecurityAudit } from '@sucoza/security-audit-panel-devtools-plugin';
 
 function MyComponent() {
   const { state, actions } = useSecurityAudit();
@@ -268,6 +268,10 @@ This plugin follows the TanStack DevTools architecture patterns:
 ## License
 
 MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.
 
 ## Security Notice
 

@@ -36,6 +36,7 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
     currentAudit,
     scanState,
     scanOptions,
+    ui,
     selectedIssue,
     filters,
     settings,
@@ -44,6 +45,7 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
     pauseScan,
     resumeScan,
     updateSettings,
+    selectTab,
     getIssueStats,
     getFilteredStats,
   } = useAccessibilityAudit();
@@ -68,7 +70,7 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
   };
 
   const renderActiveTab = () => {
-    switch (scanState.activeTab) {
+    switch (ui.activeTab) {
       case 'violations':
         return <IssueList />;
       case 'color-contrast':
@@ -224,52 +226,52 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
           icon={BarChart3}
           label="Overview"
           count={stats.total}
-          isActive={scanState.activeTab === 'overview'}
-          onClick={() => updateSettings({ activeTab: 'overview' })}
+          isActive={ui.activeTab === 'overview'}
+          onClick={() => selectTab('overview')}
         />
         
         <TabButton
           icon={AlertTriangle}
           label="Violations"
           count={stats.total}
-          isActive={scanState.activeTab === 'violations'}
-          onClick={() => updateSettings({ activeTab: 'violations' })}
+          isActive={ui.activeTab === 'violations'}
+          onClick={() => selectTab('violations')}
           severity={stats.critical > 0 ? 'critical' : stats.serious > 0 ? 'serious' : undefined}
         />
         
         <TabButton
           icon={Palette}
           label="Color Contrast"
-          isActive={scanState.activeTab === 'color-contrast'}
-          onClick={() => updateSettings({ activeTab: 'color-contrast' })}
+          isActive={ui.activeTab === 'color-contrast'}
+          onClick={() => selectTab('color-contrast')}
         />
         
         <TabButton
           icon={Keyboard}
           label="Keyboard Nav"
-          isActive={scanState.activeTab === 'keyboard'}
-          onClick={() => updateSettings({ activeTab: 'keyboard' })}
+          isActive={ui.activeTab === 'keyboard'}
+          onClick={() => selectTab('keyboard')}
         />
         
         <TabButton
           icon={Shield}
           label="ARIA"
-          isActive={scanState.activeTab === 'aria'}
-          onClick={() => updateSettings({ activeTab: 'aria' })}
+          isActive={ui.activeTab === 'aria'}
+          onClick={() => selectTab('aria')}
         />
         
         <TabButton
           icon={MapPin}
           label="Landmarks"
-          isActive={scanState.activeTab === 'landmarks'}
-          onClick={() => updateSettings({ activeTab: 'landmarks' })}
+          isActive={ui.activeTab === 'landmarks'}
+          onClick={() => selectTab('landmarks')}
         />
         
         <TabButton
           icon={Focus}
           label="Focus"
-          isActive={scanState.activeTab === 'focus'}
-          onClick={() => updateSettings({ activeTab: 'focus' })}
+          isActive={ui.activeTab === 'focus'}
+          onClick={() => selectTab('focus')}
         />
       </div>
 

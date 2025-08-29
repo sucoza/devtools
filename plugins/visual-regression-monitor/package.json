@@ -2,6 +2,7 @@
   "name": "@sucoza/visual-regression-monitor-devtools-plugin",
   "version": "0.0.1",
   "description": "DevTools plugin for visual regression testing with screenshot capture, comparison, and Playwright integration",
+  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -11,12 +12,13 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
+    "example": "cd example && npm run dev",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
     "format": "prettier --write src/**/*.{ts,tsx}",
-    "example": "cd example && npm run dev"
+    "prepare": "npm run build"
   },
   "keywords": [
     "devtools",
@@ -41,6 +43,7 @@
     "@sucoza/plugin-core": "workspace:*",
     "@sucoza/shared-components": "workspace:*",
     "@tanstack/devtools": "^0.6.2",
+    "@tanstack/devtools-event-client": "^0.2.3",
     "clsx": "^2.1.1",
     "lucide-react": "^0.542.0",
     "use-sync-external-store": "^1.5.0"

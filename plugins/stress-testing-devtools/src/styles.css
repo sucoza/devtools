@@ -460,7 +460,9 @@
   font-weight: 500;
   color: #1f2937;
   font-size: 13px;
-  truncate;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .request-path {

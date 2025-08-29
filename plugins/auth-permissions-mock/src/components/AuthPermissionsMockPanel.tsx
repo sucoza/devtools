@@ -8,18 +8,13 @@ import {
   Unlock, 
   Settings,
   AlertTriangle,
-  Check,
   X,
-  ChevronRight,
-  ChevronDown,
   Copy,
   Download,
   Upload,
-  RefreshCw,
   Trash2
 } from 'lucide-react';
 import { useAuthMockClient } from '../core/devtools-client';
-import { AuthState, MockScenario, Role, Permission } from '../types/auth';
 import '../styles.css';
 
 type TabType = 'overview' | 'scenarios' | 'roles' | 'permissions' | 'jwt' | 'storage' | 'settings';
@@ -447,7 +442,7 @@ export function AuthPermissionsMockPanel() {
                 <input 
                   type="checkbox" 
                   checked={state.mockMode}
-                  onChange={(e) => {
+                  onChange={() => {
                     // Toggle mock mode
                   }}
                 />

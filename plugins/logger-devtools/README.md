@@ -1,4 +1,4 @@
-# Logger DevTools Plugin for TanStack DevTools
+# Logger DevTools Plugin
 
 A comprehensive logging plugin for TanStack DevTools that provides advanced logging capabilities, real-time metrics monitoring, and powerful debugging features.
 
@@ -39,7 +39,7 @@ A comprehensive logging plugin for TanStack DevTools that provides advanced logg
 ## Installation
 
 ```bash
-npm install logger-tanstack-devtools-plugin
+npm install @sucoza/logger-devtools-plugin
 ```
 
 ## Basic Usage
@@ -47,7 +47,7 @@ npm install logger-tanstack-devtools-plugin
 ### 1. Import and Use the Logger
 
 ```typescript
-import { logger } from 'logger-tanstack-devtools-plugin';
+import { logger } from '@sucoza/logger-devtools-plugin';
 
 // Simple logging
 logger.info('Application started');
@@ -66,7 +66,7 @@ logger.debug('User action', {
 
 ```tsx
 import { TanStackDevtools } from '@tanstack/react-devtools';
-import { LoggerDevToolsPanel } from 'logger-tanstack-devtools-plugin';
+import { LoggerDevToolsPanel } from '@sucoza/logger-devtools-plugin';
 
 function App() {
   return (
@@ -283,3 +283,7 @@ Export filtered logs in multiple formats:
 ## License
 
 MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.

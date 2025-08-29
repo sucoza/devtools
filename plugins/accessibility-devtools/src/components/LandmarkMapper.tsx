@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import { 
   MapPin, 
   Eye, 
-  Tree, 
+  Trees, 
   RotateCw,
   ChevronRight,
   ChevronDown,
@@ -189,15 +189,17 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
     
     // Add temporary highlight
-    element.style.outline = '3px solid #8b5cf6';
-    element.style.outlineOffset = '2px';
-    element.style.backgroundColor = 'rgba(139, 92, 246, 0.1)';
-    
-    setTimeout(() => {
-      element.style.outline = '';
-      element.style.outlineOffset = '';
-      element.style.backgroundColor = '';
-    }, 2000);
+    if (element instanceof HTMLElement) {
+      element.style.outline = '3px solid #8b5cf6';
+      element.style.outlineOffset = '2px';
+      element.style.backgroundColor = 'rgba(139, 92, 246, 0.1)';
+      
+      setTimeout(() => {
+        element.style.outline = '';
+        element.style.outlineOffset = '';
+        element.style.backgroundColor = '';
+      }, 2000);
+    }
   };
 
   const toggleOverlay = () => {

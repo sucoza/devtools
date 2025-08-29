@@ -45,7 +45,7 @@ export function throttle<T extends (...args: any[]) => any>(
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean = false;
   
-  return function executedFunction(...args: Parameters<T>) {
+  return function executedFunction(this: any, ...args: Parameters<T>) {
     if (!inThrottle) {
       func.apply(this, args);
       inThrottle = true;
@@ -99,7 +99,8 @@ export function isElementVisible(element: Element): boolean {
  * Get element's text content, trimmed and normalized
  */
 export function getElementText(element: Element): string {
-  return element.textContent?.trim().replace(/\s+/g, ' ') || '';
+  const textContent = element.textContent;
+  return textContent ? textContent.trim().replace(/\s+/g, ' ') : '';
 }
 
 /**

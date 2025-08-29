@@ -43,7 +43,7 @@ A comprehensive accessibility auditing plugin for TanStack DevTools that provide
 ## Installation
 
 ```bash
-npm install @tanstack/accessibility-devtools
+npm install @sucoza/accessibility-devtools-plugin
 ```
 
 ## Usage
@@ -52,7 +52,7 @@ npm install @tanstack/accessibility-devtools
 
 ```tsx
 import React from 'react';
-import { AccessibilityDevToolsPanel } from '@tanstack/accessibility-devtools';
+import { AccessibilityDevToolsPanel } from '@sucoza/accessibility-devtools-plugin';
 
 function App() {
   return (
@@ -73,7 +73,7 @@ import React, { useEffect } from 'react';
 import { 
   AccessibilityDevToolsPanel,
   createAccessibilityDevToolsEventClient 
-} from '@tanstack/accessibility-devtools';
+} from '@sucoza/accessibility-devtools-plugin';
 
 function App() {
   useEffect(() => {
@@ -102,7 +102,7 @@ function App() {
 
 ```tsx
 import React from 'react';
-import { useAccessibilityAudit } from '@tanstack/accessibility-devtools';
+import { useAccessibilityAudit } from '@sucoza/accessibility-devtools-plugin';
 
 function MyComponent() {
   const {
@@ -137,7 +137,7 @@ function MyComponent() {
 ### Scan Options
 
 ```tsx
-import { useAccessibilityAudit } from '@tanstack/accessibility-devtools';
+import { useAccessibilityAudit } from '@sucoza/accessibility-devtools-plugin';
 
 function MyComponent() {
   const { updateScanOptions } = useAccessibilityAudit();
@@ -161,7 +161,7 @@ function MyComponent() {
 ### Settings
 
 ```tsx
-import { useAccessibilityAudit } from '@tanstack/accessibility-devtools';
+import { useAccessibilityAudit } from '@sucoza/accessibility-devtools-plugin';
 
 function MyComponent() {
   const { updateSettings } = useAccessibilityAudit();
@@ -265,6 +265,10 @@ npm run dev
 ## License
 
 MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.
 
 ## Powered By
 

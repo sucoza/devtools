@@ -35,6 +35,7 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
       const interval = setInterval(analyzeFocusableElements, 2000);
       return () => clearInterval(interval);
     }
+    return undefined;
   }, [isVisualizing]);
 
   const analyzeFocusableElements = () => {

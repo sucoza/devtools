@@ -1,4 +1,4 @@
-# API Mock & Interceptor DevTools Plugin
+# API Mock Interceptor DevTools Plugin
 
 A powerful DevTools plugin for intercepting, mocking, and modifying API responses directly in the browser. Perfect for development, testing, and debugging scenarios.
 
@@ -27,7 +27,7 @@ A powerful DevTools plugin for intercepting, mocking, and modifying API response
 ## Installation
 
 ```bash
-npm install @tanstack/api-mock-interceptor-devtools
+npm install @sucoza/api-mock-interceptor-devtools-plugin
 ```
 
 ## Usage
@@ -36,7 +36,7 @@ npm install @tanstack/api-mock-interceptor-devtools
 
 ```tsx
 import React from 'react';
-import { ApiMockInterceptorPanel, createApiMockInterceptorDevToolsClient } from '@tanstack/api-mock-interceptor-devtools';
+import { ApiMockInterceptorPanel, createApiMockInterceptorDevToolsClient } from '@sucoza/api-mock-interceptor-devtools-plugin';
 
 // Create the DevTools client
 const client = createApiMockInterceptorDevToolsClient();
@@ -56,7 +56,7 @@ export default App;
 
 ```tsx
 import React from 'react';
-import { useInterceptor } from '@tanstack/api-mock-interceptor-devtools';
+import { useInterceptor } from '@sucoza/api-mock-interceptor-devtools-plugin';
 
 function CustomComponent() {
   const { state, actions, selectors } = useInterceptor();
@@ -101,7 +101,7 @@ function CustomComponent() {
 Handles the core interception of fetch and XMLHttpRequest calls.
 
 ```tsx
-import { getApiInterceptor } from '@tanstack/api-mock-interceptor-devtools';
+import { getApiInterceptor } from '@sucoza/api-mock-interceptor-devtools-plugin';
 
 const interceptor = getApiInterceptor();
 interceptor.enableInterception();
@@ -114,7 +114,7 @@ interceptor.addListener((apiCall) => {
 Manages request matching logic for mock rules.
 
 ```tsx
-import { getRequestMatcher } from '@tanstack/api-mock-interceptor-devtools';
+import { getRequestMatcher } from '@sucoza/api-mock-interceptor-devtools-plugin';
 
 const matcher = getRequestMatcher();
 const isMatch = matcher.matches(request, {
@@ -127,7 +127,7 @@ const isMatch = matcher.matches(request, {
 Generates mock responses and simulates network conditions.
 
 ```tsx
-import { getMockResponseEngine } from '@tanstack/api-mock-interceptor-devtools';
+import { getMockResponseEngine } from '@sucoza/api-mock-interceptor-devtools-plugin';
 
 const mocker = getMockResponseEngine();
 const response = await mocker.createMockResponse(request, {
@@ -245,7 +245,7 @@ actions.setNetworkConditions({
 
 ### Export Configuration
 ```tsx
-import { getStorageEngine } from '@tanstack/api-mock-interceptor-devtools';
+import { getStorageEngine } from '@sucoza/api-mock-interceptor-devtools-plugin';
 
 const storage = getStorageEngine();
 const config = storage.exportData();
@@ -273,7 +273,7 @@ import type {
   MockResponse,
   HttpMethod,
   DevToolsState
-} from '@tanstack/api-mock-interceptor-devtools';
+} from '@sucoza/api-mock-interceptor-devtools-plugin';
 ```
 
 ## Browser Compatibility
@@ -293,4 +293,8 @@ import type {
 
 ## License
 
-MIT © TanStack
+MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.

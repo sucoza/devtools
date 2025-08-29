@@ -51,7 +51,7 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
 }));
 
 // Mock Chrome DevTools Protocol APIs
-global.chrome = {
+(global as any).chrome = {
   runtime: {
     onMessage: {
       addListener: vi.fn(),
@@ -113,8 +113,8 @@ global.MutationObserver = vi.fn().mockImplementation(() => ({
   takeRecords: vi.fn(),
 }));
 
-// Mock PerformanceObserver
-global.PerformanceObserver = vi.fn().mockImplementation(() => ({
+// Mock PerformanceObserver  
+(global as any).PerformanceObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   disconnect: vi.fn(),
   takeRecords: vi.fn(),
@@ -127,7 +127,7 @@ HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
   getImageData: vi.fn(() => ({ data: [] })),
   putImageData: vi.fn(),
   drawImage: vi.fn(),
-}));
+})) as any;
 
 HTMLCanvasElement.prototype.toDataURL = vi.fn(() => 'data:image/png;base64,mock');
 HTMLCanvasElement.prototype.toBlob = vi.fn();
@@ -152,15 +152,15 @@ global.fetch = vi.fn(() =>
     text: () => Promise.resolve(''),
     blob: () => Promise.resolve(new Blob()),
   })
-);
+) as any;
 
 // Mock WebSocket
-global.WebSocket = vi.fn().mockImplementation(() => ({
+(global as any).WebSocket = vi.fn().mockImplementation(() => ({
   send: vi.fn(),
   close: vi.fn(),
   addEventListener: vi.fn(),
   removeEventListener: vi.fn(),
-  readyState: WebSocket.OPEN,
+  readyState: 1, // WebSocket.OPEN
 }));
 
 // Mock crypto for generating IDs

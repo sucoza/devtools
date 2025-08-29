@@ -1,4 +1,4 @@
-# Form State Inspector - TanStack DevTools Plugin
+# Form State Inspector DevTools Plugin
 
 A comprehensive form debugging and state management visualization tool for TanStack DevTools. Monitor, debug, and optimize your forms with real-time insights, validation tracking, and performance metrics.
 
@@ -29,7 +29,7 @@ A comprehensive form debugging and state management visualization tool for TanSt
 ## Installation
 
 ```bash
-npm install form-state-inspector-tanstack-devtools-plugin
+npm install @sucoza/form-state-inspector-devtools-plugin
 ```
 
 ## Quick Start
@@ -37,7 +37,7 @@ npm install form-state-inspector-tanstack-devtools-plugin
 ### 1. Basic Setup
 
 ```tsx
-import { formStateInspectorPlugin } from 'form-state-inspector-tanstack-devtools-plugin';
+import { formStateInspectorPlugin } from '@sucoza/form-state-inspector-devtools-plugin';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 
 function App() {
@@ -56,7 +56,7 @@ function App() {
 Or if you want to use it alongside other plugins:
 
 ```tsx
-import { formStateInspectorPlugin } from 'form-state-inspector-tanstack-devtools-plugin';
+import { formStateInspectorPlugin } from '@sucoza/form-state-inspector-devtools-plugin';
 import { otherPlugin } from 'other-tanstack-plugin';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 
@@ -72,7 +72,7 @@ import { TanStackDevtools } from '@tanstack/react-devtools';
 ### 2. Manual Form Tracking
 
 ```tsx
-import { registerForm, updateField, validateField } from 'form-state-inspector-tanstack-devtools-plugin';
+import { registerForm, updateField, validateField } from '@sucoza/form-state-inspector-devtools-plugin';
 
 // Register a form
 useEffect(() => {
@@ -103,7 +103,7 @@ const handleChange = (fieldName: string, value: any) => {
 
 ```tsx
 import { useForm } from 'react-hook-form';
-import { useFormStateInspector } from 'form-state-inspector-tanstack-devtools-plugin';
+import { useFormStateInspector } from '@sucoza/form-state-inspector-devtools-plugin';
 
 function MyForm() {
   const methods = useForm();
@@ -123,7 +123,7 @@ function MyForm() {
 
 ```tsx
 import { Formik } from 'formik';
-import { formikDevToolsPlugin } from 'form-state-inspector-tanstack-devtools-plugin';
+import { formikDevToolsPlugin } from '@sucoza/form-state-inspector-devtools-plugin';
 
 function MyFormikForm() {
   return (
@@ -142,7 +142,7 @@ function MyFormikForm() {
 ### 5. Native HTML Form Tracking
 
 ```tsx
-import { trackHTMLForm } from 'form-state-inspector-tanstack-devtools-plugin';
+import { trackHTMLForm } from '@sucoza/form-state-inspector-devtools-plugin';
 
 useEffect(() => {
   const form = document.getElementById('my-html-form');
@@ -161,7 +161,7 @@ useEffect(() => {
 ### Form Replay
 
 ```tsx
-import { formReplayEngine } from 'form-state-inspector-tanstack-devtools-plugin';
+import { formReplayEngine } from '@sucoza/form-state-inspector-devtools-plugin';
 
 // Replay form interactions
 await formReplayEngine.replayForm('my-form', {
@@ -197,7 +197,7 @@ const mockData = formReplayEngine.generateMockData('my-form');
 
 ```tsx
 import * as Yup from 'yup';
-import { setValidationSchema, parseYupSchema } from 'form-state-inspector-tanstack-devtools-plugin';
+import { setValidationSchema, parseYupSchema } from '@sucoza/form-state-inspector-devtools-plugin';
 
 const schema = Yup.object({
   email: Yup.string().email().required(),
@@ -211,7 +211,7 @@ setValidationSchema('my-form', parseYupSchema(schema));
 ### Custom Form Library Adapter
 
 ```tsx
-import { createFormAdapter } from 'form-state-inspector-tanstack-devtools-plugin';
+import { createFormAdapter } from '@sucoza/form-state-inspector-devtools-plugin';
 
 const adapter = createFormAdapter({
   formId: 'custom-form',
@@ -311,6 +311,10 @@ Contributions are welcome! Please read our contributing guidelines before submit
 ## License
 
 MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.
 
 ## Support
 

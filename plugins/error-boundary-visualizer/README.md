@@ -26,7 +26,7 @@ A comprehensive React DevTools plugin for visualizing, debugging, and managing e
 ## Installation
 
 ```bash
-npm install @tanstack/error-boundary-visualizer-plugin
+npm install @sucoza/error-boundary-visualizer-devtools-plugin
 ```
 
 ## Quick Start
@@ -34,7 +34,7 @@ npm install @tanstack/error-boundary-visualizer-plugin
 ### Basic Setup
 
 ```tsx
-import { ErrorBoundaryDevTools, ErrorBoundaryWrapper } from '@tanstack/error-boundary-visualizer-plugin'
+import { ErrorBoundaryDevTools, ErrorBoundaryWrapper } from '@sucoza/error-boundary-visualizer-devtools-plugin'
 
 function App() {
   return (
@@ -64,7 +64,7 @@ function App() {
 ### Using the Hook
 
 ```tsx
-import { useErrorBoundaryDevTools } from '@tanstack/error-boundary-visualizer-plugin'
+import { useErrorBoundaryDevTools } from '@sucoza/error-boundary-visualizer-devtools-plugin'
 
 function MyComponent() {
   const { addError, metrics, config } = useErrorBoundaryDevTools()
@@ -260,6 +260,10 @@ Contributions are welcome! Please read our contributing guidelines before submit
 ## License
 
 MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.
 
 ## Support
 

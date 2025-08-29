@@ -1,4 +1,4 @@
-# Zustand DevTools Plugin for TanStack DevTools
+# Zustand DevTools Plugin
 
 A custom plugin for TanStack DevTools that allows you to inspect and debug Zustand stores in real-time.
 
@@ -14,7 +14,7 @@ A custom plugin for TanStack DevTools that allows you to inspect and debug Zusta
 ## Installation
 
 ```bash
-npm install @tanstack/devtools-event-client zustand
+npm install @sucoza/zustand-devtools-plugin
 ```
 
 ## Usage
@@ -25,7 +25,7 @@ The easiest way to integrate is using the `createDevToolsStore` wrapper:
 
 ```typescript
 import { create } from 'zustand';
-import { createDevToolsStore } from './zustand-devtools-plugin';
+import { createDevToolsStore } from '@sucoza/zustand-devtools-plugin';
 
 interface UserState {
   user: User | null;
@@ -54,7 +54,7 @@ export const useUserStore = createDevToolsStore(
 If you have existing stores, you can register them manually:
 
 ```typescript
-import { useRegisterZustandStore } from './zustand-devtools-plugin';
+import { useRegisterZustandStore } from '@sucoza/zustand-devtools-plugin';
 
 // In your component
 function MyComponent() {
@@ -69,7 +69,7 @@ function MyComponent() {
 
 ```tsx
 import { TanStackDevtools } from '@tanstack/react-devtools';
-import { ZustandDevToolsPanel } from './zustand-devtools-plugin';
+import { ZustandDevToolsPanel } from '@sucoza/zustand-devtools-plugin';
 
 function App() {
   return (
@@ -96,7 +96,7 @@ function App() {
 For more detailed action tracking, use the `devtoolsMiddleware`:
 
 ```typescript
-import { devtoolsMiddleware } from './zustand-devtools-plugin';
+import { devtoolsMiddleware } from '@sucoza/zustand-devtools-plugin';
 
 const useStore = create<State>()(
   devtoolsMiddleware((set) => ({
@@ -110,7 +110,7 @@ const useStore = create<State>()(
 You can also access store information programmatically:
 
 ```typescript
-import { zustandRegistry } from './zustand-devtools-plugin';
+import { zustandRegistry } from '@sucoza/zustand-devtools-plugin';
 
 // Get all registered stores
 const stores = zustandRegistry.getStores();
@@ -154,3 +154,7 @@ React component for the DevTools panel UI.
 ## License
 
 MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.

@@ -1,323 +1,405 @@
-# I18n DevTools Plugin
+# i18n DevTools Plugin
 
-A comprehensive internationalization (i18n) inspector plugin for TanStack DevTools, providing advanced translation management, missing key detection, and performance optimization tools.
+A comprehensive internationalization debugging plugin for TanStack DevTools that provides real-time translation key tracking, missing key detection, language coverage analysis, formatting preview, bundle size optimization, and layout testing for multilingual React applications.
 
 ## Features
 
-### 🔑 Translation Key Explorer
-- **Real-time key tracking** - Monitor translation usage across your application
-- **Search and filtering** - Find keys by name, namespace, or content
-- **Usage analytics** - See which keys are used most frequently
-- **Missing key detection** - Identify and prioritize untranslated content
+### 🌐 **Translation Key Management**
+- Real-time translation key usage tracking and monitoring
+- Missing translation key detection with component source mapping
+- Translation key coverage analysis across languages and namespaces
+- Dynamic key generation and interpolation value tracking
 
-### 🌍 Language Management
-- **Language switcher** - Test your app in different languages instantly
-- **Coverage visualization** - Heat maps and charts showing translation completeness
-- **RTL/LTR support** - Automatic detection and testing for right-to-left languages
-- **Completeness metrics** - Track translation progress across all languages
+### 🔍 **Translation Coverage Analysis**
+- Comprehensive language coverage reporting and statistics
+- Namespace-level translation completeness tracking
+- Translation quality assessment and consistency analysis
+- Dead key detection and cleanup recommendations
 
-### ✏️ Inline Translation Editor
-- **Live editing** - Edit translations directly in DevTools
-- **Multi-language support** - Edit multiple languages simultaneously
-- **Preview mode** - See how interpolation and formatting will look
-- **Batch operations** - Add, edit, or delete multiple translations at once
+### 📝 **Interactive Translation Editor**
+- In-browser translation editing with real-time preview
+- Context-aware translation suggestions and validation
+- Pluralization and interpolation testing interface
+- Translation import/export functionality
 
-### 📊 Advanced Analytics
-- **Bundle size analysis** - Optimize translation bundle sizes per locale
-- **Performance metrics** - Monitor i18n initialization and lookup times
-- **Coverage reports** - Detailed breakdowns by namespace and language
-- **Usage patterns** - Identify unused or duplicate translations
+### 🎨 **Format & Layout Testing**
+- Live formatting preview for dates, numbers, and currencies
+- RTL (Right-to-Left) layout testing and validation
+- Text expansion testing for different languages
+- UI component overflow and truncation detection
 
-### 🧪 Layout Testing
-- **RTL layout testing** - Verify right-to-left language compatibility
-- **Text overflow detection** - Find UI elements that break with longer translations
-- **Responsive testing** - Check layouts across different screen sizes
-- **Visual comparisons** - Before/after screenshots of layout changes
+### 📦 **Bundle Size Analysis**
+- Translation bundle size analysis and optimization
+- Namespace-based bundle splitting recommendations
+- Unused translation detection and cleanup suggestions
+- Lazy loading impact analysis and recommendations
 
-### 🎨 Format Preview
-- **Date formatting** - Preview how dates appear in different locales
-- **Number formatting** - Test currency, percentages, and decimal formats
-- **Pluralization rules** - Verify plural forms across languages
-- **Custom formatting** - Test interpolation and variable substitution
+### ⚡ **Performance Monitoring**
+- Translation loading performance metrics and analysis
+- Cache hit rate monitoring and optimization
+- Translation lookup performance profiling
+- Memory usage analysis for large translation sets
+
+### 🔧 **Framework Integration**
+- react-i18next integration with hook usage tracking
+- i18next configuration analysis and optimization
+- Custom i18n framework adapter support
+- Translation provider performance monitoring
 
 ## Installation
 
 ```bash
-npm install @tanstack/i18n-devtools-plugin
+npm install @sucoza/i18n-devtools-plugin
 ```
 
-## Quick Start
+## Usage
 
-### With react-i18next
+### Basic Setup
 
 ```tsx
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import { createReactI18nextAdapter } from '@tanstack/i18n-devtools-plugin';
+import React from 'react';
+import { I18nDevToolsPanel } from '@sucoza/i18n-devtools-plugin';
 
-// Initialize i18next
-i18n
-  .use(initReactI18next)
-  .init({
-    // your i18next configuration
-  });
-
-// Create and initialize the DevTools adapter
-const adapter = createReactI18nextAdapter(i18n);
-
-// In your DevTools setup
-import { I18nDevToolsPanel } from '@tanstack/i18n-devtools-plugin';
-
-function DevToolsWrapper() {
+function App() {
   return (
-    <TanStackDevtools>
+    <div>
+      {/* Your app content */}
+      
+      {/* i18n DevTools Panel */}
       <I18nDevToolsPanel />
-    </TanStackDevtools>
+    </div>
   );
 }
 ```
 
-### Manual Setup
+### With Event Client Integration
 
 ```tsx
-import { I18nEventClient, I18nDevToolsPanel } from '@tanstack/i18n-devtools-plugin';
+import React, { useEffect } from 'react';
+import { 
+  I18nDevToolsPanel,
+  createI18nEventClient 
+} from '@sucoza/i18n-devtools-plugin';
 
-// Create event client
-const eventClient = new I18nEventClient({
-  pluginId: 'i18n-devtools',
-  enabled: true,
-  trackUsage: true,
-  debugMode: false
-});
+function App() {
+  useEffect(() => {
+    // Initialize the i18n event client
+    const client = createI18nEventClient();
+    
+    // Optional: Listen for i18n events
+    const unsubscribe = client.subscribe((event, type) => {
+      if (type === 'i18n:missing-key') {
+        console.log('Missing translation key detected:', event);
+      }
+      if (type === 'i18n:language-change') {
+        console.log('Language changed:', event);
+      }
+      if (type === 'i18n:translation-updated') {
+        console.log('Translation updated:', event);
+      }
+    });
+    
+    return unsubscribe;
+  }, []);
 
-// Use in your DevTools
-function MyDevTools() {
-  return <I18nDevToolsPanel />;
+  return (
+    <div>
+      <I18nDevToolsPanel />
+    </div>
+  );
 }
 ```
 
-## API Reference
+### React-i18next Integration
 
-### Event Client
+```tsx
+import React from 'react';
+import { I18nDevToolsPanel, ReactI18nextAdapter } from '@sucoza/i18n-devtools-plugin';
+import { useTranslation } from 'react-i18next';
 
-```typescript
-class I18nEventClient {
-  constructor(config?: Partial<I18nDevToolsConfig>)
-  emit<T extends I18nEventType>(type: T, payload: I18nEventPayload<T>): void
-  on<T extends I18nEventType>(type: T, callback: EventCallback<T>): () => void
-  setEnabled(enabled: boolean): void
-  setDebugMode(enabled: boolean): void
-  destroy(): void
+function App() {
+  const { i18n } = useTranslation();
+
+  return (
+    <div>
+      <I18nDevToolsPanel 
+        adapter={new ReactI18nextAdapter(i18n)}
+      />
+    </div>
+  );
 }
 ```
 
-### React i18next Adapter
+### Using the Hook
 
-```typescript
-class ReactI18nextAdapter {
-  constructor(i18nInstance: i18n)
-  destroy(): void
-}
+```tsx
+import React from 'react';
+import { useI18nDevTools } from '@sucoza/i18n-devtools-plugin';
 
-function createReactI18nextAdapter(i18nInstance: i18n): ReactI18nextAdapter
-```
-
-### DevTools Panel Props
-
-```typescript
-interface I18nDevToolsPanelProps {
-  // All props are optional - the panel manages its own state
+function MyComponent() {
+  const {
+    currentLanguage,
+    availableLanguages,
+    missingKeys,
+    translationKeys,
+    performanceMetrics,
+    changeLanguage,
+    updateTranslation,
+    addTranslationKey,
+    analyzeBundle,
+    testLayout
+  } = useI18nDevTools();
+  
+  return (
+    <div>
+      <div>
+        <h3>i18n Status</h3>
+        <p>Current Language: {currentLanguage}</p>
+        <p>Available Languages: {availableLanguages.length}</p>
+        <p>Missing Keys: {missingKeys.length}</p>
+        <p>Cache Hit Rate: {(performanceMetrics.cacheHitRate * 100).toFixed(1)}%</p>
+      </div>
+      
+      <div>
+        <h3>Language Switcher</h3>
+        {availableLanguages.map(lang => (
+          <button 
+            key={lang.code}
+            onClick={() => changeLanguage(lang.code)}
+            className={lang.code === currentLanguage ? 'active' : ''}
+          >
+            {lang.name} ({lang.completeness}%)
+          </button>
+        ))}
+      </div>
+      
+      {missingKeys.length > 0 && (
+        <div>
+          <h3>Missing Translation Keys</h3>
+          {missingKeys.slice(0, 10).map(key => (
+            <div key={key.key}>
+              <p><strong>{key.namespace}:{key.key}</strong></p>
+              <p>Used in: {key.usedAt.join(', ')}</p>
+              <button onClick={() => updateTranslation(key.namespace, key.key, 'TODO: Add translation')}>
+                Add Translation
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 ```
 
 ## Configuration
 
-### DevTools Config
+### Framework Adapter Setup
 
-```typescript
-interface I18nDevToolsConfig {
-  pluginId: string;              // Unique plugin identifier
-  enabled: boolean;              // Enable/disable the plugin
-  trackUsage: boolean;           // Track translation key usage
-  trackPerformance: boolean;     // Monitor performance metrics
-  debugMode: boolean;            // Enable debug logging
-  autoDetectMissing: boolean;    // Automatically detect missing keys
-  supportedFormats: string[];    // Export/import formats
-  maxHistorySize: number;        // Maximum history entries to keep
-  refreshInterval: number;       // Auto-refresh interval in ms
-}
-```
+```tsx
+import { ReactI18nextAdapter } from '@sucoza/i18n-devtools-plugin';
+import i18n from './i18n'; // Your i18next configuration
 
-### Adapter Options
-
-```typescript
-// React i18next adapter automatically configures itself
-// based on your i18next instance configuration
-```
-
-## Events
-
-The plugin emits various events that you can listen to:
-
-```typescript
-// Translation usage tracking
-eventClient.on('i18n-translation-used', (event) => {
-  console.log('Translation used:', event.payload.usage);
-});
-
-// Missing key detection
-eventClient.on('i18n-missing-key', (event) => {
-  console.log('Missing key:', event.payload.key);
-});
-
-// Language changes
-eventClient.on('i18n-language-changed', (event) => {
-  console.log('Language changed from', event.payload.from, 'to', event.payload.to);
-});
-
-// Performance metrics
-eventClient.on('i18n-performance-metrics', (event) => {
-  console.log('Performance:', event.payload.metrics);
-});
-```
-
-## Advanced Usage
-
-### Custom Adapters
-
-Create your own adapter for other i18n libraries:
-
-```typescript
-import { i18nEventClient } from '@tanstack/i18n-devtools-plugin';
-
-class MyI18nAdapter {
-  constructor(myI18nInstance) {
-    this.i18n = myI18nInstance;
-    
-    // Hook into your i18n library's events
-    this.i18n.onTranslation((key, value, language) => {
-      i18nEventClient.emit('i18n-translation-used', {
-        usage: {
-          key,
-          namespace: 'default',
-          componentPath: 'unknown',
-          usage: { type: 't' },
-          timestamp: Date.now()
-        }
-      });
-    });
-    
-    // Send initial state
-    this.sendStateUpdate();
-  }
-  
-  sendStateUpdate() {
-    const state = this.buildI18nState();
-    i18nEventClient.emit('i18n-state-update', { state });
-  }
-}
-```
-
-### Bundle Analysis
-
-The bundle analyzer can help optimize your translation files:
-
-```typescript
-// Listen for bundle analysis results
-eventClient.on('i18n-bundle-analysis-response', (event) => {
-  const analysis = event.payload.analysis;
-  
-  analysis.forEach(bundle => {
-    console.log(`${bundle.namespace} (${bundle.language}): ${bundle.size} bytes`);
-    
-    if (bundle.duplicates?.length > 0) {
-      console.warn('Duplicate keys:', bundle.duplicates);
-    }
-    
-    if (bundle.unusedKeys?.length > 0) {
-      console.warn('Unused keys:', bundle.unusedKeys);
-    }
+function MyComponent() {
+  const adapter = new ReactI18nextAdapter(i18n, {
+    trackUsage: true,
+    detectMissingKeys: true,
+    enablePerformanceMonitoring: true,
+    enableBundleAnalysis: true,
   });
-});
 
-// Request analysis
-eventClient.emit('i18n-bundle-analysis-request', {
-  namespaces: ['common', 'auth', 'dashboard'],
-  languages: ['en', 'es', 'fr']
-});
+  return (
+    <I18nDevToolsPanel adapter={adapter} />
+  );
+}
 ```
 
-### Performance Monitoring
+### Analysis Options
 
-Monitor your i18n performance:
+```tsx
+import { useI18nDevTools } from '@sucoza/i18n-devtools-plugin';
+
+function MyComponent() {
+  const { updateAnalysisOptions } = useI18nDevTools();
+  
+  // Configure analysis behavior
+  updateAnalysisOptions({
+    trackKeyUsage: true,
+    detectMissingKeys: true,
+    analyzeBundleSize: true,
+    enablePerformanceMetrics: true,
+    enableLayoutTesting: true,
+    maxKeysToTrack: 1000,
+    bundleAnalysisInterval: 30000, // 30 seconds
+  });
+}
+```
+
+### Testing Configuration
+
+```tsx
+import { useI18nDevTools } from '@sucoza/i18n-devtools-plugin';
+
+function MyComponent() {
+  const { updateTestingOptions } = useI18nDevTools();
+  
+  // Configure layout testing
+  updateTestingOptions({
+    testLanguages: ['en', 'ar', 'de', 'ja'], // Languages to test
+    enableRTLTesting: true,
+    enableOverflowDetection: true,
+    enableTruncationDetection: true,
+    captureScreenshots: true,
+    testViewports: ['mobile', 'tablet', 'desktop'],
+  });
+}
+```
+
+## Components
+
+### I18nDevToolsPanel
+The main panel component that provides the complete i18n debugging interface with multiple tabs.
+
+### Individual Components
+You can also use individual components for specific functionality:
+
+- `KeyExplorer` - Translation key browser and search interface
+- `LanguageSwitcher` - Language selection and switching controls
+- `MissingKeysPanel` - Missing translation detection and management
+- `TranslationEditor` - In-browser translation editing interface
+- `CoverageVisualization` - Translation coverage charts and statistics
+- `FormatPreview` - Date, number, and currency formatting preview
+- `BundleAnalyzer` - Translation bundle size analysis
+- `LayoutTester` - Cross-language layout testing interface
+- `PerformanceMetrics` - i18n performance monitoring dashboard
+
+## API Reference
+
+### Types
 
 ```typescript
-// Listen for performance updates
-eventClient.on('i18n-performance-metrics', (event) => {
-  const metrics = event.payload.metrics;
-  
-  if (metrics.initTime > 100) {
-    console.warn('Slow i18n initialization:', metrics.initTime + 'ms');
-  }
-  
-  if (metrics.cacheHitRate < 0.8) {
-    console.warn('Low cache hit rate:', metrics.cacheHitRate);
-  }
-  
-  if (metrics.missedTranslationsCount > 10) {
-    console.warn('High miss rate:', metrics.missedTranslationsCount);
-  }
-});
+interface TranslationKey {
+  key: string;
+  namespace: string;
+  defaultValue?: string;
+  interpolation?: Record<string, any>;
+  count?: number;
+  context?: string;
+  usedAt: string[];
+  lastUsed: number;
+}
+
+interface LanguageInfo {
+  code: string;
+  name: string;
+  nativeName: string;
+  isRTL: boolean;
+  completeness: number;
+  totalKeys: number;
+  translatedKeys: number;
+  missingKeys: string[];
+  isDefault?: boolean;
+  isActive?: boolean;
+}
+
+interface I18nState {
+  currentLanguage: string;
+  fallbackLanguage: string;
+  availableLanguages: LanguageInfo[];
+  namespaces: NamespaceInfo[];
+  translations: Translation[];
+  translationKeys: TranslationKey[];
+  missingKeys: TranslationKey[];
+  isLoading: boolean;
+  lastUpdated: number;
+}
+
+interface I18nPerformanceMetrics {
+  initTime: number;
+  translationTime: number;
+  bundleLoadTime: Record<string, number>;
+  memoryUsage: number;
+  cacheHitRate: number;
+  missedTranslationsCount: number;
+  averageKeyLookupTime: number;
+}
 ```
 
-## TypeScript Support
-
-The plugin is written in TypeScript and provides comprehensive type definitions:
+### Event Client
 
 ```typescript
-import type {
-  I18nState,
-  TranslationKey,
-  Translation,
-  LanguageInfo,
-  NamespaceInfo,
-  I18nEventType,
-  I18nEventPayload
-} from '@tanstack/i18n-devtools-plugin';
+interface I18nEvents {
+  'i18n:state': I18nState;
+  'i18n:language-change': { from: string; to: string; timestamp: number };
+  'i18n:missing-key': { key: TranslationKey; component: string };
+  'i18n:translation-updated': { namespace: string; key: string; value: string };
+  'i18n:key-usage': { key: TranslationKey; component: string };
+  'i18n:bundle-loaded': { namespace: string; size: number; loadTime: number };
+  'i18n:performance-metrics': I18nPerformanceMetrics;
+  'i18n:layout-test': { language: string; results: LayoutTestResult[] };
+}
 ```
 
-## Browser Compatibility
+### Framework Adapters
 
-- Chrome 70+
-- Firefox 63+
-- Safari 12+
-- Edge 79+
+```typescript
+interface I18nAdapter {
+  getCurrentLanguage(): string;
+  getAvailableLanguages(): LanguageInfo[];
+  changeLanguage(language: string): Promise<void>;
+  getTranslation(namespace: string, key: string): string | undefined;
+  updateTranslation(namespace: string, key: string, value: string): void;
+  getNamespaces(): NamespaceInfo[];
+  trackKeyUsage(key: TranslationKey, component: string): void;
+  getPerformanceMetrics(): I18nPerformanceMetrics;
+}
 
-## Performance
+class ReactI18nextAdapter implements I18nAdapter {
+  constructor(i18nInstance: i18n, options?: AdapterOptions);
+  // Implementation methods...
+}
+```
 
-The plugin is designed to have minimal impact on your application:
+## Examples
 
-- **Lazy initialization** - Only loads when DevTools are open
-- **Efficient tracking** - Uses debounced updates to prevent performance issues
-- **Memory management** - Automatically cleans up old data
-- **Production safety** - Can be safely left in production builds
+Check out the `example/` directory for a complete demonstration of the plugin with various i18n configurations and testing scenarios.
+
+To run the example:
+
+```bash
+cd example
+npm install
+npm run dev
+```
+
+The example includes:
+- react-i18next integration with multiple languages
+- Missing translation key scenarios
+- Layout testing with RTL languages
+- Translation bundle analysis examples
+- Performance monitoring demonstrations
+- Interactive translation editing examples
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+MIT
 
-## Related Projects
+---
 
-- [TanStack DevTools](https://github.com/TanStack/react-devtools)
-- [react-i18next](https://react.i18next.com/)
-- [i18next](https://www.i18next.com/)
+Part of the @sucoza TanStack DevTools ecosystem.
 
-## Support
+## Powered By
 
-- [Documentation](https://tanstack.com/devtools)
-- [Discord Community](https://discord.gg/tanstack)
-- [GitHub Issues](https://github.com/TanStack/devtools/issues)
+- [react-i18next](https://react.i18next.com/) - React internationalization framework
+- [i18next](https://www.i18next.com/) - Internationalization framework
+- [TanStack DevTools](https://tanstack.com/devtools) - Development tools framework
+- [Zustand](https://github.com/pmndrs/zustand) - State management
+- [Intl](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) - Native internationalization APIs

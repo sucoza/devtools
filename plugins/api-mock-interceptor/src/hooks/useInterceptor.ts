@@ -8,7 +8,7 @@ import { getDevToolsStore } from '../core/devtools-store';
 export function useInterceptor() {
   const store = getDevToolsStore();
   
-  const state = useSyncExternalStore(
+  const state = useSyncExternalStore<DevToolsState>(
     store.subscribe.bind(store),
     store.getSnapshot.bind(store)
   );

@@ -580,6 +580,28 @@ export interface CDPCustomPreview {
 }
 
 /**
+ * Event execution result
+ */
+export interface EventExecutionResult {
+  success: boolean;
+  duration: number;
+  error?: string;
+  screenshot?: string;
+  assertions?: AssertionResult[];
+}
+
+/**
+ * Assertion result
+ */
+export interface AssertionResult {
+  type: string;
+  expected: any;
+  actual: any;
+  passed: boolean;
+  message: string;
+}
+
+/**
  * Browser automation engine interface
  */
 export interface AutomationEngine {
@@ -1290,4 +1312,97 @@ export interface CollaborationNotification {
   actionUrl?: string;
   createdAt: number;
   expiresAt?: number;
+}
+
+/**
+ * Test case for automation testing
+ */
+export interface TestCase {
+  id: string;
+  name: string;
+  description: string;
+  events: string[]; // Event IDs
+  assertions: TestAssertion[];
+  metadata: TestCaseMetadata;
+  createdAt: number;
+  updatedAt: number;
+}
+
+/**
+ * Test assertion for validation
+ */
+export interface TestAssertion {
+  id: string;
+  type: string;
+  selector: string;
+  expected: any;
+  description: string;
+}
+
+/**
+ * Test case metadata
+ */
+export interface TestCaseMetadata {
+  sessionId: string;
+  eventCount: number;
+  duration: number;
+  url: string;
+  viewport: ViewportInfo;
+  assertions: number;
+  selectors: number;
+  tags?: string[];
+  category?: string;
+}
+
+/**
+ * Generated test code
+ */
+export interface GeneratedTest {
+  id: string;
+  name: string;
+  format: TestFormat;
+  framework: TestFramework;
+  code: string;
+  metadata: TestCaseMetadata;
+  createdAt: number;
+}
+
+/**
+ * Test format types
+ */
+export type TestFormat = 
+  | 'playwright'
+  | 'puppeteer'
+  | 'selenium'
+  | 'cypress'
+  | 'testcafe'
+  | 'webdriver'
+  | 'typescript'
+  | 'javascript'
+  | 'custom';
+
+/**
+ * Test framework types
+ */
+export type TestFramework = 
+  | 'jest'
+  | 'mocha'
+  | 'jasmine'
+  | 'qunit'
+  | 'vitest'
+  | 'playwright'
+  | 'custom';
+
+/**
+ * Recording session for organized testing
+ */
+export interface RecordingSession {
+  id: string;
+  name: string;
+  startTime: number;
+  url: string;
+  viewport: ViewportInfo;
+  userAgent: string;
+  events: string[]; // Event IDs
+  metadata: Record<string, any>;
 }

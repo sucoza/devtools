@@ -1,4 +1,4 @@
-# Router DevTools Enhanced
+# Router DevTools Plugin
 
 A comprehensive router debugging plugin for TanStack DevTools with live parameter editing, route tree visualization, and navigation timeline tracking.
 
@@ -13,7 +13,7 @@ A comprehensive router debugging plugin for TanStack DevTools with live paramete
 ## Installation
 
 ```bash
-npm install @tanstack/router-devtools-enhanced
+npm install @sucoza/router-devtools-plugin
 ```
 
 ## Quick Start
@@ -23,7 +23,7 @@ npm install @tanstack/router-devtools-enhanced
 ```tsx
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useRouterDevTools } from '@tanstack/router-devtools-enhanced';
+import { useRouterDevTools } from '@sucoza/router-devtools-plugin';
 
 function App() {
   // Initialize router DevTools
@@ -44,7 +44,7 @@ function App() {
 ### Manual Initialization
 
 ```tsx
-import { initializeRouterDevTools } from '@tanstack/router-devtools-enhanced';
+import { initializeRouterDevTools } from '@sucoza/router-devtools-plugin';
 
 // Initialize manually
 const cleanup = initializeRouterDevTools();
@@ -57,7 +57,7 @@ cleanup();
 
 ```tsx
 import { TanStackRouterDevtools } from '@tanstack/router-devtools';
-import { RouterDevToolsPanel } from '@tanstack/router-devtools-enhanced';
+import { RouterDevToolsPanel } from '@sucoza/router-devtools-plugin';
 
 function MyDevTools() {
   return (
@@ -111,7 +111,7 @@ Navigation history display with:
 Central state management for router DevTools.
 
 ```tsx
-import { RouterStateManager } from '@tanstack/router-devtools-enhanced';
+import { RouterStateManager } from '@sucoza/router-devtools-plugin';
 
 const stateManager = new RouterStateManager({
   maxHistoryEntries: 50,
@@ -125,7 +125,7 @@ const stateManager = new RouterStateManager({
 Adapter for React Router v6 integration.
 
 ```tsx
-import { createReactRouterAdapter } from '@tanstack/router-devtools-enhanced';
+import { createReactRouterAdapter } from '@sucoza/router-devtools-plugin';
 
 const adapter = createReactRouterAdapter();
 stateManager.registerAdapter(adapter);
@@ -211,7 +211,7 @@ interface RouterDevToolsConfig {
 Custom parameter validators can be provided:
 
 ```tsx
-import { commonValidators } from '@tanstack/router-devtools-enhanced';
+import { commonValidators } from '@sucoza/router-devtools-plugin';
 
 const config = {
   paramValidator: (params) => {
@@ -233,7 +233,7 @@ const config = {
 Create adapters for other router libraries:
 
 ```tsx
-import { IRouterAdapter, NavigationState } from '@tanstack/router-devtools-enhanced';
+import { IRouterAdapter, NavigationState } from '@sucoza/router-devtools-plugin';
 
 class MyRouterAdapter implements IRouterAdapter {
   getCurrentState(): NavigationState | null {
@@ -253,7 +253,7 @@ class MyRouterAdapter implements IRouterAdapter {
 Listen to router events programmatically:
 
 ```tsx
-import { routerEventClient } from '@tanstack/router-devtools-enhanced';
+import { routerEventClient } from '@sucoza/router-devtools-plugin';
 
 routerEventClient.on('router-navigation', (event) => {
   console.log('Navigation event:', event.payload);
@@ -277,4 +277,8 @@ Contributions are welcome! Please see our [contributing guide](CONTRIBUTING.md) 
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.

@@ -1,16 +1,12 @@
-import { AuthState, User, Role, Permission, MockScenario, StorageOperation } from '../types/auth';
+import { AuthState, User, Role, Permission, MockScenario, StorageOperation, StorageConfig } from '../types/auth';
 
-interface DevToolsState {
+export interface DevToolsState {
   authState: AuthState;
   scenarios: MockScenario[];
   roles: Role[];
   permissions: Permission[];
   storageOperations: StorageOperation[];
-  storageConfig: {
-    type: 'localStorage' | 'sessionStorage';
-    key: string;
-    userKey?: string;
-  };
+  storageConfig: StorageConfig;
   mockMode: boolean;
 }
 

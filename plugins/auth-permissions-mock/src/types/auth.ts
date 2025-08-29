@@ -64,6 +64,7 @@ export interface OAuthFlow {
 export interface StorageConfig {
   type: 'localStorage' | 'sessionStorage' | 'cookies';
   key: string;
+  userKey?: string;
   domain?: string;
   secure?: boolean;
   httpOnly?: boolean;

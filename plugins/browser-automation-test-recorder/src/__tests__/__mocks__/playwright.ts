@@ -5,7 +5,7 @@
 
 import { vi } from 'vitest';
 
-export const mockPage = {
+const mockPage = {
   // Navigation
   goto: vi.fn().mockResolvedValue(undefined),
   goBack: vi.fn().mockResolvedValue(undefined),
@@ -206,3 +206,6 @@ export const firefox = mockBrowserType;
 export const webkit = mockBrowserType;
 export const devices = mockPlaywright.devices;
 export const selectors = mockPlaywright.selectors;
+
+// Export mockPage for use in tests
+export { mockPage };

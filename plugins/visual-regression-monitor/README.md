@@ -296,7 +296,11 @@ src/
 
 ## License
 
-MIT License - see LICENSE file for details.
+MIT
+
+---
+
+Part of the @sucoza TanStack DevTools ecosystem.
 
 ## Support
 
@@ -307,4 +311,4 @@ MIT License - see LICENSE file for details.
 
 ---
 
-Built with ❤️ by the TanStack team
+Part of the @sucoza TanStack DevTools ecosystem.
