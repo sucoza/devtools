@@ -85,12 +85,13 @@ export const DevToolsManager: React.FC<DevToolsManagerProps> = ({
       const validPlugins = plugins.filter(Boolean);
 
       const DevtoolsWithConfig: React.FC = () => (
-        <TanStackDevtools
-          {...(devtoolsConfig.config ?? {})}
-          eventBusConfig={devtoolsConfig.eventBusConfig}
-          plugins={validPlugins}
-          className={className}
-        />
+        <div className={className}>
+          <TanStackDevtools
+            {...(devtoolsConfig.config ?? {})}
+            eventBusConfig={devtoolsConfig.eventBusConfig}
+            plugins={validPlugins}
+          />
+        </div>
       );
 
       return { default: DevtoolsWithConfig };

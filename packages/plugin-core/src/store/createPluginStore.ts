@@ -69,7 +69,7 @@ export function createPluginStore<T extends BasePluginState>(
         },
 
         reset: () => {
-          set({ ...initialState } as Partial<PluginStore<T>>);
+          set((state) => ({ ...state, ...initialState }));
         }
       })
     )
