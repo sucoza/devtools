@@ -12,6 +12,9 @@ export default defineConfig({
       ],
       config: {
         defaultOpen: false,
+        position: 'bottom-right', // Official TanStack DevTools position option
+        hideUntilHover: false,
+        panelLocation: 'bottom'
       },
       port: { min: 40000, max: 49999 },
       enhancedLogs: { enabled: true }

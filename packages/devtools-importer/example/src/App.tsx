@@ -85,9 +85,8 @@ function App() {
         </ul>
       </div>
 
-      {/* DevTools Manager - automatically handles positioning and display */}
+      {/* DevTools Manager - position configured in vite.config.ts */}
       <DevToolsManager 
-        position="bottom-right"
         onError={(error) => console.error('DevTools Error:', error)}
         onPluginLoad={(pluginId) => console.log('Loaded plugin:', pluginId)}
       />

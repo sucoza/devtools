@@ -46,10 +46,19 @@ export type TanstackDevtoolsImporterOptions = {
      * Defaults to "virtual:tdi".
      */
     virtualIdBase?: string;
+
 };
 
 export function tanstackDevtoolsImporter(opts: TanstackDevtoolsImporterOptions): Plugin {
-    const { plugins, config = {}, eventBusConfig = {}, enhancedLogs, port, enableInProd = false, virtualIdBase = "virtual:tdi" } = opts;
+    const { 
+        plugins, 
+        config = {}, 
+        eventBusConfig = {}, 
+        enhancedLogs, 
+        port, 
+        enableInProd = false, 
+        virtualIdBase = "virtual:tdi"
+    } = opts;
 
     if (!Array.isArray(plugins) || plugins.length === 0) {
         throw new Error("[tanstack-devtools-importer] `plugins` must be a non-empty array of import specifiers.");

@@ -37,6 +37,9 @@ export default defineConfig({
       ],
       config: {
         defaultOpen: false,
+        position: 'bottom-right', // TanStack DevTools position
+        hideUntilHover: true,
+        panelLocation: 'bottom'
       },
       port: { min: 40000, max: 49999 }, // or specify a fixed port: 3001
     })
@@ -56,7 +59,7 @@ function App() {
     <div>
       <h1>My Application</h1>
       
-      {/* DevTools will only render in development */}
+      {/* DevTools configured in vite.config.js, will only render in development */}
       <DevToolsManager />
     </div>
   );
@@ -76,7 +79,6 @@ function App() {
   return (
     <div>
       <DevToolsManager
-        position="bottom-right"
         onError={(error) => console.error('DevTools Error:', error)}
         onPluginLoad={(pluginId) => console.log('Loaded plugin:', pluginId)}
         className="my-devtools"
@@ -119,9 +121,6 @@ interface TanstackDevtoolsImporterOptions {
 
 ```typescript
 interface DevToolsManagerProps {
-  // Optional: Position of the DevTools button
-  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-  
   // Optional: Custom className
   className?: string;
   
@@ -130,11 +129,10 @@ interface DevToolsManagerProps {
   
   // Optional: Plugin load handler
   onPluginLoad?: (pluginId: string) => void;
-  
-  // Optional: Custom button text
-  buttonText?: string;
 }
 ```
+
+The `DevToolsManager` uses the TanStack DevTools configuration passed through the Vite plugin, including position, styling, and behavior options.
 
 ## Virtual Modules
 
