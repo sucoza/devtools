@@ -1,5 +1,5 @@
 {
-  "name": "@your-scope/tanstack-devtools-importer",
+  "name": "@sucoza/devtools-importer",
   "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
