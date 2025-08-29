@@ -1,5 +1,5 @@
 {
-  "name": "@tanstack/i18n-devtools-plugin",
+  "name": "@sucoza/i18n-devtools-plugin",
   "version": "1.0.0",
   "description": "Internationalization (i18n) inspector plugin for TanStack DevTools with translation management and missing key detection",
   "main": "dist/index.js",

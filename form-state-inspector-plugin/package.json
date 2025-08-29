@@ -1,5 +1,5 @@
 {
-  "name": "@tanstack/form-state-inspector-devtools",
+  "name": "@sucoza/form-state-inspector-devtools",
   "version": "1.0.0",
   "description": "Comprehensive form debugging and state management visualization tool for TanStack DevTools",
   "main": "dist/index.js",

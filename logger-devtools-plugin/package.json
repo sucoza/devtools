@@ -1,5 +1,5 @@
 {
-  "name": "@tanstack/logger-devtools",
+  "name": "@sucoza/logger-devtools",
   "version": "1.0.0",
   "description": "Advanced logging plugin for TanStack DevTools with metrics monitoring",
   "main": "dist/index.js",
