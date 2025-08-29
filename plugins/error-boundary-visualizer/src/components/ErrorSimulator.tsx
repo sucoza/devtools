@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useErrorBoundaryDevTools } from '../core/store'
-import type { ErrorSimulation, ErrorCategory } from '../types'
+import type { ErrorSimulation } from '../types'
+import { ErrorCategory } from '../types'
 
 export const ErrorSimulator: React.FC = () => {
   const { 

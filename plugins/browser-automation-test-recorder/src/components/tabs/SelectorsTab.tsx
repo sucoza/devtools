@@ -175,7 +175,7 @@ export default function SelectorsTab({ state, dispatch, compact }: TabComponentP
         </ul>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .selectors-tab {
           display: flex;
           flex-direction: column;

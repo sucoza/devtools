@@ -17,7 +17,7 @@ import type {
 /**
  * Initial state for bundle impact analyzer DevTools
  */
-const initialState: BundleAnalyzerState = {
+const initialState: Omit<BundleAnalyzerState, 'config' | 'jobs'> = {
   modules: [],
   chunks: [],
   stats: {

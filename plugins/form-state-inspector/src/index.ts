@@ -18,6 +18,10 @@ export type {
 } from './formEventClient';
 
 // Form State Tracker
+import { formStateRegistry } from './formStateTracker';
+import { formReplayEngine } from './formReplayEngine';
+import { trackHTMLForm } from './formLibraryIntegrations';
+import { formStateEventClient } from './formEventClient';
 export {
   formStateRegistry,
   registerForm,

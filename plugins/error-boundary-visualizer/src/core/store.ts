@@ -9,10 +9,9 @@ import type {
   ErrorRecoveryStrategy,
   ErrorSimulation,
   DevToolsConfig,
-  ErrorCategory,
-  ErrorSeverity,
   ErrorMetrics,
 } from '../types'
+import { ErrorCategory, ErrorSeverity } from '../types'
 
 const defaultConfig: DevToolsConfig = {
   enabled: true,

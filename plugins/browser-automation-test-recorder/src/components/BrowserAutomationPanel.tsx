@@ -260,7 +260,7 @@ export function BrowserAutomationPanel({
 
       {children}
 
-      <style jsx>{`
+      <style>{`
         .browser-automation-devtools {
           display: flex;
           flex-direction: column;

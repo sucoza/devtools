@@ -363,7 +363,7 @@ export function BundleImpactAnalyzerPanel({
       {/* Custom children */}
       {children}
 
-      <style jsx>{`
+      <style>{`
         .bundle-impact-analyzer-devtools {
           display: flex;
           flex-direction: column;

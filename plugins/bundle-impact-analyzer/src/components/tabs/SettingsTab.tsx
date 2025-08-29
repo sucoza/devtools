@@ -220,7 +220,7 @@ export function SettingsTab({ state, eventClient }: SettingsTabProps) {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .settings-tab {
           padding: 16px;
           display: flex;

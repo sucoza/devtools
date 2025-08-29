@@ -126,9 +126,9 @@ export function ModulesTab({ state, eventClient }: ModulesTabProps) {
 
                 <div className="module-indicators">
                   {module.isTreeShakeable ? (
-                    <CheckCircle size={14} color="#34a853" title="Tree-shakeable" />
+                    <span title="Tree-shakeable"><CheckCircle size={14} color="#34a853" /></span>
                   ) : (
-                    <AlertTriangle size={14} color="#fbbc04" title="Not tree-shakeable" />
+                    <span title="Not tree-shakeable"><AlertTriangle size={14} color="#fbbc04" /></span>
                   )}
                   
                   <button
@@ -260,7 +260,7 @@ export function ModulesTab({ state, eventClient }: ModulesTabProps) {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .modules-tab {
           height: 100%;
           display: flex;

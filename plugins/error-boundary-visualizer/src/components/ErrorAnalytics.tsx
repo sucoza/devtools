@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { useErrorBoundaryDevTools } from '../core/store'
-import type { ErrorCategory, ErrorSeverity } from '../types'
+import { ErrorCategory, ErrorSeverity } from '../types'
 
 interface ChartData {
   label: string

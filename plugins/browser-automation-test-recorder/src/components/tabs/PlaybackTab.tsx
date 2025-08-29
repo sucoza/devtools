@@ -425,7 +425,7 @@ export default function PlaybackTab({ state, dispatch, compact }: TabComponentPr
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .playback-tab {
           display: flex;
           flex-direction: column;

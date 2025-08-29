@@ -341,7 +341,7 @@ class FormStateRegistry {
     }
   }
 
-  private updateFormState(formId: string) {
+  public updateFormState(formId: string) {
     const form = this.forms.get(formId);
     if (!form) return;
 
@@ -351,7 +351,7 @@ class FormStateRegistry {
     form.timestamp = Date.now();
   }
 
-  private handleFormSubmit(formId: string, event: SubmitEvent) {
+  public handleFormSubmit(formId: string, event: SubmitEvent) {
     const form = this.forms.get(formId);
     if (!form) return;
 

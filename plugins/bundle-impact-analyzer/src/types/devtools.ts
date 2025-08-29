@@ -33,6 +33,7 @@ export interface BundleAnalyzerState {
     selectedNode: string | null;
   };
   config: BundleAnalyzerConfig;
+  jobs: AnalysisJob[];
 }
 
 export interface BundleAnalyzerEvent {

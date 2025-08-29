@@ -337,7 +337,7 @@ export default function TestGeneratorTab({ state, dispatch, compact }: TabCompon
               </button>
 
               <button
-                onClick={() => dispatch({ type: 'test/export', payload: { format: 'json' } })}
+                onClick={() => dispatch({ type: 'test/export', payload: { format: 'json', includeMetadata: true, includeScreenshots: false, compress: false } })}
                 disabled={!hasEvents}
                 className="secondary-button"
               >
@@ -503,7 +503,7 @@ export default function TestGeneratorTab({ state, dispatch, compact }: TabCompon
         </ul>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .test-generator-tab {
           display: flex;
           flex-direction: column;

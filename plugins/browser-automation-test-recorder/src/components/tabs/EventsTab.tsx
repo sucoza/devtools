@@ -142,7 +142,7 @@ export default function EventsTab({ state, dispatch, compact }: TabComponentProp
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .events-tab {
           display: flex;
           flex-direction: column;

@@ -3,7 +3,12 @@ import type { FieldState, FieldValidation, ValidationSchema } from './formEventC
 
 // React Hook Form Integration
 export function useFormStateInspector(formId: string, hookFormMethods?: any) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') return {
+    updateField: () => {},
+    validateField: () => ({ state: 'valid' as const }),
+    resetForm: () => {},
+    unregister: () => {}
+  };
 
   // Register form on mount
   const formState = formStateRegistry.registerForm(formId);

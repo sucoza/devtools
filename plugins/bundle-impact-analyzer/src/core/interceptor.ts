@@ -508,8 +508,8 @@ class ViteInterceptor {
   }
 
   private trackViteHMR() {
-    if (typeof import.meta?.hot !== 'undefined') {
-      const hot = import.meta.hot;
+    if (typeof (import.meta as any)?.hot !== 'undefined') {
+      const hot = (import.meta as any).hot;
       
       // Track HMR updates
       hot.on('vite:beforeUpdate', (payload) => {
@@ -522,9 +522,9 @@ class ViteInterceptor {
     const buildInfo: BundleBuildInfo = {
       buildTool: 'vite',
       buildTime: Date.now(),
-      environment: import.meta.env?.PROD ? 'production' : 'development',
+      environment: (import.meta as any).env?.PROD ? 'production' : 'development',
       optimization: {
-        minimize: import.meta.env?.PROD || false,
+        minimize: (import.meta as any).env?.PROD || false,
         treeShaking: true,
         splitChunks: true,
         sideEffects: false,
@@ -533,7 +533,11 @@ class ViteInterceptor {
       errors: [],
     };
 
-    this.eventClient.getState().setBuildInfo?.(buildInfo);
+    // Call setBuildInfo method on the store
+    const store = (this.eventClient as any).store;
+    if (store && store.setBuildInfo) {
+      store.setBuildInfo(buildInfo);
+    }
   }
 }
 

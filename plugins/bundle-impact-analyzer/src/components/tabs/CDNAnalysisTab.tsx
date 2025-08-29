@@ -101,7 +101,7 @@ export function CDNAnalysisTab({ state, eventClient }: CDNAnalysisTabProps) {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .cdn-analysis-tab {
           height: 100%;
           display: flex;

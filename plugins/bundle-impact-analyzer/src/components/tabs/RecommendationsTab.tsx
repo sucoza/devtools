@@ -137,7 +137,7 @@ export function RecommendationsTab({ state, eventClient }: RecommendationsTabPro
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .recommendations-tab {
           height: 100%;
           display: flex;

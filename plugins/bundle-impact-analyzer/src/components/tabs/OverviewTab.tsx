@@ -283,7 +283,7 @@ export function OverviewTab({ state, eventClient }: OverviewTabProps) {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .overview-tab {
           padding: 16px;
           display: flex;

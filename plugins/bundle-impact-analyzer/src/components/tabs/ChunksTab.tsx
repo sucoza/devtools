@@ -83,7 +83,7 @@ export function ChunksTab({ state, eventClient }: ChunksTabProps) {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .chunks-tab {
           height: 100%;
           display: flex;

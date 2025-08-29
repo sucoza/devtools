@@ -304,7 +304,7 @@ export default function RecorderTab({ state, dispatch, compact }: TabComponentPr
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .recorder-tab {
           display: flex;
           flex-direction: column;

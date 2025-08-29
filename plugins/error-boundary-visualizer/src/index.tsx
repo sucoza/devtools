@@ -1,6 +1,7 @@
 // Core exports
 export { useErrorBoundaryDevTools } from './core/store'
 export { ErrorBoundaryWrapper } from './core/ErrorBoundaryWrapper'
+import { ErrorCategory, ErrorSeverity } from './types'
 
 // Component exports
 export { ErrorBoundaryDevToolsPanel } from './components/ErrorBoundaryDevToolsPanel'
@@ -116,8 +117,8 @@ export function reportError(error: Error | string, metadata?: Record<string, unk
     timestamp: Date.now(),
     message: typeof error === 'string' ? error : error.message,
     stack: typeof error === 'object' ? error.stack : undefined,
-    category: 'unknown' as const,
-    severity: 'medium' as const,
+    category: ErrorCategory.UNKNOWN,
+    severity: ErrorSeverity.MEDIUM,
     occurrences: 1,
     firstSeen: Date.now(),
     lastSeen: Date.now(),
@@ -172,8 +173,8 @@ export function useErrorBoundary() {
           timestamp: Date.now(),
           message: error.message,
           stack: error.stack,
-          category: 'render' as const,
-          severity: 'high' as const,
+          category: ErrorCategory.RENDER,
+          severity: ErrorSeverity.HIGH,
           occurrences: 1,
           firstSeen: Date.now(),
           lastSeen: Date.now(),

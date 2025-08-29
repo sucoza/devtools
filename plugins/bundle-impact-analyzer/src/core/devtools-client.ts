@@ -11,7 +11,7 @@ import type {
   CDNAnalysis,
   AnalysisJob,
 } from '../types';
-import { getBundleAnalyzerStore } from './devtools-store';
+import { useBundleAnalyzerStore } from './devtools-store';
 
 /**
  * Bundle analyzer event types for TanStack DevTools integration
@@ -60,7 +60,8 @@ export interface BundleAnalyzerEventClient {
  */
 export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventClient {
   private unsubscribe?: () => void;
-  private store = getBundleAnalyzerStore();
+  private getStore = () => useBundleAnalyzerStore.getState();
+  private store = useBundleAnalyzerStore;
   private subscribers = new Set<(
     event: BundleAnalyzerEvents[keyof BundleAnalyzerEvents],
     type: keyof BundleAnalyzerEvents
@@ -95,9 +96,10 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
    */
   private setupJobNotifications() {
     // Subscribe to job updates in the store
+    let previousJobs: AnalysisJob[] = [];
     const unsubscribeJobs = this.store.subscribe(
-      (state) => state.jobs,
-      (jobs, previousJobs) => {
+      (state) => {
+        const jobs = state.jobs;
         const newJobs = jobs.filter(job => 
           !previousJobs.some(prevJob => prevJob.id === job.id)
         );
@@ -123,6 +125,8 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
             this.emit('bundle:job-updated', { job });
           }
         });
+
+        previousJobs = jobs;
       }
     );
   }
@@ -183,7 +187,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
     this.getBundleSize(src).then(size => {
       if (size > 0) {
         module.size = size;
-        this.store.addModule(module);
+        this.getStore().addModule(module);
         this.emit('bundle:module-added', { module });
       }
     });
@@ -211,7 +215,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
     this.getBundleSize(href).then(size => {
       if (size > 0) {
         module.size = size;
-        this.store.addModule(module);
+        this.getStore().addModule(module);
         this.emit('bundle:module-added', { module });
       }
     });
@@ -293,7 +297,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
       timestamp: Date.now(),
     };
 
-    this.store.addModule(module);
+    this.getStore().addModule(module);
     this.emit('bundle:module-added', { module });
   }
 
@@ -333,7 +337,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
       errors: [],
     };
 
-    this.store.setBuildInfo(buildInfo);
+    this.getStore().setBuildInfo(buildInfo);
   }
 
   /**
@@ -343,9 +347,9 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
     const buildInfo: BundleBuildInfo = {
       buildTool: 'vite',
       buildTime: Date.now(),
-      environment: import.meta.env.PROD ? 'production' : 'development',
+      environment: (import.meta as any).env?.PROD ? 'production' : 'development',
       optimization: {
-        minimize: import.meta.env.PROD,
+        minimize: (import.meta as any).env?.PROD,
         treeShaking: true,
         splitChunks: true,
         sideEffects: false,
@@ -354,7 +358,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
       errors: [],
     };
 
-    this.store.setBuildInfo(buildInfo);
+    this.getStore().setBuildInfo(buildInfo);
   }
 
   /**
@@ -417,7 +421,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
       type: 'full-analysis' 
     });
     
-    this.store.startAnalysis();
+    this.getStore().startAnalysis();
   };
 
   /**
@@ -427,7 +431,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
     if (!this.analysisActive) return;
     
     this.analysisActive = false;
-    this.store.stopAnalysis();
+    this.getStore().stopAnalysis();
   };
 
   // Convenience methods for common operations
@@ -437,7 +441,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
    */
   analyzeImport = (importPath: string): void => {
     try {
-      const impact = this.store.analyzeImportImpact(importPath);
+      const impact = this.getStore().analyzeImportImpact(importPath);
       if (impact) {
         this.emit('bundle:import-analyzed', { impact });
       }
@@ -454,7 +458,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
    */
   startCDNAnalysis = (): void => {
     try {
-      this.store.analyzeCDNOpportunities();
+      this.getStore().analyzeCDNOpportunities();
     } catch (error) {
       this.emit('bundle:error', {
         message: `CDN analysis failed: ${error instanceof Error ? error.message : String(error)}`,
@@ -468,7 +472,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
    */
   startTreeShakingAnalysis = (): void => {
     try {
-      this.store.analyzeTreeShaking();
+      this.getStore().analyzeTreeShaking();
     } catch (error) {
       this.emit('bundle:error', {
         message: `Tree-shaking analysis failed: ${error instanceof Error ? error.message : String(error)}`,
@@ -481,7 +485,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
    * Update configuration
    */
   updateConfig = (config: Partial<BundleAnalyzerConfig>): void => {
-    this.store.updateConfig(config);
+    this.getStore().updateConfig(config);
     this.emit('bundle:config-updated', { config: this.store.getState().config });
   };
 
@@ -489,7 +493,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
    * Select module for detailed view
    */
   selectModule = (moduleId: string | null): void => {
-    this.store.selectModule(moduleId);
+    this.getStore().selectModule(moduleId);
     this.emit('bundle:state', this.store.getState());
   };
 
@@ -497,7 +501,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
    * Select chunk for detailed view
    */
   selectChunk = (chunkId: string | null): void => {
-    this.store.selectChunk(chunkId);
+    this.getStore().selectChunk(chunkId);
     this.emit('bundle:state', this.store.getState());
   };
 
@@ -505,7 +509,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
    * Update filters
    */
   updateFilters = (filters: Partial<BundleAnalyzerState['filters']>): void => {
-    this.store.updateFilters(filters);
+    this.getStore().updateFilters(filters);
     this.emit('bundle:state', this.store.getState());
   };
 
@@ -513,7 +517,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
    * Update visualization settings
    */
   updateVisualization = (viz: Partial<BundleAnalyzerState['visualization']>): void => {
-    this.store.updateVisualization(viz);
+    this.getStore().updateVisualization(viz);
     this.emit('bundle:state', this.store.getState());
   };
 
@@ -521,7 +525,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
    * Get filtered modules
    */
   getFilteredModules = (): BundleModule[] => {
-    return this.store.getFilteredModules();
+    return this.getStore().getFilteredModules();
   };
 
   /**
@@ -600,11 +604,11 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
       },
     ];
 
-    this.store.updateModules(sampleModules);
-    this.store.updateChunks(sampleChunks);
+    this.getStore().updateModules(sampleModules);
+    this.getStore().updateChunks(sampleChunks);
     
     // Trigger analysis
-    this.store.generateRecommendations();
+    this.getStore().generateRecommendations();
     
     this.emit('bundle:state', this.store.getState());
   };

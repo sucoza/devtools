@@ -1,6 +1,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react'
 import { useErrorBoundaryDevTools } from './store'
-import type { ErrorBoundaryInfo, ErrorInfo as DevToolsErrorInfo, ErrorCategory, ErrorSeverity } from '../types'
+import type { ErrorBoundaryInfo, ErrorInfo as DevToolsErrorInfo } from '../types'
+import { ErrorCategory, ErrorSeverity } from '../types'
 
 interface Props {
   children: ReactNode

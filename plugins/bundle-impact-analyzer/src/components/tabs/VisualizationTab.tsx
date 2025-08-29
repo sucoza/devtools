@@ -91,7 +91,7 @@ export function VisualizationTab({ state, eventClient }: VisualizationTabProps) 
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .visualization-tab {
           height: 100%;
           display: flex;

@@ -1,4 +1,5 @@
-import { DevtoolsPlugin } from '@tanstack/react-devtools';
+// import { DevtoolsPlugin } from '@tanstack/react-devtools'; // Not available
+type DevtoolsPlugin = any;
 import { FormStateDevToolsPanel } from './FormStateDevToolsPanel';
 import { formStateEventClient } from './formEventClient';
 

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react'
 import { useErrorBoundaryDevTools } from '../core/store'
 import type { ComponentTreeNode, ErrorBoundaryInfo, ErrorInfo } from '../types'
+import { ErrorCategory, ErrorSeverity } from '../types'
 
 interface UseErrorBoundaryDevToolsOptions {
   enabled?: boolean
@@ -189,8 +190,8 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
         timestamp: Date.now(),
         message: event.message,
         stack: event.error?.stack,
-        category: 'unknown' as const,
-        severity: 'medium' as const,
+        category: ErrorCategory.UNKNOWN,
+        severity: ErrorSeverity.MEDIUM,
         occurrences: 1,
         firstSeen: Date.now(),
         lastSeen: Date.now(),
@@ -208,8 +209,8 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
         timestamp: Date.now(),
         message: event.reason?.message || 'Unhandled Promise Rejection',
         stack: event.reason?.stack,
-        category: 'async' as const,
-        severity: 'high' as const,
+        category: ErrorCategory.ASYNC,
+        severity: ErrorSeverity.HIGH,
         occurrences: 1,
         firstSeen: Date.now(),
         lastSeen: Date.now(),
@@ -298,8 +299,8 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
         message: error.message,
         stack: error.stack,
         componentStack: errorInfo.componentStack,
-        category: 'render' as const,
-        severity: 'high' as const,
+        category: ErrorCategory.RENDER,
+        severity: ErrorSeverity.HIGH,
         occurrences: 1,
         firstSeen: Date.now(),
         lastSeen: Date.now(),
@@ -326,8 +327,8 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
           id: `console-error-${Date.now()}-${Math.random()}`,
           timestamp: Date.now(),
           message: firstArg,
-          category: 'render' as const,
-          severity: 'medium' as const,
+          category: ErrorCategory.RENDER,
+          severity: ErrorSeverity.MEDIUM,
           occurrences: 1,
           firstSeen: Date.now(),
           lastSeen: Date.now(),
@@ -383,8 +384,8 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
       timestamp: Date.now(),
       message: typeof error === 'string' ? error : error.message,
       stack: typeof error === 'object' ? error.stack : undefined,
-      category: 'unknown' as const,
-      severity: 'medium' as const,
+      category: ErrorCategory.UNKNOWN,
+      severity: ErrorSeverity.MEDIUM,
       occurrences: 1,
       firstSeen: Date.now(),
       lastSeen: Date.now(),

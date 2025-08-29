@@ -75,7 +75,7 @@ export function TreeShakingTab({ state, eventClient }: TreeShakingTabProps) {
           ))}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .tree-shaking-tab {
           padding: 16px;
           display: flex;

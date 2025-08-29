@@ -34,6 +34,8 @@ global.MutationObserver = class MutationObserver {
 
 // Mock PerformanceObserver
 global.PerformanceObserver = class PerformanceObserver {
+  static readonly supportedEntryTypes: readonly string[] = ['navigation', 'measure', 'mark'];
+  
   constructor(public callback: PerformanceObserverCallback) {}
   observe() {}
   disconnect() {}

@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react'
 import { useErrorBoundaryDevTools } from '../core/store'
 import { StackTraceViewer } from './StackTraceViewer'
-import type { ErrorInfo, ErrorCategory, ErrorSeverity } from '../types'
+import type { ErrorInfo } from '../types'
+import { ErrorCategory, ErrorSeverity } from '../types'
 
 type SortField = 'timestamp' | 'severity' | 'category' | 'message' | 'occurrences'
 type SortOrder = 'asc' | 'desc'
