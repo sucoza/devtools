@@ -1,6 +1,6 @@
 {
     "name": "@sucoza/security-audit-panel-devtools-plugin",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "TanStack DevTools plugin for comprehensive security auditing including XSS, CSRF, CSP, dependency vulnerabilities, and more",
     "main": "dist/index.js",
     "module": "dist/index.esm.js",

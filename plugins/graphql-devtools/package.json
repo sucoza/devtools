@@ -1,6 +1,6 @@
 {
     "name": "@sucoza/graphql-devtools-plugin",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "description": "Enhanced GraphQL DevTools plugin for TanStack DevTools with schema exploration, query building, and performance monitoring",
     "main": "dist/index.js",
     "module": "dist/index.esm.js",

@@ -1,5 +1,5 @@
-import { renderHook, act } from '@testing-library/react';
-import type { BaseDevToolsClient } from '../devtools-client/BaseDevToolsClient';
+import { renderHook } from '@testing-library/react';
+import { BaseDevToolsClient } from '../devtools-client/BaseDevToolsClient';
 import type { PluginStore, BasePluginState } from '../store/createPluginStore';
 
 /**

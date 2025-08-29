@@ -13,7 +13,7 @@ export interface BasePluginState {
   };
 }
 
-export interface PluginStoreActions<T> {
+export interface PluginStoreActions<T extends BasePluginState> {
   setActive: (active: boolean) => void;
   setMonitoring: (monitoring: boolean) => void;
   updateConfig: (config: Partial<T['config']>) => void;
@@ -33,40 +33,43 @@ export function createPluginStore<T extends BasePluginState>(
 ) {
   const store = create<PluginStore<T>>()(
     subscribeWithSelector(
-      (set, get) => ({
+      (set) => ({
         ...initialState,
 
         setActive: (active: boolean) => {
-          set({ isActive: active });
+          set({ isActive: active } as Partial<PluginStore<T>>);
         },
 
         setMonitoring: (monitoring: boolean) => {
-          set({ isMonitoring: monitoring });
+          set({ isMonitoring: monitoring } as Partial<PluginStore<T>>);
         },
 
         updateConfig: (config: Partial<T['config']>) => {
           set((state) => ({
+            ...state,
             config: { ...state.config, ...config }
-          }));
+          }) as Partial<PluginStore<T>>);
         },
 
         updateUI: (ui: Partial<T['ui']>) => {
           set((state) => ({
+            ...state,
             ui: { ...state.ui, ...ui }
-          }));
+          }) as Partial<PluginStore<T>>);
         },
 
         updateFilter: (filter: Partial<T['ui']['filter']>) => {
           set((state) => ({
+            ...state,
             ui: {
               ...state.ui,
               filter: { ...state.ui.filter, ...filter }
             }
-          }));
+          }) as Partial<PluginStore<T>>);
         },
 
         reset: () => {
-          set(initialState);
+          set({ ...initialState } as Partial<PluginStore<T>>);
         }
       })
     )

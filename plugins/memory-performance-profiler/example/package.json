@@ -1,6 +1,6 @@
 {
   "name": "memory-performance-profiler-example",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Example application demonstrating the Memory & Performance Profiler plugin",
   "private": true,
   "type": "module",

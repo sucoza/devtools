@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'use-sync-external-store/shim';
+import { useSyncExternalStore } from 'use-sync-external-store/shim/index.js';
 
 export interface DevToolsEvent<T = any> {
   type: string;

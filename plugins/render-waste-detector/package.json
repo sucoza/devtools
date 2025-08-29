@@ -1,6 +1,6 @@
 {
     "name": "@sucoza/render-waste-detector-devtools-plugin",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "type": "module",
     "description": "DevTools plugin for detecting unnecessary React re-renders and providing performance optimization insights with visual heat maps and suggestions",
     "main": "dist/index.js",
