@@ -298,6 +298,12 @@ jobs:
               'security-check': '${{ needs.security-check.result }}'
             };
             
+            const changes = {
+              'shared': '${{ needs.changes.outputs.shared }}' === 'true',
+              'plugins': '${{ needs.changes.outputs.plugins }}' === 'true',
+              'workflows': '${{ needs.changes.outputs.workflows }}' === 'true'
+            };
+            
             const passed = Object.values(results).every(result => 
               result === 'success' || result === 'skipped'
             );
@@ -314,9 +320,9 @@ jobs:
             }).join('\n')}
             
             ### Changes Detected:
-            - Shared Packages: ${{ needs.changes.outputs.shared == 'true' ? '✅' : '❌' }}
-            - Plugin Packages: ${{ needs.changes.outputs.plugins == 'true' ? '✅' : '❌' }}  
-            - Workflows: ${{ needs.changes.outputs.workflows == 'true' ? '✅' : '❌' }}
+            - Shared Packages: ${changes.shared ? '✅' : '❌'}
+            - Plugin Packages: ${changes.plugins ? '✅' : '❌'}
+            - Workflows: ${changes.workflows ? '✅' : '❌'}
             `;
             
             github.rest.issues.createComment({
