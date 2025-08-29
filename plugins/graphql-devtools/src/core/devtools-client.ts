@@ -1,4 +1,4 @@
-import { EventClient } from '@tanstack/devtools-event-client'
+import type { EventClient } from '@tanstack/devtools-event-client'
 import type { GraphQLDevToolsEvents, GraphQLDevToolsState, GraphQLDevToolsAction } from '../types';
 import { getGraphQLDevToolsStore, GraphQLDevToolsStore } from './devtools-store';
 
