@@ -1,0 +1,1 @@
+{"version":3,"file":"StackTraceViewer.d.ts","sourceRoot":"","sources":["../../src/components/StackTraceViewer.tsx"],"names":[],"mappings":"AAAA,OAAO,KAA4B,MAAM,OAAO,CAAA;AAIhD,UAAU,qBAAqB;IAC7B,KAAK,EAAE,MAAM,CAAA;IACb,SAAS,CAAC,EAAE,MAAM,CAAA;CACnB;AAED,eAAO,MAAM,gBAAgB,EAAE,KAAK,CAAC,EAAE,CAAC,qBAAqB,CAyN5D,CAAA"}

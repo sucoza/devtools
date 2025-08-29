@@ -16,8 +16,9 @@
         "test": "vitest"
     },
     "dependencies": {
-        "zustand": "^5.0.8",
-        "use-sync-external-store": "^1.5.0"
+        "@testing-library/react": "^16.3.0",
+        "use-sync-external-store": "^1.5.0",
+        "zustand": "^5.0.8"
     },
     "peerDependencies": {
         "@tanstack/devtools": "^0.6.2",

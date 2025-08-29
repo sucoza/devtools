@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import { 
   Camera, 
   GitCompare, 
-  Timeline, 
+  History, 
   Play, 
   Settings, 
   Zap,
@@ -206,7 +206,7 @@ export function PluginPanel({ className }: PluginPanelProps) {
               : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
           )}
         >
-          <Timeline className="w-4 h-4" />
+          <History className="w-4 h-4" />
           Timeline
         </button>
         

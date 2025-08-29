@@ -36,6 +36,9 @@ export type {
 import React from 'react'
 import { ErrorBoundaryDevToolsPanel } from './components/ErrorBoundaryDevToolsPanel'
 import { useErrorBoundaryDevToolsHook } from './hooks/useErrorBoundaryDevTools'
+import { ErrorBoundaryWrapper } from './core/ErrorBoundaryWrapper'
+import { useErrorBoundaryDevTools } from './core/store'
+import type { DevToolsConfig } from './types'
 
 interface ErrorBoundaryDevToolsProps {
   enabled?: boolean
