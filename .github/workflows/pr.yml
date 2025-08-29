@@ -77,7 +77,6 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 8
           run_install: false
 
       - name: Setup Node.js
@@ -128,7 +127,6 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 8
           run_install: false
 
       - name: Setup Node.js ${{ matrix.node-version }}
@@ -181,7 +179,6 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 8
           run_install: false
 
       - name: Setup Node.js
@@ -253,7 +250,6 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 8
           run_install: false
 
       - name: Setup Node.js
