@@ -1,0 +1,65 @@
+version: 2
+
+updates:
+  # Root package.json
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "tyevco"
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+
+  # Shared packages
+  - package-ecosystem: "npm"
+    directory: "/packages/devtools-common"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "shared-packages"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/plugin-core"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "shared-packages"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/shared-components"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "shared-packages"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/devtools-importer"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "shared-packages"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "github-actions"
+      - "dependencies"

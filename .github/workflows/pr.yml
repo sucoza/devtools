@@ -1,0 +1,254 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      shared: ${{ steps.changes.outputs.shared }}
+      plugins: ${{ steps.changes.outputs.plugins }}
+      workflows: ${{ steps.changes.outputs.workflows }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            shared:
+              - 'packages/**'
+              - 'package.json'
+              - 'package-lock.json'
+            plugins:
+              - 'plugins/**'
+            workflows:
+              - '.github/workflows/**'
+
+  validate-pr:
+    name: Validate PR
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Validate PR title
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            chore
+            ci
+            build
+          scopes: |
+            shared
+            plugins
+            core
+            ci
+            deps
+          requireScope: false
+
+  lint-shared:
+    name: Lint Shared Packages
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.shared == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint shared packages
+        run: npm run lint:shared
+
+      - name: Type check shared packages
+        run: |
+          npm run typecheck --workspace=packages/devtools-common
+          npm run typecheck --workspace=packages/plugin-core
+          npm run typecheck --workspace=packages/shared-components
+          npm run typecheck --workspace=packages/devtools-importer
+
+  test-affected-plugins:
+    name: Test Affected Plugins
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.plugins == 'true' || needs.changes.outputs.shared == 'true'
+    strategy:
+      matrix:
+        node-version: [18, 20]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build shared packages
+        run: npm run build:shared
+
+      - name: Build and test plugins
+        run: |
+          # Build a subset of plugins for PR validation
+          npm run build --workspace=plugins/api-mock-interceptor
+          npm run build --workspace=plugins/memory-performance-profiler
+          npm run build --workspace=plugins/browser-automation-test-recorder
+          npm run build --workspace=plugins/bundle-impact-analyzer
+          
+          # Run tests if they exist
+          npm run test --workspace=plugins/api-mock-interceptor --if-present
+          npm run test --workspace=plugins/memory-performance-profiler --if-present
+          npm run test --workspace=plugins/browser-automation-test-recorder --if-present
+
+  size-check:
+    name: Bundle Size Check
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.plugins == 'true' || needs.changes.outputs.shared == 'true'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build packages
+        run: npm run build:shared
+
+      - name: Build sample plugins
+        run: |
+          npm run build --workspace=plugins/api-mock-interceptor
+          npm run build --workspace=plugins/memory-performance-profiler
+
+      - name: Check bundle sizes
+        run: |
+          echo "## Bundle Sizes" >> bundle-sizes.md
+          echo "" >> bundle-sizes.md
+          
+          for pkg in packages/*/dist/*.js plugins/*/dist/*.js; do
+            if [ -f "$pkg" ]; then
+              size=$(wc -c < "$pkg" | numfmt --to=iec-i --suffix=B --padding=7)
+              echo "- $(basename $(dirname $(dirname $pkg))): $size" >> bundle-sizes.md
+            fi
+          done
+          
+          cat bundle-sizes.md
+
+      - name: Comment bundle sizes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            if (fs.existsSync('bundle-sizes.md')) {
+              const bundleSizes = fs.readFileSync('bundle-sizes.md', 'utf8');
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: bundleSizes
+              });
+            }
+
+  security-check:
+    name: Security Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security audit
+        run: npm run audit:security
+
+      - name: Check for high vulnerabilities
+        run: npx audit-ci --high
+
+  pr-summary:
+    name: PR Summary
+    runs-on: ubuntu-latest
+    needs: [changes, validate-pr, lint-shared, test-affected-plugins, security-check]
+    if: always()
+    steps:
+      - name: PR Summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const results = {
+              'changes': '${{ needs.changes.result }}',
+              'validate-pr': '${{ needs.validate-pr.result }}', 
+              'lint-shared': '${{ needs.lint-shared.result }}',
+              'test-affected-plugins': '${{ needs.test-affected-plugins.result }}',
+              'security-check': '${{ needs.security-check.result }}'
+            };
+            
+            const passed = Object.values(results).every(result => 
+              result === 'success' || result === 'skipped'
+            );
+            
+            const summary = `
+            ## PR Validation Summary
+            
+            ${passed ? '✅' : '❌'} **Overall Status: ${passed ? 'PASSED' : 'FAILED'}**
+            
+            ### Check Results:
+            ${Object.entries(results).map(([job, result]) => {
+              const icon = result === 'success' ? '✅' : result === 'skipped' ? '⏭️' : '❌';
+              return `- ${icon} ${job}: ${result}`;
+            }).join('\n')}
+            
+            ### Changes Detected:
+            - Shared Packages: ${{ needs.changes.outputs.shared == 'true' ? '✅' : '❌' }}
+            - Plugin Packages: ${{ needs.changes.outputs.plugins == 'true' ? '✅' : '❌' }}  
+            - Workflows: ${{ needs.changes.outputs.workflows == 'true' ? '✅' : '❌' }}
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });

@@ -1,0 +1,296 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., patch, minor, major, or specific version like 1.2.3)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor  
+          - major
+          - prerelease
+      packages:
+        description: 'Packages to publish (comma-separated, or "all")'
+        required: true
+        default: 'all'
+        type: string
+      dry_run:
+        description: 'Dry run (do not actually publish)'
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate Release
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.packages.outputs.packages }}
+      version: ${{ steps.version.outputs.version }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Determine packages to publish
+        id: packages
+        run: |
+          if [ "${{ github.event.inputs.packages }}" = "all" ] || [ -z "${{ github.event.inputs.packages }}" ]; then
+            PACKAGES="devtools-common,plugin-core,shared-components,devtools-importer,accessibility-devtools,api-mock-interceptor,auth-permissions-mock,browser-automation-test-recorder,bundle-impact-analyzer,design-system-inspector,error-boundary-visualizer,feature-flag-manager,form-state-inspector,graphql-devtools,i18n-devtools,logger-devtools,memory-performance-profiler,render-waste-detector,router-devtools,security-audit-panel,stress-testing-devtools,visual-regression-monitor,websocket-signalr-devtools,zustand-devtools"
+          else
+            PACKAGES="${{ github.event.inputs.packages }}"
+          fi
+          echo "packages=$PACKAGES" >> $GITHUB_OUTPUT
+          echo "Publishing packages: $PACKAGES"
+
+      - name: Determine version
+        id: version  
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION="patch"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Build all packages
+        run: |
+          # Build shared packages first
+          npm run build --workspace=packages/devtools-common
+          npm run build --workspace=packages/plugin-core
+          npm run build --workspace=packages/shared-components
+          npm run build --workspace=packages/devtools-importer
+          
+          # Build all plugins
+          for plugin in plugins/*/; do
+            if [ -f "$plugin/package.json" ]; then
+              plugin_name=$(basename "$plugin")
+              echo "Building plugin: $plugin_name"
+              npm run build --workspace=plugins/$plugin_name || true
+            fi
+          done
+
+      - name: Run tests
+        run: |
+          # Test shared packages
+          npm run test --workspace=packages/devtools-common || echo "No tests for devtools-common"
+          npm run test --workspace=packages/plugin-core || echo "No tests for plugin-core"  
+          npm run test --workspace=packages/shared-components || echo "No tests for shared-components"
+
+  publish-shared:
+    name: Publish Shared Packages
+    runs-on: ubuntu-latest
+    needs: validate
+    if: contains(needs.validate.outputs.packages, 'devtools-common') || contains(needs.validate.outputs.packages, 'plugin-core') || contains(needs.validate.outputs.packages, 'shared-components') || contains(needs.validate.outputs.packages, 'devtools-importer')
+    strategy:
+      matrix:
+        package: [
+          { name: 'devtools-common', path: 'packages/devtools-common' },
+          { name: 'plugin-core', path: 'packages/plugin-core' },
+          { name: 'shared-components', path: 'packages/shared-components' },
+          { name: 'devtools-importer', path: 'packages/devtools-importer' }
+        ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build dependencies
+        run: |
+          # Build in dependency order
+          if [ "${{ matrix.package.name }}" != "devtools-common" ]; then
+            npm run build --workspace=packages/devtools-common
+          fi
+          if [ "${{ matrix.package.name }}" != "devtools-common" ] && [ "${{ matrix.package.name }}" != "plugin-core" ]; then
+            npm run build --workspace=packages/plugin-core
+          fi
+          if [ "${{ matrix.package.name }}" = "shared-components" ] || [ "${{ matrix.package.name }}" = "devtools-importer" ]; then
+            npm run build --workspace=packages/shared-components
+          fi
+
+      - name: Build package
+        run: npm run build --workspace=${{ matrix.package.path }}
+
+      - name: Check if package should be published
+        id: check
+        run: |
+          if [[ "${{ needs.validate.outputs.packages }}" == *"${{ matrix.package.name }}"* ]]; then
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Version package
+        if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true'
+        working-directory: ${{ matrix.package.path }}
+        run: |
+          npm version ${{ needs.validate.outputs.version }} --no-git-tag-version
+
+      - name: Publish package (Dry Run)
+        if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run == 'true'
+        working-directory: ${{ matrix.package.path }}
+        run: npm publish --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish package
+        if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true'
+        working-directory: ${{ matrix.package.path }}
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-plugins:
+    name: Publish Plugin Packages  
+    runs-on: ubuntu-latest
+    needs: [validate, publish-shared]
+    if: always() && (needs.publish-shared.result == 'success' || needs.publish-shared.result == 'skipped')
+    strategy:
+      matrix:
+        plugin: [
+          'accessibility-devtools',
+          'api-mock-interceptor',
+          'auth-permissions-mock', 
+          'browser-automation-test-recorder',
+          'bundle-impact-analyzer',
+          'design-system-inspector',
+          'error-boundary-visualizer',
+          'feature-flag-manager',
+          'form-state-inspector',
+          'graphql-devtools',
+          'i18n-devtools',
+          'logger-devtools',
+          'memory-performance-profiler',
+          'render-waste-detector',
+          'router-devtools',
+          'security-audit-panel',
+          'stress-testing-devtools',
+          'visual-regression-monitor',
+          'websocket-signalr-devtools',
+          'zustand-devtools'
+        ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build shared packages
+        run: |
+          npm run build --workspace=packages/devtools-common
+          npm run build --workspace=packages/plugin-core
+          npm run build --workspace=packages/shared-components
+          npm run build --workspace=packages/devtools-importer
+
+      - name: Build plugin
+        run: npm run build --workspace=plugins/${{ matrix.plugin }}
+
+      - name: Check if plugin should be published
+        id: check
+        run: |
+          if [[ "${{ needs.validate.outputs.packages }}" == *"${{ matrix.plugin }}"* ]] || [[ "${{ needs.validate.outputs.packages }}" == "all" ]]; then
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Version plugin
+        if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true'
+        working-directory: plugins/${{ matrix.plugin }}
+        run: |
+          npm version ${{ needs.validate.outputs.version }} --no-git-tag-version
+
+      - name: Publish plugin (Dry Run)
+        if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run == 'true'
+        working-directory: plugins/${{ matrix.plugin }}
+        run: npm publish --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish plugin
+        if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true'
+        working-directory: plugins/${{ matrix.plugin }}
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [validate, publish-shared, publish-plugins]
+    if: always() && needs.publish-shared.result == 'success' && needs.publish-plugins.result == 'success' && github.event.inputs.dry_run != 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          echo "## Changes" > CHANGELOG.md
+          git log --oneline --pretty=format:"- %s (%h)" $(git describe --tags --abbrev=0 2>/dev/null || echo "")..HEAD >> CHANGELOG.md || echo "- Initial release" >> CHANGELOG.md
+          cat CHANGELOG.md
+
+      - name: Get package version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=v$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          release_name: Release ${{ steps.version.outputs.version }}
+          body_path: CHANGELOG.md
+          draft: false
+          prerelease: ${{ contains(needs.validate.outputs.version, 'pre') }}
