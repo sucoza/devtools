@@ -30,5 +30,7 @@
     "api-testing",
     "curl-import",
     "validation-engine"
-  ]
+  ],
+  "author": "tyevco",
+  "license": "MIT"
 }

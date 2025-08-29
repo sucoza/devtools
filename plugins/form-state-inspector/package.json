@@ -61,5 +61,7 @@
     "tanstack",
     "accessibility",
     "performance"
-  ]
+  ],
+  "author": "tyevco",
+  "license": "MIT"
 }

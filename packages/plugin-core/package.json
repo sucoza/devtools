@@ -30,5 +30,7 @@
     "rollup": "^3.29.0",
     "typescript": "^5.2.2",
     "vitest": "^0.34.0"
-  }
+  },
+  "author": "tyevco",
+  "license": "MIT"
 }

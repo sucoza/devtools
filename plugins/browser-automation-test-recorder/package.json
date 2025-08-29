@@ -50,7 +50,7 @@
     "react",
     "chrome-devtools-protocol"
   ],
-  "author": "TanStack",
+  "author": "tyevco",
   "license": "MIT",
   "peerDependencies": {
     "react": ">=16.8.0",

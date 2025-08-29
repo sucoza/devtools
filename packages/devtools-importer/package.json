@@ -34,7 +34,7 @@
     "react",
     "development"
   ],
-  "author": "TanStack",
+  "author": "tyevco",
   "license": "MIT",
   "peerDependencies": {
     "vite": ">=5.0.0",

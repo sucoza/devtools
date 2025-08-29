@@ -56,5 +56,6 @@
     "dist",
     "src"
   ],
+  "author": "tyevco",
   "license": "MIT"
 }
