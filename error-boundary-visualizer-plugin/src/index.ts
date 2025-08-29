@@ -1,0 +1,209 @@
+// Core exports
+export { useErrorBoundaryDevTools } from './core/store'
+export { ErrorBoundaryWrapper } from './core/ErrorBoundaryWrapper'
+
+// Component exports
+export { ErrorBoundaryDevToolsPanel } from './components/ErrorBoundaryDevToolsPanel'
+export { ComponentTreeView } from './components/ComponentTreeView'
+export { ErrorList } from './components/ErrorList'
+export { StackTraceViewer } from './components/StackTraceViewer'
+export { ErrorAnalytics } from './components/ErrorAnalytics'
+export { ErrorSimulator } from './components/ErrorSimulator'
+export { RecoveryStrategyEditor } from './components/RecoveryStrategyEditor'
+
+// Hook exports
+export { useErrorBoundaryDevToolsHook } from './hooks/useErrorBoundaryDevTools'
+
+// Type exports
+export type {
+  ErrorBoundaryInfo,
+  ErrorInfo,
+  ErrorCategory,
+  ErrorSeverity,
+  ComponentTreeNode,
+  ErrorRecoveryStrategy,
+  ErrorSimulation,
+  SourceMapInfo,
+  EnhancedStackFrame,
+  ErrorGroup,
+  ErrorMetrics,
+  ExternalServiceConfig,
+  DevToolsConfig,
+  ErrorBoundaryDevToolsState,
+} from './types'
+
+// Main DevTools component for easy integration
+import React from 'react'
+import { ErrorBoundaryDevToolsPanel } from './components/ErrorBoundaryDevToolsPanel'
+import { useErrorBoundaryDevToolsHook } from './hooks/useErrorBoundaryDevTools'
+
+interface ErrorBoundaryDevToolsProps {
+  enabled?: boolean
+  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+  defaultOpen?: boolean
+  theme?: 'light' | 'dark' | 'auto'
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void
+}
+
+export const ErrorBoundaryDevTools: React.FC<ErrorBoundaryDevToolsProps> = ({
+  enabled = true,
+  position = 'bottom-right',
+  defaultOpen = false,
+  theme = 'auto',
+  onError,
+}) => {
+  const { updateConfig } = useErrorBoundaryDevToolsHook({
+    enabled,
+    autoDetectBoundaries: true,
+    enhanceStackTraces: true,
+    trackComponentTree: true,
+  })
+
+  React.useEffect(() => {
+    updateConfig({
+      enabled,
+      position,
+      defaultOpen,
+      theme,
+    })
+  }, [enabled, position, defaultOpen, theme, updateConfig])
+
+  React.useEffect(() => {
+    if (onError) {
+      // Set up custom error handler
+      const handleError = (event: ErrorEvent) => {
+        const error = new Error(event.message)
+        error.stack = event.error?.stack
+        onError(error, {
+          componentStack: event.error?.componentStack || '',
+        } as React.ErrorInfo)
+      }
+
+      window.addEventListener('error', handleError)
+      return () => window.removeEventListener('error', handleError)
+    }
+  }, [onError])
+
+  if (!enabled) return null
+
+  return <ErrorBoundaryDevToolsPanel />
+}
+
+// Utility functions for manual integration
+
+/**
+ * Initialize Error Boundary DevTools with configuration
+ */
+export function initializeErrorBoundaryDevTools(config?: Partial<DevToolsConfig>) {
+  const { updateConfig } = useErrorBoundaryDevTools()
+  
+  if (config) {
+    updateConfig(config)
+  }
+}
+
+/**
+ * Manually report an error to the DevTools
+ */
+export function reportError(error: Error | string, metadata?: Record<string, unknown>) {
+  const { addError } = useErrorBoundaryDevTools()
+  
+  const errorInfo = {
+    id: `manual-${Date.now()}-${Math.random()}`,
+    timestamp: Date.now(),
+    message: typeof error === 'string' ? error : error.message,
+    stack: typeof error === 'object' ? error.stack : undefined,
+    category: 'unknown' as const,
+    severity: 'medium' as const,
+    occurrences: 1,
+    firstSeen: Date.now(),
+    lastSeen: Date.now(),
+    metadata,
+  }
+  
+  addError(errorInfo)
+}
+
+/**
+ * Create a higher-order component that wraps components with error boundary
+ */
+export function withErrorBoundary<P extends object>(
+  Component: React.ComponentType<P>,
+  fallbackComponent?: React.ComponentType<{ error: Error; resetErrorBoundary: () => void }>
+) {
+  const WrappedComponent = React.forwardRef<any, P>((props, ref) => (
+    <ErrorBoundaryWrapper fallbackComponent={fallbackComponent}>
+      <Component {...props} ref={ref} />
+    </ErrorBoundaryWrapper>
+  ))
+
+  WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name || 'Component'})`
+
+  return WrappedComponent
+}
+
+/**
+ * Hook for components to register themselves as error boundaries
+ */
+export function useErrorBoundary() {
+  const { registerErrorBoundary } = useErrorBoundaryDevTools()
+  const [hasError, setHasError] = React.useState(false)
+  const [error, setError] = React.useState<Error | null>(null)
+
+  const resetErrorBoundary = React.useCallback(() => {
+    setHasError(false)
+    setError(null)
+  }, [])
+
+  React.useEffect(() => {
+    if (hasError && error) {
+      // Register this component as an error boundary
+      const boundaryInfo = {
+        id: `boundary-${Date.now()}-${Math.random()}`,
+        componentName: 'useErrorBoundary',
+        componentStack: error.stack || '',
+        hasError: true,
+        errorCount: 1,
+        lastError: {
+          id: `error-${Date.now()}`,
+          timestamp: Date.now(),
+          message: error.message,
+          stack: error.stack,
+          category: 'render' as const,
+          severity: 'high' as const,
+          occurrences: 1,
+          firstSeen: Date.now(),
+          lastSeen: Date.now(),
+        },
+        children: [],
+        coverage: 100,
+        depth: 0,
+        path: ['useErrorBoundary'],
+        isActive: true,
+      }
+
+      registerErrorBoundary(boundaryInfo)
+    }
+  }, [hasError, error, registerErrorBoundary])
+
+  const captureError = React.useCallback((error: Error) => {
+    setHasError(true)
+    setError(error)
+  }, [])
+
+  return {
+    hasError,
+    error,
+    resetErrorBoundary,
+    captureError,
+  }
+}
+
+// Development helpers
+if (process.env.NODE_ENV === 'development') {
+  // Add global helpers for development
+  ;(window as any).__ERROR_BOUNDARY_DEVTOOLS__ = {
+    reportError,
+    initializeErrorBoundaryDevTools,
+  }
+}
