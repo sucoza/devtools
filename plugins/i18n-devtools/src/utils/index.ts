@@ -20,7 +20,7 @@ export function throttle<T extends (...args: any[]) => any>(
   let inThrottle: boolean;
   return ((...args: any[]) => {
     if (!inThrottle) {
-      func.apply(null, args);
+      func(...args);
       inThrottle = true;
       setTimeout(() => (inThrottle = false), limit);
     }
@@ -67,7 +67,7 @@ export function flattenObject(obj: any, prefix = ''): Record<string, any> {
   const flattened: Record<string, any> = {};
   
   for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const newKey = prefix ? `${prefix}.${key}` : key;
       
       if (isObject(obj[key])) {
@@ -85,7 +85,7 @@ export function unflattenObject(obj: Record<string, any>): any {
   const result: any = {};
   
   for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const keys = key.split('.');
       let current = result;
       
@@ -121,7 +121,7 @@ export function highlightText(text: string, query: string): string {
   return text.replace(regex, '<mark>$1</mark>');
 }
 
-export function calculateTextWidth(text: string, fontSize: number = 12, fontFamily: string = 'monospace'): number {
+export function calculateTextWidth(text: string, fontSize: number = 12, _fontFamily: string = 'monospace'): number {
   // Rough estimation - in a real implementation you'd use canvas.measureText()
   const avgCharWidth = fontSize * 0.6;
   return text.length * avgCharWidth;

@@ -246,7 +246,7 @@ export function BundleAnalyzer({
         </h5>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {processedData.slice(0, 10).map((item, index) => {
+          {processedData.slice(0, 10).map((item, _index) => {
             const maxSize = Math.max(...processedData.map(d => d.size));
             const widthPercentage = (item.size / maxSize) * 100;
             
@@ -390,7 +390,7 @@ export function BundleAnalyzer({
         gap: '4px',
         height: '350px'
       }}>
-        {processedData.map((item, index) => {
+        {processedData.map((item, _index) => {
           const maxSize = Math.max(...processedData.map(d => d.size));
           const sizeRatio = item.size / maxSize;
           const minSize = 60;
@@ -702,7 +702,7 @@ export function BundleAnalyzer({
           fontSize: '12px',
           marginTop: '40px'
         }}>
-          Click "Run Bundle Analysis" to analyze your translation bundles
+          Click &ldquo;Run Bundle Analysis&rdquo; to analyze your translation bundles
         </div>
       )}
     </div>

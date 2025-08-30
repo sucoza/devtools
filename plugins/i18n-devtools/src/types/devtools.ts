@@ -5,9 +5,9 @@
 import {
   I18nState,
   TranslationKey,
-  Translation,
-  LanguageInfo,
-  NamespaceInfo,
+  Translation as _Translation,
+  LanguageInfo as _LanguageInfo,
+  NamespaceInfo as _NamespaceInfo,
   TranslationUsage,
   FormattingExample,
   BundleAnalysis,

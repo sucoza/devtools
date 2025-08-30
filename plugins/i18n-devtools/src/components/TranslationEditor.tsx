@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import type { I18nState, Translation } from '../types/i18n';
+import type { I18nState, Translation as _Translation } from '../types/i18n';
 
 interface TranslationEditorProps {
   i18nState: I18nState;
@@ -88,7 +88,7 @@ export function TranslationEditor({
     }
   }, []);
 
-  const formatPreview = (value: string, language: string): string => {
+  const formatPreview = (value: string, _language: string): string => {
     // Simple interpolation preview
     return value
       .replace(/\{\{(\w+)\}\}/g, (match, key) => `<${key}>`)
@@ -469,7 +469,7 @@ export function TranslationEditor({
           <li>Use {'{{variable}}'} for interpolation placeholders</li>
           <li>Use {'_zero'}, {'_one'}, {'_other'} suffixes for pluralization</li>
           <li>Preview shows how interpolation will be formatted</li>
-          <li>Changes are saved immediately upon clicking "Save Changes"</li>
+          <li>Changes are saved immediately upon clicking &ldquo;Save Changes&rdquo;</li>
         </ul>
       </div>
     </div>

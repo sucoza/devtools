@@ -8,12 +8,12 @@ import { i18nEventClient } from '../core/i18n-event-client';
 import type { 
   I18nState, 
   TranslationKey, 
-  Translation, 
-  LanguageInfo, 
-  NamespaceInfo,
-  TranslationUsage,
-  FormattingExample,
-  BundleAnalysis,
+  Translation as _Translation, 
+  LanguageInfo as _LanguageInfo, 
+  NamespaceInfo as _NamespaceInfo,
+  TranslationUsage as _TranslationUsage,
+  FormattingExample as _FormattingExample,
+  BundleAnalysis as _BundleAnalysis,
   I18nPerformanceMetrics
 } from '../types/i18n';
 
@@ -59,7 +59,7 @@ const loadUIState = (): Partial<I18nUIState> => {
   try {
     const saved = localStorage.getItem(I18N_UI_STATE_KEY);
     return saved ? JSON.parse(saved) : {};
-  } catch (e) {
+  } catch {
     return {};
   }
 };
@@ -238,7 +238,7 @@ export function I18nDevToolsPanel() {
     }
   }, []);
 
-  const copyToClipboard = useCallback(async (data: any, label: string) => {
+  const _copyToClipboard = useCallback(async (data: any, label: string) => {
     try {
       await navigator.clipboard.writeText(JSON.stringify(data, null, 2));
       setCopySuccess(label);

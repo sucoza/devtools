@@ -4,7 +4,7 @@
  */
 
 import { i18n as I18nextInstance, TFunction } from 'i18next';
-import { useTranslation, Trans, withTranslation, WithTranslation } from 'react-i18next';
+import { useTranslation, Trans as _Trans, withTranslation as _withTranslation, WithTranslation as _WithTranslation } from 'react-i18next';
 import { i18nEventClient } from '../core/i18n-event-client';
 import {
   I18nState,
@@ -67,25 +67,23 @@ export class ReactI18nextAdapter {
     this.performanceMetrics.initTime = performance.now() - startTime;
     this.isInitialized = true;
 
-    console.log('[I18n DevTools] React-i18next adapter initialized');
+    // console.log('[I18n DevTools] React-i18next adapter initialized');
   }
 
   private wrapTranslationFunction(): void {
-    const adapter = this;
-
     // Wrap the main translation function
-    (this.i18n.t as any) = function(key: string, options: any = {}) {
+    (this.i18n.t as any) = (key: string, options: any = {}) => {
       const startTime = performance.now();
       
       try {
-        const result = adapter.originalT(key, options);
+        const result = this.originalT(key, options);
         const endTime = performance.now();
         
         // Track usage
-        adapter.trackTranslationUsage(key, options, 't');
+        this.trackTranslationUsage(key, options, 't');
         
         // Update performance metrics
-        adapter.performanceMetrics.translationTime += endTime - startTime;
+        this.performanceMetrics.translationTime += endTime - startTime;
         
         return result;
       } catch (error) {
@@ -134,7 +132,7 @@ export class ReactI18nextAdapter {
       const lines = stack.split('\n');
       for (const line of lines) {
         if (line.includes('.tsx') || line.includes('.jsx')) {
-          const match = line.match(/\/([^\/]+\.tsx?)/);
+          const match = line.match(/\/([^/]+\.tsx?)/);  
           return match ? match[1] : 'unknown';
         }
       }
@@ -235,7 +233,7 @@ export class ReactI18nextAdapter {
     this.sendStateUpdate();
   }
 
-  private onResourceRemoved(language: string, namespace: string): void {
+  private onResourceRemoved(_language: string, _namespace: string): void {
     this.sendStateUpdate();
   }
 
@@ -642,7 +640,7 @@ export class ReactI18nextAdapter {
     this.usageTracker.clear();
 
     this.isInitialized = false;
-    console.log('[I18n DevTools] React-i18next adapter destroyed');
+    // console.log('[I18n DevTools] React-i18next adapter destroyed');
   }
 }
 

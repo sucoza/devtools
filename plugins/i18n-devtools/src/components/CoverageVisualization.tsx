@@ -20,7 +20,7 @@ export function CoverageVisualization({
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
 
   // Calculate coverage matrix
-  const coverageMatrix = useMemo(() => {
+  const _coverageMatrix = useMemo(() => {
     const matrix: Record<string, Record<string, number>> = {};
     
     namespaces.forEach(ns => {

@@ -3,7 +3,7 @@
  * Handles communication between the i18n adapter and DevTools panel
  */
 
-import type { I18nDevToolsEvents, I18nEventType, I18nEventPayload, I18nDevToolsConfig } from '../types/devtools';
+import type { I18nDevToolsEvents as _I18nDevToolsEvents, I18nEventType, I18nEventPayload, I18nDevToolsConfig } from '../types/devtools';
 
 /**
  * Event client interface for i18n devtools
@@ -27,8 +27,8 @@ export interface I18nEventClientInterface {
 export class I18nEventClient implements I18nEventClientInterface {
   private config: I18nDevToolsConfig;
   private isEnabled: boolean = true;
-  private subscribers = new Map<string, Set<Function>>();
-  private allSubscribers = new Set<Function>();
+  private subscribers = new Map<string, Set<(...args: any[]) => void>>();
+  private allSubscribers = new Set<(...args: any[]) => void>();
 
   constructor(config: Partial<I18nDevToolsConfig> = {}) {
     this.config = {
@@ -82,7 +82,7 @@ export class I18nEventClient implements I18nEventClientInterface {
       });
       
       if (this.config.debugMode) {
-        console.debug(`[I18n DevTools] Event emitted: ${type}`, payload);
+        // console.debug(`[I18n DevTools] Event emitted: ${type}`, payload);
       }
     } catch (error) {
       console.error(`[I18n DevTools] Failed to emit event ${type}:`, error);

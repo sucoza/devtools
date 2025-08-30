@@ -72,7 +72,7 @@ export function FormatPreview({
       let options = {};
       try {
         options = JSON.parse(customOptions);
-      } catch (e) {
+      } catch {
         console.warn('Invalid options JSON, using default');
       }
 
@@ -130,7 +130,7 @@ export function FormatPreview({
       
       try {
         options = JSON.parse(customOptions);
-      } catch (e) {
+      } catch {
         // Use empty options if JSON is invalid
       }
 
@@ -139,14 +139,14 @@ export function FormatPreview({
         try {
           const date = new Date(customValue);
           output = date.toLocaleDateString(lang, options as Intl.DateTimeFormatOptions);
-        } catch (e) {
+        } catch {
           output = 'Invalid Date';
         }
       } else if (formatType === 'number') {
         try {
           const num = parseFloat(customValue);
           output = num.toLocaleString(lang, options as Intl.NumberFormatOptions);
-        } catch (e) {
+        } catch {
           output = 'Invalid Number';
         }
       } else if (formatType === 'currency') {
@@ -157,7 +157,7 @@ export function FormatPreview({
             currency: 'USD',
             ...options as Intl.NumberFormatOptions
           });
-        } catch (e) {
+        } catch {
           output = 'Invalid Currency';
         }
       } else if (formatType === 'plural') {
@@ -667,11 +667,11 @@ export function FormatPreview({
           💡 Format Type Guide:
         </div>
         <div style={{ display: 'grid', gap: '6px' }}>
-          <div><strong style={{ color: '#d19a66' }}>Date:</strong> ISO strings or timestamps (e.g., "2024-03-15T14:30:00.000Z")</div>
-          <div><strong style={{ color: '#d19a66' }}>Number:</strong> Decimal numbers (e.g., "1234567.89")</div>
-          <div><strong style={{ color: '#d19a66' }}>Currency:</strong> Numeric amounts (e.g., "1234.56")</div>
-          <div><strong style={{ color: '#d19a66' }}>Plural:</strong> Integer counts (e.g., "0", "1", "5")</div>
-          <div><strong style={{ color: '#d19a66' }}>Ordinal:</strong> Position numbers (e.g., "1", "22", "103")</div>
+          <div><strong style={{ color: '#d19a66' }}>Date:</strong> ISO strings or timestamps (e.g., &ldquo;2024-03-15T14:30:00.000Z&rdquo;)</div>
+          <div><strong style={{ color: '#d19a66' }}>Number:</strong> Decimal numbers (e.g., &ldquo;1234567.89&rdquo;)</div>
+          <div><strong style={{ color: '#d19a66' }}>Currency:</strong> Numeric amounts (e.g., &ldquo;1234.56&rdquo;)</div>
+          <div><strong style={{ color: '#d19a66' }}>Plural:</strong> Integer counts (e.g., &ldquo;0&rdquo;, &ldquo;1&rdquo;, &ldquo;5&rdquo;)</div>
+          <div><strong style={{ color: '#d19a66' }}>Ordinal:</strong> Position numbers (e.g., &ldquo;1&rdquo;, &ldquo;22&rdquo;, &ldquo;103&rdquo;)</div>
         </div>
       </div>
     </div>

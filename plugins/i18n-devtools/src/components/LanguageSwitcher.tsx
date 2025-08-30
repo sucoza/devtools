@@ -22,7 +22,7 @@ export function LanguageSwitcher({
   const [showOnlyIncomplete, setShowOnlyIncomplete] = useState(false);
 
   const filteredAndSortedLanguages = React.useMemo(() => {
-    let filtered = languages.filter(lang => {
+    const filtered = languages.filter(lang => {
       const matchesSearch = searchQuery.trim() === '' || 
         lang.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         lang.nativeName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -208,7 +208,7 @@ export function LanguageSwitcher({
       }}>
         {filteredAndSortedLanguages.map(language => {
           const isActive = language.code === currentLanguage;
-          const isComplete = language.completeness >= 95;
+          const _isComplete = language.completeness >= 95;
           
           return (
             <div

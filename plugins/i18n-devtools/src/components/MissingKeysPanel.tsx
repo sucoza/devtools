@@ -22,7 +22,7 @@ export function MissingKeysPanel({
 
   // Group and filter missing keys
   const processedMissingKeys = useMemo(() => {
-    let filtered = missingKeys.filter(key => {
+    const filtered = missingKeys.filter(key => {
       const matchesSearch = searchQuery.trim() === '' ||
         key.key.toLowerCase().includes(searchQuery.toLowerCase()) ||
         key.namespace.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -452,7 +452,7 @@ export function MissingKeysPanel({
                         fontFamily: 'monospace',
                         border: '1px solid #3c3c3c'
                       }}>
-                        "{key.defaultValue}"
+                        &ldquo;{key.defaultValue}&rdquo;
                       </div>
                     </div>
                   )}

@@ -20,7 +20,7 @@ export function LayoutTester({
   const [testSelector, setTestSelector] = useState<string>('');
   const [testResults, setTestResults] = useState<LayoutTestResult[]>([]);
   const [isTestingInProgress, setIsTestingInProgress] = useState(false);
-  const [previewMode, setPreviewMode] = useState<'side-by-side' | 'overlay' | 'animation'>('side-by-side');
+  const [_previewMode, _setPreviewMode] = useState<'side-by-side' | 'overlay' | 'animation'>('side-by-side');
 
   const rtlLanguages = languages.filter(lang => lang.isRTL);
   const ltrLanguages = languages.filter(lang => !lang.isRTL);
