@@ -511,9 +511,9 @@ export interface BrowserAutomationDevToolsPanelProps {
 
 // Export missing types that are referenced but not exported
 export type { 
-  EventType as _EventType, 
+  EventType, 
   RecordedEvent, 
-  RecordedEventTarget as _RecordedEventTarget,
+  RecordedEventTarget,
   ElementInfo, 
   ViewportInfo, 
   ActionTiming, 
@@ -536,7 +536,7 @@ export interface RecordingOptions {
   captureConsole: boolean;
   captureNetwork: boolean;
   capturePerformance: boolean;
-  ignoredEvents: EventType as _EventType[];
+  ignoredEvents: EventType[];
   debounceMs: number;
   maxEvents: number;
   selectorOptions: SelectorOptions;
@@ -631,7 +631,7 @@ export interface CollaborationState {
   currentTeam: string | null;
   
   // Notifications and shared data
-  notifications: CollaborationNotification as _CollaborationNotification[];
+  notifications: CollaborationNotification[];
   sharedTests: SharedTestRecording[];
   
   // Library state
@@ -712,7 +712,7 @@ export interface CollaborationFilters {
 export interface ShareDialogState {
   open: boolean;
   testId: string | null;
-  settings: SharingSettings as _SharingSettings | null;
+  settings: SharingSettings | null;
   loading: boolean;
   error: string | null;
 }
@@ -748,13 +748,13 @@ import type {
   SelectorOptions,
   CollaborationUser,
   SharedTestRecording,
-  SharingSettings as _SharingSettings,
+  SharingSettings,
   TestComment,
   TestReview,
   ReviewStatus,
   ReviewCriteria,
   LibraryTestStatus,
-  CollaborationNotification as _CollaborationNotification,
-  EventType as _EventType,
+  CollaborationNotification,
+  EventType,
   RecordedEvent
 } from './automation';

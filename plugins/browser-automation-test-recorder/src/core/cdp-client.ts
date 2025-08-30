@@ -530,7 +530,7 @@ export class CDPClient {
    */
   private cleanup(): void {
     // Reject all pending messages
-    for (const [id, pending] of this.pendingMessages) {
+    for (const [_id, pending] of this.pendingMessages) {
       pending.reject(new Error('CDP connection closed'));
     }
     this.pendingMessages.clear();

@@ -581,8 +581,8 @@ export class ReviewManager {
   }
 
   private async applyChange(
-    test: SharedTestRecording,
-    change: ReviewChange
+    _test: SharedTestRecording,
+    _change: ReviewChange
   ): Promise<void> {
     // Implementation would apply the change to the test recording
     // This is a simplified version - real implementation would modify events
@@ -604,12 +604,12 @@ export class ReviewManager {
     return review.requestedAt + (config.timeoutDays * 24 * 60 * 60 * 1000);
   }
 
-  private async getTestRecording(testId: string): Promise<SharedTestRecording | null> {
+  private async getTestRecording(_testId: string): Promise<SharedTestRecording | null> {
     // Implementation would retrieve test from sharing manager
     return null;
   }
 
-  private async getUser(userId: string): Promise<CollaborationUser | null> {
+  private async getUser(_userId: string): Promise<CollaborationUser | null> {
     // Implementation would retrieve user from team manager
     return null;
   }
@@ -781,27 +781,27 @@ class ReviewNotificationManager {
     this.config = config;
   }
 
-  async sendReviewRequest(review: TestReview, message?: string): Promise<void> {
+  async sendReviewRequest(_review: TestReview, _message?: string): Promise<void> {
     // Send review request notification
   }
 
-  async sendReviewAssignment(review: TestReview): Promise<void> {
+  async sendReviewAssignment(_review: TestReview): Promise<void> {
     // Send review assignment notification
   }
 
-  async sendReviewCompletion(review: TestReview): Promise<void> {
+  async sendReviewCompletion(_review: TestReview): Promise<void> {
     // Send review completion notification
   }
 
-  async sendChangesApplied(review: TestReview, changeIds: string[]): Promise<void> {
+  async sendChangesApplied(_review: TestReview, _changeIds: string[]): Promise<void> {
     // Send changes applied notification
   }
 
-  async sendChangesRejected(review: TestReview, changeIds: string[], reason: string): Promise<void> {
+  async sendChangesRejected(_review: TestReview, _changeIds: string[], _reason: string): Promise<void> {
     // Send changes rejected notification
   }
 
-  async sendReviewCancellation(review: TestReview, reason: string): Promise<void> {
+  async sendReviewCancellation(_review: TestReview, _reason: string): Promise<void> {
     // Send review cancellation notification
   }
 }
@@ -824,7 +824,7 @@ class ReviewWorkflowEngine {
     return this.config.criteria;
   }
 
-  async handleReviewCompletion(review: TestReview): Promise<void> {
+  async handleReviewCompletion(_review: TestReview): Promise<void> {
     // Handle workflow progression after review completion
     // This could trigger auto-publishing, notifications, etc.
   }
@@ -841,9 +841,9 @@ class ReviewAssignmentEngine {
   }
 
   async autoAssignReviewers(
-    test: SharedTestRecording,
+    _test: SharedTestRecording,
     preferredReviewers: string[],
-    requester: CollaborationUser
+    _requester: CollaborationUser
   ): Promise<string[]> {
     // Implementation would use skill matching and workload balancing
     // For now, return preferred reviewers

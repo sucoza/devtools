@@ -874,7 +874,7 @@ class UserManager {
     this.config = config;
   }
 
-  async getUser(userId: string): Promise<CollaborationUser | null> {
+  async getUser(_userId: string): Promise<CollaborationUser | null> {
     // Implementation would retrieve user from storage
     return null;
   }
@@ -917,17 +917,17 @@ class InvitationManager {
     return invitation;
   }
 
-  async getPendingInvitation(teamId: string, email: string): Promise<TeamInvitation | null> {
+  async getPendingInvitation(_teamId: string, _email: string): Promise<TeamInvitation | null> {
     // Implementation would query pending invitations
     return null;
   }
 
-  async getInvitationByToken(token: string): Promise<TeamInvitation | null> {
+  async getInvitationByToken(_token: string): Promise<TeamInvitation | null> {
     // Implementation would retrieve invitation by token
     return null;
   }
 
-  async acceptInvitation(invitationId: string, userId: string): Promise<void> {
+  async acceptInvitation(_invitationId: string, _userId: string): Promise<void> {
     // Implementation would update invitation status
   }
 
@@ -1033,7 +1033,7 @@ class ActivityTracker {
     this.config = config;
   }
 
-  async recordActivity(activity: {
+  async recordActivity(_activity: {
     type: string;
     actor: CollaborationUser;
     target: { type: string; id: string; name: string };
@@ -1056,40 +1056,40 @@ class TeamNotificationManager {
     this.config = config;
   }
 
-  async sendInvitation(invitation: TeamInvitation, team: CollaborationTeam): Promise<void> {
+  async sendInvitation(_invitation: TeamInvitation, _team: CollaborationTeam): Promise<void> {
     // Send invitation email
   }
 
-  async sendWelcome(user: CollaborationUser, team: CollaborationTeam): Promise<void> {
+  async sendWelcome(_user: CollaborationUser, _team: CollaborationTeam): Promise<void> {
     // Send welcome notification
   }
 
   async sendMemberRemoved(
-    member: CollaborationUser,
-    team: CollaborationTeam,
-    remover: CollaborationUser
+    _member: CollaborationUser,
+    _team: CollaborationTeam,
+    _remover: CollaborationUser
   ): Promise<void> {
     // Send member removal notification
   }
 
   async sendRoleUpdate(
-    member: CollaborationUser,
-    team: CollaborationTeam,
-    oldRole: UserRole,
-    newRole: UserRole
+    _member: CollaborationUser,
+    _team: CollaborationTeam,
+    _oldRole: UserRole,
+    _newRole: UserRole
   ): Promise<void> {
     // Send role update notification
   }
 
   async sendOwnershipTransfer(
-    team: CollaborationTeam,
-    oldOwner: CollaborationUser,
-    newOwner: CollaborationUser
+    _team: CollaborationTeam,
+    _oldOwner: CollaborationUser,
+    _newOwner: CollaborationUser
   ): Promise<void> {
     // Send ownership transfer notification
   }
 
-  async sendTeamDeletion(team: CollaborationTeam): Promise<void> {
+  async sendTeamDeletion(_team: CollaborationTeam): Promise<void> {
     // Send team deletion notification to all members
   }
 }

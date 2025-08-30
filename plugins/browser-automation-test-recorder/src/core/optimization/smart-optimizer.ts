@@ -3,7 +3,7 @@
  * Analyzes recorded events and applies intelligent optimizations for better test code
  */
 
-import type { RecordedEvent, NavigationEventData, FormEventData, MouseEventData, KeyboardEventData } from '../../types';
+import type { RecordedEvent, NavigationEventData, FormEventData, KeyboardEventData } from '../../types';
 import type { EventGroup } from '../code-generator';
 
 export interface OptimizationRule {
@@ -337,6 +337,7 @@ export class SmartOptimizer {
         const navData = firstEvent.data as NavigationEventData;
         const url = new URL(navData.url);
         return `Navigate to ${url.pathname.split('/').filter(Boolean)[0] || url.hostname}`;
+        }
       
       case 'form_interaction':
         if (firstEvent.target.name) {
@@ -465,7 +466,7 @@ export class SmartOptimizer {
   /**
    * Analyze wait requirements between events
    */
-  private analyzeWaitNeed(current: RecordedEvent, next: RecordedEvent, history: RecordedEvent[]): RecordedEvent | null {
+  private analyzeWaitNeed(current: RecordedEvent, next: RecordedEvent, _history: RecordedEvent[]): RecordedEvent | null {
     const timeDiff = next.timestamp - current.timestamp;
     
     // Add wait after navigation
@@ -723,7 +724,6 @@ export class SmartOptimizer {
         warnings.push('Consider adding waits after navigation events for better stability.');
         
         break;
-      }
       }
     }
     

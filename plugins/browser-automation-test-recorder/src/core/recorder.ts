@@ -320,7 +320,7 @@ export class EventRecorder {
   /**
    * Debounce rapid events to avoid overwhelming the system
    */
-  private debounceEvent(eventType: EventType as _EventType, event: Event): void {
+  private debounceEvent(eventType: EventType, event: Event): void {
     const key = `${eventType}_${(event.target as Element)?.tagName || 'window'}`;
     
     // Clear existing timer
@@ -341,7 +341,7 @@ export class EventRecorder {
   /**
    * Process and record DOM event
    */
-  private async processEvent(eventType: EventType as _EventType, event: Event): Promise<void> {
+  private async processEvent(eventType: EventType, event: Event): Promise<void> {
     try {
       // Generate unique event ID
       const eventId = `evt_${Date.now()}_${this.sequenceNumber++}`;
@@ -490,7 +490,7 @@ export class EventRecorder {
   /**
    * Extract event-specific data based on event type
    */
-  private extractEventData(eventType: EventType as _EventType, event: Event): EventData as _EventData {
+  private extractEventData(eventType: EventType, event: Event): EventData {
     switch (eventType) {
       case 'click':
       case 'dblclick':
@@ -532,7 +532,7 @@ export class EventRecorder {
   /**
    * Extract mouse event data
    */
-  private extractMouseEventData(event: MouseEvent): MouseEventData as _MouseEventData {
+  private extractMouseEventData(event: MouseEvent): MouseEventData {
     return {
       type: 'mouse',
       button: event.button,
@@ -554,7 +554,7 @@ export class EventRecorder {
   /**
    * Extract keyboard event data
    */
-  private extractKeyboardEventData(event: KeyboardEvent): KeyboardEventData as _KeyboardEventData {
+  private extractKeyboardEventData(event: KeyboardEvent): KeyboardEventData {
     const target = event.target as HTMLInputElement;
     
     return {
@@ -613,7 +613,7 @@ export class EventRecorder {
   /**
    * Extract scroll event data
    */
-  private extractScrollEventData(event: Event): ScrollEventData as _ScrollEventData {
+  private extractScrollEventData(event: Event): ScrollEventData {
     const target = event.target;
     const isWindow = target === window || target === document;
     
@@ -781,7 +781,7 @@ export class EventRecorder {
   /**
    * Calculate reliability metrics for recorded event
    */
-  private async calculateReliabilityMetrics(target: RecordedEventTarget as _RecordedEventTarget, event: Event): Promise<ReliabilityMetrics> {
+  private async calculateReliabilityMetrics(target: RecordedEventTarget, event: Event): Promise<ReliabilityMetrics> {
     const element = event.target as Element;
     
     // Calculate selector reliability score
@@ -853,7 +853,7 @@ export class EventRecorder {
   /**
    * Capture screenshot of current page or element
    */
-  private async captureScreenshot(target: RecordedEventTarget as _RecordedEventTarget): Promise<unknown> {
+  private async captureScreenshot(target: RecordedEventTarget): Promise<unknown> {
     try {
       // This would integrate with Chrome DevTools Protocol
       // For now, return placeholder

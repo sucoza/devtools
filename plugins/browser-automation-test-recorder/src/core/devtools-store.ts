@@ -6,7 +6,7 @@ import type {
   RecordedEvent,
   TestCase,
   GeneratedTest,
-  RecordingSession as _RecordingSession,
+  RecordingSession,
   TestGenerationOptions,
   ExportOptions,
   EventFilters,
@@ -16,7 +16,7 @@ import type {
   DevToolsTab,
   RecordingMode,
   PlaybackMode,
-  EventType as _EventType,
+  EventType,
 } from '../types';
 
 /**
@@ -257,7 +257,7 @@ interface BrowserAutomationStore extends BrowserAutomationState {
   // Utility methods
   getFilteredEvents: () => RecordedEvent[];
   getSelectedEvent: () => RecordedEvent | null;
-  getActiveSession: () => RecordingSession as _RecordingSession | null;
+  getActiveSession: () => RecordingSession | null;
   updateStats: () => void;
 }
 
@@ -276,7 +276,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
 
       switch (action.type) {
         case 'recording/start': {
-          const session: RecordingSession as _RecordingSession = {
+          const session: RecordingSession = {
             id: `session_${Date.now()}`,
             name: `Session ${new Date().toLocaleTimeString()}`,
             startTime: Date.now(),
@@ -308,6 +308,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
         case 'recording/stop':
           set(state => ({
@@ -322,7 +323,6 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
           }));
           get().updateStats();
           break;
-        }
 
         case 'recording/pause':
           set(state => ({
@@ -337,7 +337,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
           break;
 
         case 'recording/clear':
-          set(state => ({
+          set(_state => ({
             recording: {
               ...initialState.recording,
             },
@@ -553,15 +553,13 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
           }));
           break;
 
-        case 'ui/event/select':
-          {
-        const selectedEventId = action.payload;
+        case 'ui/event/select': {
+          const selectedEventId = action.payload;
           set(state => ({
             ui: { ...state.ui, selectedEventId },
           }));
-          
-        break;
-      }
+          break;
+        }
 
         case 'ui/filter/update': {
           const filterUpdates = action.payload;
@@ -583,14 +581,14 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
         }
 
         case 'settings/reset':
-          set(state => ({
+          set(_state => ({
             settings: { ...initialState.settings },
           }));
           break;
 
         case 'settings/import': {
           const importedSettings = action.payload;
-          set(state => ({
+          set(_state => ({
             settings: importedSettings,
           }));
           break;
@@ -740,7 +738,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
     /**
      * Recording methods
      */
-    startRecording: (mode: RecordingMode = 'standard') => {
+    startRecording: (_mode: RecordingMode = 'standard') => {
       get().dispatch({ type: 'recording/start' });
     },
 
@@ -848,8 +846,8 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
       return generatedTest;
     },
 
-    exportData: async (options: ExportOptions): Promise<void> => {
-      const state = get();
+    exportData: async (_options: ExportOptions): Promise<void> => {
+      const _state = get();
       // This would implement actual export logic
       // console.log('Exporting data with options:', options);
       // console.log('State to export:', state);
@@ -984,7 +982,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
 
       // Hide system events
       if (filters.hideSystem) {
-        const systemEvents: EventType as _EventType[] = ['scroll', 'mousemove', 'resize'];
+        const systemEvents: EventType[] = ['scroll', 'mousemove', 'resize'];
         filteredEvents = filteredEvents.filter(event =>
           !systemEvents.includes(event.type)
         );
@@ -1001,7 +999,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
       return state.events.find(event => event.id === selectedEventId) || null;
     },
 
-    getActiveSession: (): RecordingSession as _RecordingSession | null => {
+    getActiveSession: (): RecordingSession | null => {
       return get().recording.activeSession;
     },
 

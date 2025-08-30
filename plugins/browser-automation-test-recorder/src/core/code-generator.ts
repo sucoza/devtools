@@ -8,11 +8,11 @@ import type {
   TestGenerationOptions,
   GeneratedTest,
   TestCase as _TestCase,
-  TestFormat as _TestFormat,
+  TestFormat,
   TestFramework,
   EventType as _EventType,
   MouseEventData as _MouseEventData,
-  KeyboardEventData as _KeyboardEventData,
+  KeyboardEventData,
   FormEventData,
   NavigationEventData,
   AssertionEventData,
@@ -57,7 +57,7 @@ export interface CodeTemplate {
   id: string;
   name: string;
   description: string;
-  format: TestFormat as _TestFormat;
+  format: TestFormat;
   language: string;
   template: string;
   placeholders: Record<string, string>;
@@ -133,7 +133,7 @@ export class CodeGenerator {
    */
   async generateTestVariants(events: RecordedEvent[]): Promise<GeneratedTest[]> {
     const variants: GeneratedTest[] = [];
-    const formats: TestFormat as _TestFormat[] = ['playwright', 'cypress', 'selenium', 'puppeteer'];
+    const formats: TestFormat[] = ['playwright', 'cypress', 'selenium', 'puppeteer'];
     const languages = ['javascript', 'typescript'];
 
     for (const format of formats) {
@@ -412,7 +412,7 @@ export class CodeGenerator {
           id: template.id,
           name: template.name,
           description: template.description,
-          format: mapping.format as TestFormat as _TestFormat,
+          format: mapping.format as TestFormat,
           language: mapping.language,
           template: template.template,
           placeholders: (template.placeholders as Array<Record<string, unknown>>).reduce((acc: Record<string, unknown>, p) => {
@@ -661,7 +661,7 @@ export class CodeGenerator {
     };
   }
 
-  private getEventGenerator(format: TestFormat as _TestFormat, language: string): { 
+  private getEventGenerator(format: TestFormat, language: string): { 
     generateEvent: (event: RecordedEvent) => string;
     generateSetup: () => string;
     generateTeardown: () => string;
@@ -721,11 +721,11 @@ export class CodeGenerator {
     }
   }
 
-  private async generatePageObject(pageName: string, events: RecordedEvent[]): Promise<string> {
+  private async generatePageObject(pageName: string, _events: RecordedEvent[]): Promise<string> {
     return `// Page Object for ${pageName}`;
   }
 
-  private async generatePageObjectTest(events: RecordedEvent[], pageFiles: string[]): Promise<string> {
+  private async generatePageObjectTest(_events: RecordedEvent[], _pageFiles: string[]): Promise<string> {
     return `// Test using Page Objects`;
   }
 
@@ -792,7 +792,7 @@ export class CodeGenerator {
         inputGroups.get(key)!.push(event);
       } else {
         // Process accumulated input groups
-        inputGroups.forEach((group, selector) => {
+        inputGroups.forEach((group, _selector) => {
           if (group.length > 0) {
             result.push(this.createMergedInputEvent(group));
           }
@@ -844,17 +844,17 @@ export class CodeGenerator {
   private createMergedInputEvent(inputEvents: RecordedEvent[]): RecordedEvent {
     const lastEvent = inputEvents[inputEvents.length - 1];
     const allInputs = inputEvents
-      .map(e => (e.data as KeyboardEventData as _KeyboardEventData).inputValue)
+      .map(e => (e.data as KeyboardEventData).inputValue)
       .filter(Boolean)
       .join('');
     
-    const lastEventData = lastEvent.data as KeyboardEventData as _KeyboardEventData;
+    const lastEventData = lastEvent.data as KeyboardEventData;
     return {
       ...lastEvent,
       data: {
         ...lastEventData,
         inputValue: allInputs
-      } as KeyboardEventData as _KeyboardEventData
+      } as KeyboardEventData
     };
   }
 

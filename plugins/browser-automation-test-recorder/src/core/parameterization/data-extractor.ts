@@ -273,7 +273,7 @@ export class DataExtractor {
       1
     );
 
-    const generateCombo = (index: number[], depth: number): Record<string, any> | null => {
+    const _generateCombo = (index: number[], depth: number): Record<string, any> | null => {
       if (depth >= parameterValues.length) return null;
       
       const combo: Record<string, any> = {};
@@ -373,7 +373,7 @@ export class DataExtractor {
       {
         id: 'phone',
         name: 'Phone Number',
-        pattern: /^[\+]?[1-9][\d]{0,15}$/,
+        pattern: /^[+]?[1-9][\d]{0,15}$/,
         type: 'phone',
         category: 'userInput',
         priority: 9,
@@ -639,7 +639,7 @@ export class DataExtractor {
 
     switch (strategy) {
       case 'sequential':
-        parameterValues.forEach((param, i) => {
+        parameterValues.forEach((param, _i) => {
           combo[param.name] = param.values[index % param.values.length];
         });
         break;
@@ -703,7 +703,7 @@ export class DataExtractor {
   /**
    * Utility methods
    */
-  private findLabel(event: RecordedEvent): string | undefined {
+  private findLabel(_event: RecordedEvent): string | undefined {
     // This would search for associated label elements
     return undefined;
   }
@@ -813,7 +813,7 @@ export class DataExtractor {
     return `# Data Set: ${dataSet.name}\nname: ${dataSet.name}\nparameters:\n${dataSet.parameters.map(p => `  - name: ${p.name}\n    type: ${p.type}\n    value: ${p.value}`).join('\n')}\ncombinations:\n${dataSet.combinations.map(c => `  - ${JSON.stringify(c.values)}`).join('\n')}`;
   }
 
-  private exportToExcel(dataSet: DataSet): string {
+  private exportToExcel(_dataSet: DataSet): string {
     // Would integrate with Excel export library
     throw new Error('Excel export not implemented');
   }
@@ -875,7 +875,7 @@ export class DataExtractor {
     };
   }
 
-  private importFromYAML(content: string): DataSet {
+  private importFromYAML(_content: string): DataSet {
     // Would implement YAML parsing
     throw new Error('YAML import not implemented');
   }

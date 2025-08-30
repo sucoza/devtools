@@ -747,7 +747,7 @@ export class ExecutionManager {
   /**
    * Cancel job on worker
    */
-  private cancelWorkerJob(workerId: string): void {
+  private cancelWorkerJob(_workerId: string): void {
     // This would send cancellation signal to worker
     // console.log(`Cancelling job on worker ${workerId}`);
   }

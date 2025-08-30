@@ -715,7 +715,7 @@ export class SelectorResolver {
   /**
    * Build matching criteria from event target info
    */
-  private buildMatchingCriteria(targetInfo: RecordedEventTarget as _RecordedEventTarget): ElementMatchingCriteria {
+  private buildMatchingCriteria(targetInfo: RecordedEventTarget): ElementMatchingCriteria {
     return {
       textContent: targetInfo.textContent,
       attributes: {

@@ -162,19 +162,22 @@ export abstract class BaseGenerator {
       case 'click':
         return `Click on ${this.getElementDescription(target)}`;
       case 'input':
-      case 'change':
-        {
+      case 'change': {
         const formData = event.data as FormEventData;
         return `Enter "${formData.value || ''}" in ${this.getElementDescription(target)}`;
-      case 'navigation':
+      }
+      case 'navigation': {
         const navData = event.data as NavigationEventData;
         return `Navigate to ${navData.url}`;
-      case 'wait':
+      }
+      case 'wait': {
         const waitData = event.data as WaitEventData;
         return `Wait ${waitData.duration}ms for ${waitData.reason}`;
-      case 'assertion':
+      }
+      case 'assertion': {
         const assertData = event.data as AssertionEventData;
         return `Verify ${assertData.message}`;
+      }
       default:
         return `Perform ${event.type} on ${this.getElementDescription(target)}`;
     }

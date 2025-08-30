@@ -508,7 +508,7 @@ export class PlaybackEngine {
         })()
       `;
 
-      const result = await this.cdpClient.executeScript(clickScript);
+      const _result = await this.cdpClient.executeScript(clickScript);
       
       // Wait for any resulting navigation or animations
       await this.sleep(options.animationDelay || 50);
@@ -677,7 +677,7 @@ export class PlaybackEngine {
     const keyboardData = event.data as KeyboardEventData as _KeyboardEventData;
 
     try {
-      const element = await this.findAndWaitForElement(event.target.selector, options);
+      const _element = await this.findAndWaitForElement(event.target.selector, options);
       
       const keyScript = `
         (function() {
@@ -734,7 +734,7 @@ export class PlaybackEngine {
     const formData = event.data as FormEventData;
 
     try {
-      const element = await this.findAndWaitForElement(event.target.selector, options);
+      const _element = await this.findAndWaitForElement(event.target.selector, options);
       
       const formScript = `
         (function() {
@@ -784,7 +784,7 @@ export class PlaybackEngine {
     const startTime = Date.now();
 
     try {
-      const element = await this.findAndWaitForElement(event.target.selector, options);
+      const _element = await this.findAndWaitForElement(event.target.selector, options);
       
       const focusScript = `
         (function() {
@@ -822,8 +822,8 @@ export class PlaybackEngine {
    */
   private async executeNavigationEvent(
     event: RecordedEvent,
-    context: PlaybackContext,
-    options: PlaybackEngineOptions
+    _context: PlaybackContext,
+    _options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
     const navData = event.data as NavigationEventData;
@@ -869,8 +869,8 @@ export class PlaybackEngine {
    */
   private async executeScrollEvent(
     event: RecordedEvent,
-    context: PlaybackContext,
-    options: PlaybackEngineOptions
+    _context: PlaybackContext,
+    _options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
     const scrollData = event.data as ScrollEventData as _ScrollEventData;
@@ -946,8 +946,8 @@ export class PlaybackEngine {
    */
   private async executeAssertionEvent(
     event: RecordedEvent,
-    context: PlaybackContext,
-    options: PlaybackEngineOptions
+    _context: PlaybackContext,
+    _options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
     const assertionData = event.data as AssertionEventData;
@@ -982,9 +982,9 @@ export class PlaybackEngine {
    * Execute screenshot events
    */
   private async executeScreenshotEvent(
-    event: RecordedEvent,
-    context: PlaybackContext,
-    options: PlaybackEngineOptions
+    _event: RecordedEvent,
+    _context: PlaybackContext,
+    _options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
 
@@ -1120,7 +1120,7 @@ export class PlaybackEngine {
           }
           break;
           
-        case 'retry':
+        case 'retry': {
           // Wait and retry original selector
           await this.sleep(1000);
           const element = await this.cdpClient.findElement(event.target.selector);
@@ -1128,6 +1128,7 @@ export class PlaybackEngine {
             return true;
           }
           break;
+        }
           
         case 'position':
           // Try to find element by position (advanced healing)
@@ -1203,23 +1204,23 @@ export class PlaybackEngine {
    */
   private log(level: string, message: string): void {
     const timestamp = new Date().toISOString();
-    const logMessage = `[${timestamp}] PlaybackEngine: ${message}`;
+    const _logMessage = `[${timestamp}] PlaybackEngine: ${message}`;
     
     switch (level) {
       case 'error':
-        // console.error(logMessage);
+        // console.error(_logMessage);
         break;
       case 'warn':
-        // console.warn(logMessage);
+        // console.warn(_logMessage);
         break;
       case 'info':
-        // console.info(logMessage);
+        // console.info(_logMessage);
         break;
       case 'debug':
-        // console.debug(logMessage);
+        // console.debug(_logMessage);
         break;
       default:
-        // console.log(logMessage);
+        // console.log(_logMessage);
     }
   }
 

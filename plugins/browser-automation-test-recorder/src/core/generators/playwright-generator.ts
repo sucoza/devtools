@@ -795,7 +795,7 @@ module.exports = { ${pageName} };`;
     const methods: string[] = [];
     const actionGroups = this.groupRelatedEvents(events);
     
-    actionGroups.forEach((group, index) => {
+    actionGroups.forEach((group, _index) => {
       const methodName = this.generateMethodName(group);
       const methodCode = this.generatePageObjectMethod(methodName, group);
       methods.push(methodCode);
@@ -874,7 +874,7 @@ module.exports = { ${pageName} };`;
   /**
    * Get mouse event modifiers
    */
-  private getModifiers(mouseData: MouseEventData as _MouseEventData): string[] {
+  private getModifiers(mouseData: MouseEventData): string[] {
     const modifiers: string[] = [];
     
     if (mouseData.ctrlKey) modifiers.push('Control');
@@ -888,7 +888,7 @@ module.exports = { ${pageName} };`;
   /**
    * Get keyboard event modifiers
    */
-  private getKeyboardModifiers(keyData: KeyboardEventData as _KeyboardEventData): string[] {
+  private getKeyboardModifiers(keyData: KeyboardEventData): string[] {
     const modifiers: string[] = [];
     
     if (keyData.ctrlKey) modifiers.push('Control');

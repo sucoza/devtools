@@ -6,7 +6,7 @@
 import type {
   RecordedEvent,
   SharedTestRecording,
-  SharingSettings as _SharingSettings,
+  SharingSettings,
   CollaborationUser,
   SharedTestMetadata,
   TestVersion,
@@ -330,7 +330,7 @@ export class SharingManager {
    */
   async listSharedTests(filters?: {
     author?: string;
-    visibility?: SharingSettings as _SharingSettings['visibility'];
+    visibility?: SharingSettings['visibility'];
     tags?: string[];
     category?: string;
     search?: string;
@@ -640,34 +640,34 @@ export class SharingManager {
   }
 
   // Placeholder methods for cloud integration
-  private async uploadToCloud(test: SharedTestRecording): Promise<void> {
+  private async uploadToCloud(_test: SharedTestRecording): Promise<void> {
     // Implementation would use actual API
     // console.log('Upload to cloud:', test.id);
   }
 
-  private async syncToCloud(test: SharedTestRecording): Promise<void> {
+  private async syncToCloud(_test: SharedTestRecording): Promise<void> {
     // Implementation would use actual API
     // console.log('Sync to cloud:', test.id);
   }
 
-  private async fetchFromCloud(testId: string): Promise<SharedTestRecording | null> {
+  private async fetchFromCloud(_testId: string): Promise<SharedTestRecording | null> {
     // Implementation would use actual API
     // console.log('Fetch from cloud:', testId);
     return null;
   }
 
-  private async deleteFromCloud(testId: string): Promise<void> {
+  private async deleteFromCloud(_testId: string): Promise<void> {
     // Implementation would use actual API
     // console.log('Delete from cloud:', testId);
   }
 
   // Placeholder methods for format conversion
-  private convertToHar(test: SharedTestRecording): string {
+  private convertToHar(_test: SharedTestRecording): string {
     // Convert to HTTP Archive format
     return JSON.stringify({ log: { entries: [] } });
   }
 
-  private async convertFromHar(har: string, author: CollaborationUser): Promise<SharedTestRecording> {
+  private async convertFromHar(_har: string, _author: CollaborationUser): Promise<SharedTestRecording> {
     // Convert from HAR to SharedTestRecording
     throw new Error('HAR import not implemented yet');
   }
@@ -687,7 +687,7 @@ export class SharingManager {
     return `// Generated Selenium test for: ${test.name}`;
   }
 
-  private async createZipExport(test: SharedTestRecording): Promise<Blob> {
+  private async createZipExport(_test: SharedTestRecording): Promise<Blob> {
     // Create ZIP with test files
     return new Blob(['zip content'], { type: 'application/zip' });
   }
@@ -753,7 +753,7 @@ export class SharingStorage {
 
   async listSharedTests(filters?: {
     author?: string;
-    visibility?: SharingSettings as _SharingSettings['visibility'];
+    visibility?: SharingSettings['visibility'];
     tags?: string[];
     category?: string;
     search?: string;

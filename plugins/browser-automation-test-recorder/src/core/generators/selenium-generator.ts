@@ -650,7 +650,7 @@ ${this.indent(testCode, 2)}
   /**
    * Select event code generation
    */
-  private generateSelectEventCode(event: RecordedEvent): string {
+  private generateSelectEventCode(_event: RecordedEvent): string {
     // This is handled in generateInputCode for select elements
     return this.generateCommentForLanguage('Select event handled by input processing');
   }
@@ -919,7 +919,7 @@ ${this.indent(testCode, 2)}
   /**
    * Generate page object files
    */
-  private async generatePageObjectFiles(groups: EventGroup[]): Promise<GeneratedTestFile[]> {
+  private async generatePageObjectFiles(_groups: EventGroup[]): Promise<GeneratedTestFile[]> {
     // Implementation would be similar to other frameworks but adapted for each language
     return [];
   }

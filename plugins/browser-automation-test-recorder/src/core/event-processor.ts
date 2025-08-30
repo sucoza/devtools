@@ -5,14 +5,14 @@
 
 import type {
   RecordedEvent,
-  EventType as _EventType,
+  EventType,
   EventGroup,
   EventAnnotation,
   RecordingSession as _RecordingSession,
   EventFilters,
   EventData as _EventData,
-  MouseEventData as _MouseEventData,
-  KeyboardEventData as _KeyboardEventData,
+  MouseEventData,
+  KeyboardEventData,
 } from '../types';
 
 /**
@@ -177,7 +177,7 @@ export class EventProcessor {
     }
 
     if (filters.hideSystem) {
-      const systemEvents: EventType as _EventType[] = ['scroll', 'mousemove', 'resize', 'load'];
+      const systemEvents: EventType[] = ['scroll', 'mousemove', 'resize', 'load'];
       events = events.filter(event => !systemEvents.includes(event.type));
     }
 
@@ -402,7 +402,7 @@ export class EventProcessor {
 
       // Filter empty input events
       if (event.type === 'input') {
-        const keyboardData = event.data as KeyboardEventData as _KeyboardEventData;
+        const keyboardData = event.data as KeyboardEventData;
         if (!keyboardData.inputValue || keyboardData.inputValue.trim() === '') {
           return false;
         }
@@ -583,10 +583,10 @@ export class EventProcessor {
 
     // Add event-specific data
     if (event.data.type === 'keyboard') {
-      const kbData = event.data as KeyboardEventData as _KeyboardEventData;
+      const kbData = event.data as KeyboardEventData;
       keyParts.push(kbData.key, kbData.inputValue || '');
     } else if (event.data.type === 'mouse') {
-      const mouseData = event.data as MouseEventData as _MouseEventData;
+      const mouseData = event.data as MouseEventData;
       keyParts.push(mouseData.button.toString());
     }
 

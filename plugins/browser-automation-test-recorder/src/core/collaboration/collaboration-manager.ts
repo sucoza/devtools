@@ -11,8 +11,8 @@ import type {
   TestComment,
   TestReview,
   RecordedEvent,
-  CollaborationNotification as _CollaborationNotification,
-  ActivityFeedItem as _ActivityFeedItem
+  CollaborationNotification,
+  ActivityFeedItem
 } from '../../types';
 
 import { SharingManager, type SharingConfig } from './sharing';
@@ -484,7 +484,7 @@ export class CollaborationManager {
    */
   onNotification(
     type: string,
-    handler: (notification: CollaborationNotification as _CollaborationNotification) => void
+    handler: (notification: CollaborationNotification) => void
   ): () => void {
     if (!this.notificationHandlers.has(type)) {
       this.notificationHandlers.set(type, []);
@@ -594,7 +594,7 @@ export class CollaborationManager {
     // // console.log('Disconnecting from notifications...');
   }
 
-  private emitNotification(notification: CollaborationNotification as _CollaborationNotification): void {
+  private emitNotification(notification: CollaborationNotification): void {
     const handlers = this.notificationHandlers.get(notification.type);
     if (handlers) {
       handlers.forEach(handler => {

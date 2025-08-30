@@ -5,10 +5,10 @@
 
 import type {
   RecordedEvent,
-  RecordedEventTarget as _RecordedEventTarget,
+  RecordedEventTarget,
   EventContext,
   ViewportInfo,
-  RecordingSession as _RecordingSession,
+  RecordingSession,
   TestCase,
   GeneratedTest,
   CollaborationUser,
@@ -16,11 +16,11 @@ import type {
   TestComment,
   TestReview,
   LibraryTest,
-  MouseEventData as _MouseEventData,
-  KeyboardEventData as _KeyboardEventData,
+  MouseEventData,
+  KeyboardEventData,
   FormEventData,
   NavigationEventData,
-  EventType as _EventType,
+  EventType,
   ReliabilityMetrics,
   EventMetadata,
 } from '../../types';
@@ -292,7 +292,7 @@ export const createMockRecordedEvent = (
 /**
  * Create mock recording session
  */
-export const createMockRecordingSession = (overrides: Partial<RecordingSession> = {}): RecordingSession as _RecordingSession => {
+export const createMockRecordingSession = (overrides: Partial<RecordingSession> = {}): RecordingSession => {
   // Create event IDs instead of full events
   const eventIds = [
     generateId('event'),
@@ -563,7 +563,7 @@ export const createMockLibraryTest = (overrides: Partial<LibraryTest> = {}): Lib
 /**
  * Create a sequence of related events (user flow)
  */
-export const createMockUserFlow = (steps: EventType as _EventType[]): RecordedEvent[] => {
+export const createMockUserFlow = (steps: EventType[]): RecordedEvent[] => {
   return steps.map((type, index) => 
     createMockRecordedEvent(type, {
       sequence: index,

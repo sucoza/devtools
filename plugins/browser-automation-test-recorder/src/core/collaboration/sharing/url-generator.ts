@@ -284,7 +284,7 @@ export class UrlGenerator {
   /**
    * Generate QR code data URL
    */
-  private generateQrCodeDataUrl(url: string): string {
+  private generateQrCodeDataUrl(_url: string): string {
     // In production, use actual QR code library
     // For now, return placeholder
     return `data:image/svg+xml;base64,${btoa(`
