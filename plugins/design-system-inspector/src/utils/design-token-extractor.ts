@@ -373,7 +373,7 @@ function isTokenizableSpacing(value: string): boolean {
   return pixels !== null && pixels >= 0 && pixels <= 200;
 }
 
-function isAccessibleColor(value: string): boolean {
+function isAccessibleColor(_value: string): boolean {
   // Simplified accessibility check - would need proper contrast calculation
   return true;
 }

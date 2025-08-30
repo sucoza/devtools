@@ -131,7 +131,7 @@ function analyzeTypographyConsistency(
 ): ConsistencyIssue[] {
   const issues: ConsistencyIssue[] = [];
   const fontSize = computedStyle.fontSize;
-  const fontWeight = computedStyle.fontWeight;
+  const _fontWeight = computedStyle.fontWeight;
   const lineHeight = computedStyle.lineHeight;
 
   // Check font size scale compliance
@@ -429,7 +429,7 @@ function isTokenizedValue(value: string, tokens?: DesignToken[]): boolean {
  */
 function hasGoodContrast(element: Element, computedStyle: CSSStyleDeclaration): boolean {
   // Simplified contrast check - in reality, would need proper WCAG calculation
-  const color = computedStyle.color;
+  const _color = computedStyle.color;
   const backgroundColor = computedStyle.backgroundColor;
   
   // Skip if no background color is set

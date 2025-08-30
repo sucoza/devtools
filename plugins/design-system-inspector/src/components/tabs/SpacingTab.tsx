@@ -1,5 +1,5 @@
 import React from 'react';
-import { Ruler, AlertTriangle, CheckCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle } from 'lucide-react';
 import { useDesignSystemInspector } from '../../hooks';
 
 export function SpacingTab() {

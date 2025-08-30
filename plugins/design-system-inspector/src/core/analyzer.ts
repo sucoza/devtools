@@ -409,7 +409,7 @@ class DesignSystemAnalyzer {
   /**
    * Create component usage data from React component info
    */
-  private createComponentUsage(info: ReactComponentInfo, element: Element): ComponentUsage {
+  private createComponentUsage(info: ReactComponentInfo, _element: Element): ComponentUsage {
     return {
       id: generateId(),
       name: info.name,
@@ -440,7 +440,7 @@ class DesignSystemAnalyzer {
   /**
    * Merge component props usage data
    */
-  private mergeProps(existing: ComponentUsage, usage: ComponentUsage): void {
+  private mergeProps(_existing: ComponentUsage, _usage: ComponentUsage): void {
     // Implementation for merging prop usage data
     // This would merge the prop usage statistics
   }

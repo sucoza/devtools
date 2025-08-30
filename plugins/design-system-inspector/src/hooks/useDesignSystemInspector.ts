@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
-import type { DesignSystemState, DesignSystemAction, AnalysisOptions, ConsistencyIssueType, DesignTokenType } from '../types';
+import type { DesignSystemState, AnalysisOptions, ConsistencyIssueType, DesignTokenType } from '../types';
 import { getDesignSystemDevToolsStore } from '../core/devtools-store';
 
 /**

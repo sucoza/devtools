@@ -114,7 +114,7 @@ function calculateSpacingScale(pixels: number): number {
   const scale4px = [0, 4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 128];
   
   // Common 8px-based scale: 8, 16, 24, 32, 40, 48, 64, 80, 96
-  const scale8px = [0, 8, 16, 24, 32, 40, 48, 64, 80, 96, 112, 128];
+  const _scale8px = [0, 8, 16, 24, 32, 40, 48, 64, 80, 96, 112, 128];
 
   // Find closest match in 4px scale
   for (let i = 0; i < scale4px.length; i++) {
@@ -332,7 +332,7 @@ function generateSpacingRecommendation(values: string[]): string {
  */
 function generateSpacingRecommendations(
   patterns: Map<string, { count: number; elements: Element[] }>,
-  inconsistencies: { property: string; values: string[]; recommendation: string }[]
+  _inconsistencies: { property: string; values: string[]; recommendation: string }[]
 ): string[] {
   const recommendations: string[] = [];
   

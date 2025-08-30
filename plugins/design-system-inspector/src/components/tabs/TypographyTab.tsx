@@ -1,5 +1,5 @@
 import React from 'react';
-import { Type, AlertTriangle, CheckCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle } from 'lucide-react';
 import { useDesignSystemInspector } from '../../hooks';
 
 export function TypographyTab() {

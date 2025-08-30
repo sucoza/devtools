@@ -6,7 +6,6 @@ import {
   Play, 
   Pause, 
   RotateCcw, 
-  Filter,
   AlertTriangle,
   CheckCircle
 } from 'lucide-react';
@@ -33,7 +32,7 @@ import { IssuesTab } from './tabs/IssuesTab';
 export function DesignSystemInspectorPanel() {
   const { state, actions } = useDesignSystemInspector();
   const {
-    ui: { activeTab, searchQuery, showOnlyIssues, filters },
+    ui: { activeTab, searchQuery, showOnlyIssues },
     isAnalysisEnabled,
     isRealTimeMode,
     stats,

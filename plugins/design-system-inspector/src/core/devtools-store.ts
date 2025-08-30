@@ -4,11 +4,10 @@ import type {
   ComponentUsage,
   DesignToken,
   ConsistencyIssue,
-  AnalysisOptions,
-  DesignSystemStats
+  AnalysisOptions
 } from '../types';
 import { initialDesignSystemState } from '../types/devtools';
-import { generateId, getTimestamp } from '../utils';
+import { getTimestamp } from '../utils';
 
 /**
  * DevTools store for managing Design System Inspector state
@@ -207,7 +206,7 @@ class DesignSystemDevToolsStore {
           ...action.payload,
         };
 
-      case 'component/track':
+      case 'component/track': {
         const existingComponent = state.componentUsage.find(c => c.id === action.payload.id);
         if (existingComponent) {
           return {
@@ -233,8 +232,9 @@ class DesignSystemDevToolsStore {
             },
           };
         }
+      }
 
-      case 'token/add':
+      case 'token/add': {
         const existingToken = state.tokens.find(t => t.id === action.payload.id);
         if (existingToken) {
           return {
@@ -255,6 +255,7 @@ class DesignSystemDevToolsStore {
             },
           };
         }
+      }
 
       case 'token/update':
         return {

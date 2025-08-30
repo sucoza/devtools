@@ -4,13 +4,12 @@ import {
   TrendingUp, 
   AlertCircle, 
   CheckCircle, 
-  Clock,
   Palette,
   Type,
   Ruler,
   Zap
 } from 'lucide-react';
-import { useDesignSystemInspector, useFilteredData } from '../../hooks';
+import { useDesignSystemInspector } from '../../hooks';
 
 export function DashboardTab() {
   const { state } = useDesignSystemInspector();
@@ -101,7 +100,7 @@ export function DashboardTab() {
           Design System Overview
         </h2>
         <p className="text-gray-600 dark:text-gray-400">
-          Monitor your design system's health and consistency across your application.
+          Monitor your design system&apos;s health and consistency across your application.
         </p>
       </div>
 
@@ -227,8 +226,7 @@ export function DashboardTab() {
 function ConsistencyItem({ 
   icon, 
   label, 
-  score, 
-  description 
+  score 
 }: { 
   icon: React.ReactNode; 
   label: string; 

@@ -6,8 +6,7 @@ import {
   Info, 
   CheckCircle, 
   X, 
-  ExternalLink,
-  Filter
+  ExternalLink
 } from 'lucide-react';
 import { useDesignSystemInspector, useFilteredData, useIssueStats } from '../../hooks';
 

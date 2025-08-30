@@ -7,7 +7,6 @@ import {
   Box, 
   Zap,
   Copy,
-  ExternalLink,
   AlertTriangle,
   CheckCircle
 } from 'lucide-react';
@@ -245,7 +244,7 @@ function TokenListItem({
 
 function TokenPreview({ token }: { token: import('../../types').DesignToken }) {
   switch (token.type) {
-    case 'color':
+    case 'color': {
       const colorToken = token as import('../../types').ColorToken;
       return (
         <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
@@ -262,8 +261,9 @@ function TokenPreview({ token }: { token: import('../../types').DesignToken }) {
           )}
         </div>
       );
+    }
       
-    case 'typography':
+    case 'typography': {
       const typographyToken = token as import('../../types').TypographyToken;
       return (
         <div 
@@ -277,14 +277,16 @@ function TokenPreview({ token }: { token: import('../../types').DesignToken }) {
           {typographyToken.fontSize} / {typographyToken.fontWeight}
         </div>
       );
+    }
       
-    case 'spacing':
+    case 'spacing': {
       const spacingToken = token as import('../../types').SpacingToken;
       return (
         <div className="text-xs text-gray-500 dark:text-gray-400">
           {spacingToken.pixels}px ({spacingToken.rem.toFixed(2)}rem)
         </div>
       );
+    }
       
     default:
       return null;
@@ -413,7 +415,7 @@ function TokenTypeIcon({ type, className }: { type: string; className?: string }
 
 function TokenLargePreview({ token }: { token: import('../../types').DesignToken }) {
   switch (token.type) {
-    case 'color':
+    case 'color': {
       const colorToken = token as import('../../types').ColorToken;
       return (
         <div className="flex items-center space-x-4">
@@ -437,8 +439,9 @@ function TokenLargePreview({ token }: { token: import('../../types').DesignToken
           </div>
         </div>
       );
+    }
       
-    case 'typography':
+    case 'typography': {
       const typographyToken = token as import('../../types').TypographyToken;
       return (
         <div className="space-y-3">
@@ -473,8 +476,9 @@ function TokenLargePreview({ token }: { token: import('../../types').DesignToken
           </div>
         </div>
       );
+    }
       
-    case 'spacing':
+    case 'spacing': {
       const spacingToken = token as import('../../types').SpacingToken;
       return (
         <div className="space-y-3">
@@ -503,6 +507,7 @@ function TokenLargePreview({ token }: { token: import('../../types').DesignToken
           </div>
         </div>
       );
+    }
       
     default:
       return (

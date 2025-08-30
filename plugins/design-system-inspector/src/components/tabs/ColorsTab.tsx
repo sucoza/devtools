@@ -1,6 +1,5 @@
 import React from 'react';
-import { clsx } from 'clsx';
-import { Palette, Eye, AlertTriangle, CheckCircle } from 'lucide-react';
+import { AlertTriangle, CheckCircle } from 'lucide-react';
 import { useDesignSystemInspector } from '../../hooks';
 import type { ColorToken } from '../../types';
 
@@ -8,13 +7,6 @@ export function ColorsTab() {
   const { state } = useDesignSystemInspector();
   const { colorPalette, colorUsage } = state;
 
-  const allColors = [
-    ...colorPalette.primary,
-    ...colorPalette.secondary, 
-    ...colorPalette.neutral,
-    ...colorPalette.semantic,
-    ...colorPalette.custom,
-  ];
 
   return (
     <div className="p-6 space-y-6">

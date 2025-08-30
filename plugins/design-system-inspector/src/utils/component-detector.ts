@@ -153,7 +153,7 @@ function getComponentSource(component: any): { fileName?: string; lineNumber?: n
     }
 
     return extractSourceFromStack(component);
-  } catch (error) {
+  } catch {
     return undefined;
   }
 }
@@ -161,7 +161,7 @@ function getComponentSource(component: any): { fileName?: string; lineNumber?: n
 /**
  * Extract source information from stack trace
  */
-function extractSourceFromStack(component: any): { fileName?: string; lineNumber?: number; columnNumber?: number } | undefined {
+function extractSourceFromStack(_component: any): { fileName?: string; lineNumber?: number; columnNumber?: number } | undefined {
   try {
     // Create an error to get stack trace
     const error = new Error();
@@ -191,7 +191,7 @@ function extractSourceFromStack(component: any): { fileName?: string; lineNumber
     }
     
     return undefined;
-  } catch (error) {
+  } catch {
     return undefined;
   }
 }
