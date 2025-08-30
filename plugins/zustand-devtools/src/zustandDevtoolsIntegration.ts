@@ -54,7 +54,7 @@ class ZustandStoreRegistry {
     if (typeof obj === 'object') {
       const cleaned: any = {};
       for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
           cleaned[key] = this.cleanStateForSerialization(obj[key]);
         }
       }

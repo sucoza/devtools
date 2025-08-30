@@ -27,7 +27,7 @@ interface ZustandUIState {
 const saveUIState = (state: ZustandUIState) => {
   try {
     localStorage.setItem(ZUSTAND_UI_STATE_KEY, JSON.stringify(state));
-  } catch (e) {
+  } catch {
     // Ignore localStorage errors
   }
 };
@@ -36,7 +36,7 @@ const loadUIState = (): Partial<ZustandUIState> => {
   try {
     const saved = localStorage.getItem(ZUSTAND_UI_STATE_KEY);
     return saved ? JSON.parse(saved) : {};
-  } catch (e) {
+  } catch {
     return {};
   }
 };
@@ -69,8 +69,8 @@ export function ZustandDevToolsPanel() {
     });
 
     // Subscribe to store registrations
-    const unsubscribeRegister = zustandEventClient.on('zustand-store-registered', (event: any) => {
-      console.log(`Store registered: ${event.payload.storeName}`);
+    const unsubscribeRegister = zustandEventClient.on('zustand-store-registered', (_event: any) => {
+      // console.log(`Store registered: ${event.payload.storeName}`);
     });
 
     // Subscribe to store actions
@@ -191,21 +191,21 @@ export function ZustandDevToolsPanel() {
               // Added property
               return (
                 <div key={key} style={{ marginLeft: '20px', background: '#1e3a28' }}>
-                  <span style={{ color: '#4ec9b0' }}>+ "{key}": {renderJson(next[key])}</span>
+                  <span style={{ color: '#4ec9b0' }}>+ &quot;{key}&quot;: {renderJson(next[key])}</span>
                 </div>
               );
             } else if (!hasInNext) {
               // Removed property
               return (
                 <div key={key} style={{ marginLeft: '20px', background: '#3c2415' }}>
-                  <span style={{ color: '#f48771', textDecoration: 'line-through' }}>- "{key}": {renderJson(prev[key])}</span>
+                  <span style={{ color: '#f48771', textDecoration: 'line-through' }}>- &quot;{key}&quot;: {renderJson(prev[key])}</span>
                 </div>
               );
             } else if (JSON.stringify(prev[key]) !== JSON.stringify(next[key])) {
               // Modified property
               return (
                 <div key={key} style={{ marginLeft: '20px' }}>
-                  <span style={{ color: '#e74c3c' }}>"{key}"</span>
+                  <span style={{ color: '#e74c3c' }}>&quot;{key}&quot;</span>
                   <span style={{ color: '#ecf0f1' }}>: </span>
                   {renderDiff(prev[key], next[key], `${path}.${key}`)}
                 </div>
@@ -214,7 +214,7 @@ export function ZustandDevToolsPanel() {
               // Unchanged property
               return (
                 <div key={key} style={{ marginLeft: '20px' }}>
-                  <span style={{ color: '#e74c3c' }}>"{key}"</span>
+                  <span style={{ color: '#e74c3c' }}>&quot;{key}&quot;</span>
                   <span style={{ color: '#ecf0f1' }}>: </span>
                   {renderJson(next[key])}
                 </div>
@@ -250,7 +250,7 @@ export function ZustandDevToolsPanel() {
       if (data.startsWith('[') && data.endsWith(']')) {
         return <span style={{ color: '#95a5a6', fontStyle: 'italic' }}>{data}</span>;
       }
-      return <span style={{ color: '#27ae60' }}>"<span style={{ wordBreak: 'break-all' }}>{data}</span>"</span>;
+      return <span style={{ color: '#27ae60' }}>&quot;<span style={{ wordBreak: 'break-all' }}>{data}</span>&quot;</span>;
     }
 
     if (typeof data === 'number') {
@@ -340,7 +340,7 @@ export function ZustandDevToolsPanel() {
             <div style={{ marginLeft: '16px', borderLeft: '1px solid #404040', paddingLeft: '8px' }}>
               {entries.map(([key, value]) => (
                 <div key={key} style={{ margin: '2px 0', display: 'flex', alignItems: 'flex-start' }}>
-                  <span style={{ color: '#e74c3c', fontSize: '11px', minWidth: 'fit-content' }}>"{key}":</span>
+                  <span style={{ color: '#e74c3c', fontSize: '11px', minWidth: 'fit-content' }}>&quot;{key}&quot;:</span>
                   <div style={{ marginLeft: '8px' }}>
                     <TreeNode data={value} path={`${path}.${key}`} depth={depth + 1} />
                   </div>
@@ -365,7 +365,7 @@ export function ZustandDevToolsPanel() {
       if (data.startsWith('[') && data.endsWith(']')) {
         return <span style={{ color: '#95a5a6', fontStyle: 'italic' }}>{data}</span>;
       }
-      return <span style={{ color: '#27ae60' }}>"{data}"</span>;
+      return <span style={{ color: '#27ae60' }}>&quot;{data}&quot;</span>;
     }
 
     if (typeof data === 'number') {
@@ -404,7 +404,7 @@ export function ZustandDevToolsPanel() {
           <span style={{ color: '#95a5a6' }}>{'{'}</span>
           {Object.entries(data).map(([key, value]) => (
             <div key={key} style={{ marginLeft: '20px' }}>
-              <span style={{ color: '#e74c3c' }}>"{key}"</span>
+              <span style={{ color: '#e74c3c' }}>&quot;{key}&quot;</span>
               <span style={{ color: '#ecf0f1' }}>: </span>
               {renderJson(value, depth + 1)}
             </div>
