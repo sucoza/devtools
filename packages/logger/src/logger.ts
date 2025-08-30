@@ -250,7 +250,7 @@ export class Logger {
       };
 
       this.processLogEntry(entry);
-    } catch (error) {
+    } catch {
       // Silent fail
     } finally {
       this.interceptingConsole = false;
@@ -443,7 +443,7 @@ export class Logger {
     if (typeof data === 'object') {
       const cleaned: any = {};
       for (const key in data) {
-        if (data.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(data, key)) {
           cleaned[key] = this.cleanData(data[key]);
         }
       }
@@ -623,7 +623,7 @@ export class Logger {
       case 'json':
         return JSON.stringify(logs, null, 2);
       
-      case 'csv':
+      case 'csv': {
         const headers = ['timestamp', 'level', 'category', 'message', 'data'];
         const rows = logs.map(log => [
           new Date(log.timestamp).toISOString(),
@@ -633,6 +633,7 @@ export class Logger {
           JSON.stringify(log.data || ''),
         ]);
         return [headers, ...rows].map(row => row.join(',')).join('\n');
+      }
       
       case 'txt':
         return logs.map(log => {

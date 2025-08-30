@@ -1,0 +1,17 @@
+dist
+build
+node_modules
+coverage
+*.config.js
+*.config.mjs
+*.config.ts
+example
+examples
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+.changeset
+.turbo
+pnpm-lock.yaml
+CHANGELOG.md

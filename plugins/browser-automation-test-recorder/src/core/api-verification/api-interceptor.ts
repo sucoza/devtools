@@ -495,7 +495,7 @@ export class APIInterceptor {
     const url = input instanceof Request ? input.url : input.toString();
     const method = init?.method || (input instanceof Request ? input.method : 'GET');
     
-    let headers: Record<string, string> = {};
+    const headers: Record<string, string> = {};
     if (init?.headers) {
       if (init.headers instanceof Headers) {
         init.headers.forEach((value, key) => {

@@ -119,7 +119,7 @@ export class SelectorResolver {
       }
     }
 
-    let lastResult: SelectorResolutionResult | null = null;
+    const lastResult: SelectorResolutionResult | null = null;
     let attempts = 0;
 
     // Try original selector first

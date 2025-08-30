@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { clsx } from 'clsx';
 import { Filter, Search, ExternalLink, Clock, AlertCircle, CheckCircle } from 'lucide-react';
 import { useInterceptor } from '../hooks/useInterceptor';
-import type { ApiCall, HttpMethod } from '../types';
+import type { HttpMethod } from '../types';
 import { ApiCallDetails } from './ApiCallDetails';
 import { FilterPanel } from './FilterPanel';
 

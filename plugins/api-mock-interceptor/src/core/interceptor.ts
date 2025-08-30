@@ -180,7 +180,7 @@ export class ApiInterceptor {
       const xhr = new OriginalXHR();
       const requestId = generateId();
       let startTime: number;
-      let request: Partial<ApiRequest> = { id: requestId };
+      const request: Partial<ApiRequest> = { id: requestId };
 
       // Override open method
       const originalOpen = xhr.open;

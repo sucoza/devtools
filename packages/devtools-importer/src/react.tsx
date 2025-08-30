@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
+import React, { useState, useCallback, lazy, Suspense } from 'react';
 
 // Import the virtual modules provided by the Vite plugin
 import { pluginLoaders } from 'virtual:tdi/plugins';
@@ -30,15 +30,15 @@ export const DevToolsManager: React.FC<DevToolsManagerProps> = ({
   onError,
   onPluginLoad
 }) => {
-  const [loadedPlugins, setLoadedPlugins] = useState<Set<string>>(new Set());
-
-  // Only render when enabled
-  if (!devtoolsConfig?.enabled) return null;
+  const [_loadedPlugins, setLoadedPlugins] = useState<Set<string>>(new Set());
 
   const handlePluginLoad = useCallback((pluginId: string) => {
     setLoadedPlugins(prev => new Set(prev).add(pluginId));
     onPluginLoad?.(pluginId);
   }, [onPluginLoad]);
+
+  // Only render when enabled
+  if (!devtoolsConfig?.enabled) return null;
 
   const LazyDevTools = lazy(async () => {
     try {

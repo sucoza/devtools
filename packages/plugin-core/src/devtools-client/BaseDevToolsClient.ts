@@ -47,14 +47,18 @@ export abstract class BaseDevToolsClient<TState = any> {
   }
 
   /**
-   * Subscribe to store changes for React components
+   * Create a React hook for subscribing to store changes
+   * Must be called from within a React component
    */
-  public useStore<TSelected>(selector: (state: TState) => TSelected): TSelected {
-    return useSyncExternalStore(
-      this.store.subscribe,
-      () => selector(this.store.getSnapshot()),
-      () => selector(this.store.getSnapshot())
-    );
+  public createStoreHook() {
+    const store = this.store;
+    return function useStore<TSelected>(selector: (state: TState) => TSelected): TSelected {
+      return useSyncExternalStore(
+        store.subscribe,
+        () => selector(store.getSnapshot()),
+        () => selector(store.getSnapshot())
+      );
+    };
   }
 
   /**

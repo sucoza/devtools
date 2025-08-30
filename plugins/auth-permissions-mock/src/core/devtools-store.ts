@@ -102,7 +102,7 @@ class AuthMockDevToolsStore {
       throw new Error(`Scenario ${scenarioId} not found`);
     }
 
-    let authState = { ...scenario.authState };
+    const authState = { ...scenario.authState };
 
     // Generate token if authenticated
     if (authState.isAuthenticated && authState.user) {
@@ -325,7 +325,7 @@ class AuthMockDevToolsStore {
       
       const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
       return payload;
-    } catch (error) {
+    } catch {
       return null;
     }
   }

@@ -109,7 +109,7 @@ export function truncateString(str: string, maxLength: number): string {
  * Format URL for display (remove protocol, truncate)
  */
 export function formatUrl(url: string, maxLength: number = 50): string {
-  let formatted = url.replace(/^https?:\/\//, '');
+  const formatted = url.replace(/^https?:\/\//, '');
   return truncateString(formatted, maxLength);
 }
 
@@ -119,7 +119,7 @@ export function formatUrl(url: string, maxLength: number = 50): string {
 export function formatJson(obj: any, indent: number = 2): string {
   try {
     return JSON.stringify(obj, null, indent);
-  } catch (error) {
+  } catch {
     return String(obj);
   }
 }

@@ -15,23 +15,22 @@ export class AuthMockDevToolsClient {
     // Intercept localStorage and sessionStorage operations
     const originalSetItem = Storage.prototype.setItem;
     const originalRemoveItem = Storage.prototype.removeItem;
-    const self = this;
 
-    Storage.prototype.setItem = function(key: string, value: string) {
-      originalSetItem.call(this, key, value);
+    Storage.prototype.setItem = (key: string, value: string) => {
+      originalSetItem.call(window.localStorage, key, value);
       
       // Detect auth-related storage changes
       if (key.includes('auth') || key.includes('token') || key.includes('user')) {
-        self.handleStorageChange(key, value);
+        this.handleStorageChange(key, value);
       }
     };
 
-    Storage.prototype.removeItem = function(key: string) {
-      originalRemoveItem.call(this, key);
+    Storage.prototype.removeItem = (key: string) => {
+      originalRemoveItem.call(window.localStorage, key);
       
       // Detect auth-related storage removal
       if (key.includes('auth') || key.includes('token') || key.includes('user')) {
-        self.handleStorageChange(key, null);
+        this.handleStorageChange(key, null);
       }
     };
 

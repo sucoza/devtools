@@ -350,7 +350,9 @@ export function AuthPermissionsMockPanel() {
                         if (parts.length === 3) {
                           return JSON.parse(atob(parts[1]));
                         }
-                      } catch {}
+                      } catch {
+                        // Invalid token format, return null
+                      }
                       return null;
                     })(),
                     null,

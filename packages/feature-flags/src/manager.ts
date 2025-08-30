@@ -27,7 +27,7 @@ export class FeatureFlagManager {
   private storage: StorageAdapter;
   private options: FeatureFlagManagerOptions;
   private refreshTimer?: NodeJS.Timeout;
-  private listeners = new Map<string, Set<Function>>();
+  private listeners = new Map<string, Set<(data: any) => void>>();
 
   constructor(options: FeatureFlagManagerOptions = {}) {
     this.options = {
@@ -225,14 +225,14 @@ export class FeatureFlagManager {
   }
 
   // Event handling
-  on(event: string, listener: Function): void {
+  on(event: string, listener: (data: any) => void): void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
     }
     this.listeners.get(event)!.add(listener);
   }
 
-  off(event: string, listener: Function): void {
+  off(event: string, listener: (data: any) => void): void {
     const eventListeners = this.listeners.get(event);
     if (eventListeners) {
       eventListeners.delete(listener);
