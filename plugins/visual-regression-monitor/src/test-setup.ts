@@ -24,41 +24,157 @@ global.HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
     width: 1920,
     height: 1080,
     toDataURL: vi.fn(() => 'data:image/png;base64,mock')
-  }
-}));
+  },
+  // Add missing CanvasRenderingContext2D properties
+  globalAlpha: 1,
+  globalCompositeOperation: 'source-over',
+  beginPath: vi.fn(),
+  clip: vi.fn(),
+  stroke: vi.fn(),
+  fill: vi.fn(),
+  closePath: vi.fn(),
+  moveTo: vi.fn(),
+  lineTo: vi.fn(),
+  quadraticCurveTo: vi.fn(),
+  bezierCurveTo: vi.fn(),
+  arcTo: vi.fn(),
+  arc: vi.fn(),
+  rect: vi.fn(),
+  ellipse: vi.fn(),
+  scale: vi.fn(),
+  rotate: vi.fn(),
+  translate: vi.fn(),
+  transform: vi.fn(),
+  setTransform: vi.fn(),
+  resetTransform: vi.fn(),
+  save: vi.fn(),
+  restore: vi.fn(),
+  getTransform: vi.fn(),
+  strokeStyle: '',
+  lineWidth: 1,
+  lineCap: 'butt',
+  lineJoin: 'miter',
+  miterLimit: 10,
+  lineDashOffset: 0,
+  shadowOffsetX: 0,
+  shadowOffsetY: 0,
+  shadowBlur: 0,
+  shadowColor: '',
+  filter: 'none',
+  imageSmoothingEnabled: true,
+  imageSmoothingQuality: 'low',
+  strokeRect: vi.fn(),
+  strokeText: vi.fn(),
+  textAlign: 'start',
+  textBaseline: 'alphabetic',
+  direction: 'inherit',
+  font: '10px sans-serif',
+  fontKerning: 'auto',
+  fontStretch: 'normal',
+  fontVariantCaps: 'normal',
+  getLineDash: vi.fn(() => []),
+  setLineDash: vi.fn(),
+  createLinearGradient: vi.fn(),
+  createRadialGradient: vi.fn(),
+  createConicGradient: vi.fn(),
+  createPattern: vi.fn(),
+  isContextLost: vi.fn(() => false),
+  getContextAttributes: vi.fn()
+})) as any;
 
 global.HTMLCanvasElement.prototype.toDataURL = vi.fn(() => 'data:image/png;base64,mock');
 
 // Mock Image constructor
-global.Image = class Image {
+global.Image = class Image extends EventTarget {
   width = 0;
   height = 0;
-  onload: (() => void) | null = null;
-  onerror: (() => void) | null = null;
+  naturalWidth = 0;
+  naturalHeight = 0;
+  complete = false;
   src = '';
+  alt = '';
+  crossOrigin: string | null = null;
+  decoding = 'auto';
+  isMap = false;
+  loading = 'eager';
+  referrerPolicy = '';
+  sizes = '';
+  srcset = '';
+  useMap = '';
+  onload: ((event: Event) => void) | null = null;
+  onerror: ((event: ErrorEvent) => void) | null = null;
+  onabort: ((event: UIEvent) => void) | null = null;
+  
+  // Add missing HTMLElement properties with minimal implementation
+  accessKey = '';
+  className = '';
+  id = '';
+  lang = '';
+  title = '';
+  dir = '';
+  hidden = false;
+  innerHTML = '';
+  innerText = '';
+  outerHTML = '';
+  outerText = '';
+  tagName = 'IMG';
+  nodeName = 'IMG';
+  nodeType = 1;
+  nodeValue: string | null = null;
+  textContent: string | null = null;
+  parentElement: Element | null = null;
+  parentNode: ParentNode | null = null;
+  childNodes = [] as unknown as NodeList;
+  children = [] as unknown as HTMLCollection;
+  firstChild: ChildNode | null = null;
+  lastChild: ChildNode | null = null;
+  nextSibling: ChildNode | null = null;
+  previousSibling: ChildNode | null = null;
 
   constructor() {
+    super();
     setTimeout(() => {
       this.width = 1920;
       this.height = 1080;
+      this.naturalWidth = 1920;
+      this.naturalHeight = 1080;
+      this.complete = true;
       if (this.onload) {
-        this.onload();
+        this.onload(new Event('load'));
       }
     }, 0);
   }
-};
+
+  // Add missing methods with minimal implementation
+  addEventListener = vi.fn();
+  removeEventListener = vi.fn();
+  dispatchEvent = vi.fn();
+  getAttribute = vi.fn();
+  setAttribute = vi.fn();
+  removeAttribute = vi.fn();
+  hasAttribute = vi.fn();
+  appendChild = vi.fn();
+  removeChild = vi.fn();
+  insertBefore = vi.fn();
+  cloneNode = vi.fn();
+  click = vi.fn();
+  blur = vi.fn();
+  focus = vi.fn();
+} as any;
 
 // Mock Web Workers
 global.Worker = class Worker extends EventTarget {
   url: string;
   onmessage: ((event: MessageEvent) => void) | null = null;
+  onmessageerror: ((event: MessageEvent) => void) | null = null;
+  onerror: ((event: ErrorEvent) => void) | null = null;
 
-  constructor(url: string) {
+  constructor(url: string, options?: WorkerOptions) {
     super();
     this.url = url;
   }
 
-  postMessage(data: any) {
+  postMessage(data: any, transfer?: Transferable[]) {
     // Mock worker responses
     setTimeout(() => {
       if (this.onmessage) {
@@ -78,19 +194,26 @@ global.Worker = class Worker extends EventTarget {
   terminate() {
     // Mock terminate
   }
-};
+
+  addEventListener = vi.fn();
+  removeEventListener = vi.fn();
+  dispatchEvent = vi.fn();
+} as any;
 
 // Mock OffscreenCanvas
-global.OffscreenCanvas = class OffscreenCanvas {
+global.OffscreenCanvas = class OffscreenCanvas extends EventTarget {
   width: number;
   height: number;
+  oncontextlost: ((event: Event) => void) | null = null;
+  oncontextrestored: ((event: Event) => void) | null = null;
 
   constructor(width: number, height: number) {
+    super();
     this.width = width;
     this.height = height;
   }
 
-  getContext() {
+  getContext(contextType: any, options?: any) {
     return {
       fillRect: vi.fn(),
       clearRect: vi.fn(),
@@ -103,7 +226,19 @@ global.OffscreenCanvas = class OffscreenCanvas {
       drawImage: vi.fn()
     };
   }
-};
+
+  convertToBlob(options?: ImageEncodeOptions): Promise<Blob> {
+    return Promise.resolve(new Blob(['mock-blob'], { type: 'image/png' }));
+  }
+
+  transferToImageBitmap(): ImageBitmap {
+    return {} as ImageBitmap;
+  }
+
+  addEventListener = vi.fn();
+  removeEventListener = vi.fn();
+  dispatchEvent = vi.fn();
+} as any;
 
 // Mock MCP Playwright tools
 global.mcpPlaywrightTools = {
@@ -167,21 +302,74 @@ global.URL = class URL {
   protocol: string;
   hostname: string;
   pathname: string;
+  search: string;
+  searchParams: URLSearchParams;
+  hash: string;
+  host: string;
+  origin: string;
+  port: string;
+  username: string;
+  password: string;
 
-  constructor(url: string) {
+  constructor(url: string, base?: string | URL) {
     this.href = url;
     this.protocol = 'https:';
     this.hostname = 'example.com';
     this.pathname = '/';
+    this.search = '';
+    this.hash = '';
+    this.host = 'example.com';
+    this.origin = 'https://example.com';
+    this.port = '';
+    this.username = '';
+    this.password = '';
+    this.searchParams = new URLSearchParams();
   }
-};
+
+  toString() {
+    return this.href;
+  }
+
+  toJSON() {
+    return this.href;
+  }
+
+  static canParse(url: string | URL, base?: string | URL): boolean {
+    return true;
+  }
+
+  static createObjectURL(obj: Blob | MediaSource): string {
+    return 'blob:mock-object-url';
+  }
+
+  static parse(url: string | URL, base?: string | URL): URL | null {
+    try {
+      return new URL(url as string);
+    } catch {
+      return null;
+    }
+  }
+
+  static revokeObjectURL(url: string): void {
+    // Mock implementation
+  }
+} as any;
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
+  root: Element | Document | null = null;
+  rootMargin: string = '0px';
+  thresholds: readonly number[] = [0];
+
+  constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
+    // Mock implementation
+  }
+
   observe = vi.fn();
   disconnect = vi.fn();
   unobserve = vi.fn();
-};
+  takeRecords = vi.fn(() => []);
+} as any;
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {

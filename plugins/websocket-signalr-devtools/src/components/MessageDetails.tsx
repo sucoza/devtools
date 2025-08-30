@@ -270,7 +270,7 @@ export function MessageDetails({ messageId, type }: MessageDetailsProps) {
         )}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .message-details {
           display: flex;
           flex-direction: column;

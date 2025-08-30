@@ -132,7 +132,7 @@ export function WebSocketSignalRDevToolsPanel({
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .websocket-signalr-devtools {
           display: flex;
           flex-direction: column;

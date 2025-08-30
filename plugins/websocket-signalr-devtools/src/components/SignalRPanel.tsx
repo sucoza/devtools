@@ -108,7 +108,7 @@ export function SignalRPanel() {
           Make sure the DevTools is enabled before creating connections.
         </div>
 
-        <style jsx>{`
+        <style>{`
           .empty-state {
             display: flex;
             flex-direction: column;
@@ -194,7 +194,7 @@ export function SignalRPanel() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .signalr-panel {
           display: flex;
           flex-direction: column;

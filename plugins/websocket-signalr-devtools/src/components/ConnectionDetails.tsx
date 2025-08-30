@@ -290,7 +290,7 @@ export function ConnectionDetails({ connectionId, type }: ConnectionDetailsProps
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .connection-details {
           display: flex;
           flex-direction: column;

@@ -700,7 +700,7 @@ export class ScreenshotEngine {
     
     // Calculate hash from canvas image data
     const imageData = ctx?.getImageData(0, 0, canvas.width, canvas.height);
-    const hash = imageData ? calculateImageHash(imageData.data) : `mock_${Date.now()}`;
+    const hash = imageData ? calculateImageHash(new Uint8Array(imageData.data)) : `mock_${Date.now()}`;
 
     return {
       dataUrl,

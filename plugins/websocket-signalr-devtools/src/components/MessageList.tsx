@@ -16,9 +16,8 @@ export function MessageList({ messages, onMessageSelect, type }: MessageListProp
       hour12: false, 
       hour: '2-digit', 
       minute: '2-digit', 
-      second: '2-digit',
-      fractionalSecondDigits: 3 
-    });
+      second: '2-digit'
+    } as any);
   };
 
   const getMessageTypeColor = (message: WebSocketMessage | SignalRMessage) => {
@@ -114,7 +113,7 @@ export function MessageList({ messages, onMessageSelect, type }: MessageListProp
       <div className="message-list-empty">
         <div>No messages to display</div>
 
-        <style jsx>{`
+        <style>{`
           .message-list-empty {
             flex: 1;
             display: flex;
@@ -170,7 +169,7 @@ export function MessageList({ messages, onMessageSelect, type }: MessageListProp
         ))}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .message-list {
           flex: 1;
           display: flex;

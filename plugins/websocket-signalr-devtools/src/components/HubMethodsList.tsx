@@ -32,7 +32,7 @@ export function HubMethodsList({ hubMethods, connectionId }: HubMethodsListProps
       <div className="hub-methods-empty">
         <div>No hub methods called yet</div>
 
-        <style jsx>{`
+        <style>{`
           .hub-methods-empty {
             flex: 1;
             display: flex;
@@ -87,7 +87,7 @@ export function HubMethodsList({ hubMethods, connectionId }: HubMethodsListProps
         ))}
       </div>
 
-      <style jsx>{`
+      <style>{`
         .hub-methods-list {
           flex: 1;
           display: flex;

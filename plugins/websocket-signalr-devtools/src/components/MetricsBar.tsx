@@ -68,7 +68,7 @@ export function MetricsBar({ metrics }: MetricsBarProps) {
         <div className="metric-label">Errors</div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .metrics-bar {
           display: flex;
           align-items: center;

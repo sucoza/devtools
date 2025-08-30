@@ -48,7 +48,7 @@ export function TabNavigation() {
         </button>
       ))}
 
-      <style jsx>{`
+      <style>{`
         .tab-navigation {
           display: flex;
           gap: 2px;

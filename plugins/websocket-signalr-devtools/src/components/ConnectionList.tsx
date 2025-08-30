@@ -76,7 +76,7 @@ export function ConnectionList({
       <div className="connection-list-empty">
         <div>No connections found</div>
 
-        <style jsx>{`
+        <style>{`
           .connection-list-empty {
             flex: 1;
             display: flex;
@@ -180,7 +180,7 @@ export function ConnectionList({
         </div>
       ))}
 
-      <style jsx>{`
+      <style>{`
         .connection-list {
           flex: 1;
           overflow-y: auto;

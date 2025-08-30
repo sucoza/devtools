@@ -86,7 +86,7 @@ export function WebSocketPanel() {
           Make sure the DevTools is enabled before creating connections.
         </div>
 
-        <style jsx>{`
+        <style>{`
           .empty-state {
             display: flex;
             flex-direction: column;
@@ -157,7 +157,7 @@ export function WebSocketPanel() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .websocket-panel {
           display: flex;
           flex-direction: column;

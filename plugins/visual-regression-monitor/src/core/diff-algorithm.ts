@@ -1141,7 +1141,7 @@ export class DiffAlgorithm {
   /**
    * Check if a region is inside another region
    */
-  private isRegionInside(region: DiffRegion, container: DiffRegion): boolean {
+  private isRegionInside(region: DiffRegion, container: DiffRegion | { x: number; y: number; width: number; height: number }): boolean {
     return (
       region.x >= container.x &&
       region.y >= container.y &&

@@ -44,7 +44,7 @@ export interface VisualDiff {
   threshold: number;
 }
 
-export type DiffStatus = 'passed' | 'failed' | 'pending' | 'error';
+export type DiffStatus = 'passed' | 'failed' | 'pending' | 'error' | 'warning';
 
 export interface DiffRegion {
   x: number;
@@ -319,6 +319,7 @@ export interface DiffOptions {
   ignoreDifferences: boolean;
   threshold: number;
   regions?: Array<{ x: number; y: number; width: number; height: number }>;
+  ignoreRegions?: boolean;
 }
 
 export interface DiffResult {

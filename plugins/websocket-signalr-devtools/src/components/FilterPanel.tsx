@@ -79,14 +79,7 @@ export function FilterPanel() {
           multiple: true,
         }
       ] : []),
-    ],
-    // Pass current filter values
-    states: filter.states,
-    messageTypes: filter.messageTypes,
-    ...(selectedTab === 'signalr' ? {
-      transports: (signalrFilter as any).transports,
-      hubMethods: (signalrFilter as any).hubMethods,
-    } : {}),
+    ]
   };
 
   const handleFilterChange = (updates: Partial<FilterConfig>) => {
