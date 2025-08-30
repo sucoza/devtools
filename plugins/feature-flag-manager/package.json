@@ -1,5 +1,7 @@
 {
+  "name": "@sucoza/feature-flag-manager-devtools-plugin",
   "version": "0.0.1",
+  "description": "DevTools plugin for feature flag management and A/B testing with multiple provider support",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -18,6 +20,16 @@
     "format": "prettier --write src/**/*.{ts,tsx}",
     "prepare": "npm run build"
   },
+  "keywords": [
+    "devtools",
+    "feature-flags",
+    "ab-testing",
+    "launchdarkly",
+    "experiments",
+    "toggles",
+    "tanstack",
+    "react"
+  ],
   "author": "tyevco",
   "license": "MIT",
   "peerDependencies": {
@@ -61,17 +73,5 @@
     "typescript": "^5.9.2",
     "vite": "^7.1.3",
     "vitest": "^3.2.4"
-  },
-  "name": "@sucoza/feature-flag-manager-devtools-plugin",
-  "description": "DevTools plugin for feature flag management and A/B testing with multiple provider support",
-  "keywords": [
-    "devtools",
-    "feature-flags",
-    "ab-testing",
-    "launchdarkly",
-    "experiments",
-    "toggles",
-    "tanstack",
-    "react"
-  ]
+  }
 }

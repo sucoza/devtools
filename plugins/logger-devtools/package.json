@@ -1,5 +1,7 @@
 {
+  "name": "@sucoza/logger-devtools-plugin",
   "version": "0.0.1",
+  "description": "Enhanced logging DevTools plugin with filtering, formatting, and TanStack integration",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -18,6 +20,16 @@
     "format": "prettier --write src/**/*.{ts,tsx}",
     "prepare": "npm run build"
   },
+  "keywords": [
+    "devtools",
+    "logging",
+    "debugging",
+    "console",
+    "filtering",
+    "formatting",
+    "tanstack",
+    "react"
+  ],
   "author": "tyevco",
   "license": "MIT",
   "peerDependencies": {
@@ -61,17 +73,5 @@
     "typescript": "^5.9.2",
     "vite": "^7.1.3",
     "vitest": "^3.2.4"
-  },
-  "name": "@sucoza/logger-devtools-plugin",
-  "description": "Enhanced logging DevTools plugin with filtering, formatting, and TanStack integration",
-  "keywords": [
-    "devtools",
-    "logging",
-    "debugging",
-    "console",
-    "filtering",
-    "formatting",
-    "tanstack",
-    "react"
-  ]
+  }
 }

@@ -1,5 +1,7 @@
 {
+  "name": "@sucoza/security-audit-panel-devtools-plugin",
   "version": "0.0.1",
+  "description": "DevTools plugin for security auditing, vulnerability scanning, and best practice validation",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -18,6 +20,17 @@
     "format": "prettier --write src/**/*.{ts,tsx}",
     "prepare": "npm run build"
   },
+  "keywords": [
+    "devtools",
+    "security",
+    "audit",
+    "vulnerability",
+    "csp",
+    "xss",
+    "csrf",
+    "tanstack",
+    "react"
+  ],
   "author": "tyevco",
   "license": "MIT",
   "peerDependencies": {
@@ -60,18 +73,5 @@
     "typescript": "^5.9.2",
     "vite": "^7.1.3",
     "vitest": "^3.2.4"
-  },
-  "name": "@sucoza/security-audit-panel-devtools-plugin",
-  "description": "DevTools plugin for security auditing, vulnerability scanning, and best practice validation",
-  "keywords": [
-    "devtools",
-    "security",
-    "audit",
-    "vulnerability",
-    "csp",
-    "xss",
-    "csrf",
-    "tanstack",
-    "react"
-  ]
+  }
 }

@@ -1,5 +1,7 @@
 {
+  "name": "@sucoza/render-waste-detector-devtools-plugin",
   "version": "0.0.1",
+  "description": "DevTools plugin for detecting unnecessary re-renders and providing optimization suggestions",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -18,6 +20,15 @@
     "format": "prettier --write src/**/*.{ts,tsx}",
     "prepare": "npm run build"
   },
+  "keywords": [
+    "devtools",
+    "performance",
+    "render-optimization",
+    "react-profiling",
+    "re-renders",
+    "tanstack",
+    "react"
+  ],
   "author": "tyevco",
   "license": "MIT",
   "peerDependencies": {
@@ -61,16 +72,5 @@
     "typescript": "^5.9.2",
     "vite": "^7.1.3",
     "vitest": "^3.2.4"
-  },
-  "name": "@sucoza/render-waste-detector-devtools-plugin",
-  "description": "DevTools plugin for detecting unnecessary re-renders and providing optimization suggestions",
-  "keywords": [
-    "devtools",
-    "performance",
-    "render-optimization",
-    "react-profiling",
-    "re-renders",
-    "tanstack",
-    "react"
-  ]
+  }
 }

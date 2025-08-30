@@ -1,5 +1,7 @@
 {
+  "name": "@sucoza/router-devtools-plugin",
   "version": "0.0.1",
+  "description": "DevTools plugin for routing debugging, navigation tracking, and parameter inspection",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -18,6 +20,16 @@
     "format": "prettier --write src/**/*.{ts,tsx}",
     "prepare": "npm run build"
   },
+  "keywords": [
+    "devtools",
+    "routing",
+    "navigation",
+    "react-router",
+    "url-params",
+    "debugging",
+    "tanstack",
+    "react"
+  ],
   "author": "tyevco",
   "license": "MIT",
   "peerDependencies": {
@@ -60,17 +72,5 @@
     "typescript": "^5.9.2",
     "vite": "^7.1.3",
     "vitest": "^3.2.4"
-  },
-  "name": "@sucoza/router-devtools-plugin",
-  "description": "DevTools plugin for routing debugging, navigation tracking, and parameter inspection",
-  "keywords": [
-    "devtools",
-    "routing",
-    "navigation",
-    "react-router",
-    "url-params",
-    "debugging",
-    "tanstack",
-    "react"
-  ]
+  }
 }

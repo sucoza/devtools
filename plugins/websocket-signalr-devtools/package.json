@@ -1,5 +1,7 @@
 {
+  "name": "@sucoza/websocket-signalr-devtools-plugin",
   "version": "0.0.1",
+  "description": "DevTools plugin for WebSocket and SignalR connection monitoring and debugging",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -18,6 +20,16 @@
     "format": "prettier --write src/**/*.{ts,tsx}",
     "prepare": "npm run build"
   },
+  "keywords": [
+    "devtools",
+    "websocket",
+    "signalr",
+    "real-time",
+    "connections",
+    "monitoring",
+    "tanstack",
+    "react"
+  ],
   "author": "tyevco",
   "license": "MIT",
   "peerDependencies": {
@@ -60,17 +72,5 @@
     "typescript": "^5.9.2",
     "vite": "^7.1.3",
     "vitest": "^3.2.4"
-  },
-  "name": "@sucoza/websocket-signalr-devtools-plugin",
-  "description": "DevTools plugin for WebSocket and SignalR connection monitoring and debugging",
-  "keywords": [
-    "devtools",
-    "websocket",
-    "signalr",
-    "real-time",
-    "connections",
-    "monitoring",
-    "tanstack",
-    "react"
-  ]
+  }
 }
