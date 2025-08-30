@@ -45,11 +45,78 @@ const initialState: MemoryProfilerState = {
   alerts: []
 };
 
+// Extended initial state for the store
+const extendedInitialState = {
+  ...initialState,
+  // Additional properties needed by the hook
+  isRecording: false,
+  isPaused: false,
+  activeTab: 'overview',
+  currentSnapshot: null,
+  warnings: [],
+  recommendations: [],
+  leakPatterns: [],
+  componentTree: [],
+  componentStats: [],
+  activeSession: null,
+  sessions: [],
+  selectedComponent: null,
+  selectedSession: null,
+  filters: {},
+  exportData: null,
+  importStatus: null,
+};
+
 export interface MemoryProfilerStore extends MemoryProfilerState {
+  // Additional state properties that the hook expects
+  isRecording: boolean;
+  isPaused: boolean;
+  activeTab: string;
+  currentSnapshot: any | null;
+  warnings: any[];
+  recommendations: any[];
+  leakPatterns: any[];
+  componentTree: any[];
+  componentStats: any[];
+  activeSession: any | null;
+  sessions: any[];
+  selectedComponent: any | null;
+  selectedSession: any | null;
+  filters: any;
+  exportData: any | null;
+  importStatus: any | null;
+
   // Actions
   startProfiling: () => void;
   stopProfiling: () => void;
+  pauseProfiling: () => void;
+  resumeProfiling: () => void;
+  clearSession: () => void;
+  deleteSession: (id: string) => void;
+  loadSession: (id: string) => void;
+  takeSnapshot: (name?: string) => void;
+  clearSnapshots: () => void;
+  selectComponent: (componentId: string) => void;
+  analyzeComponent: (componentId: string) => void;
+  trackComponent: (componentId: string) => void;
+  untrackComponent: (componentId: string) => void;
   updateConfig: (config: Partial<MemoryProfilerConfig>) => void;
+  resetConfig: () => void;
+  dismissWarning: (warningId: string) => void;
+  markRecommendationCompleted: (recommendationId: string) => void;
+  generateRecommendations: () => void;
+  updateFilters: (filters: any) => void;
+  clearFilters: () => void;
+  setActiveTab: (tab: string) => void;
+  exportSession: () => void;
+  importSession: (data: any) => void;
+  triggerGC: () => void;
+  simulateMemoryPressure: () => void;
+  enableDebugMode: () => void;
+  disableDebugMode: () => void;
+  logMemorySnapshot: () => void;
+
+  // Original actions
   addMemoryMeasurement: (measurement: MemoryMeasurement) => void;
   updateComponents: (components: ComponentMemoryInfo[]) => void;
   updateHooks: (hooks: HookMemoryInfo[]) => void;
@@ -75,19 +142,175 @@ export interface MemoryProfilerStore extends MemoryProfilerState {
   getBudgetViolations: () => MemoryBudget[];
   getMemoryPressureLevel: () => 'low' | 'medium' | 'high';
   getCurrentMemoryUsageMB: () => number;
+  getFilteredWarnings: () => any[];
+  getFilteredComponents: () => any[];
+  getCurrentMemoryUsage: () => number;
+  getMemoryUtilization: () => number;
 }
 
 export const useMemoryProfilerStore = create<MemoryProfilerStore>()(
   subscribeWithSelector((set, get) => ({
-    ...initialState,
+    ...extendedInitialState,
 
     // Core profiler controls
     startProfiling: () => {
-      set({ isRunning: true });
+      set({ isRunning: true, isRecording: true });
     },
 
     stopProfiling: () => {
-      set({ isRunning: false });
+      set({ isRunning: false, isRecording: false });
+    },
+
+    // Additional action implementations
+    pauseProfiling: () => {
+      set({ isPaused: true });
+    },
+
+    resumeProfiling: () => {
+      set({ isPaused: false });
+    },
+
+    clearSession: () => {
+      set({ 
+        timeline: null,
+        components: [],
+        hooks: [],
+        warnings: [],
+        componentTree: [],
+      });
+    },
+
+    deleteSession: (id: string) => {
+      set((state) => ({
+        sessions: state.sessions.filter((session: any) => session.id !== id)
+      }));
+    },
+
+    loadSession: (id: string) => {
+      set((state) => ({
+        selectedSession: state.sessions.find((session: any) => session.id === id) || null
+      }));
+    },
+
+    takeSnapshot: (name?: string) => {
+      get().createSnapshot(name || `Snapshot ${Date.now()}`);
+    },
+
+    clearSnapshots: () => {
+      set({ snapshots: [] });
+    },
+
+    selectComponent: (componentId: string) => {
+      set({ selectedComponent: componentId });
+    },
+
+    analyzeComponent: (componentId: string) => {
+      // Implementation would perform component analysis
+      console.log('Analyzing component:', componentId);
+    },
+
+    trackComponent: (componentId: string) => {
+      // Implementation would start tracking a component
+      console.log('Tracking component:', componentId);
+    },
+
+    untrackComponent: (componentId: string) => {
+      // Implementation would stop tracking a component
+      console.log('Untracking component:', componentId);
+    },
+
+    resetConfig: () => {
+      set({ config: defaultConfig });
+    },
+
+    dismissWarning: (warningId: string) => {
+      set((state) => ({
+        warnings: state.warnings.filter((warning: any) => warning.id !== warningId)
+      }));
+    },
+
+    markRecommendationCompleted: (recommendationId: string) => {
+      set((state) => ({
+        recommendations: state.recommendations.map((rec: any) => 
+          rec.id === recommendationId ? { ...rec, completed: true } : rec
+        )
+      }));
+    },
+
+    generateRecommendations: () => {
+      // Implementation would analyze current state and generate recommendations
+      console.log('Generating recommendations...');
+    },
+
+    updateFilters: (filters: any) => {
+      set({ filters });
+    },
+
+    clearFilters: () => {
+      set({ filters: {} });
+    },
+
+    setActiveTab: (tab: string) => {
+      set({ activeTab: tab });
+    },
+
+    exportSession: () => {
+      const state = get();
+      const exportData = {
+        config: state.config,
+        timeline: state.timeline,
+        components: state.components,
+        snapshots: state.snapshots,
+        timestamp: Date.now()
+      };
+      set({ exportData });
+    },
+
+    importSession: (data: any) => {
+      set({ importStatus: 'importing' });
+      try {
+        if (data.config) get().updateConfig(data.config);
+        if (data.components) set({ components: data.components });
+        if (data.timeline) set({ timeline: data.timeline });
+        if (data.snapshots) set({ snapshots: data.snapshots });
+        set({ importStatus: 'success' });
+      } catch (error) {
+        set({ importStatus: 'error' });
+      }
+    },
+
+    triggerGC: () => {
+      if ((window as any).gc) {
+        (window as any).gc();
+        console.log('Garbage collection triggered');
+      }
+    },
+
+    simulateMemoryPressure: () => {
+      // Implementation would simulate memory pressure for testing
+      console.log('Simulating memory pressure...');
+    },
+
+    enableDebugMode: () => {
+      set((state) => ({
+        config: { ...state.config, debugMode: true }
+      }));
+    },
+
+    disableDebugMode: () => {
+      set((state) => ({
+        config: { ...state.config, debugMode: false }
+      }));
+    },
+
+    logMemorySnapshot: () => {
+      const state = get();
+      console.log('Memory Snapshot:', {
+        currentMemory: state.currentMemory,
+        components: state.components.length,
+        warnings: state.warnings.length,
+        timestamp: Date.now()
+      });
     },
 
     updateConfig: (configUpdate: Partial<MemoryProfilerConfig>) => {
@@ -381,6 +604,28 @@ export const useMemoryProfilerStore = create<MemoryProfilerStore>()(
     getCurrentMemoryUsageMB: () => {
       const state = get();
       return state.currentMemory ? state.currentMemory.heapUsed / 1024 / 1024 : 0;
+    },
+
+    // Additional computed getters
+    getFilteredWarnings: () => {
+      const state = get();
+      return state.warnings || [];
+    },
+
+    getFilteredComponents: () => {
+      const state = get();
+      return state.componentTree || state.components || [];
+    },
+
+    getCurrentMemoryUsage: () => {
+      const state = get();
+      return state.currentMemory?.heapUsed || 0;
+    },
+
+    getMemoryUtilization: () => {
+      const state = get();
+      if (!state.currentMemory || !state.currentMemory.heapLimit) return 0;
+      return state.currentMemory.heapUsed / state.currentMemory.heapLimit;
     }
   }))
 );

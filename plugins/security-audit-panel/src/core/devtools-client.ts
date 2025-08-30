@@ -63,8 +63,8 @@ export class SecurityAuditDevToolsClient implements DevToolsEventClient<Security
   };
 
   // Control methods
-  startScan = async (scannerIds?: string[]) => {
-    if (!this.scanEngine) return;
+  startScan = async (scannerIds?: string[]): Promise<SecurityScanResult[] | undefined> => {
+    if (!this.scanEngine) return undefined;
     
     this.store.startScan(scannerIds);
     
@@ -80,6 +80,7 @@ export class SecurityAuditDevToolsClient implements DevToolsEventClient<Security
           error: error instanceof Error ? error.message : 'Unknown error' 
         } 
       });
+      return undefined;
     }
   };
 
@@ -207,14 +208,14 @@ export class SecurityAuditDevToolsClient implements DevToolsEventClient<Security
   /**
    * Get available scanners
    */
-  getAvailableScanners() {
+  getAvailableScanners(): any[] {
     return this.scanEngine?.getScanners() || [];
   }
 
   /**
    * Get enabled scanners
    */
-  getEnabledScanners() {
+  getEnabledScanners(): any[] {
     return this.scanEngine?.getEnabledScanners() || [];
   }
 }

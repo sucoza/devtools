@@ -1,3 +1,4 @@
 export { MemoryProfiler } from './memory-profiler';
-export { useMemoryProfilerStore } from './devtools-store';
-export { memoryProfilerClient, useMemoryProfilerDevTools } from './devtools-client';
+export { useMemoryProfilerStore, type MemoryProfilerStore } from './devtools-store';
+export { memoryProfilerClient, useMemoryProfilerDevTools, createMemoryProfilerEventClient } from './devtools-client';
+export type { MemoryProfilerDevToolsState } from './devtools-client';

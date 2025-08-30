@@ -3,10 +3,13 @@ import { useMemo } from 'react';
 import { 
   useMemoryProfilerStore,
   createMemoryProfilerEventClient,
-  type MemoryProfilerDevToolsState,
-  type ProfilingConfiguration,
-  type MemoryWarning
+  type MemoryProfilerDevToolsState
 } from '../core';
+import type { 
+  ProfilingConfiguration,
+  MemoryWarning,
+  MemoryProfilerEvents
+} from '../types';
 
 /**
  * Main hook for accessing memory profiler functionality
@@ -145,14 +148,14 @@ export function useMemoryStats() {
     const totalComponentMemory = componentTree.reduce((sum, comp) => sum + comp.memoryUsage, 0);
     const componentsWithWarnings = componentTree.filter(comp => comp.warnings.length > 0).length;
 
-    const timelineStats = timeline.length > 0 ? {
-      duration: timeline[timeline.length - 1]?.timestamp - timeline[0]?.timestamp,
-      memoryGrowth: timeline.length > 1 
-        ? timeline[timeline.length - 1]?.usedMemory - timeline[0]?.usedMemory
+    const timelineStats = timeline && timeline.measurements && timeline.measurements.length > 0 ? {
+      duration: timeline.endTime - timeline.startTime,
+      memoryGrowth: timeline.measurements.length > 1 
+        ? timeline.measurements[timeline.measurements.length - 1]?.heapUsed - timeline.measurements[0]?.heapUsed
         : 0,
-      gcEvents: timeline.filter(point => point.gcEvent).length,
-      peakMemory: Math.max(...timeline.map(point => point.usedMemory)),
-      minMemory: Math.min(...timeline.map(point => point.usedMemory))
+      gcEvents: timeline.events?.filter(event => event.type === 'gc').length || 0,
+      peakMemory: Math.max(...timeline.measurements.map(measurement => measurement.heapUsed)),
+      minMemory: Math.min(...timeline.measurements.map(measurement => measurement.heapUsed))
     } : null;
 
     return {
@@ -281,7 +284,7 @@ export function useMemoryTrends(windowSize: number = 10) {
   const { timeline } = useMemoryProfiler();
 
   const trends = useMemo(() => {
-    if (timeline.length < 2) {
+    if (!timeline || !timeline.measurements || timeline.measurements.length < 2) {
       return {
         memoryTrend: 'stable' as const,
         growthRate: 0,
@@ -291,7 +294,7 @@ export function useMemoryTrends(windowSize: number = 10) {
     }
 
     // Use last N points for trend analysis
-    const recentPoints = timeline.slice(-windowSize);
+    const recentPoints = timeline.measurements.slice(-windowSize);
     if (recentPoints.length < 2) {
       return {
         memoryTrend: 'stable' as const,
@@ -304,8 +307,8 @@ export function useMemoryTrends(windowSize: number = 10) {
     // Calculate linear regression for trend analysis
     const n = recentPoints.length;
     const sumX = recentPoints.reduce((sum, _, index) => sum + index, 0);
-    const sumY = recentPoints.reduce((sum, point) => sum + point.usedMemory, 0);
-    const sumXY = recentPoints.reduce((sum, point, index) => sum + index * point.usedMemory, 0);
+    const sumY = recentPoints.reduce((sum, measurement) => sum + measurement.heapUsed, 0);
+    const sumXY = recentPoints.reduce((sum, measurement, index) => sum + index * measurement.heapUsed, 0);
     const sumXX = recentPoints.reduce((sum, _, index) => sum + index * index, 0);
 
     const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
@@ -313,12 +316,12 @@ export function useMemoryTrends(windowSize: number = 10) {
 
     // Calculate R-squared for trend strength
     const meanY = sumY / n;
-    const ssRes = recentPoints.reduce((sum, point, index) => {
+    const ssRes = recentPoints.reduce((sum, measurement, index) => {
       const predicted = slope * index + intercept;
-      return sum + Math.pow(point.usedMemory - predicted, 2);
+      return sum + Math.pow(measurement.heapUsed - predicted, 2);
     }, 0);
-    const ssTot = recentPoints.reduce((sum, point) => {
-      return sum + Math.pow(point.usedMemory - meanY, 2);
+    const ssTot = recentPoints.reduce((sum, measurement) => {
+      return sum + Math.pow(measurement.heapUsed - meanY, 2);
     }, 0);
     const rSquared = ssTot > 0 ? 1 - (ssRes / ssTot) : 0;
 

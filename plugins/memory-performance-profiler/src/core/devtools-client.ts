@@ -1,10 +1,39 @@
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import type { MemoryProfilerDevToolsEvent } from '../types';
-import { useMemoryProfilerStore } from './devtools-store';
+import { useMemoryProfilerStore, type MemoryProfilerStore } from './devtools-store';
 import { MemoryProfiler } from './memory-profiler';
 
-class MemoryProfilerDevToolsClient {
+// Export the devtools state type
+export type MemoryProfilerDevToolsState = ReturnType<typeof useMemoryProfilerStore.getState>;
+
+// Public interface for the DevTools client
+export interface IMemoryProfilerDevToolsClient {
+  subscribe<T = any>(eventType: string, callback: (data: T) => void): () => void;
+  subscribe(callback: () => void): () => void;
+  emit<T = any>(eventType: string, data: T): void;
+  getSnapshot(): any;
+  start(samplingInterval?: number): void;
+  stop(): void;
+  updateConfig(configUpdate: any): void;
+  createSnapshot(name: string): void;
+  reset(): void;
+  forceGC(): void;
+  exportData(): string;
+  importData(jsonData: string): void;
+  getProfiler(): MemoryProfiler;
+  isSupported(): boolean;
+  getSupportInfo(): {
+    memoryAPI: boolean;
+    performanceObserver: boolean;
+    gc: boolean;
+    reactDevTools: boolean;
+    tanStackDevTools: boolean;
+  };
+}
+
+class MemoryProfilerDevToolsClient implements IMemoryProfilerDevToolsClient {
   private subscribers = new Set<() => void>();
+  private eventSubscribers = new Map<string, Set<(data: any) => void>>();
   private memoryProfiler: MemoryProfiler;
   private isInitialized = false;
 
@@ -17,42 +46,83 @@ class MemoryProfilerDevToolsClient {
     this.memoryProfiler.setCallbacks({
       onMemoryUpdate: (measurement) => {
         useMemoryProfilerStore.getState().addMemoryMeasurement(measurement);
-        this.emit('memory-measurement', measurement);
+        this.emitDevToolsEvent('memory-measurement', measurement);
       },
 
       onComponentUpdate: (components) => {
         useMemoryProfilerStore.getState().updateComponents(components);
-        this.emit('component-update', components);
+        this.emitDevToolsEvent('component-update', components);
       },
 
       onHookUpdate: (hooks) => {
         useMemoryProfilerStore.getState().updateHooks(hooks);
-        this.emit('hook-update', hooks);
+        this.emitDevToolsEvent('hook-update', hooks);
       },
 
       onLeakDetected: (leak) => {
         useMemoryProfilerStore.getState().addLeak(leak);
-        this.emit('leak-detected', leak);
+        this.emitDevToolsEvent('leak-detected', leak);
       },
 
       onPerformanceUpdate: (metrics) => {
         useMemoryProfilerStore.getState().updatePerformance(metrics);
-        this.emit('performance-update', metrics);
+        this.emitDevToolsEvent('performance-update', metrics);
       },
 
       onGCEvent: (event) => {
         useMemoryProfilerStore.getState().addGCEvent(event);
-        this.emit('gc-event', event);
+        this.emitDevToolsEvent('gc-event', event);
       },
 
       onSuggestion: (suggestion) => {
         useMemoryProfilerStore.getState().addSuggestion(suggestion);
-        this.emit('suggestion-generated', suggestion);
+        this.emitDevToolsEvent('suggestion-generated', suggestion);
       }
     });
   }
 
-  private emit<T>(type: string, payload: T): void {
+  subscribe<T = any>(eventType: string, callback: (data: T) => void): () => void;
+  subscribe(callback: () => void): () => void;
+  subscribe<T = any>(eventTypeOrCallback: string | (() => void), callback?: (data: T) => void): () => void {
+    if (typeof eventTypeOrCallback === 'string' && callback) {
+      // Event-specific subscription
+      if (!this.eventSubscribers.has(eventTypeOrCallback)) {
+        this.eventSubscribers.set(eventTypeOrCallback, new Set());
+      }
+      this.eventSubscribers.get(eventTypeOrCallback)!.add(callback);
+      
+      return () => {
+        const subscribers = this.eventSubscribers.get(eventTypeOrCallback);
+        if (subscribers) {
+          subscribers.delete(callback);
+          if (subscribers.size === 0) {
+            this.eventSubscribers.delete(eventTypeOrCallback);
+          }
+        }
+      };
+    } else if (typeof eventTypeOrCallback === 'function') {
+      // General state subscription
+      this.subscribers.add(eventTypeOrCallback);
+      return () => {
+        this.subscribers.delete(eventTypeOrCallback);
+      };
+    }
+    
+    return () => {};
+  }
+
+  emit<T = any>(eventType: string, data: T): void {
+    // Emit to event subscribers
+    const subscribers = this.eventSubscribers.get(eventType);
+    if (subscribers) {
+      subscribers.forEach(callback => callback(data));
+    }
+    
+    // Also emit as devtools event using the private emit method
+    this.emitDevToolsEvent(eventType, data);
+  }
+
+  private emitDevToolsEvent<T>(type: string, payload: T): void {
     const event: MemoryProfilerDevToolsEvent = {
       type: type as any,
       payload,
@@ -72,13 +142,6 @@ class MemoryProfilerDevToolsClient {
 
     // Log for debugging
     console.debug('MemoryProfiler DevTools Event:', event);
-  }
-
-  subscribe(callback: () => void): () => void {
-    this.subscribers.add(callback);
-    return () => {
-      this.subscribers.delete(callback);
-    };
   }
 
   getSnapshot(): any {
@@ -101,7 +164,7 @@ class MemoryProfilerDevToolsClient {
     this.memoryProfiler.start(store.config.samplingInterval);
     store.startProfiling();
 
-    this.emit('profiling-started', { 
+    this.emitDevToolsEvent('profiling-started', { 
       config: store.config,
       timestamp: Date.now() 
     });
@@ -111,7 +174,7 @@ class MemoryProfilerDevToolsClient {
     this.memoryProfiler.stop();
     useMemoryProfilerStore.getState().stopProfiling();
 
-    this.emit('profiling-stopped', { timestamp: Date.now() });
+    this.emitDevToolsEvent('profiling-stopped', { timestamp: Date.now() });
   }
 
   updateConfig(configUpdate: any): void {
@@ -124,7 +187,7 @@ class MemoryProfilerDevToolsClient {
       this.memoryProfiler.start(store.config.samplingInterval);
     }
 
-    this.emit('config-changed', store.config);
+    this.emitDevToolsEvent('config-changed', store.config);
   }
 
   createSnapshot(name: string): void {
@@ -134,21 +197,21 @@ class MemoryProfilerDevToolsClient {
     const snapshots = store.snapshots;
     const latestSnapshot = snapshots[snapshots.length - 1];
 
-    this.emit('snapshot-created', latestSnapshot);
+    this.emitDevToolsEvent('snapshot-created', latestSnapshot);
   }
 
   reset(): void {
     this.memoryProfiler.reset();
     useMemoryProfilerStore.getState().reset();
 
-    this.emit('data-reset', { timestamp: Date.now() });
+    this.emitDevToolsEvent('data-reset', { timestamp: Date.now() });
   }
 
   // Force garbage collection (if supported)
   forceGC(): void {
     if ((window as any).gc) {
       (window as any).gc();
-      this.emit('gc-forced', { timestamp: Date.now() });
+      this.emitDevToolsEvent('gc-forced', { timestamp: Date.now() });
     } else {
       console.warn('Garbage collection not available. Run Chrome with --enable-precise-memory-info --js-flags="--expose-gc"');
     }
@@ -208,7 +271,7 @@ class MemoryProfilerDevToolsClient {
         data.suggestions.forEach((suggestion: any) => store.addSuggestion(suggestion));
       }
 
-      this.emit('data-imported', { 
+      this.emitDevToolsEvent('data-imported', { 
         importedAt: Date.now(),
         originalExportDate: data.exportedAt 
       });
@@ -285,6 +348,11 @@ class MemoryProfilerDevToolsClient {
 // Create singleton instance
 export const memoryProfilerClient = new MemoryProfilerDevToolsClient();
 
+// Factory function for creating event clients
+export function createMemoryProfilerEventClient(): IMemoryProfilerDevToolsClient {
+  return memoryProfilerClient;
+}
+
 // React hook for using the devtools client
 export function useMemoryProfilerDevTools() {
   const state = useSyncExternalStore(
@@ -293,7 +361,7 @@ export function useMemoryProfilerDevTools() {
   );
 
   return {
-    ...state,
+    ...(state as MemoryProfilerStore),
     client: memoryProfilerClient,
     
     // Convenience methods

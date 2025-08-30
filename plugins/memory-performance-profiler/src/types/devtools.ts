@@ -1,4 +1,20 @@
-import { MemoryProfilerState } from './memory-profiler';
+import { MemoryProfilerState, MemoryMeasurement, ComponentMemoryInfo, MemoryLeak, PerformanceMetrics, GarbageCollectionInfo } from './memory-profiler';
+
+// Events interface for the hook
+export interface MemoryProfilerEvents {
+  'memory-measurement': MemoryMeasurement;
+  'component-update': ComponentMemoryInfo[];
+  'leak-detected': MemoryLeak;
+  'performance-update': PerformanceMetrics;
+  'gc-event': GarbageCollectionInfo;
+  'config-change': any;
+  'snapshot-created': any;
+  'profiling-started': any;
+  'profiling-stopped': any;
+  'data-reset': any;
+  'gc-forced': any;
+  'data-imported': any;
+}
 
 export interface MemoryProfilerDevToolsEvent {
   type: 'memory-measurement' | 'component-update' | 'leak-detected' | 'performance-update' | 'gc-event' | 'config-change' | 'snapshot-created';
