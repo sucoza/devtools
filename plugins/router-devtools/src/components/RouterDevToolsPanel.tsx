@@ -16,7 +16,7 @@ import {
   filterRoutes, 
   getRouteStatistics 
 } from '../utils/route-tree-utils';
-import { createParamEditContext, updateParamEditContext } from '../utils/param-validation';
+import { createParamEditContext } from '../utils/param-validation';
 import { RouteTreeView } from './RouteTreeView';
 import { RouteParameterInspector } from './RouteParameterInspector';
 import { NavigationTimeline } from './NavigationTimeline';
@@ -47,7 +47,7 @@ interface RouterUIState {
 const saveUIState = (state: RouterUIState) => {
   try {
     localStorage.setItem(ROUTER_UI_STATE_KEY, JSON.stringify(state));
-  } catch (e) {
+  } catch {
     // Ignore localStorage errors
   }
 };
@@ -56,7 +56,7 @@ const loadUIState = (): Partial<RouterUIState> => {
   try {
     const saved = localStorage.getItem(ROUTER_UI_STATE_KEY);
     return saved ? JSON.parse(saved) : {};
-  } catch (e) {
+  } catch {
     return {};
   }
 };
@@ -127,8 +127,8 @@ export function RouterDevToolsPanel() {
     });
 
     // Subscribe to adapter registration
-    const unsubscribeAdapterRegistered = routerEventClient.on('router-adapter-registered', (event) => {
-      console.log(`Router adapter registered: ${event.payload.routerType}`);
+    const unsubscribeAdapterRegistered = routerEventClient.on('router-adapter-registered', (_event) => {
+      // console.log(`Router adapter registered: ${event.payload.routerType}`);
       setState(prevState => ({ ...prevState, isConnected: true }));
     });
 
@@ -297,7 +297,7 @@ export function RouterDevToolsPanel() {
         ].map((tab) => (
           <button
             key={tab.key}
-            onClick={() => handleTabChange(tab.key as any)}
+            onClick={() => handleTabChange(tab.key as 'tree' | 'params' | 'timeline')}
             style={{
               padding: '8px 16px',
               background: state.activeTab === tab.key ? '#1e1e1e' : 'transparent',

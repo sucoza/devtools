@@ -320,7 +320,7 @@ export function NavigationTimeline({
 
     const averageDuration = history
       .filter(entry => entry.duration)
-      .reduce((sum, entry, _, arr) => sum + (entry.duration! / arr.length), 0);
+      .reduce((sum, entry, _, arr) => sum + ((entry.duration ?? 0) / arr.length), 0);
 
     return { actionCounts, averageDuration };
   }, [history]);

@@ -55,7 +55,7 @@ export class ReactRouterAdapter implements IRouterAdapter {
     // you would need to traverse the React fiber tree to find the router
     try {
       // Look for router instance in window
-      const reactRouter = (window as any).__reactRouter;
+      const reactRouter = (window as unknown as { __reactRouter?: unknown }).__reactRouter;
       if (reactRouter) {
         this.router = reactRouter;
       }

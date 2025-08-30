@@ -45,7 +45,9 @@ export { createReactRouterAdapter } from './adapters/react-router-adapter';
  * ```
  */
 export function initializeRouterDevTools() {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { createReactRouterAdapter } = require('./adapters/react-router-adapter');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { routerStateManager } = require('./core/router-state-manager');
   
   const adapter = createReactRouterAdapter();
@@ -75,11 +77,11 @@ export function initializeRouterDevTools() {
  * ```
  */
 export function useRouterDevTools() {
-  if (typeof window === 'undefined') {
-    return; // Skip in SSR
-  }
-  
   React.useEffect(() => {
+    if (typeof window === 'undefined') {
+      return; // Skip in SSR
+    }
+    
     const cleanup = initializeRouterDevTools();
     return cleanup;
   }, []);

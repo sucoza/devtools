@@ -161,8 +161,8 @@ export class RouterStateManager {
       this.navigationHistory.push(historyEntry);
 
       // Trim history to max size
-      if (this.navigationHistory.length > this.config.maxHistoryEntries!) {
-        this.navigationHistory = this.navigationHistory.slice(-this.config.maxHistoryEntries!);
+      if (this.navigationHistory.length > (this.config.maxHistoryEntries ?? 50)) {
+        this.navigationHistory = this.navigationHistory.slice(-(this.config.maxHistoryEntries ?? 50));
       }
 
       // Emit navigation event

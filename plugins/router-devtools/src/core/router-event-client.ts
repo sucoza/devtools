@@ -4,10 +4,10 @@
  */
 
 import { EventClient } from '@tanstack/devtools-event-client';
-import { RouterDevToolsEvents, RouterEventType, RouterEventPayload } from '../types/devtools';
+import { RouterEventType, RouterEventPayload } from '../types/devtools';
 
 export class RouterEventClient {
-  private eventClient: any;
+  private eventClient: EventClient;
 
   constructor() {
     this.eventClient = new EventClient({ pluginId: 'router-devtools' });

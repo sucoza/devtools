@@ -51,7 +51,7 @@ export function validateSearch(search: string): string | null {
     new URLSearchParams(searchString);
     
     return null; // No error
-  } catch (error) {
+  } catch {
     return 'Invalid search parameter format';
   }
 }
@@ -143,7 +143,7 @@ export function updateParamEditContext(
       };
     } else {
       // Remove search error if validation passes
-      const { search, ...otherErrors } = updatedContext.errors;
+      const { search: _search, ...otherErrors } = updatedContext.errors;
       updatedContext.errors = otherErrors;
     }
   }

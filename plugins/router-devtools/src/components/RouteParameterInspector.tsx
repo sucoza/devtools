@@ -18,7 +18,7 @@ interface RouteParameterInspectorProps {
   onEditContextChange: (context: RouteParamEditContext) => void;
   onParamUpdate: (params: Record<string, string>) => void;
   onSearchUpdate: (search: string) => void;
-  onNavigate: (to: string, options?: { replace?: boolean }) => void;
+  onNavigate?: (to: string, options?: { replace?: boolean }) => void;
 }
 
 export function RouteParameterInspector({
@@ -27,13 +27,13 @@ export function RouteParameterInspector({
   onEditContextChange,
   onParamUpdate,
   onSearchUpdate,
-  onNavigate
+  onNavigate: _onNavigate
 }: RouteParameterInspectorProps) {
   const [activeTab, setActiveTab] = useState<'params' | 'search' | 'state'>('params');
   const [showRawJson, setShowRawJson] = useState(false);
 
   const activeMatch = currentState?.matches?.[currentState.matches.length - 1];
-  const searchParams = parseSearchParams(currentState?.location.search || '');
+  const _searchParams = parseSearchParams(currentState?.location.search || '');
 
   const handleParamEdit = useCallback((paramName: string, value: string) => {
     const newContext = updateParamEditContext(editContext, {
@@ -138,7 +138,7 @@ export function RouteParameterInspector({
         ].map((tab) => (
           <button
             key={tab.key}
-            onClick={() => setActiveTab(tab.key as any)}
+            onClick={() => setActiveTab(tab.key as 'params' | 'search' | 'state')}
             style={{
               padding: '6px 12px',
               background: activeTab === tab.key ? '#1e1e1e' : 'transparent',
