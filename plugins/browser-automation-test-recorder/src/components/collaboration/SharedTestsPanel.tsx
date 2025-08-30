@@ -133,7 +133,7 @@ export const SharedTestsPanel: React.FC<SharedTestsPanelProps> = ({
   };
 
   // Get visibility icon
-  const getVisibilityIcon = (sharing: SharingSettings as _SharingSettings) => {
+  const getVisibilityIcon = (sharing: SharingSettings) => {
     switch (sharing.visibility) {
       case 'public':
         return <Globe size={16} className="text-green-600" />;

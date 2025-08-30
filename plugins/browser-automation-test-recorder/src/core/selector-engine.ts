@@ -255,7 +255,7 @@ export class SelectorEngine {
       const stability = this.analyzeElementStability(element);
       score += stability * 0.2;
 
-    } catch (error) {
+    } catch {
       // console.error('SelectorEngine: Error evaluating stability');
       score = 0.1; // Minimum score for failed evaluation
     }
@@ -311,7 +311,7 @@ export class SelectorEngine {
         }
       }, 5000);
 
-    } catch (error) {
+    } catch {
       // console.error('SelectorEngine: Error highlighting element');
     }
   }

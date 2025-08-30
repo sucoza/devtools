@@ -26,7 +26,7 @@ import { SeleniumGenerator } from './generators/selenium-generator';
 import { PuppeteerGenerator } from './generators/puppeteer-generator';
 
 export interface CodeGenerationConfig {
-  format: TestFormat as _TestFormat;
+  format: TestFormat;
   framework: TestFramework;
   language: 'javascript' | 'typescript' | 'python' | 'csharp';
   includeAssertions: boolean;

@@ -242,7 +242,7 @@ export class CDPClient {
       }
 
       return null;
-    } catch (error) {
+    } catch {
       // // console.error('CDPClient: Error finding element');
       return null;
     }
@@ -262,7 +262,7 @@ export class CDPClient {
       });
 
       return result.node;
-    } catch (error) {
+    } catch {
       // // console.error('CDPClient: Error getting node info');
       return null;
     }
@@ -303,12 +303,12 @@ export class CDPClient {
       setTimeout(async () => {
         try {
           await this.sendCommand('DOM.hideHighlight');
-        } catch (error) {
+        } catch {
           // Ignore errors when hiding highlight
         }
       }, 3000);
 
-    } catch (error) {
+    } catch {
       // // console.error('CDPClient: Error highlighting element');
     }
   }
@@ -484,7 +484,7 @@ export class CDPClient {
         listeners.forEach(callback => {
           try {
             callback(message.params);
-          } catch (error) {
+          } catch {
             // // console.error('CDPClient: Error in event listener:', error);
           }
         });

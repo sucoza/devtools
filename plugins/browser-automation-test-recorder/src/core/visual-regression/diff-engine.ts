@@ -249,7 +249,7 @@ export class DiffEngine {
     svg.setAttribute('height', '100%');
     svg.setAttribute('style', 'position: absolute; top: 0; left: 0; pointer-events: none;');
 
-    regions.forEach((region, _index) => {
+    regions.forEach((region, __index) => {
       const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       const color = this.getSeverityColor(region.severity);
       

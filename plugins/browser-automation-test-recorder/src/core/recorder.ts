@@ -295,7 +295,7 @@ export class EventRecorder {
   /**
    * Create event listener for specific event type
    */
-  private createEventListener(eventType: EventType as _EventType): EventListenerOrEventListenerObject {
+  private createEventListener(eventType: EventType): EventListenerOrEventListenerObject {
     return (event: Event) => {
       if (!this.isRecording || this.isPaused) return;
 
@@ -312,8 +312,8 @@ export class EventRecorder {
   /**
    * Check if event should be debounced
    */
-  private shouldDebounceEvent(eventType: EventType as _EventType, _event: Event): boolean {
-    const debounceTypes: EventType as _EventType[] = ['mousemove', 'scroll', 'resize', 'input'];
+  private shouldDebounceEvent(eventType: EventType, _event: Event): boolean {
+    const debounceTypes: EventType[] = ['mousemove', 'scroll', 'resize', 'input'];
     return debounceTypes.includes(eventType);
   }
 
@@ -390,7 +390,7 @@ export class EventRecorder {
       // Update last event time
       this.lastEventTime = Date.now();
       
-    } catch (error) {
+    } catch {
       // console.error('EventRecorder: Error processing event');
     }
   }
@@ -865,7 +865,7 @@ export class EventRecorder {
         size: 0,
         dimensions: { width: 0, height: 0 },
       };
-    } catch (error) {
+    } catch {
       // console.error('EventRecorder: Failed to capture screenshot');
       return undefined;
     }

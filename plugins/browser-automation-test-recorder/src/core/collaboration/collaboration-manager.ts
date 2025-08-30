@@ -83,7 +83,7 @@ export class CollaborationManager {
   private initialized = false;
   private connected = false;
   private syncInterval: NodeJS.Timeout | null = null;
-  private notificationHandlers = new Map<string, ((notification: CollaborationNotification as _CollaborationNotification) => void)[]>();
+  private notificationHandlers = new Map<string, ((notification: CollaborationNotification) => void)[]>();
 
   constructor(private readonly config: CollaborationConfig) {
     // Initialize managers
@@ -127,7 +127,7 @@ export class CollaborationManager {
       this.connected = true;
 
       // // console.log('Collaboration system initialized successfully');
-    } catch (error) {
+    } catch {
       // // console.error('Failed to initialize collaboration system:', error);
       throw error;
     }
@@ -570,7 +570,7 @@ export class CollaborationManager {
     this.syncInterval = setInterval(async () => {
       try {
         await this.performSync();
-      } catch (error) {
+      } catch {
         // // console.error('Sync error:', error);
       }
     }, this.config.sync.interval);
@@ -600,7 +600,7 @@ export class CollaborationManager {
       handlers.forEach(handler => {
         try {
           handler(notification);
-        } catch (error) {
+        } catch {
           // // console.error('Error in notification handler:', error);
         }
       });

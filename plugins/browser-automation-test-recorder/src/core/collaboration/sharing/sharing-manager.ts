@@ -115,7 +115,7 @@ export class SharingManager {
     };
 
     // Create sharing settings
-    const sharing: SharingSettings as _SharingSettings = {
+    const sharing: SharingSettings = {
       visibility: options.visibility,
       allowFork: options.allowFork,
       allowEdit: options.allowEdit,
@@ -171,7 +171,7 @@ export class SharingManager {
     if (this.baseUrl && this.apiKey) {
       try {
         await this.uploadToCloud(sharedTest);
-      } catch (error) {
+      } catch {
         // console.warn('Failed to upload to cloud:', error);
         // Continue with local storage
       }
@@ -244,7 +244,7 @@ export class SharingManager {
     if (this.baseUrl && this.apiKey) {
       try {
         await this.syncToCloud(updatedTest);
-      } catch (error) {
+      } catch {
         // console.warn('Failed to sync to cloud:', error);
       }
     }
@@ -310,7 +310,7 @@ export class SharingManager {
         if (test) {
           await this.storage.saveSharedTest(test);
         }
-      } catch (error) {
+      } catch {
         // console.warn('Failed to fetch from cloud:', error);
       }
     }
@@ -358,7 +358,7 @@ export class SharingManager {
     if (this.baseUrl && this.apiKey) {
       try {
         await this.deleteFromCloud(testId);
-      } catch (error) {
+      } catch {
         // console.warn('Failed to delete from cloud:', error);
       }
     }
@@ -451,7 +451,7 @@ export class SharingManager {
         errors: [],
         warnings: validation.warnings
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
         errors: [error instanceof Error ? error.message : 'Unknown import error'],

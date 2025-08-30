@@ -862,27 +862,27 @@ export class PerformanceMonitor {
     };
   }
 
-  private recordWebVital(metric: string, value: number): void {
+  private recordWebVital(_metric: string, _value: number): void {
     // Store web vital measurement
   }
 
-  private processNavigationTiming(entry: PerformanceNavigationTiming): void {
+  private processNavigationTiming(_entry: PerformanceNavigationTiming): void {
     // Process navigation timing entry
   }
 
-  private processResourceTiming(entry: PerformanceResourceTiming): void {
+  private processResourceTiming(_entry: PerformanceResourceTiming): void {
     // Process resource timing entry
   }
 
-  private recordLongTask(task: LongTask): void {
+  private recordLongTask(_task: LongTask): void {
     // Record long task
   }
 
-  private recordLayoutShift(shift: LayoutShift): void {
+  private recordLayoutShift(_shift: LayoutShift): void {
     // Record layout shift
   }
 
-  private detectRegressions(baseline: PerformanceMetrics, current: PerformanceMetrics): PerformanceRegression[] {
+  private detectRegressions(_baseline: PerformanceMetrics, _current: PerformanceMetrics): PerformanceRegression[] {
     // Detect performance regressions
     return [];
   }

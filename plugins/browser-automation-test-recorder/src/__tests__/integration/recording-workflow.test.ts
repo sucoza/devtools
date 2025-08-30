@@ -400,7 +400,7 @@ describe('Recording Workflow Integration', () => {
           includeComments: true,
           includeAssertions: false,
         });
-      } catch (error) {
+      } catch {
         // If error is thrown, it should be handled gracefully
         expect(error).toBeInstanceOf(Error);
       }

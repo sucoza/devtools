@@ -295,7 +295,7 @@ export abstract class BaseGenerator {
     
         break;
       }
-  } catch (error) {
+  } catch {
     if (attempt === ${maxRetries}) throw error;
     await page.waitForTimeout(1000 * attempt);
   }

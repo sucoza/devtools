@@ -55,7 +55,7 @@ export type BrowserAutomationAction =
   | { type: 'settings/export' }
   
   // Collaboration actions
-  | { type: 'collaboration/share/create'; payload: SharingSettings as _SharingSettings }
+  | { type: 'collaboration/share/create'; payload: SharingSettings }
   | { type: 'collaboration/share/update'; payload: { id: string; settings: Partial<SharingSettings> } }
   | { type: 'collaboration/share/delete'; payload: string }
   | { type: 'collaboration/share/show'; payload: unknown }
@@ -343,7 +343,7 @@ export interface RecorderSettings {
     captureConsole: boolean;
     captureNetwork: boolean;
     capturePerformance: boolean;
-    ignoredEvents: EventType as _EventType[];
+    ignoredEvents: EventType[];
     debounceMs: number;
     maxEvents: number;
   };
@@ -388,7 +388,7 @@ export interface RecorderStats {
   totalSessions: number;
   totalEvents: number;
   averageSessionDuration: number;
-  mostUsedEvents: { type: EventType as _EventType; count: number }[];
+  mostUsedEvents: { type: EventType; count: number }[];
   successRate: number;
   lastActivity: number;
   generatedTests: number;

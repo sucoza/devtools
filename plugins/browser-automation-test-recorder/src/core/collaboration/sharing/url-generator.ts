@@ -254,7 +254,7 @@ export class UrlGenerator {
         token: token || undefined,
         options
       };
-    } catch (error) {
+    } catch {
       return {
         valid: false,
         error: 'Invalid URL format'

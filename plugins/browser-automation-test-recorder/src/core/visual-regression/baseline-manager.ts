@@ -199,7 +199,7 @@ export class BaselineManager {
       await this.removeBaseline(id);
       this.cache.delete(id);
       return true;
-    } catch (error) {
+    } catch {
       // // console.error('Failed to delete baseline');
       return false;
     }

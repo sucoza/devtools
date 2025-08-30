@@ -645,7 +645,7 @@ export class PlaybackMonitor {
   /**
    * Add event listener
    */
-  addEventListener(event: string, callback: Function): void {
+  addEventListener(event: string, callback: (...args: any[]) => void): void {
     if (!this.eventListeners.has(event)) {
       this.eventListeners.set(event, []);
     }
@@ -655,7 +655,7 @@ export class PlaybackMonitor {
   /**
    * Remove event listener
    */
-  removeEventListener(event: string, callback: Function): void {
+  removeEventListener(event: string, callback: (...args: any[]) => void): void {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
       const index = listeners.indexOf(callback);
@@ -674,7 +674,7 @@ export class PlaybackMonitor {
       listeners.forEach(callback => {
         try {
           callback(data);
-        } catch (error) {
+        } catch {
           this.log('error', `Event listener error: ${error}`);
         }
       });
@@ -693,24 +693,24 @@ export class PlaybackMonitor {
     
     if (messageLevelIndex <= currentLevelIndex) {
       const timestamp = new Date().toISOString();
-      const logMessage = `[${timestamp}] PlaybackMonitor: ${message}`;
+      const _logMessage = `[${timestamp}] PlaybackMonitor: ${message}`;
       
       if (this.config.logToConsole) {
         switch (level) {
           case 'error':
-            // console.error(logMessage);
+            // console.error(_logMessage);
             break;
           case 'warn':
-            // console.warn(logMessage);
+            // console.warn(_logMessage);
             break;
           case 'info':
-            // console.info(logMessage);
+            // console.info(_logMessage);
             break;
           case 'debug':
-            // console.debug(logMessage);
+            // console.debug(_logMessage);
             break;
           default:
-            // console.log(logMessage);
+            // console.log(_logMessage);
         }
       }
       

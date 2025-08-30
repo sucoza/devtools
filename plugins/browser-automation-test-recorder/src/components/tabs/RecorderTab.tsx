@@ -42,7 +42,7 @@ export default function RecorderTab({ state, dispatch, compact: _compact }: TabC
     try {
       await eventClient.startRecording();
       setRealTimeEventCount(0);
-    } catch (error) {
+    } catch {
       // console.error('Failed to start recording');
     } finally {
       setIsLoading(false);
@@ -53,7 +53,7 @@ export default function RecorderTab({ state, dispatch, compact: _compact }: TabC
     setIsLoading(true);
     try {
       await eventClient.stopRecording();
-    } catch (error) {
+    } catch {
       // console.error('Failed to stop recording');
     } finally {
       setIsLoading(false);
@@ -81,7 +81,7 @@ export default function RecorderTab({ state, dispatch, compact: _compact }: TabC
         // console.log('Screenshot captured:', screenshot);
         // Could emit event or show notification
       }
-    } catch (error) {
+    } catch {
       // console.error('Screenshot failed');
     }
   };

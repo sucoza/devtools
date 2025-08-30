@@ -52,7 +52,7 @@ export const createMockViewport = (overrides: Partial<ViewportInfo> = {}): Viewp
 /**
  * Create mock event target
  */
-export const createMockEventTarget = (overrides: Partial<RecordedEventTarget> = {}): RecordedEventTarget as _RecordedEventTarget => ({
+export const createMockEventTarget = (overrides: Partial<RecordedEventTarget> = {}): RecordedEventTarget => ({
   selector: '#test-button',
   xpath: '//*[@id="test-button"]',
   textContent: 'Click me',
@@ -176,7 +176,7 @@ export const createMockEventMetadata = (overrides: Partial<EventMetadata> = {}):
 /**
  * Create mock mouse event data
  */
-export const createMockMouseEventData = (overrides: Partial<MouseEventData> = {}): MouseEventData as _MouseEventData => ({
+export const createMockMouseEventData = (overrides: Partial<MouseEventData> = {}): MouseEventData => ({
   type: 'mouse',
   button: 0,
   buttons: 1,
@@ -197,7 +197,7 @@ export const createMockMouseEventData = (overrides: Partial<MouseEventData> = {}
 /**
  * Create mock keyboard event data
  */
-export const createMockKeyboardEventData = (overrides: Partial<KeyboardEventData> = {}): KeyboardEventData as _KeyboardEventData => ({
+export const createMockKeyboardEventData = (overrides: Partial<KeyboardEventData> = {}): KeyboardEventData => ({
   type: 'keyboard',
   key: 'Enter',
   code: 'Enter',
@@ -245,7 +245,7 @@ export const createMockNavigationEventData = (overrides: Partial<NavigationEvent
  * Create mock recorded event
  */
 export const createMockRecordedEvent = (
-  type: EventType as _EventType = 'click',
+  type: EventType = 'click',
   overrides: Partial<RecordedEvent> = {}
 ): RecordedEvent => {
   const id = generateId('event');

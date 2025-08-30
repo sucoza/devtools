@@ -691,7 +691,7 @@ export class APIInterceptor {
         // if (!validationResult.valid) {
         //   errors.push(...validationResult.errors);
         // }
-      } catch (error) {
+      } catch {
         errors.push({
           type: 'schema',
           message: `Schema validation failed: ${error}`,
@@ -757,7 +757,7 @@ export class APIInterceptor {
             severity: 'error',
           });
         }
-      } catch (error) {
+      } catch {
         warnings.push({
           type: 'assertion',
           message: `Assertion '${assertion.name}' failed to execute: ${error}`,

@@ -55,7 +55,7 @@ export type {
 } from './types/devtools';
 
 export type {
-  EventType as _EventType as AutomationEventType,
+  EventType as AutomationEventType,
   RecordedEvent as AutomationRecordedEvent,
   ElementInfo as AutomationElementInfo,
   ViewportInfo as AutomationViewportInfo,

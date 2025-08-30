@@ -610,7 +610,7 @@ class AnnotationEventBus {
       eventListeners.forEach(callback => {
         try {
           callback(data);
-        } catch (error) {
+        } catch {
           // // console.error('Error in annotation event listener:', error);
         }
       });

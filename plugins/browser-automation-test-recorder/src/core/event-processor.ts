@@ -665,7 +665,7 @@ export class EventProcessor {
           return form.id ? `#${form.id}` : 'form';
         }
       }
-    } catch (error) {
+    } catch {
       // Ignore selector errors
     }
     return null;
