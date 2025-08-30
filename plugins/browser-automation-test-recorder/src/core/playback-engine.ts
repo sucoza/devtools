@@ -8,14 +8,14 @@ import type {
   EventExecutionResult,
   PlaybackOptions,
   PlaybackError,
-  PlaybackStatus,
-  EventType,
-  EventData,
-  MouseEventData,
-  KeyboardEventData,
+  PlaybackStatus as _PlaybackStatus,
+  EventType as _EventType,
+  EventData as _EventData,
+  MouseEventData as _MouseEventData,
+  KeyboardEventData as _KeyboardEventData,
   FormEventData,
   NavigationEventData,
-  ScrollEventData,
+  ScrollEventData as _ScrollEventData,
   WaitEventData,
   AssertionEventData,
   ScreenshotInfo,
@@ -98,7 +98,7 @@ export class PlaybackEngine {
   private abortController: AbortController | null = null;
   
   // Event emitters
-  private eventListeners: Map<string, Function[]> = new Map();
+  private eventListeners: Map<string, ((...args: any[]) => void)[]> = new Map();
   
   constructor(cdpClient: CDPClient, selectorEngine: SelectorEngine) {
     this.cdpClient = cdpClient;
@@ -219,7 +219,7 @@ export class PlaybackEngine {
                 fullPage: false,
               });
               playbackError.screenshot = screenshot.data;
-            } catch (screenshotError) {
+            } catch {
               this.log('warn', 'Failed to capture error screenshot');
             }
           }
@@ -246,7 +246,7 @@ export class PlaybackEngine {
           try {
             const screenshot = await this.captureScreenshot();
             this.context.screenshots.push(screenshot);
-          } catch (error) {
+          } catch {
             this.log('warn', 'Failed to capture periodic screenshot');
           }
         }
@@ -258,7 +258,7 @@ export class PlaybackEngine {
       }
 
       // Calculate final status
-      const status: PlaybackStatus = {
+      const status: PlaybackStatus as _PlaybackStatus = {
         currentStep: this.context.currentEventIndex + 1,
         totalSteps: this.context.totalEvents,
         elapsed: Date.now() - this.context.startTime,
@@ -398,7 +398,7 @@ export class PlaybackEngine {
   /**
    * Get current playback status
    */
-  getStatus(): PlaybackStatus | null {
+  getStatus(): PlaybackStatus as _PlaybackStatus | null {
     if (!this.context) return null;
 
     return {
@@ -457,7 +457,7 @@ export class PlaybackEngine {
     options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
-    const mouseData = event.data as MouseEventData;
+    const mouseData = event.data as MouseEventData as _MouseEventData;
 
     try {
       // Find and wait for element
@@ -536,7 +536,7 @@ export class PlaybackEngine {
     options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
-    const mouseData = event.data as MouseEventData;
+    const mouseData = event.data as MouseEventData as _MouseEventData;
 
     try {
       const element = await this.findAndWaitForElement(event.target.selector, options);
@@ -597,7 +597,7 @@ export class PlaybackEngine {
     options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
-    const keyboardData = event.data as KeyboardEventData;
+    const keyboardData = event.data as KeyboardEventData as _KeyboardEventData;
 
     try {
       const element = await this.findAndWaitForElement(event.target.selector, options);
@@ -674,7 +674,7 @@ export class PlaybackEngine {
     options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
-    const keyboardData = event.data as KeyboardEventData;
+    const keyboardData = event.data as KeyboardEventData as _KeyboardEventData;
 
     try {
       const element = await this.findAndWaitForElement(event.target.selector, options);
@@ -873,7 +873,7 @@ export class PlaybackEngine {
     options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
-    const scrollData = event.data as ScrollEventData;
+    const scrollData = event.data as ScrollEventData as _ScrollEventData;
 
     try {
       const scrollScript = `
@@ -1162,7 +1162,7 @@ export class PlaybackEngine {
   /**
    * Add event listener
    */
-  addEventListener(event: string, callback: Function): void {
+  addEventListener(event: string, callback: (...args: any[]) => void): void {
     if (!this.eventListeners.has(event)) {
       this.eventListeners.set(event, []);
     }
@@ -1172,7 +1172,7 @@ export class PlaybackEngine {
   /**
    * Remove event listener
    */
-  removeEventListener(event: string, callback: Function): void {
+  removeEventListener(event: string, callback: (...args: any[]) => void): void {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
       const index = listeners.indexOf(callback);

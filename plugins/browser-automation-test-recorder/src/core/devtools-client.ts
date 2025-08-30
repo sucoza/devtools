@@ -11,7 +11,7 @@ import type {
   RecorderSettings,
   RecordingOptions,
 } from '../types';
-import { getBrowserAutomationStore, getBrowserAutomationStoreApi } from './devtools-store';
+import { getBrowserAutomationStoreApi } from './devtools-store';
 import { EventRecorder } from './recorder';
 import { SelectorEngine } from './selector-engine';
 import { CDPClient } from './cdp-client';
@@ -355,8 +355,8 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
     
     // Also try CDP highlighting if available
     if (selector && this.cdpClient.isConnectedToCDP()) {
-      this.cdpClient.highlightElement(selector).catch(error => {
-        // // console.warn('CDP highlighting failed:', error);
+      this.cdpClient.highlightElement(selector).catch(_error => {
+        // // console.warn('CDP highlighting failed:', _error);
       });
     }
     
@@ -449,8 +449,8 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
       
       this.emit('recorder:cdp-connected', { connected: true });
       return true;
-    } catch (error) {
-      // // console.warn('CDP connection failed:', error);
+    } catch {
+      // // console.warn('CDP connection failed');
       this.emit('recorder:cdp-connected', { connected: false });
       return false;
     }
@@ -477,7 +477,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
         return null;
       }
     } catch (error) {
-      // // console.error('Screenshot failed:', error);
+      // // console.error('Screenshot failed');
       return null;
     }
   }

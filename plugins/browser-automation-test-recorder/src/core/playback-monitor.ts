@@ -7,7 +7,7 @@ import type {
   RecordedEvent,
   EventExecutionResult,
   PlaybackError,
-  PlaybackStatus,
+  PlaybackStatus as _PlaybackStatus,
   ScreenshotInfo,
   NetworkRequest,
   ConsoleMessage,
@@ -121,7 +121,7 @@ export class PlaybackMonitor {
   private performanceInterval: NodeJS.Timeout | null = null;
   
   // Event listeners
-  private eventListeners: Map<string, Function[]> = new Map();
+  private eventListeners: Map<string, ((...args: any[]) => void)[]> = new Map();
   
   // State tracking
   private startTime: number = 0;
@@ -473,7 +473,7 @@ export class PlaybackMonitor {
     this.recoveryStrategies.set('element-not-found', {
       name: 'element-not-found',
       condition: (error) => error.message.includes('Element not found'),
-      action: async (error, context) => {
+      action: async (_error, _context) => {
         this.log('info', 'Attempting element recovery...');
         // Wait for element to appear
         await this.sleep(2000);
@@ -487,7 +487,7 @@ export class PlaybackMonitor {
     this.recoveryStrategies.set('selector-healing', {
       name: 'selector-healing',
       condition: (error) => error.message.includes('selector') || error.message.includes('not found'),
-      action: async (error, context) => {
+      action: async (_error, _context) => {
         this.log('info', 'Attempting selector healing...');
         // This would integrate with the SelectorResolver
         await this.sleep(1000);
@@ -501,7 +501,7 @@ export class PlaybackMonitor {
     this.recoveryStrategies.set('network-timeout', {
       name: 'network-timeout',
       condition: (error) => error.message.includes('timeout') || error.message.includes('network'),
-      action: async (error, context) => {
+      action: async (_error, _context) => {
         this.log('info', 'Attempting network recovery...');
         await this.sleep(3000);
         return true;
@@ -514,7 +514,7 @@ export class PlaybackMonitor {
     this.recoveryStrategies.set('page-load', {
       name: 'page-load',
       condition: (error) => error.message.includes('navigation') || error.message.includes('load'),
-      action: async (error, context) => {
+      action: async (_error, _context) => {
         this.log('info', 'Attempting page load recovery...');
         // Refresh page or wait for load
         await this.sleep(5000);
@@ -582,7 +582,7 @@ export class PlaybackMonitor {
         };
 
         this.recordPerformance(performance);
-      } catch (error) {
+      } catch {
         this.log('warn', 'Failed to collect performance metrics');
       }
     }, this.config.performanceInterval);

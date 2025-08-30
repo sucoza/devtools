@@ -4,7 +4,7 @@
  */
 
 import type {
-  RecordedEventTarget,
+  RecordedEventTarget as _RecordedEventTarget,
   SelectorOptions,
   ElementPathNode,
   CDPRemoteObject,
@@ -88,7 +88,7 @@ export class SelectorResolver {
    */
   async resolveSelector(
     originalSelector: string,
-    targetInfo: RecordedEventTarget,
+    targetInfo: RecordedEventTarget as _RecordedEventTarget,
     options: SelectorOptions = {} as SelectorOptions,
     maxRetries: number = 3
   ): Promise<SelectorResolutionResult> {
@@ -227,7 +227,7 @@ export class SelectorResolver {
    */
   private async attemptHealing(
     originalSelector: string,
-    targetInfo: RecordedEventTarget,
+    targetInfo: RecordedEventTarget as _RecordedEventTarget,
     options: SelectorOptions
   ): Promise<SelectorResolutionResult | null> {
     const criteria = this.buildMatchingCriteria(targetInfo);
@@ -249,8 +249,8 @@ export class SelectorResolver {
         if (result) {
           return result;
         }
-      } catch (error) {
-        // console.warn(`Healing strategy ${strategy.name} failed:`, error);
+      } catch {
+        // console.warn(`Healing strategy ${strategy.name} failed`);
       }
     }
 
@@ -481,8 +481,8 @@ export class SelectorResolver {
           }
         }
       }
-    } catch (error) {
-      // console.warn('Position healing failed:', error);
+    } catch {
+      // console.warn('Position healing failed');
     }
 
     return null;
@@ -658,8 +658,8 @@ export class SelectorResolver {
           };
         }
       }
-    } catch (error) {
-      // console.warn('DOM analysis healing failed:', error);
+    } catch {
+      // console.warn('DOM analysis healing failed');
     }
 
     return null;
@@ -715,7 +715,7 @@ export class SelectorResolver {
   /**
    * Build matching criteria from event target info
    */
-  private buildMatchingCriteria(targetInfo: RecordedEventTarget): ElementMatchingCriteria {
+  private buildMatchingCriteria(targetInfo: RecordedEventTarget as _RecordedEventTarget): ElementMatchingCriteria {
     return {
       textContent: targetInfo.textContent,
       attributes: {

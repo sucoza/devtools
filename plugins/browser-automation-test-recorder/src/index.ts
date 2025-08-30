@@ -32,15 +32,15 @@ export type {
   EventFilters,
   RecorderSettings,
   RecordingOptions,
-  PlaybackStatus,
-  TestFormat,
+  PlaybackStatus as _PlaybackStatus,
+  TestFormat as _TestFormat,
   TestFramework,
   ScreenshotMode,
   PerformanceTracker,
   CDPClientStatus,
   CollaborationState,
   DataValidation,
-  EventType,
+  EventType as _EventType,
   RecordedEvent,
   ElementInfo,
   ViewportInfo,
@@ -55,7 +55,7 @@ export type {
 } from './types/devtools';
 
 export type {
-  EventType as AutomationEventType,
+  EventType as _EventType as AutomationEventType,
   RecordedEvent as AutomationRecordedEvent,
   ElementInfo as AutomationElementInfo,
   ViewportInfo as AutomationViewportInfo,

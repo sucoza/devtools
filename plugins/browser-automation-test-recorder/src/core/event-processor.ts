@@ -5,14 +5,14 @@
 
 import type {
   RecordedEvent,
-  EventType,
+  EventType as _EventType,
   EventGroup,
   EventAnnotation,
-  RecordingSession,
+  RecordingSession as _RecordingSession,
   EventFilters,
-  EventData,
-  MouseEventData,
-  KeyboardEventData,
+  EventData as _EventData,
+  MouseEventData as _MouseEventData,
+  KeyboardEventData as _KeyboardEventData,
 } from '../types';
 
 /**
@@ -177,7 +177,7 @@ export class EventProcessor {
     }
 
     if (filters.hideSystem) {
-      const systemEvents: EventType[] = ['scroll', 'mousemove', 'resize', 'load'];
+      const systemEvents: EventType as _EventType[] = ['scroll', 'mousemove', 'resize', 'load'];
       events = events.filter(event => !systemEvents.includes(event.type));
     }
 
@@ -402,7 +402,7 @@ export class EventProcessor {
 
       // Filter empty input events
       if (event.type === 'input') {
-        const keyboardData = event.data as KeyboardEventData;
+        const keyboardData = event.data as KeyboardEventData as _KeyboardEventData;
         if (!keyboardData.inputValue || keyboardData.inputValue.trim() === '') {
           return false;
         }
@@ -555,13 +555,13 @@ export class EventProcessor {
     }
 
     // Group navigation sequences
-    const navEvents = events.filter(event => 
+    const _navEvents = events.filter(event => 
       event.type === 'navigation' || event.type === 'click'
     );
     
     // Create groups
     groups.forEach((group, index) => {
-      const groupId = this.createEventGroup(
+      const _groupId = this.createEventGroup(
         group.events.map(e => e.id),
         `Auto Group ${index + 1}`,
         group.pattern
@@ -583,10 +583,10 @@ export class EventProcessor {
 
     // Add event-specific data
     if (event.data.type === 'keyboard') {
-      const kbData = event.data as KeyboardEventData;
+      const kbData = event.data as KeyboardEventData as _KeyboardEventData;
       keyParts.push(kbData.key, kbData.inputValue || '');
     } else if (event.data.type === 'mouse') {
-      const mouseData = event.data as MouseEventData;
+      const mouseData = event.data as MouseEventData as _MouseEventData;
       keyParts.push(mouseData.button.toString());
     }
 

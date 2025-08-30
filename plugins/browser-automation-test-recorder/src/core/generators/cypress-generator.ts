@@ -6,11 +6,11 @@
 import { BaseGenerator, type BaseGeneratorOptions, type GeneratedTestFile, type SelectorOptimization } from './base-generator';
 import type {
   RecordedEvent,
-  MouseEventData,
-  KeyboardEventData,
+  MouseEventData as _MouseEventData,
+  KeyboardEventData as _KeyboardEventData,
   FormEventData,
   NavigationEventData,
-  ScrollEventData,
+  ScrollEventData as _ScrollEventData,
   WaitEventData,
   AssertionEventData,
 } from '../../types';
@@ -195,7 +195,7 @@ ${this.indent(testCode)}
    */
   private generateClickCode(event: RecordedEvent): string {
     const selector = this.formatSelectorForCypress(event.target.selector);
-    const mouseData = event.data as MouseEventData;
+    const mouseData = event.data as MouseEventData as _MouseEventData;
     
     let code = `cy.get('${selector}')`;
     
@@ -287,7 +287,7 @@ ${this.indent(testCode)}
    * Keyboard event code generation
    */
   private generateKeyboardCode(event: RecordedEvent): string {
-    const keyData = event.data as KeyboardEventData;
+    const keyData = event.data as KeyboardEventData as _KeyboardEventData;
     const key = this.mapCypressKey(keyData.key);
     
     // Build modifier string
@@ -331,7 +331,7 @@ ${this.indent(testCode)}
    * Scroll event code generation
    */
   private generateScrollCode(event: RecordedEvent): string {
-    const scrollData = event.data as ScrollEventData;
+    const scrollData = event.data as ScrollEventData as _ScrollEventData;
     
     if (scrollData.element === 'window') {
       return `cy.scrollTo(${scrollData.scrollX}, ${scrollData.scrollY});`;
@@ -464,12 +464,13 @@ ${this.indent(testCode)}
     // Generate assertions based on event types and context
     events.forEach(event => {
       switch (event.type) {
-        case 'navigation':
+        case 'navigation': {
           const navData = event.data as NavigationEventData;
           assertions.push(`cy.url().should('eq', '${navData.url}');`);
           break;
+        }
         case 'input':
-        case 'change':
+        case 'change': {
           if (event.target.type !== 'password') { // Don't assert password values
             const formData = event.data as FormEventData;
             if (formData.value) {
@@ -477,6 +478,7 @@ ${this.indent(testCode)}
             }
           }
           break;
+        }
       }
     });
     
@@ -494,12 +496,15 @@ ${this.indent(testCode)}
     // Add assertions based on group type
     switch (group.actionType) {
       case 'navigation':
+        {
         const navEvent = group.events.find(e => e.type === 'navigation');
         if (navEvent) {
           const navData = navEvent.data as NavigationEventData;
           assertions.push(`cy.url().should('eq', '${navData.url}');`);
         }
+        
         break;
+      }
         
       case 'form_interaction':
         // Add form field assertions

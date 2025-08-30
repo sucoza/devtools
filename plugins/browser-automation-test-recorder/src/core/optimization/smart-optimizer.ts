@@ -333,6 +333,7 @@ export class SmartOptimizer {
   private generateSmartGroupName(actionType: EventGroup['actionType'], firstEvent: RecordedEvent): string {
     switch (actionType) {
       case 'navigation':
+        {
         const navData = firstEvent.data as NavigationEventData;
         const url = new URL(navData.url);
         return `Navigate to ${url.pathname.split('/').filter(Boolean)[0] || url.hostname}`;
@@ -720,7 +721,9 @@ export class SmartOptimizer {
           events[i + 1].type !== 'wait' &&
           events[i + 1].timestamp - events[i].timestamp < 1000) {
         warnings.push('Consider adding waits after navigation events for better stability.');
+        
         break;
+      }
       }
     }
     

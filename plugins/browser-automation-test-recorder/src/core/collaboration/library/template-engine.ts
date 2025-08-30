@@ -10,7 +10,7 @@ import type {
   RecordedEvent,
   SharedTestRecording,
   CollaborationUser,
-  TemplateUsageStats
+  TemplateUsageStats as _TemplateUsageStats
 } from '../../../types';
 
 /**
@@ -378,7 +378,7 @@ export class TemplateEngine {
     events: RecordedEvent[],
     extractParameters: boolean
   ): EventPattern[] {
-    return events.map((event, index) => {
+    return events.map((event, _index) => {
       const pattern: EventPattern = {
         type: event.type,
         target: {

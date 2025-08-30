@@ -4,7 +4,7 @@
  */
 
 import type {
-  TestComment,
+  TestComment as _TestComment,
   CommentPosition,
   ScreenshotInfo,
   CollaborationUser

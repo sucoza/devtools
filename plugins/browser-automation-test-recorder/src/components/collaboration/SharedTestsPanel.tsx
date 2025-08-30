@@ -25,7 +25,7 @@ import {
 import type {
   BrowserAutomationState,
   SharedTestRecording,
-  SharingSettings
+  SharingSettings as _SharingSettings
 } from '../../types';
 
 export interface SharedTestsPanelProps {
@@ -133,7 +133,7 @@ export const SharedTestsPanel: React.FC<SharedTestsPanelProps> = ({
   };
 
   // Get visibility icon
-  const getVisibilityIcon = (sharing: SharingSettings) => {
+  const getVisibilityIcon = (sharing: SharingSettings as _SharingSettings) => {
     switch (sharing.visibility) {
       case 'public':
         return <Globe size={16} className="text-green-600" />;

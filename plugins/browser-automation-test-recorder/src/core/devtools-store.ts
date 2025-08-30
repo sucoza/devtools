@@ -6,8 +6,7 @@ import type {
   RecordedEvent,
   TestCase,
   GeneratedTest,
-  RecordingSession,
-  PlaybackStatus,
+  RecordingSession as _RecordingSession,
   TestGenerationOptions,
   ExportOptions,
   EventFilters,
@@ -17,8 +16,7 @@ import type {
   DevToolsTab,
   RecordingMode,
   PlaybackMode,
-  EventType,
-  CollaborationState,
+  EventType as _EventType,
 } from '../types';
 
 /**
@@ -259,7 +257,7 @@ interface BrowserAutomationStore extends BrowserAutomationState {
   // Utility methods
   getFilteredEvents: () => RecordedEvent[];
   getSelectedEvent: () => RecordedEvent | null;
-  getActiveSession: () => RecordingSession | null;
+  getActiveSession: () => RecordingSession as _RecordingSession | null;
   updateStats: () => void;
 }
 
@@ -274,11 +272,11 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
      * Main action dispatcher following TanStack DevTools patterns
      */
     dispatch: (action: BrowserAutomationAction) => {
-      const state = get();
+      const _state = get();
 
       switch (action.type) {
-        case 'recording/start':
-          const session: RecordingSession = {
+        case 'recording/start': {
+          const session: RecordingSession as _RecordingSession = {
             id: `session_${Date.now()}`,
             name: `Session ${new Date().toLocaleTimeString()}`,
             startTime: Date.now(),
@@ -324,6 +322,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
           }));
           get().updateStats();
           break;
+        }
 
         case 'recording/pause':
           set(state => ({
@@ -346,7 +345,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
           }));
           break;
 
-        case 'recording/event/add':
+        case 'recording/event/add': {
           const newEvent = action.payload;
           set(state => ({
             events: [...state.events, newEvent],
@@ -361,8 +360,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'recording/event/remove':
+        case 'recording/event/remove': {
           const eventIdToRemove = action.payload;
           set(state => ({
             events: state.events.filter(event => event.id !== eventIdToRemove),
@@ -372,8 +372,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'recording/event/update':
+        case 'recording/event/update': {
           const { id, event: eventUpdates } = action.payload;
           set(state => ({
             events: state.events.map(event =>
@@ -381,6 +382,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             ),
           }));
           break;
+        }
 
         case 'playback/start':
           set(state => ({
@@ -421,7 +423,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
           }));
           break;
 
-        case 'playback/step':
+        case 'playback/step': {
           const stepEventId = action.payload;
           set(state => ({
             playback: {
@@ -430,20 +432,23 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'playback/speed/set':
+        case 'playback/speed/set': {
           const speed = action.payload;
           set(state => ({
             playback: { ...state.playback, speed },
           }));
           break;
+        }
 
-        case 'playback/status/update':
+        case 'playback/status/update': {
           const status = action.payload;
           set(state => ({
             playback: { ...state.playback, status },
           }));
           break;
+        }
 
         case 'test/generate':
           // Test generation will be handled by the generateTest method
@@ -453,14 +458,15 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
           // Export will be handled by the exportData method
           break;
 
-        case 'test/import':
+        case 'test/import': {
           const testCase = action.payload;
           set(state => ({
             testCases: [...state.testCases, testCase],
           }));
           break;
+        }
 
-        case 'selector/mode/set':
+        case 'selector/mode/set': {
           const selectorMode = action.payload;
           set(state => ({
             selectorEngine: {
@@ -476,8 +482,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'selector/strategy/set':
+        case 'selector/strategy/set': {
           const strategy = action.payload;
           set(state => ({
             selectorEngine: {
@@ -493,8 +500,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'selector/highlight':
+        case 'selector/highlight': {
           const highlightSelector = action.payload;
           set(state => ({
             selectorEngine: {
@@ -503,15 +511,17 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'ui/tab/select':
+        case 'ui/tab/select': {
           const activeTab = action.payload;
           set(state => ({
             ui: { ...state.ui, activeTab },
           }));
           break;
+        }
 
-        case 'ui/panel/toggle':
+        case 'ui/panel/toggle': {
           const panelId = action.payload;
           set(state => ({
             ui: {
@@ -523,8 +533,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'ui/theme/set':
+        case 'ui/theme/set': {
           const theme = action.payload;
           set(state => ({
             ui: { ...state.ui, theme },
@@ -534,6 +545,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
         case 'ui/compact/toggle':
           set(state => ({
@@ -542,13 +554,16 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
           break;
 
         case 'ui/event/select':
-          const selectedEventId = action.payload;
+          {
+        const selectedEventId = action.payload;
           set(state => ({
             ui: { ...state.ui, selectedEventId },
           }));
-          break;
+          
+        break;
+      }
 
-        case 'ui/filter/update':
+        case 'ui/filter/update': {
           const filterUpdates = action.payload;
           set(state => ({
             ui: {
@@ -557,13 +572,15 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'settings/update':
+        case 'settings/update': {
           const settingUpdates = action.payload;
           set(state => ({
             settings: { ...state.settings, ...settingUpdates },
           }));
           break;
+        }
 
         case 'settings/reset':
           set(state => ({
@@ -571,19 +588,20 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
           }));
           break;
 
-        case 'settings/import':
+        case 'settings/import': {
           const importedSettings = action.payload;
           set(state => ({
             settings: importedSettings,
           }));
           break;
+        }
 
         case 'settings/export':
           // Export will be handled separately
           break;
 
         // Collaboration actions
-        case 'collaboration/user/set':
+        case 'collaboration/user/set': {
           const user = action.payload;
           set(state => ({
             collaboration: {
@@ -592,8 +610,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'collaboration/team/set':
+        case 'collaboration/team/set': {
           const team = action.payload;
           set(state => ({
             collaboration: {
@@ -602,8 +621,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'collaboration/panel/set':
+        case 'collaboration/panel/set': {
           const panel = action.payload;
           set(state => ({
             collaboration: {
@@ -612,8 +632,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'collaboration/share/show':
+        case 'collaboration/share/show': {
           const sharePayload = action.payload;
           set(state => ({
             collaboration: {
@@ -622,6 +643,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
         case 'collaboration/share/hide':
           set(state => ({
@@ -632,7 +654,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
           }));
           break;
 
-        case 'collaboration/notification/add':
+        case 'collaboration/notification/add': {
           const notification = action.payload;
           set(state => ({
             collaboration: {
@@ -641,8 +663,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'collaboration/notification/read':
+        case 'collaboration/notification/read': {
           const notificationId = action.payload;
           set(state => ({
             collaboration: {
@@ -653,8 +676,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'collaboration/library/search':
+        case 'collaboration/library/search': {
           const searchQuery = action.payload;
           set(state => ({
             collaboration: {
@@ -666,8 +690,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'collaboration/library/filter':
+        case 'collaboration/library/filter': {
           const libraryFilterUpdates = action.payload;
           set(state => ({
             collaboration: {
@@ -679,8 +704,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'collaboration/library/sort':
+        case 'collaboration/library/sort': {
           const { sortBy, sortOrder } = action.payload;
           set(state => ({
             collaboration: {
@@ -693,8 +719,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
 
-        case 'collaboration/library/view':
+        case 'collaboration/library/view': {
           const viewMode = action.payload;
           set(state => ({
             collaboration: {
@@ -706,6 +733,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             },
           }));
           break;
+        }
       }
     },
 
@@ -956,7 +984,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
 
       // Hide system events
       if (filters.hideSystem) {
-        const systemEvents: EventType[] = ['scroll', 'mousemove', 'resize'];
+        const systemEvents: EventType as _EventType[] = ['scroll', 'mousemove', 'resize'];
         filteredEvents = filteredEvents.filter(event =>
           !systemEvents.includes(event.type)
         );
@@ -973,7 +1001,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
       return state.events.find(event => event.id === selectedEventId) || null;
     },
 
-    getActiveSession: (): RecordingSession | null => {
+    getActiveSession: (): RecordingSession as _RecordingSession | null => {
       return get().recording.activeSession;
     },
 

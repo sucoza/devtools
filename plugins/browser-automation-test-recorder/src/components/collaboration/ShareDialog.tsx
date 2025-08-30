@@ -21,7 +21,7 @@ import {
 import type {
   RecordedEvent,
   SharedTestRecording,
-  SharingSettings
+  SharingSettings as _SharingSettings
 } from '../../types';
 
 export interface ShareDialogProps {
@@ -64,7 +64,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
 
     try {
       // Create sharing settings
-      const sharing: SharingSettings = {
+      const sharing: _SharingSettings = {
         visibility: formData.visibility,
         allowFork: formData.allowFork,
         allowEdit: formData.allowEdit,

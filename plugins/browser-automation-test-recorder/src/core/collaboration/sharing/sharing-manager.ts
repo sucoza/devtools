@@ -6,7 +6,7 @@
 import type {
   RecordedEvent,
   SharedTestRecording,
-  SharingSettings,
+  SharingSettings as _SharingSettings,
   CollaborationUser,
   SharedTestMetadata,
   TestVersion,
@@ -115,7 +115,7 @@ export class SharingManager {
     };
 
     // Create sharing settings
-    const sharing: SharingSettings = {
+    const sharing: SharingSettings as _SharingSettings = {
       visibility: options.visibility,
       allowFork: options.allowFork,
       allowEdit: options.allowEdit,
@@ -330,7 +330,7 @@ export class SharingManager {
    */
   async listSharedTests(filters?: {
     author?: string;
-    visibility?: SharingSettings['visibility'];
+    visibility?: SharingSettings as _SharingSettings['visibility'];
     tags?: string[];
     category?: string;
     search?: string;
@@ -753,7 +753,7 @@ export class SharingStorage {
 
   async listSharedTests(filters?: {
     author?: string;
-    visibility?: SharingSettings['visibility'];
+    visibility?: SharingSettings as _SharingSettings['visibility'];
     tags?: string[];
     category?: string;
     search?: string;

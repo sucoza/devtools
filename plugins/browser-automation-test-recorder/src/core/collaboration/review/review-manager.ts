@@ -11,7 +11,7 @@ import type {
   ReviewChange,
   SharedTestRecording,
   CollaborationUser,
-  CollaborationNotification
+  CollaborationNotification as _CollaborationNotification
 } from '../../../types';
 
 /**

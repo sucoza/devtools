@@ -5,13 +5,13 @@
 
 import type {
   RecordedEvent,
-  TestFormat,
-  EventType,
-  MouseEventData,
-  KeyboardEventData,
+  TestFormat as _TestFormat,
+  EventType as _EventType,
+  MouseEventData as _MouseEventData,
+  KeyboardEventData as _KeyboardEventData,
   FormEventData,
   NavigationEventData,
-  ScrollEventData,
+  ScrollEventData as _ScrollEventData,
   WaitEventData,
   AssertionEventData,
 } from '../../types';
@@ -163,6 +163,7 @@ export abstract class BaseGenerator {
         return `Click on ${this.getElementDescription(target)}`;
       case 'input':
       case 'change':
+        {
         const formData = event.data as FormEventData;
         return `Enter "${formData.value || ''}" in ${this.getElementDescription(target)}`;
       case 'navigation':
@@ -279,7 +280,7 @@ export abstract class BaseGenerator {
     
     return `try {
   ${this.indent(code)}
-} catch (error) {
+} catch {
   throw new Error(\`Failed to ${event.type} on ${this.getElementDescription(event.target)}: \${error.message}\`);
 }`;
   }
@@ -291,7 +292,9 @@ export abstract class BaseGenerator {
     return `for (let attempt = 1; attempt <= ${maxRetries}; attempt++) {
   try {
     ${this.indent(code)}
-    break;
+    
+        break;
+      }
   } catch (error) {
     if (attempt === ${maxRetries}) throw error;
     await page.waitForTimeout(1000 * attempt);

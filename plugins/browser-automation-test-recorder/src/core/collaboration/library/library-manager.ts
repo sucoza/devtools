@@ -10,7 +10,7 @@ import type {
   TestTemplate,
   LibraryTestStatus,
   CollaborationUser,
-  CollaborationTeam,
+  CollaborationTeam as _CollaborationTeam,
   SharedTestRecording,
   TestUsageStats,
   TestQualityMetrics,
@@ -408,7 +408,7 @@ export class LibraryManager {
     libraryId: string,
     testId: string,
     action: 'view' | 'download' | 'fork' | 'star' | 'run',
-    user?: CollaborationUser
+    _user?: CollaborationUser
   ): Promise<void> {
     const library = await this.storage.getLibrary(libraryId);
     if (!library) {
@@ -463,7 +463,7 @@ export class LibraryManager {
   async createCategory(
     libraryId: string,
     category: Omit<TestCategory, 'id' | 'testCount'>,
-    user: CollaborationUser
+    _user: CollaborationUser
   ): Promise<TestCategory> {
     const library = await this.storage.getLibrary(libraryId);
     if (!library) {
@@ -853,7 +853,7 @@ class QualityAnalyzer {
     return events.length > 0 ? reliabilitySum / events.length : 0;
   }
 
-  private assessMaintainability(test: SharedTestRecording): number {
+  private assessMaintainability(_test: SharedTestRecording): number {
     // Factor in selector quality, event grouping, etc.
     return 75; // Placeholder
   }
@@ -878,7 +878,7 @@ class QualityAnalyzer {
     return Math.min(score, 100);
   }
 
-  private assessCoverage(test: SharedTestRecording): number {
+  private assessCoverage(_test: SharedTestRecording): number {
     // Assess how well the test covers different scenarios
     return 80; // Placeholder
   }
@@ -887,7 +887,7 @@ class QualityAnalyzer {
     return test.metadata.browserSupport.length * 20;
   }
 
-  private assessPerformance(test: SharedTestRecording): number {
+  private assessPerformance(_test: SharedTestRecording): number {
     return 75; // Placeholder
   }
 }

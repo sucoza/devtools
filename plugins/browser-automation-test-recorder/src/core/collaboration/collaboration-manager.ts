@@ -11,8 +11,8 @@ import type {
   TestComment,
   TestReview,
   RecordedEvent,
-  CollaborationNotification,
-  ActivityFeedItem
+  CollaborationNotification as _CollaborationNotification,
+  ActivityFeedItem as _ActivityFeedItem
 } from '../../types';
 
 import { SharingManager, type SharingConfig } from './sharing';
@@ -83,7 +83,7 @@ export class CollaborationManager {
   private initialized = false;
   private connected = false;
   private syncInterval: NodeJS.Timeout | null = null;
-  private notificationHandlers = new Map<string, ((notification: CollaborationNotification) => void)[]>();
+  private notificationHandlers = new Map<string, ((notification: CollaborationNotification as _CollaborationNotification) => void)[]>();
 
   constructor(private readonly config: CollaborationConfig) {
     // Initialize managers
@@ -484,7 +484,7 @@ export class CollaborationManager {
    */
   onNotification(
     type: string,
-    handler: (notification: CollaborationNotification) => void
+    handler: (notification: CollaborationNotification as _CollaborationNotification) => void
   ): () => void {
     if (!this.notificationHandlers.has(type)) {
       this.notificationHandlers.set(type, []);
@@ -594,7 +594,7 @@ export class CollaborationManager {
     // // console.log('Disconnecting from notifications...');
   }
 
-  private emitNotification(notification: CollaborationNotification): void {
+  private emitNotification(notification: CollaborationNotification as _CollaborationNotification): void {
     const handlers = this.notificationHandlers.get(notification.type);
     if (handlers) {
       handlers.forEach(handler => {

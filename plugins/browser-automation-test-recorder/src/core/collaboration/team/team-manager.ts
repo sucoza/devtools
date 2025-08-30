@@ -9,10 +9,10 @@ import type {
   UserRole,
   UserPermissions,
   TeamSettings,
-  TeamIntegrations,
-  NotificationSettings,
-  ActivityFeedItem,
-  CollaborationNotification
+  TeamIntegrations as _TeamIntegrations,
+  NotificationSettings as _NotificationSettings,
+  ActivityFeedItem as _ActivityFeedItem,
+  CollaborationNotification as _CollaborationNotification
 } from '../../../types';
 
 /**

@@ -6,14 +6,14 @@
 import { BaseGenerator, type BaseGeneratorOptions, type GeneratedTestFile, type SelectorOptimization } from './base-generator';
 import type {
   RecordedEvent,
-  MouseEventData,
-  KeyboardEventData,
+  MouseEventData as _MouseEventData,
+  KeyboardEventData as _KeyboardEventData,
   FormEventData,
   NavigationEventData,
-  ScrollEventData,
+  ScrollEventData as _ScrollEventData,
   WaitEventData,
   AssertionEventData,
-  RecordedEventTarget,
+  RecordedEventTarget as _RecordedEventTarget,
 } from '../../types';
 import type { EventGroup, CodeGenerationConfig } from '../code-generator';
 
@@ -205,7 +205,7 @@ ${this.indent(testCode)}
    */
   private generateClickCode(event: RecordedEvent): string {
     const selector = this.formatSelector(event.target.selector);
-    const mouseData = event.data as MouseEventData;
+    const mouseData = event.data as MouseEventData as _MouseEventData;
     
     let code = `await page.locator('${selector}')`;
     
@@ -280,7 +280,7 @@ ${this.indent(testCode)}
    * Keyboard event code generation
    */
   private generateKeyboardCode(event: RecordedEvent): string {
-    const keyData = event.data as KeyboardEventData;
+    const keyData = event.data as KeyboardEventData as _KeyboardEventData;
     const key = keyData.key;
     
     // Handle special keys
@@ -332,7 +332,7 @@ ${this.indent(testCode)}
    * Scroll event code generation
    */
   private generateScrollCode(event: RecordedEvent): string {
-    const scrollData = event.data as ScrollEventData;
+    const scrollData = event.data as ScrollEventData as _ScrollEventData;
     
     if (scrollData.element === 'window') {
       return `await page.evaluate(() => window.scrollTo(${scrollData.scrollX}, ${scrollData.scrollY}));`;
@@ -469,7 +469,7 @@ ${this.indent(testCode)}
    * Wheel event code generation
    */
   private generateWheelCode(event: RecordedEvent): string {
-    const mouseData = event.data as MouseEventData;
+    const mouseData = event.data as MouseEventData as _MouseEventData;
     return `await page.mouse.wheel(${mouseData.clientX}, ${mouseData.clientY});`;
   }
 
@@ -489,12 +489,13 @@ ${this.indent(testCode)}
     // Generate assertions based on event types and context
     events.forEach(event => {
       switch (event.type) {
-        case 'navigation':
+        case 'navigation': {
           const navData = event.data as NavigationEventData;
           assertions.push(`await expect(page).toHaveURL('${navData.url}');`);
           break;
+        }
         case 'input':
-        case 'change':
+        case 'change': {
           if (event.target.type !== 'password') { // Don't assert password values
             const formData = event.data as FormEventData;
             if (formData.value) {
@@ -502,6 +503,7 @@ ${this.indent(testCode)}
             }
           }
           break;
+        }
       }
     });
     
@@ -518,13 +520,14 @@ ${this.indent(testCode)}
     
     // Add assertions based on group type
     switch (group.actionType) {
-      case 'navigation':
+      case 'navigation': {
         const navEvent = group.events.find(e => e.type === 'navigation');
         if (navEvent) {
           const navData = navEvent.data as NavigationEventData;
           assertions.push(`await expect(page).toHaveURL('${navData.url}');`);
         }
         break;
+      }
         
       case 'form_interaction':
         // Add form field assertions
@@ -871,7 +874,7 @@ module.exports = { ${pageName} };`;
   /**
    * Get mouse event modifiers
    */
-  private getModifiers(mouseData: MouseEventData): string[] {
+  private getModifiers(mouseData: MouseEventData as _MouseEventData): string[] {
     const modifiers: string[] = [];
     
     if (mouseData.ctrlKey) modifiers.push('Control');
@@ -885,7 +888,7 @@ module.exports = { ${pageName} };`;
   /**
    * Get keyboard event modifiers
    */
-  private getKeyboardModifiers(keyData: KeyboardEventData): string[] {
+  private getKeyboardModifiers(keyData: KeyboardEventData as _KeyboardEventData): string[] {
     const modifiers: string[] = [];
     
     if (keyData.ctrlKey) modifiers.push('Control');

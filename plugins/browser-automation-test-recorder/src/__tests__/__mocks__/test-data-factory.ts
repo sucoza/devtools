@@ -5,10 +5,10 @@
 
 import type {
   RecordedEvent,
-  RecordedEventTarget,
+  RecordedEventTarget as _RecordedEventTarget,
   EventContext,
   ViewportInfo,
-  RecordingSession,
+  RecordingSession as _RecordingSession,
   TestCase,
   GeneratedTest,
   CollaborationUser,
@@ -16,11 +16,11 @@ import type {
   TestComment,
   TestReview,
   LibraryTest,
-  MouseEventData,
-  KeyboardEventData,
+  MouseEventData as _MouseEventData,
+  KeyboardEventData as _KeyboardEventData,
   FormEventData,
   NavigationEventData,
-  EventType,
+  EventType as _EventType,
   ReliabilityMetrics,
   EventMetadata,
 } from '../../types';
@@ -52,7 +52,7 @@ export const createMockViewport = (overrides: Partial<ViewportInfo> = {}): Viewp
 /**
  * Create mock event target
  */
-export const createMockEventTarget = (overrides: Partial<RecordedEventTarget> = {}): RecordedEventTarget => ({
+export const createMockEventTarget = (overrides: Partial<RecordedEventTarget> = {}): RecordedEventTarget as _RecordedEventTarget => ({
   selector: '#test-button',
   xpath: '//*[@id="test-button"]',
   textContent: 'Click me',
@@ -176,7 +176,7 @@ export const createMockEventMetadata = (overrides: Partial<EventMetadata> = {}):
 /**
  * Create mock mouse event data
  */
-export const createMockMouseEventData = (overrides: Partial<MouseEventData> = {}): MouseEventData => ({
+export const createMockMouseEventData = (overrides: Partial<MouseEventData> = {}): MouseEventData as _MouseEventData => ({
   type: 'mouse',
   button: 0,
   buttons: 1,
@@ -197,7 +197,7 @@ export const createMockMouseEventData = (overrides: Partial<MouseEventData> = {}
 /**
  * Create mock keyboard event data
  */
-export const createMockKeyboardEventData = (overrides: Partial<KeyboardEventData> = {}): KeyboardEventData => ({
+export const createMockKeyboardEventData = (overrides: Partial<KeyboardEventData> = {}): KeyboardEventData as _KeyboardEventData => ({
   type: 'keyboard',
   key: 'Enter',
   code: 'Enter',
@@ -245,7 +245,7 @@ export const createMockNavigationEventData = (overrides: Partial<NavigationEvent
  * Create mock recorded event
  */
 export const createMockRecordedEvent = (
-  type: EventType = 'click',
+  type: EventType as _EventType = 'click',
   overrides: Partial<RecordedEvent> = {}
 ): RecordedEvent => {
   const id = generateId('event');
@@ -292,7 +292,7 @@ export const createMockRecordedEvent = (
 /**
  * Create mock recording session
  */
-export const createMockRecordingSession = (overrides: Partial<RecordingSession> = {}): RecordingSession => {
+export const createMockRecordingSession = (overrides: Partial<RecordingSession> = {}): RecordingSession as _RecordingSession => {
   // Create event IDs instead of full events
   const eventIds = [
     generateId('event'),
@@ -563,7 +563,7 @@ export const createMockLibraryTest = (overrides: Partial<LibraryTest> = {}): Lib
 /**
  * Create a sequence of related events (user flow)
  */
-export const createMockUserFlow = (steps: EventType[]): RecordedEvent[] => {
+export const createMockUserFlow = (steps: EventType as _EventType[]): RecordedEvent[] => {
   return steps.map((type, index) => 
     createMockRecordedEvent(type, {
       sequence: index,

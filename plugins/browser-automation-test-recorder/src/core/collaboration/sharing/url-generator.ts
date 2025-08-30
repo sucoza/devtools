@@ -5,7 +5,7 @@
 
 import type {
   SharedTestRecording,
-  SharingSettings
+  SharingSettings as _SharingSettings
 } from '../../../types';
 
 /**

@@ -55,7 +55,7 @@ export type BrowserAutomationAction =
   | { type: 'settings/export' }
   
   // Collaboration actions
-  | { type: 'collaboration/share/create'; payload: SharingSettings }
+  | { type: 'collaboration/share/create'; payload: SharingSettings as _SharingSettings }
   | { type: 'collaboration/share/update'; payload: { id: string; settings: Partial<SharingSettings> } }
   | { type: 'collaboration/share/delete'; payload: string }
   | { type: 'collaboration/share/show'; payload: unknown }
@@ -343,7 +343,7 @@ export interface RecorderSettings {
     captureConsole: boolean;
     captureNetwork: boolean;
     capturePerformance: boolean;
-    ignoredEvents: EventType[];
+    ignoredEvents: EventType as _EventType[];
     debounceMs: number;
     maxEvents: number;
   };
@@ -388,7 +388,7 @@ export interface RecorderStats {
   totalSessions: number;
   totalEvents: number;
   averageSessionDuration: number;
-  mostUsedEvents: { type: EventType; count: number }[];
+  mostUsedEvents: { type: EventType as _EventType; count: number }[];
   successRate: number;
   lastActivity: number;
   generatedTests: number;
@@ -511,9 +511,9 @@ export interface BrowserAutomationDevToolsPanelProps {
 
 // Export missing types that are referenced but not exported
 export type { 
-  EventType, 
+  EventType as _EventType, 
   RecordedEvent, 
-  RecordedEventTarget,
+  RecordedEventTarget as _RecordedEventTarget,
   ElementInfo, 
   ViewportInfo, 
   ActionTiming, 
@@ -536,7 +536,7 @@ export interface RecordingOptions {
   captureConsole: boolean;
   captureNetwork: boolean;
   capturePerformance: boolean;
-  ignoredEvents: EventType[];
+  ignoredEvents: EventType as _EventType[];
   debounceMs: number;
   maxEvents: number;
   selectorOptions: SelectorOptions;
@@ -631,7 +631,7 @@ export interface CollaborationState {
   currentTeam: string | null;
   
   // Notifications and shared data
-  notifications: CollaborationNotification[];
+  notifications: CollaborationNotification as _CollaborationNotification[];
   sharedTests: SharedTestRecording[];
   
   // Library state
@@ -712,7 +712,7 @@ export interface CollaborationFilters {
 export interface ShareDialogState {
   open: boolean;
   testId: string | null;
-  settings: SharingSettings | null;
+  settings: SharingSettings as _SharingSettings | null;
   loading: boolean;
   error: string | null;
 }
@@ -748,13 +748,13 @@ import type {
   SelectorOptions,
   CollaborationUser,
   SharedTestRecording,
-  SharingSettings,
+  SharingSettings as _SharingSettings,
   TestComment,
   TestReview,
   ReviewStatus,
   ReviewCriteria,
   LibraryTestStatus,
-  CollaborationNotification,
-  EventType,
+  CollaborationNotification as _CollaborationNotification,
+  EventType as _EventType,
   RecordedEvent
 } from './automation';

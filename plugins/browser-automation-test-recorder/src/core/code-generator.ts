@@ -8,11 +8,11 @@ import type {
   TestGenerationOptions,
   GeneratedTest,
   TestCase as _TestCase,
-  TestFormat,
+  TestFormat as _TestFormat,
   TestFramework,
   EventType as _EventType,
   MouseEventData as _MouseEventData,
-  KeyboardEventData,
+  KeyboardEventData as _KeyboardEventData,
   FormEventData,
   NavigationEventData,
   AssertionEventData,
@@ -26,7 +26,7 @@ import { SeleniumGenerator } from './generators/selenium-generator';
 import { PuppeteerGenerator } from './generators/puppeteer-generator';
 
 export interface CodeGenerationConfig {
-  format: TestFormat;
+  format: TestFormat as _TestFormat;
   framework: TestFramework;
   language: 'javascript' | 'typescript' | 'python' | 'csharp';
   includeAssertions: boolean;
@@ -57,7 +57,7 @@ export interface CodeTemplate {
   id: string;
   name: string;
   description: string;
-  format: TestFormat;
+  format: TestFormat as _TestFormat;
   language: string;
   template: string;
   placeholders: Record<string, string>;
@@ -133,7 +133,7 @@ export class CodeGenerator {
    */
   async generateTestVariants(events: RecordedEvent[]): Promise<GeneratedTest[]> {
     const variants: GeneratedTest[] = [];
-    const formats: TestFormat[] = ['playwright', 'cypress', 'selenium', 'puppeteer'];
+    const formats: TestFormat as _TestFormat[] = ['playwright', 'cypress', 'selenium', 'puppeteer'];
     const languages = ['javascript', 'typescript'];
 
     for (const format of formats) {
@@ -152,7 +152,7 @@ export class CodeGenerator {
           });
           
           variants.push(test);
-        } catch (_error) {
+        } catch {
           // // console.warn(`Failed to generate ${format}/${language} variant:`, _error);
         }
       }
@@ -412,7 +412,7 @@ export class CodeGenerator {
           id: template.id,
           name: template.name,
           description: template.description,
-          format: mapping.format as TestFormat,
+          format: mapping.format as TestFormat as _TestFormat,
           language: mapping.language,
           template: template.template,
           placeholders: (template.placeholders as Array<Record<string, unknown>>).reduce((acc: Record<string, unknown>, p) => {
@@ -661,7 +661,7 @@ export class CodeGenerator {
     };
   }
 
-  private getEventGenerator(format: TestFormat, language: string): { 
+  private getEventGenerator(format: TestFormat as _TestFormat, language: string): { 
     generateEvent: (event: RecordedEvent) => string;
     generateSetup: () => string;
     generateTeardown: () => string;
@@ -844,17 +844,17 @@ export class CodeGenerator {
   private createMergedInputEvent(inputEvents: RecordedEvent[]): RecordedEvent {
     const lastEvent = inputEvents[inputEvents.length - 1];
     const allInputs = inputEvents
-      .map(e => (e.data as KeyboardEventData).inputValue)
+      .map(e => (e.data as KeyboardEventData as _KeyboardEventData).inputValue)
       .filter(Boolean)
       .join('');
     
-    const lastEventData = lastEvent.data as KeyboardEventData;
+    const lastEventData = lastEvent.data as KeyboardEventData as _KeyboardEventData;
     return {
       ...lastEvent,
       data: {
         ...lastEventData,
         inputValue: allInputs
-      } as KeyboardEventData
+      } as KeyboardEventData as _KeyboardEventData
     };
   }
 

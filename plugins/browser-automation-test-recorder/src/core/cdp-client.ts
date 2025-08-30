@@ -70,55 +70,49 @@ export class CDPClient {
       ...options,
     };
 
-    try {
-      // Get available targets
-      const targets = await this.getTargets();
-      const pageTarget = targets.find(target => target.type === 'page') || targets[0];
-      
-      if (!pageTarget) {
-        throw new Error('No suitable target found');
-      }
-
-      this.targetId = pageTarget.id;
-      
-      // Connect to WebSocket
-      const wsUrl = `${protocol}://${this.connectionOptions.host}:${this.connectionOptions.port}/devtools/page/${pageTarget.id}`;
-      
-      return new Promise((resolve, reject) => {
-        const timeout = setTimeout(() => {
-          reject(new Error('CDP connection timeout'));
-        }, this.connectionOptions.timeout);
-
-        this.websocket = new WebSocket(wsUrl);
-        
-        this.websocket.onopen = () => {
-          clearTimeout(timeout);
-          this.isConnected = true;
-          // // console.log('CDPClient: Connected to DevTools Protocol');
-          resolve();
-        };
-
-        this.websocket.onerror = (error) => {
-          clearTimeout(timeout);
-          // // // console.error('CDPClient: WebSocket error:', error);
-          reject(new Error('Failed to connect to CDP'));
-        };
-
-        this.websocket.onmessage = (event) => {
-          this.handleMessage(JSON.parse(event.data));
-        };
-
-        this.websocket.onclose = () => {
-          this.isConnected = false;
-          this.cleanup();
-          // // // console.log('CDPClient: Connection closed');
-        };
-      });
-
-    } catch (error) {
-      // // // console.error('CDPClient: Connection failed:', error);
-      throw error;
+    // Get available targets
+    const targets = await this.getTargets();
+    const pageTarget = targets.find(target => target.type === 'page') || targets[0];
+    
+    if (!pageTarget) {
+      throw new Error('No suitable target found');
     }
+
+    this.targetId = pageTarget.id;
+    
+    // Connect to WebSocket
+    const wsUrl = `${protocol}://${this.connectionOptions.host}:${this.connectionOptions.port}/devtools/page/${pageTarget.id}`;
+    
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        reject(new Error('CDP connection timeout'));
+      }, this.connectionOptions.timeout);
+
+      this.websocket = new WebSocket(wsUrl);
+      
+      this.websocket.onopen = () => {
+        clearTimeout(timeout);
+        this.isConnected = true;
+        // // console.log('CDPClient: Connected to DevTools Protocol');
+        resolve();
+      };
+
+      this.websocket.onerror = (_error) => {
+        clearTimeout(timeout);
+        // // // console.error('CDPClient: WebSocket error:', error);
+        reject(new Error('Failed to connect to CDP'));
+      };
+
+      this.websocket.onmessage = (event) => {
+        this.handleMessage(JSON.parse(event.data));
+      };
+
+      this.websocket.onclose = () => {
+        this.isConnected = false;
+        this.cleanup();
+        // // // console.log('CDPClient: Connection closed');
+      };
+    });
   }
 
   /**
@@ -249,7 +243,7 @@ export class CDPClient {
 
       return null;
     } catch (error) {
-      // // console.error('CDPClient: Error finding element:', error);
+      // // console.error('CDPClient: Error finding element');
       return null;
     }
   }
@@ -269,7 +263,7 @@ export class CDPClient {
 
       return result.node;
     } catch (error) {
-      // // console.error('CDPClient: Error getting node info:', error);
+      // // console.error('CDPClient: Error getting node info');
       return null;
     }
   }
@@ -315,7 +309,7 @@ export class CDPClient {
       }, 3000);
 
     } catch (error) {
-      // // console.error('CDPClient: Error highlighting element:', error);
+      // // console.error('CDPClient: Error highlighting element');
     }
   }
 
@@ -325,23 +319,18 @@ export class CDPClient {
   async executeScript(script: string, returnByValue: boolean = true): Promise<any> {
     await this.enableRuntime();
 
-    try {
-      const result = await this.sendCommand('Runtime.evaluate', {
-        expression: script,
-        returnByValue,
-        awaitPromise: true,
-        userGesture: true,
-      });
+    const result = await this.sendCommand('Runtime.evaluate', {
+      expression: script,
+      returnByValue,
+      awaitPromise: true,
+      userGesture: true,
+    });
 
-      if (result.exceptionDetails) {
-        throw new Error(`Script execution failed: ${result.exceptionDetails.text}`);
-      }
-
-      return returnByValue ? result.result.value : result.result;
-    } catch (error) {
-      // // console.error('CDPClient: Error executing script:', error);
-      throw error;
+    if (result.exceptionDetails) {
+      throw new Error(`Script execution failed: ${result.exceptionDetails.text}`);
     }
+
+    return returnByValue ? result.result.value : result.result;
   }
 
   /**
@@ -508,17 +497,17 @@ export class CDPClient {
    */
   private setupEventListeners(): void {
     // Handle console messages
-    this.addEventListener('Runtime.consoleAPICalled', (params: any) => {
+    this.addEventListener('Runtime.consoleAPICalled', (_params: any) => {
       // // console.log('CDP Console:', params);
     });
 
     // Handle JavaScript exceptions
-    this.addEventListener('Runtime.exceptionThrown', (params: any) => {
+    this.addEventListener('Runtime.exceptionThrown', (_params: any) => {
       // // console.error('CDP Exception:', params.exceptionDetails);
     });
 
     // Handle network events
-    this.addEventListener('Network.requestWillBeSent', (params: any) => {
+    this.addEventListener('Network.requestWillBeSent', (_params: any) => {
       // // console.log('CDP Network Request:', params.request.url);
     });
   }

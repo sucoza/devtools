@@ -7,11 +7,11 @@
 import { BaseGenerator, type BaseGeneratorOptions, type GeneratedTestFile, type SelectorOptimization } from './base-generator';
 import type {
   RecordedEvent,
-  MouseEventData,
-  KeyboardEventData,
+  MouseEventData as _MouseEventData,
+  KeyboardEventData as _KeyboardEventData,
   FormEventData,
   NavigationEventData,
-  ScrollEventData,
+  ScrollEventData as _ScrollEventData,
   WaitEventData,
   AssertionEventData,
 } from '../../types';
@@ -411,7 +411,7 @@ ${this.indent(testCode, 2)}
    * Keyboard event code generation
    */
   private generateKeyboardCode(event: RecordedEvent): string {
-    const keyData = event.data as KeyboardEventData;
+    const keyData = event.data as KeyboardEventData as _KeyboardEventData;
     const key = this.mapSeleniumKey(keyData.key);
     
     switch (this.options.language) {
@@ -451,7 +451,7 @@ ${this.indent(testCode, 2)}
    * Scroll event code generation
    */
   private generateScrollCode(event: RecordedEvent): string {
-    const scrollData = event.data as ScrollEventData;
+    const scrollData = event.data as ScrollEventData as _ScrollEventData;
     
     switch (this.options.language) {
       case 'python':
@@ -670,12 +670,13 @@ ${this.indent(testCode, 2)}
     
     events.forEach(event => {
       switch (event.type) {
-        case 'navigation':
+        case 'navigation': {
           const navData = event.data as NavigationEventData;
           assertions.push(this.generateUrlAssertion(navData.url));
           break;
+        }
         case 'input':
-        case 'change':
+        case 'change': {
           if (event.target.type !== 'password') {
             const formData = event.data as FormEventData;
             if (formData.value) {
@@ -683,6 +684,7 @@ ${this.indent(testCode, 2)}
             }
           }
           break;
+        }
       }
     });
     
@@ -712,13 +714,14 @@ ${this.indent(testCode, 2)}
     const assertions: string[] = [];
     
     switch (group.actionType) {
-      case 'navigation':
+      case 'navigation': {
         const navEvent = group.events.find(e => e.type === 'navigation');
         if (navEvent) {
           const navData = navEvent.data as NavigationEventData;
           assertions.push(this.generateUrlAssertion(navData.url));
         }
         break;
+      }
     }
     
     return assertions;

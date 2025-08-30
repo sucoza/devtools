@@ -247,8 +247,8 @@ export class AccessibilityAuditor {
         configure: this.mockAxeConfigure.bind(this),
         getRules: this.mockAxeGetRules.bind(this),
       };
-    } catch (error) {
-      // // console.warn('Failed to initialize axe-core:', error);
+    } catch {
+      // // console.warn('Failed to initialize axe-core');
     }
   }
 
