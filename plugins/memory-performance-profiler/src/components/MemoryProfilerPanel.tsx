@@ -5,9 +5,7 @@ import {
   Square, 
   Camera, 
   Download, 
-  Upload, 
   Trash2, 
-  Settings,
   TrendingUp,
   TrendingDown,
   Minus,
@@ -25,7 +23,7 @@ export function MemoryProfilerPanel() {
     isRunning,
     currentMemory,
     components,
-    hooks,
+    _hooks,
     leaks,
     performance,
     suggestions,
@@ -59,7 +57,7 @@ export function MemoryProfilerPanel() {
         <div className="memory-profiler-unsupported">
           <AlertTriangle className="icon-warning" />
           <h3>Memory Profiler Not Supported</h3>
-          <p>This browser doesn't support the required APIs for memory profiling.</p>
+          <p>This browser doesn&apos;t support the required APIs for memory profiling.</p>
           <div className="support-info">
             <h4>Required Features:</h4>
             <ul>
@@ -78,7 +76,7 @@ export function MemoryProfilerPanel() {
             </ul>
             <p className="help-text">
               For best results, use Chrome with: <br />
-              <code>--enable-precise-memory-info --js-flags="--expose-gc"</code>
+              <code>--enable-precise-memory-info --js-flags=&quot;--expose-gc&quot;</code>
             </p>
           </div>
         </div>
@@ -94,7 +92,7 @@ export function MemoryProfilerPanel() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const getTrendIcon = (trend: string) => {
+  const _getTrendIcon = (trend: string) => {
     switch (trend) {
       case 'up': return <TrendingUp className="trend-up" />;
       case 'down': return <TrendingDown className="trend-down" />;
@@ -102,7 +100,7 @@ export function MemoryProfilerPanel() {
     }
   };
 
-  const getSeverityColor = (severity: string) => {
+  const _getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'critical': return 'severity-critical';
       case 'high': return 'severity-high';
@@ -367,7 +365,7 @@ function ComponentsTab({ components }: { components: ComponentMemoryInfo[] }) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const getTrendIcon = (trend: string) => {
+  const _getTrendIcon = (trend: string) => {
     switch (trend) {
       case 'up': return <TrendingUp className="trend-up" />;
       case 'down': return <TrendingDown className="trend-down" />;
@@ -389,7 +387,7 @@ function ComponentsTab({ components }: { components: ComponentMemoryInfo[] }) {
           <span>Status</span>
         </div>
         
-        {sortedComponents.map((component, index) => (
+        {sortedComponents.map((component, _index) => (
           <div key={component.name} className="table-row">
             <span className="component-name">{component.name}</span>
             <span>{component.instanceCount}</span>
@@ -425,7 +423,7 @@ function ComponentsTab({ components }: { components: ComponentMemoryInfo[] }) {
 }
 
 function LeaksTab({ leaks }: { leaks: MemoryLeak[] }) {
-  const getSeverityColor = (severity: string) => {
+  const _getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'critical': return 'severity-critical';
       case 'high': return 'severity-high';

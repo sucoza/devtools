@@ -274,7 +274,7 @@ export const useMemoryProfilerStore = create<MemoryProfilerStore>()(
         if (data.timeline) set({ timeline: data.timeline });
         if (data.snapshots) set({ snapshots: data.snapshots });
         set({ importStatus: 'success' });
-      } catch (error) {
+      } catch {
         set({ importStatus: 'error' });
       }
     },

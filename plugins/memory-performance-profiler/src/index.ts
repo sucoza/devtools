@@ -25,10 +25,10 @@ export type {
 } from './types';
 
 // Initialize plugin when imported
-import { memoryProfilerClient } from './core/devtools-client';
+import { memoryProfilerClient as _memoryProfilerClient } from './core/devtools-client';
 
 // Auto-initialize in browser environments
 if (typeof window !== 'undefined') {
   // Plugin will auto-initialize when used
-  console.log('Memory & Performance Profiler Plugin loaded');
+  // console.log('Memory & Performance Profiler Plugin loaded');
 }

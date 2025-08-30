@@ -2,12 +2,9 @@ import { useSyncExternalStore } from 'react';
 import { useMemo } from 'react';
 import { 
   useMemoryProfilerStore,
-  createMemoryProfilerEventClient,
-  type MemoryProfilerDevToolsState
+  createMemoryProfilerEventClient
 } from '../core';
 import type { 
-  ProfilingConfiguration,
-  MemoryWarning,
   MemoryProfilerEvents
 } from '../types';
 

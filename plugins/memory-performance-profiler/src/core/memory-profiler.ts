@@ -5,8 +5,7 @@ import type {
   MemoryLeak, 
   PerformanceMetrics, 
   GarbageCollectionInfo,
-  MemoryOptimizationSuggestion,
-  ReactFiberMemoryInfo
+  MemoryOptimizationSuggestion
 } from '../types';
 
 declare global {
@@ -128,7 +127,7 @@ export class MemoryProfiler {
         try {
           gcObserver.observe({ entryTypes: ['gc'] });
           this.observers.push(gcObserver);
-        } catch (e) {
+        } catch {
           // GC observation not supported
         }
       } catch (error) {

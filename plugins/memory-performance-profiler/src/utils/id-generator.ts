@@ -96,7 +96,7 @@ export function extractTimestampFromId(id: string): number | null {
         return timestamp;
       }
     }
-  } catch (error) {
+  } catch {
     // Invalid base36 number or other parsing error
   }
   

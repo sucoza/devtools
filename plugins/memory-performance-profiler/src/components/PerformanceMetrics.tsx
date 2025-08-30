@@ -5,7 +5,6 @@ import {
   MemoryStick, 
   Clock, 
   TrendingUp, 
-  TrendingDown, 
   AlertTriangle,
   CheckCircle2,
   Zap

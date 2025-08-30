@@ -115,7 +115,7 @@ export function MemoryWarnings({
           </span>
         </div>
         <p className="text-green-600 dark:text-green-300 text-sm mt-1">
-          Your application's memory usage looks healthy!
+          Your application&apos;s memory usage looks healthy!
         </p>
       </div>
     );

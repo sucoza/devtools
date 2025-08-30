@@ -142,7 +142,7 @@ export function MemoryLeakDetector({
             No Memory Leaks Detected
           </h3>
           <p className="text-green-600 dark:text-green-300">
-            Your application's memory management looks healthy. Continue monitoring for optimal performance.
+            Your application&apos;s memory management looks healthy. Continue monitoring for optimal performance.
           </p>
         </div>
       </div>

@@ -9,7 +9,6 @@ import {
   ChevronDown, 
   ChevronRight,
   Copy,
-  ExternalLink,
   MemoryStick,
   Zap
 } from 'lucide-react';
@@ -123,7 +122,7 @@ export function OptimizationRecommendations({
           </span>
         </div>
         <p className="text-green-600 dark:text-green-300 text-sm mt-1">
-          Your application's memory usage is optimized!
+          Your application&apos;s memory usage is optimized!
         </p>
       </div>
     );
