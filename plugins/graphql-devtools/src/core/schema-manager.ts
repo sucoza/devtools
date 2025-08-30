@@ -1,5 +1,5 @@
 import { GraphQLSchema } from 'graphql';
-import type { SchemaInfo, GraphQLDevToolsConfig } from '../types';
+import type { SchemaInfo } from '../types';
 import {
   buildSchemaFromIntrospection,
   getSchemaIntrospectionQuery,

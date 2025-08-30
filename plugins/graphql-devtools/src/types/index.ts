@@ -1,9 +1,6 @@
 import type { 
   GraphQLSchema, 
-  GraphQLType, 
   GraphQLField, 
-  DocumentNode, 
-  OperationDefinitionNode,
   ValidationRule
 } from 'graphql';
 

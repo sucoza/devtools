@@ -177,7 +177,7 @@ export const QueryHistory: React.FC<QueryHistoryProps> = ({
                   ? (selectedOperationData as any).networkInfo 
                   : undefined
               }
-              onCopyQuery={(query) => onCopyOperation(selectedOperationData)}
+              onCopyQuery={(_query) => onCopyOperation(selectedOperationData)}
               onReplayOperation={onReplayOperation}
             />
           ) : (

@@ -3,25 +3,18 @@ import {
   validate,
   buildClientSchema,
   getIntrospectionQuery,
-  introspectionFromSchema,
-  DocumentNode,
   GraphQLSchema,
   GraphQLError,
   OperationDefinitionNode,
   FieldNode,
   SelectionNode,
   ArgumentNode,
-  VariableDefinitionNode,
   Kind,
-  isScalarType,
   isObjectType,
   isInterfaceType,
   isUnionType,
   isEnumType,
   isInputObjectType,
-  isListType,
-  isNonNullType,
-  GraphQLType,
   GraphQLField,
   GraphQLInputField,
   GraphQLEnumValue as GQLEnumValue
@@ -32,7 +25,6 @@ import type {
   SchemaInfo,
   GraphQLTypeInfo,
   GraphQLFieldInfo,
-  GraphQLArgument,
   GraphQLEnumValue,
   GraphQLInputField as TypedInputField,
   QueryBuilderState,
@@ -362,7 +354,7 @@ function extractArgumentValue(arg: ArgumentNode): any {
  */
 export function prettifyQuery(query: string): string {
   try {
-    const document = parse(query);
+    const _document = parse(query);
     return query; // For now, return as-is. Could implement proper formatting later.
   } catch {
     return query;

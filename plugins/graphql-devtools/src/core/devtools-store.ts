@@ -3,7 +3,6 @@ import type {
   GraphQLDevToolsState,
   GraphQLDevToolsAction,
   GraphQLOperation,
-  SchemaInfo,
   QueryBuilderState,
   PerformanceMetrics,
   ValidationError
@@ -176,7 +175,7 @@ export class GraphQLDevToolsStore {
         this.performSchemaIntrospection();
         return state;
 
-      case 'operations/add':
+      case 'operations/add': {
         const newOperations = [action.payload, ...state.operations]
           .slice(0, state.maxOperations);
         
@@ -185,6 +184,7 @@ export class GraphQLDevToolsStore {
           operations: newOperations,
           performance: this.updatePerformanceMetrics(state.performance, action.payload)
         };
+      }
 
       case 'operations/update':
         return {
@@ -274,7 +274,7 @@ export class GraphQLDevToolsStore {
           }
         };
 
-      case 'query-builder/generate-query':
+      case 'query-builder/generate-query': {
         const generatedQuery = generateQueryFromBuilder(state.queryBuilder);
         return {
           ...state,
@@ -283,8 +283,9 @@ export class GraphQLDevToolsStore {
             generatedQuery
           }
         };
+      }
 
-      case 'query-builder/validate':
+      case 'query-builder/validate': {
         const validationErrors = this.validateQueryBuilder(state.queryBuilder);
         return {
           ...state,
@@ -294,6 +295,7 @@ export class GraphQLDevToolsStore {
             isValid: validationErrors.length === 0
           }
         };
+      }
 
       case 'query-builder/reset':
         return {
@@ -337,7 +339,7 @@ export class GraphQLDevToolsStore {
           }
         };
 
-      case 'ui/recording/toggle':
+      case 'ui/recording/toggle': {
         const newRecordingState = !state.ui.isRecording;
         this.interceptor.updateOptions({ enabled: newRecordingState });
         return {
@@ -347,6 +349,7 @@ export class GraphQLDevToolsStore {
             isRecording: newRecordingState
           }
         };
+      }
 
       case 'ui/filters/toggle':
         return {
@@ -378,7 +381,7 @@ export class GraphQLDevToolsStore {
           }
         };
 
-      case 'settings/update':
+      case 'settings/update': {
         const newSettings = {
           ...state.settings,
           ...action.payload
@@ -398,6 +401,7 @@ export class GraphQLDevToolsStore {
           ...state,
           settings: newSettings
         };
+      }
 
       default:
         return state;
@@ -460,7 +464,7 @@ export class GraphQLDevToolsStore {
     // Update execution time metrics
     if (operation.executionTime !== undefined) {
       const allOperations = this.state.operations.filter(op => op.executionTime !== undefined);
-      const executionTimes = allOperations.map(op => op.executionTime!);
+      const executionTimes = allOperations.map(op => op.executionTime as number);
       
       updated.averageExecutionTime = executionTimes.reduce((sum, time) => sum + time, 0) / executionTimes.length;
       

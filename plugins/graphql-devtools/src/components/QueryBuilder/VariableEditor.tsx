@@ -73,7 +73,7 @@ export const VariableEditor: React.FC<VariableEditorProps> = ({
     setEditingVariable(null);
   };
 
-  const handleSaveEdit = (variableName: string) => {
+  const handleSaveEdit = (_variableName: string) => {
     setEditingVariable(null);
   };
 

@@ -6,7 +6,6 @@ import {
   Eye, 
   RefreshCw, 
   AlertCircle,
-  Play,
   Edit3
 } from 'lucide-react';
 import { FieldSelector } from './FieldSelector';

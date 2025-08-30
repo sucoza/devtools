@@ -2,7 +2,7 @@ import React from 'react';
 import { RefreshCw, AlertCircle, Loader, Database, TrendingUp } from 'lucide-react';
 import { TypeList } from './TypeList';
 import { TypeDetails } from './TypeDetails';
-import type { SchemaInfo, GraphQLTypeInfo } from '../../types';
+import type { SchemaInfo } from '../../types';
 
 interface SchemaExplorerProps {
   schemaInfo: SchemaInfo;

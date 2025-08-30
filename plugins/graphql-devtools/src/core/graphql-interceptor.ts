@@ -6,8 +6,7 @@ import type {
 } from '../types';
 import { 
   isGraphQLRequest, 
-  extractGraphQLFromRequest,
-  parseGraphQLQuery 
+  extractGraphQLFromRequest
 } from '../utils/graphql-parser';
 
 export interface GraphQLInterceptorOptions {
@@ -95,18 +94,19 @@ export class GraphQLInterceptor {
    * Intercept fetch requests
    */
   private interceptFetch(): void {
-    const self = this;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const interceptor = this;
     
     window.fetch = async function(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
       const url = input instanceof Request ? input.url : input.toString();
       const method = init?.method || (input instanceof Request ? input.method : 'GET');
-      const headers = self.extractHeaders(init?.headers || (input instanceof Request ? input.headers : {}));
+      const headers = interceptor.extractHeaders(init?.headers || (input instanceof Request ? input.headers : {}));
       const body = init?.body?.toString() || (input instanceof Request ? await input.clone().text() : '');
       
       const startTime = performance.now();
       
       // Check if this is a GraphQL request
-      if (self.shouldIntercept(url, method, body)) {
+      if (interceptor.shouldIntercept(url, method, body)) {
         const requestData: GraphQLRequest = {
           url,
           method,
@@ -116,7 +116,7 @@ export class GraphQLInterceptor {
         };
 
         try {
-          const operation = self.createOperationFromRequest(requestData);
+          const operation = interceptor.createOperationFromRequest(requestData);
           if (operation) {
             const interceptedOp: InterceptedOperation = {
               ...operation,
@@ -130,8 +130,8 @@ export class GraphQLInterceptor {
               }
             };
             
-            self.operations.set(operation.id, interceptedOp);
-            self.notifyListeners(interceptedOp);
+            interceptor.operations.set(operation.id, interceptedOp);
+            interceptor.notifyListeners(interceptedOp);
           }
         } catch (error) {
           console.warn('Failed to parse GraphQL request:', error);
@@ -139,12 +139,12 @@ export class GraphQLInterceptor {
       }
 
       try {
-        const response = await self.originalFetch.call(this, input, init);
+        const response = await interceptor.originalFetch.call(this, input, init);
         const endTime = performance.now();
         const executionTime = endTime - startTime;
 
-        if (self.shouldIntercept(url, method, body)) {
-          await self.handleResponse(url, response.clone(), executionTime);
+        if (interceptor.shouldIntercept(url, method, body)) {
+          await interceptor.handleResponse(url, response.clone(), executionTime);
         }
 
         return response;
@@ -152,8 +152,8 @@ export class GraphQLInterceptor {
         const endTime = performance.now();
         const executionTime = endTime - startTime;
         
-        if (self.shouldIntercept(url, method, body)) {
-          await self.handleError(url, error as Error, executionTime);
+        if (interceptor.shouldIntercept(url, method, body)) {
+          await interceptor.handleError(url, error as Error, executionTime);
         }
         
         throw error;
@@ -165,7 +165,8 @@ export class GraphQLInterceptor {
    * Intercept XMLHttpRequest
    */
   private interceptXHR(): void {
-    const self = this;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const interceptor = this;
     
     XMLHttpRequest.prototype.open = function(
       this: XMLHttpRequest,
@@ -176,13 +177,13 @@ export class GraphQLInterceptor {
       password?: string | null
     ) {
       (this as any).__interceptor__ = { method, url, startTime: 0 };
-      return self.originalXHROpen.call(this, method, url, async, username, password);
+      return interceptor.originalXHROpen.call(this, method, url, async, username, password);
     };
 
     XMLHttpRequest.prototype.send = function(this: XMLHttpRequest, body?: Document | XMLHttpRequestBodyInit | null) {
       const interceptorData = (this as any).__interceptor__;
       if (!interceptorData) {
-        return self.originalXHRSend.call(this, body);
+        return interceptor.originalXHRSend.call(this, body);
       }
 
       const { method, url } = interceptorData;
@@ -190,8 +191,8 @@ export class GraphQLInterceptor {
       const startTime = performance.now();
       interceptorData.startTime = startTime;
 
-      if (self.shouldIntercept(url, method, bodyString)) {
-        const headers = self.extractXHRHeaders(this);
+      if (interceptor.shouldIntercept(url, method, bodyString)) {
+        const headers = interceptor.extractXHRHeaders(this);
         const requestData: GraphQLRequest = {
           url,
           method,
@@ -201,7 +202,7 @@ export class GraphQLInterceptor {
         };
 
         try {
-          const operation = self.createOperationFromRequest(requestData);
+          const operation = interceptor.createOperationFromRequest(requestData);
           if (operation) {
             const interceptedOp: InterceptedOperation = {
               ...operation,
@@ -215,8 +216,8 @@ export class GraphQLInterceptor {
               }
             };
             
-            self.operations.set(operation.id, interceptedOp);
-            self.notifyListeners(interceptedOp);
+            interceptor.operations.set(operation.id, interceptedOp);
+            interceptor.notifyListeners(interceptedOp);
           }
         } catch (error) {
           console.warn('Failed to parse GraphQL request:', error);
@@ -228,7 +229,7 @@ export class GraphQLInterceptor {
             const endTime = performance.now();
             const executionTime = endTime - startTime;
             
-            self.handleXHRResponse(url, this, executionTime);
+            interceptor.handleXHRResponse(url, this, executionTime);
           }
           
           if (originalOnReadyStateChange) {
@@ -237,7 +238,7 @@ export class GraphQLInterceptor {
         };
       }
 
-      return self.originalXHRSend.call(this, body);
+      return interceptor.originalXHRSend.call(this, body);
     };
   }
 
@@ -412,7 +413,7 @@ export class GraphQLInterceptor {
   /**
    * Extract headers from XHR
    */
-  private extractXHRHeaders(xhr: XMLHttpRequest): Record<string, string> {
+  private extractXHRHeaders(_xhr: XMLHttpRequest): Record<string, string> {
     // XHR doesn't provide easy access to request headers
     // This is a limitation of the XHR API
     return {};
@@ -450,7 +451,7 @@ export class GraphQLInterceptor {
       .sort((a, b) => b.timestamp - a.timestamp);
     
     const toKeep = operations.slice(0, this.options.maxOperationHistory);
-    const toRemove = operations.slice(this.options.maxOperationHistory);
+    const _toRemove = operations.slice(this.options.maxOperationHistory);
     
     this.operations.clear();
     toKeep.forEach(op => this.operations.set(op.id, op));

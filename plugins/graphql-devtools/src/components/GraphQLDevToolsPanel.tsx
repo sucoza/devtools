@@ -7,7 +7,6 @@ import {
   Settings,
   Play,
   Square,
-  RefreshCw,
   Download,
   Upload
 } from 'lucide-react';
@@ -38,10 +37,10 @@ export const GraphQLDevToolsPanel: React.FC = () => {
     client.selectOperation(id);
   };
 
-  const handleOperationDelete = (id: string) => {
+  const handleOperationDelete = (_id: string) => {
     // Remove specific operation
     // This would need to be added to the client API
-    console.log('Delete operation:', id);
+    // console.log('Delete operation:', id);
   };
 
   const handleClearOperations = () => {
@@ -52,13 +51,13 @@ export const GraphQLDevToolsPanel: React.FC = () => {
     navigator.clipboard.writeText(operation.query);
   };
 
-  const handleReplayOperation = async (operation: any) => {
+  const handleReplayOperation = async (_operation: any) => {
     // Replay the operation by executing it again
     try {
       // This would need endpoint configuration
-      console.log('Replay operation:', operation);
-    } catch (error) {
-      console.error('Failed to replay operation:', error);
+      // console.log('Replay operation:', operation);
+    } catch {
+      // console.error('Failed to replay operation:', error);
     }
   };
 
@@ -94,9 +93,9 @@ export const GraphQLDevToolsPanel: React.FC = () => {
     client.resetQueryBuilder();
   };
 
-  const handleExecuteQuery = async (query: string, variables?: Record<string, any>) => {
+  const handleExecuteQuery = async (_query: string, _variables?: Record<string, any>) => {
     // This would need endpoint configuration
-    console.log('Execute query:', query, variables);
+    // console.log('Execute query:', query, variables);
     throw new Error('Query execution requires endpoint configuration');
   };
 
@@ -134,8 +133,8 @@ export const GraphQLDevToolsPanel: React.FC = () => {
       try {
         const data = e.target?.result as string;
         client.importOperations(data);
-      } catch (error) {
-        console.error('Failed to import data:', error);
+      } catch {
+        // console.error('Failed to import data:', error);
       }
     };
     reader.readAsText(file);
