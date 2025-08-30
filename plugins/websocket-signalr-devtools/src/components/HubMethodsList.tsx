@@ -6,7 +6,7 @@ interface HubMethodsListProps {
   connectionId: string;
 }
 
-export function HubMethodsList({ hubMethods, connectionId }: HubMethodsListProps) {
+export function HubMethodsList({ hubMethods, connectionId: _connectionId }: HubMethodsListProps) {
   const formatTimestamp = (timestamp: number) => {
     return new Date(timestamp).toLocaleTimeString();
   };

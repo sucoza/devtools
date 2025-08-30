@@ -82,7 +82,7 @@ class DevToolsStore {
       }
     });
 
-    this.websocketInterceptor.on('errorOccurred', (error) => {
+    this.websocketInterceptor.on('errorOccurred', (_error) => {
       // Errors are already added to connection.errors in the interceptor
     });
 
@@ -101,7 +101,7 @@ class DevToolsStore {
       }
     });
 
-    this.signalrInterceptor.on('errorOccurred', (error) => {
+    this.signalrInterceptor.on('errorOccurred', (_error) => {
       // Errors are already added to connection.errors in the interceptor
     });
   }

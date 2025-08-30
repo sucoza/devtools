@@ -1,14 +1,14 @@
 export type EventListener<T> = (data: T) => void;
 
-export class EventEmitter<TEventMap extends Record<string, any>> {
-  private listeners = new Map<keyof TEventMap, Set<EventListener<any>>>();
+export class EventEmitter<TEventMap extends Record<string, unknown>> {
+  private listeners = new Map<keyof TEventMap, Set<EventListener<unknown>>>();
 
   on<K extends keyof TEventMap>(event: K, listener: EventListener<TEventMap[K]>): () => void {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
     }
     
-    this.listeners.get(event)!.add(listener);
+    this.listeners.get(event)?.add(listener);
 
     // Return unsubscribe function
     return () => {

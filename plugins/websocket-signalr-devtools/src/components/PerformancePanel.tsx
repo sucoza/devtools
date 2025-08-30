@@ -1,20 +1,20 @@
 import React from 'react';
 import { useDevToolsSelector } from '../core/devtools-store';
 // Mock recharts components for TypeScript compilation
-const LineChart = ({ children, ...props }: any) => <div {...props}>{children}</div>;
-const Line = (props: any) => <div {...props} />;
-const AreaChart = ({ children, ...props }: any) => <div {...props}>{children}</div>;
-const Area = (props: any) => <div {...props} />;
-const XAxis = (props: any) => <div {...props} />;
-const YAxis = (props: any) => <div {...props} />;
-const CartesianGrid = (props: any) => <div {...props} />;
-const Tooltip = (props: any) => <div {...props} />;
-const ResponsiveContainer = ({ children, ...props }: any) => <div {...props}>{children}</div>;
-const PieChart = ({ children, ...props }: any) => <div {...props}>{children}</div>;
-const Pie = (props: any) => <div {...props} />;
-const Cell = (props: any) => <div {...props} />;
-const BarChart = ({ children, ...props }: any) => <div {...props}>{children}</div>;
-const Bar = (props: any) => <div {...props} />;
+const LineChart = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>;
+const Line = (props: Record<string, unknown>) => <div {...props} />;
+const AreaChart = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>;
+const Area = (props: Record<string, unknown>) => <div {...props} />;
+const XAxis = (props: Record<string, unknown>) => <div {...props} />;
+const YAxis = (props: Record<string, unknown>) => <div {...props} />;
+const CartesianGrid = (props: Record<string, unknown>) => <div {...props} />;
+const Tooltip = (props: Record<string, unknown>) => <div {...props} />;
+const ResponsiveContainer = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>;
+const PieChart = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>;
+const Pie = (props: Record<string, unknown>) => <div {...props} />;
+const Cell = (props: Record<string, unknown>) => <div {...props} />;
+const BarChart = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>;
+const Bar = (props: Record<string, unknown>) => <div {...props} />;
 
 export function PerformancePanel() {
   const websocketMetrics = useDevToolsSelector(state => state.websocket.metrics);
@@ -275,7 +275,7 @@ export function PerformancePanel() {
                 <YAxis yAxisId="left" orientation="left" />
                 <YAxis yAxisId="right" orientation="right" />
                 <Tooltip 
-                  formatter={(value, name, props) => {
+                  formatter={(value, name, _props) => {
                     if (name === 'invocations') return [`${value} calls`, 'Invocations'];
                     if (name === 'avgTime') return [`${value}ms`, 'Avg Time'];
                     if (name === 'errors') return [`${value} errors`, 'Errors'];

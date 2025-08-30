@@ -11,7 +11,7 @@ export interface WebSocketMessage {
   connectionId: string;
   timestamp: number;
   type: MessageType;
-  data: any;
+  data: unknown;
   size: number;
   binary: boolean;
   error?: string;

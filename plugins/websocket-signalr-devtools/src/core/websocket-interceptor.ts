@@ -1,8 +1,8 @@
 import type { 
   WebSocketConnection, 
   WebSocketMessage, 
-  WebSocketState, 
-  MessageType,
+  // WebSocketState, 
+  // MessageType,
   WebSocketError 
 } from '../types/websocket';
 import { EventEmitter } from './event-emitter';
@@ -62,6 +62,7 @@ export class WebSocketInterceptor extends EventEmitter<{
   }
 
   private interceptWebSocket(): void {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const interceptor = this;
     
     window.WebSocket = class extends interceptor.originalWebSocket {
@@ -101,7 +102,7 @@ export class WebSocketInterceptor extends EventEmitter<{
 
       private setupEventListeners(): void {
         const originalAddEventListener = this.addEventListener.bind(this);
-        const originalRemoveEventListener = this.removeEventListener.bind(this);
+        const _originalRemoveEventListener = this.removeEventListener.bind(this);
 
         // Override addEventListener to intercept events
         this.addEventListener = (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) => {
@@ -169,7 +170,7 @@ export class WebSocketInterceptor extends EventEmitter<{
         };
       }
 
-      private handleOpen(event: Event): void {
+      private handleOpen(_event: Event): void {
         const connection = interceptor.connectionData.get(this.connectionId);
         if (!connection) return;
 
@@ -259,7 +260,7 @@ export class WebSocketInterceptor extends EventEmitter<{
         interceptor.connections.delete(this);
       }
 
-      private handleError(event: Event): void {
+      private handleError(_event: Event): void {
         const connection = interceptor.connectionData.get(this.connectionId);
         if (!connection) return;
 
@@ -352,7 +353,7 @@ export class WebSocketInterceptor extends EventEmitter<{
     };
   }
 
-  private calculateMessageSize(data: any): number {
+  private calculateMessageSize(data: unknown): number {
     if (typeof data === 'string') {
       return new Blob([data]).size;
     } else if (data instanceof ArrayBuffer) {

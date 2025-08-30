@@ -48,7 +48,7 @@ export interface MessageTemplate {
   name: string;
   type: 'websocket' | 'signalr';
   template: string;
-  variables: Record<string, any>;
+  variables: Record<string, unknown>;
 }
 
 export type DevToolsAction = 

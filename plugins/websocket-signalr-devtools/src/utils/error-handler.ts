@@ -2,14 +2,14 @@ export class DevToolsError extends Error {
   constructor(
     message: string,
     public code: string,
-    public context?: Record<string, any>
+    public context?: Record<string, unknown>
   ) {
     super(message);
     this.name = 'DevToolsError';
   }
 }
 
-export function handleError(error: unknown, context?: Record<string, any>): DevToolsError {
+export function handleError(error: unknown, context?: Record<string, unknown>): DevToolsError {
   if (error instanceof DevToolsError) {
     return error;
   }
@@ -31,7 +31,7 @@ export function handleError(error: unknown, context?: Record<string, any>): DevT
 export function safeExecute<T>(
   fn: () => T,
   fallback: T,
-  context?: Record<string, any>
+  context?: Record<string, unknown>
 ): T {
   try {
     return fn();
@@ -44,7 +44,7 @@ export function safeExecute<T>(
 export async function safeExecuteAsync<T>(
   fn: () => Promise<T>,
   fallback: T,
-  context?: Record<string, any>
+  context?: Record<string, unknown>
 ): Promise<T> {
   try {
     return await fn();
@@ -54,14 +54,14 @@ export async function safeExecuteAsync<T>(
   }
 }
 
-export function validateConnection(connection: any): boolean {
+export function validateConnection(connection: unknown): boolean {
   if (!connection) return false;
   if (typeof connection.id !== 'string') return false;
   if (typeof connection.createdAt !== 'number') return false;
   return true;
 }
 
-export function validateMessage(message: any): boolean {
+export function validateMessage(message: unknown): boolean {
   if (!message) return false;
   if (typeof message.id !== 'string') return false;
   if (typeof message.connectionId !== 'string') return false;

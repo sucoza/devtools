@@ -7,7 +7,7 @@ export function FilterPanel() {
   const selectedTab = useDevToolsSelector(state => state.ui.selectedTab);
   const websocketFilter = useDevToolsSelector(state => state.websocket.filter);
   const signalrFilter = useDevToolsSelector(state => state.signalr.filter);
-  const websocketConnections = useDevToolsSelector(state => Array.from(state.websocket.connections.values()));
+  const _websocketConnections = useDevToolsSelector(state => Array.from(state.websocket.connections.values()));
   const signalrConnections = useDevToolsSelector(state => Array.from(state.signalr.connections.values()));
   
   const client = createWebSocketSignalRDevToolsClient();
@@ -84,7 +84,7 @@ export function FilterPanel() {
 
   const handleFilterChange = (updates: Partial<FilterConfig>) => {
     // Map shared component updates back to plugin-specific filter format
-    const pluginUpdates: any = {};
+    const pluginUpdates: Record<string, unknown> = {};
     
     if ('searchText' in updates) {
       pluginUpdates.searchText = updates.searchText;

@@ -10,7 +10,7 @@ global.ResizeObserver = class ResizeObserver {
 // Mock window.matchMedia for theme detection
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: (query: any) => ({
+  value: (query: string) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -25,7 +25,7 @@ Object.defineProperty(window, 'matchMedia', {
 // Mock navigator.clipboard
 Object.defineProperty(navigator, 'clipboard', {
   value: {
-    writeText: async (text: string) => {},
+    writeText: async (_text: string) => {},
     readText: async () => '',
   },
 });
@@ -59,7 +59,7 @@ class MockWebSocket {
   onmessage: ((event: MessageEvent) => void) | null = null;
   onerror: ((event: Event) => void) | null = null;
 
-  send(data: any) {
+  send(_data: unknown) {
     // Mock implementation
   }
 
@@ -73,13 +73,13 @@ class MockWebSocket {
     }, 10);
   }
 
-  addEventListener(type: string, listener: EventListenerOrEventListenerObject) {
+  addEventListener(_type: string, _listener: EventListenerOrEventListenerObject) {
     // Mock implementation
   }
 
-  removeEventListener(type: string, listener: EventListenerOrEventListenerObject) {
+  removeEventListener(_type: string, _listener: EventListenerOrEventListenerObject) {
     // Mock implementation
   }
 }
 
-(global as any).WebSocket = MockWebSocket;
+(global as Record<string, unknown>).WebSocket = MockWebSocket;

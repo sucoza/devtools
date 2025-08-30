@@ -1,8 +1,8 @@
 import type {
   SignalRConnection,
   SignalRMessage,
-  SignalRConnectionState,
-  SignalRMessageType,
+  // SignalRConnectionState,
+  // SignalRMessageType,
   SignalRHubMethod,
   SignalRError,
   SignalRTransport
@@ -18,10 +18,10 @@ export class SignalRInterceptor extends EventEmitter<{
   errorOccurred: SignalRError;
   hubMethodCalled: { connectionId: string; method: SignalRHubMethod };
 }> {
-  private connections = new Map<any, string>();
+  private connections = new Map<unknown, string>();
   private connectionData = new Map<string, SignalRConnection>();
   private isEnabled = false;
-  private originalHubConnection: any;
+  private originalHubConnection: unknown;
 
   constructor() {
     super();
@@ -71,27 +71,29 @@ export class SignalRInterceptor extends EventEmitter<{
   private interceptSignalRModule(): void {
     try {
       // Dynamic import to avoid breaking if SignalR is not available
-      const signalR = (window as any).signalR || 
-                     (global as any).signalR ||
+      const signalR = (window as Record<string, unknown>).signalR || 
+                     (global as Record<string, unknown>).signalR ||
+                     // eslint-disable-next-line @typescript-eslint/no-require-imports
                      require?.('@microsoft/signalr');
       
       if (signalR?.HubConnectionBuilder) {
         this.interceptHubConnectionBuilder(signalR.HubConnectionBuilder);
       }
-    } catch (error) {
+    } catch {
       // SignalR not available, skip interception
     }
   }
 
   private interceptGlobalSignalR(): void {
     // Check for global signalR object (older versions)
-    const globalSignalR = (window as any).signalR;
+    const globalSignalR = (window as Record<string, unknown>).signalR;
     if (globalSignalR?.HubConnectionBuilder) {
       this.interceptHubConnectionBuilder(globalSignalR.HubConnectionBuilder);
     }
   }
 
-  private interceptHubConnectionBuilder(HubConnectionBuilder: any): void {
+  private interceptHubConnectionBuilder(HubConnectionBuilder: unknown): void {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const interceptor = this;
     const originalBuild = HubConnectionBuilder.prototype.build;
 
@@ -102,7 +104,7 @@ export class SignalRInterceptor extends EventEmitter<{
     };
   }
 
-  private wrapHubConnection(hubConnection: any): void {
+  private wrapHubConnection(hubConnection: unknown): void {
     const connectionId = generateId();
     const startTime = Date.now();
     
@@ -136,9 +138,10 @@ export class SignalRInterceptor extends EventEmitter<{
     this.wrapConnectionEvents(hubConnection, connectionId);
   }
 
-  private wrapConnectionMethods(hubConnection: any, connectionId: string): void {
+  private wrapConnectionMethods(hubConnection: unknown, connectionId: string): void {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const interceptor = this;
-    const connection = this.connectionData.get(connectionId)!;
+    const connection = this.connectionData.get(connectionId);
 
     // Wrap start method
     const originalStart = hubConnection.start.bind(hubConnection);
@@ -231,7 +234,7 @@ export class SignalRInterceptor extends EventEmitter<{
 
     // Wrap invoke method
     const originalInvoke = hubConnection.invoke.bind(hubConnection);
-    hubConnection.invoke = async function(methodName: string, ...args: any[]) {
+    hubConnection.invoke = async function(methodName: string, ...args: unknown[]) {
       const invocationId = generateId();
       const startTime = Date.now();
 
@@ -290,7 +293,7 @@ export class SignalRInterceptor extends EventEmitter<{
 
     // Wrap send method
     const originalSend = hubConnection.send.bind(hubConnection);
-    hubConnection.send = function(methodName: string, ...args: any[]) {
+    hubConnection.send = function(methodName: string, ...args: unknown[]) {
       interceptor.addMessage(connectionId, {
         type: 'Invocation',
         direction: 'send',
@@ -305,8 +308,8 @@ export class SignalRInterceptor extends EventEmitter<{
 
     // Wrap on method for incoming messages
     const originalOn = hubConnection.on.bind(hubConnection);
-    hubConnection.on = function(methodName: string, newMethod: (...args: any[]) => void) {
-      const wrappedMethod = (...args: any[]) => {
+    hubConnection.on = function(methodName: string, newMethod: (...args: unknown[]) => void) {
+      const wrappedMethod = (...args: unknown[]) => {
         interceptor.addMessage(connectionId, {
           type: 'Invocation',
           direction: 'receive',
@@ -322,8 +325,8 @@ export class SignalRInterceptor extends EventEmitter<{
     };
   }
 
-  private wrapConnectionEvents(hubConnection: any, connectionId: string): void {
-    const connection = this.connectionData.get(connectionId)!;
+  private wrapConnectionEvents(hubConnection: unknown, connectionId: string): void {
+    const connection = this.connectionData.get(connectionId);
 
     // Handle reconnecting event
     hubConnection.onreconnecting = (error?: Error) => {
@@ -463,7 +466,7 @@ export class SignalRInterceptor extends EventEmitter<{
     this.emit('hubMethodCalled', { connectionId, method });
   }
 
-  private getTransportName(hubConnection: any): SignalRTransport | undefined {
+  private getTransportName(hubConnection: unknown): SignalRTransport | undefined {
     const transport = hubConnection._transport || hubConnection.transport;
     if (!transport) return undefined;
 
@@ -479,7 +482,7 @@ export class SignalRInterceptor extends EventEmitter<{
     return undefined;
   }
 
-  private calculateSize(data: any): number {
+  private calculateSize(data: unknown): number {
     if (data === null || data === undefined) return 0;
     
     try {

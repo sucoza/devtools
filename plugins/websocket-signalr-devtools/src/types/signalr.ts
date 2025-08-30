@@ -27,8 +27,8 @@ export interface SignalRMessage {
   direction: 'send' | 'receive';
   type: SignalRMessageType;
   target?: string;
-  arguments?: any[];
-  result?: any;
+  arguments?: unknown[];
+  result?: unknown;
   error?: string;
   invocationId?: string;
   streamIds?: string[];

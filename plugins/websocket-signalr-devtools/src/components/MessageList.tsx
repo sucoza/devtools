@@ -17,7 +17,7 @@ export function MessageList({ messages, onMessageSelect, type }: MessageListProp
       hour: '2-digit', 
       minute: '2-digit', 
       second: '2-digit'
-    } as any);
+    } as Intl.DateTimeFormatOptions);
   };
 
   const getMessageTypeColor = (message: WebSocketMessage | SignalRMessage) => {

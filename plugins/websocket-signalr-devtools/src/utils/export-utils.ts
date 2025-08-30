@@ -45,16 +45,16 @@ export function exportToJSON(
 
   if (options.connectionIds?.length) {
     filteredWSConnections = websocketConnections.filter(conn => 
-      options.connectionIds!.includes(conn.id)
+      options.connectionIds?.includes(conn.id) ?? false
     );
     filteredWSMessages = websocketMessages.filter(msg => 
-      options.connectionIds!.includes(msg.connectionId)
+      options.connectionIds?.includes(msg.connectionId) ?? false
     );
     filteredSRConnections = signalrConnections.filter(conn => 
-      options.connectionIds!.includes(conn.id)
+      options.connectionIds?.includes(conn.id) ?? false
     );
     filteredSRMessages = signalrMessages.filter(msg => 
-      options.connectionIds!.includes(msg.connectionId)
+      options.connectionIds?.includes(msg.connectionId) ?? false
     );
   }
 
@@ -223,7 +223,7 @@ export function exportToHAR(
         name: 'WebSocket SignalR DevTools',
         version: '1.0.0',
       },
-      entries: [] as any[],
+      entries: [] as unknown[],
     },
   };
 

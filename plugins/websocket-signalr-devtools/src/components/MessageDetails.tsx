@@ -42,7 +42,7 @@ export function MessageDetails({ messageId, type }: MessageDetailsProps) {
     return new Date(timestamp).toLocaleString();
   };
 
-  const formatData = (data: any, formatted: boolean = true) => {
+  const formatData = (data: unknown, formatted: boolean = true) => {
     if (data === null || data === undefined) return 'null';
     
     if (typeof data === 'string') {
@@ -176,7 +176,7 @@ export function MessageDetails({ messageId, type }: MessageDetailsProps) {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-    } catch (err) {
+    } catch {
       // Fallback for older browsers
       const textArea = document.createElement('textarea');
       textArea.value = text;

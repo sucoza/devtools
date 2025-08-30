@@ -69,7 +69,7 @@ export class WebSocketSignalRDevToolsClient extends EventClient<WebSocketSignalR
     devToolsStore.closeConnection(type, id);
   };
 
-  updateFilter = (type: 'websocket' | 'signalr', filter: any) => {
+  updateFilter = (type: 'websocket' | 'signalr', filter: Record<string, unknown>) => {
     if (type === 'websocket') {
       devToolsStore.dispatch({ type: 'websocket/filter/update', payload: filter });
     } else {
