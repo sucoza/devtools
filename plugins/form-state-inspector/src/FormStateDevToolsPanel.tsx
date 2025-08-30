@@ -3,8 +3,8 @@ import { formStateEventClient } from './formEventClient';
 import type { 
   FormState, 
   FieldState, 
-  FieldHistoryEntry, 
-  AccessibilityIssue,
+  _FieldHistoryEntry, 
+  _AccessibilityIssue,
   FormSubmission,
   ValidationState 
 } from './formEventClient';
@@ -27,7 +27,7 @@ const FORM_STATE_UI_KEY = 'form-state-devtools-ui-state';
 const saveUIState = (state: FormStateUIState) => {
   try {
     localStorage.setItem(FORM_STATE_UI_KEY, JSON.stringify(state));
-  } catch (e) {
+  } catch {
     // Ignore localStorage errors
   }
 };
@@ -36,7 +36,7 @@ const loadUIState = (): Partial<FormStateUIState> => {
   try {
     const saved = localStorage.getItem(FORM_STATE_UI_KEY);
     return saved ? JSON.parse(saved) : {};
-  } catch (e) {
+  } catch {
     return {};
   }
 };
@@ -66,7 +66,7 @@ export function FormStateDevToolsPanel() {
   
   const [forms, setForms] = useState<Record<string, FormState>>({});
   const [selectedFormId, setSelectedFormId] = useState<string | null>(savedState.selectedFormId || null);
-  const [selectedFieldName, setSelectedFieldName] = useState<string | null>(savedState.selectedFieldName || null);
+  const [selectedFieldName, _setSelectedFieldName] = useState<string | null>(savedState.selectedFieldName || null);
   const [activeTab, setActiveTab] = useState<FormStateUIState['activeTab']>(savedState.activeTab || 'fields');
   const [showOnlyDirty, setShowOnlyDirty] = useState(savedState.showOnlyDirty ?? false);
   const [showOnlyInvalid, setShowOnlyInvalid] = useState(savedState.showOnlyInvalid ?? false);
@@ -181,7 +181,7 @@ export function FormStateDevToolsPanel() {
     setIsReplaying(false);
   }, [forms, replaySpeed]);
 
-  const toggleFormExpanded = (formId: string) => {
+  const _toggleFormExpanded = (_formId: string) => {
     setExpandedForms(prev => 
       prev.includes(formId) 
         ? prev.filter(id => id !== formId)

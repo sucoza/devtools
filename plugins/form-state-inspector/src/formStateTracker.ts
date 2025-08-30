@@ -1,9 +1,9 @@
 import { 
   FormState, 
   FieldState, 
-  ValidationState, 
+  _ValidationState, 
   FieldValidation, 
-  FormPerformanceMetrics,
+  _FormPerformanceMetrics,
   FieldHistoryEntry,
   AccessibilityIssue,
   ValidationSchema,
@@ -351,7 +351,7 @@ class FormStateRegistry {
     form.timestamp = Date.now();
   }
 
-  public handleFormSubmit(formId: string, event: SubmitEvent) {
+  public handleFormSubmit(formId: string, _event: SubmitEvent) {
     const form = this.forms.get(formId);
     if (!form) return;
 

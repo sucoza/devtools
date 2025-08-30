@@ -19,13 +19,13 @@ export const formStateInspectorPlugin: DevtoolsPlugin = {
   
   // Optional: Initialize the plugin
   init: () => {
-    console.log('🔍 Form State Inspector plugin initialized');
+    // console.log('🔍 Form State Inspector plugin initialized');
     
     // Auto-detect forms on page load
     if (typeof window !== 'undefined') {
       window.addEventListener('DOMContentLoaded', () => {
-        const forms = document.querySelectorAll('form');
-        console.log(`Form State Inspector: Found ${forms.length} forms on the page`);
+        const _forms = document.querySelectorAll('form');
+        // console.log(`Form State Inspector: Found ${forms.length} forms on the page`);
       });
     }
   }

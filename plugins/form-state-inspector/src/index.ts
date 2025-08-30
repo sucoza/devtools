@@ -75,7 +75,7 @@ export function initializeFormStateInspector() {
       });
     }
 
-    console.log('🔍 Form State Inspector initialized');
+    // console.log('🔍 Form State Inspector initialized');
   }
 }
 

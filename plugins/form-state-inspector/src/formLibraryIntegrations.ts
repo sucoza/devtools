@@ -11,11 +11,11 @@ export function useFormStateInspector(formId: string, hookFormMethods?: any) {
   };
 
   // Register form on mount
-  const formState = formStateRegistry.registerForm(formId);
+  const _formState = formStateRegistry.registerForm(formId);
 
   if (hookFormMethods) {
     // React Hook Form specific integration
-    const { watch, formState: rhfState, control } = hookFormMethods;
+    const { watch, formState: rhfState, control: _control } = hookFormMethods;
 
     // Watch all fields
     const watchedValues = watch();
@@ -102,14 +102,14 @@ export function formikDevToolsPlugin(formId: string) {
       });
     },
     
-    onSubmit: (values: any, formik: any) => {
+    onSubmit: (_values: any, _formik: any) => {
       formStateRegistry.handleFormSubmit(formId, {
         preventDefault: () => {},
         target: { elements: {} }
       } as any);
     },
     
-    onReset: (formik: any) => {
+    onReset: (_formik: any) => {
       formStateRegistry.resetForm(formId);
     }
   };
@@ -120,7 +120,7 @@ export function trackHTMLForm(formElement: HTMLFormElement, formId?: string) {
   const id = formId || formElement.id || `form-${Date.now()}`;
   
   // Register form with DOM element
-  const formState = formStateRegistry.registerForm(id, formElement);
+  const _formState = formStateRegistry.registerForm(id, formElement);
   
   // Track all form inputs
   const inputs = formElement.querySelectorAll('input, textarea, select');
@@ -166,7 +166,7 @@ export function trackHTMLForm(formElement: HTMLFormElement, formId?: string) {
     
     field.addEventListener('blur', () => {
       // Run validation on blur
-      validateField(id, fieldName, (value) => {
+      validateField(id, fieldName, (_value) => {
         const isValid = field.checkValidity();
         return isValid ? { state: 'valid' } : {
           state: 'invalid',
