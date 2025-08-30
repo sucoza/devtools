@@ -274,7 +274,7 @@ export class RequestImportParser {
             headers[match[1]] = match[2]
           }
           options.headers = headers
-        } catch (e) {
+        } catch {
           // Ignore header parsing errors
         }
       }
@@ -286,7 +286,7 @@ export class RequestImportParser {
       }
       
       return options
-    } catch (error) {
+    } catch {
       return {}
     }
   }

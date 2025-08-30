@@ -115,7 +115,7 @@ export class StressTestRunner {
         // Create a safe evaluation context
         const testFunction = new Function('response', `return ${config.test}`)
         testPassed = testFunction(responseData)
-      } catch (error) {
+      } catch {
         testPassed = false
       }
 

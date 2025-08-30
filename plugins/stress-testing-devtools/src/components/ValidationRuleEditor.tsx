@@ -299,7 +299,7 @@ export const ValidationRuleEditor: React.FC<ValidationRuleEditorProps> = ({
         {rules.length === 0 && (
           <div className="no-rules">
             <p>No validation rules configured.</p>
-            <p>Click "Add Rule" to create your first validation rule, or use "Test Request" to generate suggested rules automatically.</p>
+            <p>Click &quot;Add Rule&quot; to create your first validation rule, or use &quot;Test Request&quot; to generate suggested rules automatically.</p>
           </div>
         )}
       </div>

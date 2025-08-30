@@ -36,7 +36,7 @@ export function createStressTestPlugin(config: StressTestPluginConfig = {}) {
     
     onUnmount: () => {
       // Cleanup plugin resources
-      console.log('Stress testing plugin unmounted')
+      // console.log('Stress testing plugin unmounted')
     }
   }
 }

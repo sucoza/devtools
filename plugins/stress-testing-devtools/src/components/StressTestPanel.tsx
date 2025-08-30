@@ -53,7 +53,7 @@ export const StressTestPanel: React.FC = () => {
         status: 'completed',
         endTime: Date.now()
       })
-    } catch (error) {
+    } catch {
       stressTestStore.updateTestRun(testRun.id, {
         status: 'failed',
         endTime: Date.now()
@@ -80,7 +80,7 @@ export const StressTestPanel: React.FC = () => {
         status: 'completed',
         endTime: Date.now()
       })
-    } catch (error) {
+    } catch {
       stressTestStore.updateTestRun(testRun.id, {
         status: 'failed',
         endTime: Date.now()

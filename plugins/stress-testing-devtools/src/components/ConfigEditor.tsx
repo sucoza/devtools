@@ -15,7 +15,7 @@ export const ConfigEditor: React.FC<ConfigEditorProps> = ({ configs, onSave }) =
   const [error, setError] = useState<string | null>(null)
   const [showImporter, setShowImporter] = useState(false)
   const [selectedConfigIndex, setSelectedConfigIndex] = useState<number | null>(null)
-  const [editingConfig, setEditingConfig] = useState<StressTestConfig | null>(null)
+  const [_editingConfig, _setEditingConfig] = useState<StressTestConfig | null>(null)
 
   const selectedConfig = selectedConfigIndex !== null ? configs[selectedConfigIndex] : null
 
@@ -47,8 +47,8 @@ export const ConfigEditor: React.FC<ConfigEditorProps> = ({ configs, onSave }) =
       
       onSave(parsed)
       setError(null)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (_err: any) {
+      setError(_err.message)
     }
   }
 
@@ -110,8 +110,8 @@ export const ConfigEditor: React.FC<ConfigEditorProps> = ({ configs, onSave }) =
     try {
       await navigator.clipboard.writeText(configText)
       alert('Configuration exported to clipboard')
-    } catch (err) {
-      console.error('Failed to copy to clipboard:', err)
+    } catch {
+      // console.error('Failed to copy to clipboard')
     }
   }
 
@@ -120,7 +120,7 @@ export const ConfigEditor: React.FC<ConfigEditorProps> = ({ configs, onSave }) =
       const text = await navigator.clipboard.readText()
       setConfigText(text)
       setActiveTab('json')
-    } catch (err) {
+    } catch {
       const imported = prompt('Paste configuration JSON:')
       if (imported) {
         setConfigText(imported)
