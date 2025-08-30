@@ -1,5 +1,5 @@
 import type { SecurityScanner, SecurityVulnerability } from '../types';
-import { generateId, getTimestamp, getElementSelector, escapeHtml } from '../utils';
+import { generateId, getTimestamp, escapeHtml } from '../utils';
 
 export class XSSScanner implements SecurityScanner {
   id = 'xss-scanner';
@@ -15,7 +15,7 @@ export class XSSScanner implements SecurityScanner {
     payloadTimeout: 100,
   };
 
-  configure(config: any): void {
+  configure(config: Record<string, unknown>): void {
     this.config = { ...this.config, ...config };
   }
 

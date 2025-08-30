@@ -3,7 +3,7 @@ import { getSecurityAuditDevToolsStore } from './devtools-store';
 import { getSecurityScanEngine, initializeSecurityScanEngine } from './security-scanner';
 
 // Basic event client interface (simplified from @tanstack/devtools)
-export interface DevToolsEventClient<TEvents extends Record<string, any>> {
+export interface DevToolsEventClient<TEvents extends Record<string, unknown>> {
   subscribe: (callback: (event: TEvents[keyof TEvents], type: keyof TEvents) => void) => () => void;
 }
 
@@ -100,7 +100,7 @@ export class SecurityAuditDevToolsClient implements DevToolsEventClient<Security
     this.store.disableScanner(scannerId);
   };
 
-  configureScanners = (scannerId: string, config: any) => {
+  configureScanners = (scannerId: string, config: Record<string, unknown>) => {
     this.store.updateScannerConfig(scannerId, config);
   };
 
@@ -208,14 +208,14 @@ export class SecurityAuditDevToolsClient implements DevToolsEventClient<Security
   /**
    * Get available scanners
    */
-  getAvailableScanners(): any[] {
+  getAvailableScanners(): Array<{ id: string; name: string; description: string; category: string }> {
     return this.scanEngine?.getScanners() || [];
   }
 
   /**
    * Get enabled scanners
    */
-  getEnabledScanners(): any[] {
+  getEnabledScanners(): Array<{ id: string; name: string; description: string; category: string }> {
     return this.scanEngine?.getEnabledScanners() || [];
   }
 }

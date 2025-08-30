@@ -16,7 +16,7 @@ export class CSPAnalyzer implements SecurityScanner {
     checkHTTPSources: true,
   };
 
-  configure(config: any): void {
+  configure(config: Record<string, unknown>): void {
     this.config = { ...this.config, ...config };
   }
 
@@ -125,7 +125,7 @@ export class CSPAnalyzer implements SecurityScanner {
     };
   }
 
-  private checkUnsafeInline(policy: Record<string, string[]>, cspHeader: string): SecurityVulnerability[] {
+  private checkUnsafeInline(policy: Record<string, string[]>, _cspHeader: string): SecurityVulnerability[] {
     const vulnerabilities: SecurityVulnerability[] = [];
     const unsafeInlineDirectives = [
       'script-src', 'style-src', 'default-src'
@@ -165,7 +165,7 @@ export class CSPAnalyzer implements SecurityScanner {
     return vulnerabilities;
   }
 
-  private checkUnsafeEval(policy: Record<string, string[]>, cspHeader: string): SecurityVulnerability[] {
+  private checkUnsafeEval(policy: Record<string, string[]>, _cspHeader: string): SecurityVulnerability[] {
     const vulnerabilities: SecurityVulnerability[] = [];
     const evalDirectives = ['script-src', 'default-src'];
 
@@ -202,7 +202,7 @@ export class CSPAnalyzer implements SecurityScanner {
     return vulnerabilities;
   }
 
-  private checkWildcardSources(policy: Record<string, string[]>, cspHeader: string): SecurityVulnerability[] {
+  private checkWildcardSources(policy: Record<string, string[]>, _cspHeader: string): SecurityVulnerability[] {
     const vulnerabilities: SecurityVulnerability[] = [];
     
     Object.entries(policy).forEach(([directive, sources]) => {
@@ -240,7 +240,7 @@ export class CSPAnalyzer implements SecurityScanner {
     return vulnerabilities;
   }
 
-  private checkDeprecatedDirectives(policy: Record<string, string[]>, cspHeader: string): SecurityVulnerability[] {
+  private checkDeprecatedDirectives(policy: Record<string, string[]>, _cspHeader: string): SecurityVulnerability[] {
     const vulnerabilities: SecurityVulnerability[] = [];
     const deprecatedDirectives = [
       'referrer', 'reflected-xss', 'block-all-mixed-content'
@@ -277,7 +277,7 @@ export class CSPAnalyzer implements SecurityScanner {
     return vulnerabilities;
   }
 
-  private checkHTTPSources(policy: Record<string, string[]>, cspHeader: string): SecurityVulnerability[] {
+  private checkHTTPSources(policy: Record<string, string[]>, _cspHeader: string): SecurityVulnerability[] {
     const vulnerabilities: SecurityVulnerability[] = [];
     
     Object.entries(policy).forEach(([directive, sources]) => {

@@ -48,14 +48,14 @@ export interface SecurityScanResult {
   duration: number; // ms
   status: 'running' | 'completed' | 'error' | 'cancelled';
   error?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface SecurityScannerConfig {
   enabled: boolean;
   autoScan: boolean;
   scanInterval?: number; // ms
-  options?: Record<string, any>;
+  options?: Record<string, unknown>;
 }
 
 export interface SecurityAuditConfig {
@@ -134,7 +134,7 @@ export interface SecurityScanner {
   name: string;
   category: VulnerabilityCategory;
   description: string;
-  configure?(config: any): void;
+  configure?(config: Record<string, unknown>): void;
   scan(): Promise<SecurityVulnerability[]>;
 }
 

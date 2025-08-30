@@ -70,7 +70,7 @@ export type DevToolsAction =
   | { type: 'config/update'; payload: Partial<SecurityAuditConfig> }
   | { type: 'config/scanner/enable'; payload: string }
   | { type: 'config/scanner/disable'; payload: string }
-  | { type: 'config/scanner/configure'; payload: { scannerId: string; config: any } }
+  | { type: 'config/scanner/configure'; payload: { scannerId: string; config: Record<string, unknown> } }
   | { type: 'config/reset' }
   
   // Metrics actions

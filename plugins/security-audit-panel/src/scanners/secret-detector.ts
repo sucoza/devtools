@@ -89,7 +89,7 @@ export class SecretDetector implements SecurityScanner {
     },
   ];
 
-  configure(config: any): void {
+  configure(config: Record<string, unknown>): void {
     this.config = { ...this.config, ...config };
   }
 
@@ -180,7 +180,7 @@ export class SecretDetector implements SecurityScanner {
     );
 
     let comment;
-    while (comment = walker.nextNode()) {
+    while ((comment = walker.nextNode())) {
       const content = comment.textContent || '';
       const findings = this.findSecretsInText(content);
 
@@ -252,7 +252,7 @@ export class SecretDetector implements SecurityScanner {
           });
         });
       }
-    } catch (error) {
+    } catch {
       // localStorage might not be available
     }
 
@@ -297,7 +297,7 @@ export class SecretDetector implements SecurityScanner {
           });
         });
       }
-    } catch (error) {
+    } catch {
       // sessionStorage might not be available
     }
 
@@ -383,7 +383,7 @@ export class SecretDetector implements SecurityScanner {
             tags: ['json-data', 'client-side-secrets'],
           });
         });
-      } catch (e) {
+      } catch {
         // Invalid JSON, skip
       }
     });

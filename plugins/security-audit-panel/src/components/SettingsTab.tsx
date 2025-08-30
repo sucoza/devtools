@@ -6,7 +6,7 @@ import { useSecurityAudit } from '../hooks';
 export function SettingsTab() {
   const { state, actions } = useSecurityAudit();
 
-  const handleConfigUpdate = (key: string, value: any) => {
+  const handleConfigUpdate = (key: string, value: unknown) => {
     // Update config through direct action (simplified approach)
     // In a full implementation, this would dispatch to the client
     console.warn('Config update not implemented:', key, value);
@@ -142,7 +142,7 @@ export function SettingsTab() {
               ].map(({ key, label }) => (
                 <button
                   key={key}
-                  onClick={() => actions.setTheme(key as any)}
+                  onClick={() => actions.setTheme(key as 'light' | 'dark' | 'auto')}
                   className={clsx(
                     'px-3 py-2 text-sm font-medium rounded-md border',
                     state.ui.theme === key
@@ -172,14 +172,14 @@ export function SettingsTab() {
                     {scannerId.replace('-', ' ')}
                   </label>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {(config as any).enabled ? 'Enabled' : 'Disabled'}
-                    {(config as any).autoScan && ' • Auto-scan enabled'}
+                    {(config as unknown as { enabled?: boolean }).enabled ? 'Enabled' : 'Disabled'}
+                    {(config as unknown as { autoScan?: boolean }).autoScan && ' • Auto-scan enabled'}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
-                    checked={(config as any).autoScan || false}
+                    checked={(config as unknown as { autoScan?: boolean }).autoScan || false}
                     onChange={(e) => {
                       console.warn('Scanner config update not implemented:', scannerId, 'autoScan', e.target.checked);
                     }}
@@ -188,7 +188,7 @@ export function SettingsTab() {
                   />
                   <input
                     type="checkbox"
-                    checked={(config as any).enabled || false}
+                    checked={(config as unknown as { enabled?: boolean }).enabled || false}
                     onChange={(e) => e.target.checked ? actions.enableScanner(scannerId) : actions.disableScanner(scannerId)}
                     className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                     title="Enabled"

@@ -1,5 +1,5 @@
 import type { SecurityScanner, SecurityVulnerability } from '../types';
-import { generateId, getTimestamp, getElementSelector } from '../utils';
+import { generateId, getTimestamp } from '../utils';
 
 export class CSRFValidator implements SecurityScanner {
   id = 'csrf-validator';
@@ -14,7 +14,7 @@ export class CSRFValidator implements SecurityScanner {
     checkReferrerPolicy: true,
   };
 
-  configure(config: any): void {
+  configure(config: Record<string, unknown>): void {
     this.config = { ...this.config, ...config };
   }
 
@@ -120,7 +120,7 @@ export class CSRFValidator implements SecurityScanner {
     const vulnerabilities: SecurityVulnerability[] = [];
 
     // Check if common CSRF headers are available
-    const metaCSRF = document.querySelector('meta[name="csrf-token"], meta[name="_csrf"]');
+    const _metaCSRF = document.querySelector('meta[name="csrf-token"], meta[name="_csrf"]');
     const scripts = document.querySelectorAll('script');
     
     let hasXMLHttpRequestSetup = false;

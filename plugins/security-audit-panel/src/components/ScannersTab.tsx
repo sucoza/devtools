@@ -1,6 +1,6 @@
 import React from 'react';
 import { clsx } from 'clsx';
-import { Search, Play, Settings, CheckCircle, XCircle } from 'lucide-react';
+import { Search, Play, CheckCircle, XCircle } from 'lucide-react';
 import { useSecurityAudit, useScannerStatus } from '../hooks';
 import { getCategoryDisplayName } from '../utils';
 

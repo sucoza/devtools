@@ -38,10 +38,10 @@ export function VulnerabilitiesTab() {
             {['critical', 'high', 'medium', 'low'].map((severity) => (
               <button
                 key={severity}
-                onClick={() => actions.toggleSeverityFilter(severity as any)}
+                onClick={() => actions.toggleSeverityFilter(severity as 'critical' | 'high' | 'medium' | 'low')}
                 className={clsx(
                   'px-2 py-1 text-xs rounded capitalize',
-                  state.ui.severityFilter.includes(severity as any)
+                  state.ui.severityFilter.includes(severity as 'critical' | 'high' | 'medium' | 'low')
                     ? getSeverityColor(severity)
                     : 'bg-gray-100 text-gray-600 dark:bg-gray-600 dark:text-gray-400'
                 )}

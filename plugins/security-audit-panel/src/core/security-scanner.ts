@@ -4,7 +4,7 @@ import type {
   VulnerabilityCategory,
   SecurityAuditConfig
 } from '../types';
-import { generateId, getTimestamp } from '../utils';
+import { getTimestamp } from '../utils';
 
 export interface SecurityScanner {
   id: string;
@@ -12,7 +12,7 @@ export interface SecurityScanner {
   category: VulnerabilityCategory;
   description: string;
   scan(): Promise<SecurityVulnerability[]>;
-  configure?(config: any): void;
+  configure?(config: Record<string, unknown>): void;
 }
 
 export class SecurityScanEngine {
@@ -133,7 +133,7 @@ export class SecurityScanEngine {
   /**
    * Get scanner configuration
    */
-  getScannerConfig(scannerId: string): any {
+  getScannerConfig(scannerId: string): Record<string, unknown> | undefined {
     return this.config.scanners[scannerId];
   }
 

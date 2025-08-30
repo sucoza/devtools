@@ -100,7 +100,7 @@ export class DependencyChecker implements SecurityScanner {
     ];
 
     librariesToCheck.forEach(({ name, prop }) => {
-      const lib = (window as any)[prop];
+      const lib = (window as Record<string, unknown>)[prop];
       if (lib && lib.fn && lib.fn.jquery) {
         // jQuery version check
         const version = lib.fn.jquery;
@@ -137,9 +137,9 @@ export class DependencyChecker implements SecurityScanner {
   private extractLibraryInfo(src: string): { name: string; version: string } | null {
     // Simple regex patterns for common CDN formats
     const patterns = [
-      /\/([^\/]+)@(\d+\.\d+\.\d+)/,  // unpkg format
-      /\/([^\/]+)-(\d+\.\d+\.\d+)\.min\.js/,  // traditional format
-      /\/([^\/]+)\/(\d+\.\d+\.\d+)/,  // cdnjs format
+      /\/([^/]+)@(\d+\.\d+\.\d+)/,  // unpkg format
+      /\/([^/]+)-(\d+\.\d+\.\d+)\.min\.js/,  // traditional format
+      /\/([^/]+)\/(\d+\.\d+\.\d+)/,  // cdnjs format
     ];
 
     for (const pattern of patterns) {

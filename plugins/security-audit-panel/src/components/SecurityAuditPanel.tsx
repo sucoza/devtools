@@ -9,7 +9,6 @@ import {
   FileText,
   AlertTriangle,
   Search,
-  Filter,
   Download
 } from 'lucide-react';
 import { useSecurityAudit } from '../hooks';

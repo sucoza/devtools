@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { createSecurityAuditDevToolsClient } from '../core/devtools-client';
-import type { DevToolsState, SecurityVulnerability } from '../types';
+import type { SecurityVulnerability } from '../types';
 
 const client = createSecurityAuditDevToolsClient();
 
@@ -88,10 +88,11 @@ export function useFilteredVulnerabilities(): SecurityVulnerability[] {
     let comparison = 0;
     
     switch (state.ui.sortBy) {
-      case 'severity':
+      case 'severity': {
         const severityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
         comparison = severityOrder[b.severity] - severityOrder[a.severity];
         break;
+      }
         
       case 'category':
         comparison = a.category.localeCompare(b.category);

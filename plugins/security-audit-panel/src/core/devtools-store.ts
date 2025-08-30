@@ -4,7 +4,6 @@ import type {
   SecurityVulnerability, 
   SecurityScanResult,
   SecurityMetrics,
-  VulnerabilityCategory,
   SeverityLevel
 } from '../types';
 import { initialDevToolsState } from '../types/devtools';
@@ -85,7 +84,7 @@ class SecurityAuditDevToolsStore {
   /**
    * Update scanner configuration
    */
-  updateScannerConfig(scannerId: string, config: any): void {
+  updateScannerConfig(scannerId: string, config: Record<string, unknown>): void {
     this.dispatch({ type: 'config/scanner/configure', payload: { scannerId, config } });
   }
 
@@ -115,7 +114,7 @@ class SecurityAuditDevToolsStore {
           isScanning: true,
         };
 
-      case 'scan/complete':
+      case 'scan/complete': {
         const newScanResults = action.payload.scanResults.reduce((acc, result) => {
           acc[result.scannerId] = result;
           return acc;
@@ -155,6 +154,7 @@ class SecurityAuditDevToolsStore {
           }),
           scanHistory: [historyEntry, ...state.scanHistory.slice(0, 49)], // Keep last 50
         };
+      }
 
       case 'scan/error':
         return {
@@ -186,7 +186,7 @@ class SecurityAuditDevToolsStore {
         };
 
       // Vulnerability actions
-      case 'vulnerability/add':
+      case 'vulnerability/add': {
         const updatedVulns = {
           ...state.vulnerabilities,
           [action.payload.id]: action.payload,
@@ -196,9 +196,10 @@ class SecurityAuditDevToolsStore {
           vulnerabilities: updatedVulns,
           metrics: this.recalculateMetrics(updatedVulns),
         };
+      }
 
-      case 'vulnerability/remove':
-        const { [action.payload]: removed, ...remainingVulns } = state.vulnerabilities;
+      case 'vulnerability/remove': {
+        const { [action.payload]: _removed, ...remainingVulns } = state.vulnerabilities;
         return {
           ...state,
           vulnerabilities: remainingVulns,
@@ -210,6 +211,7 @@ class SecurityAuditDevToolsStore {
               : state.ui.selectedVulnerabilityId,
           },
         };
+      }
 
       case 'vulnerabilities/clear':
         return {
@@ -312,7 +314,7 @@ class SecurityAuditDevToolsStore {
           },
         };
 
-      case 'ui/filter/severity/toggle':
+      case 'ui/filter/severity/toggle': {
         const severityFilter = state.ui.severityFilter.includes(action.payload)
           ? state.ui.severityFilter.filter(s => s !== action.payload)
           : [...state.ui.severityFilter, action.payload];
@@ -324,8 +326,9 @@ class SecurityAuditDevToolsStore {
             severityFilter,
           },
         };
+      }
 
-      case 'ui/filter/category/toggle':
+      case 'ui/filter/category/toggle': {
         const categoryFilter = state.ui.categoryFilter.includes(action.payload)
           ? state.ui.categoryFilter.filter(c => c !== action.payload)
           : [...state.ui.categoryFilter, action.payload];
@@ -337,6 +340,7 @@ class SecurityAuditDevToolsStore {
             categoryFilter,
           },
         };
+      }
 
       case 'ui/filter/search':
         return {
@@ -366,7 +370,7 @@ class SecurityAuditDevToolsStore {
           },
         };
 
-      case 'ui/category/collapse':
+      case 'ui/category/collapse': {
         const newExpandedCategories = new Set(state.ui.expandedCategories);
         newExpandedCategories.delete(action.payload);
         return {
@@ -376,6 +380,7 @@ class SecurityAuditDevToolsStore {
             expandedCategories: newExpandedCategories,
           },
         };
+      }
 
       case 'ui/theme/set':
         return {
