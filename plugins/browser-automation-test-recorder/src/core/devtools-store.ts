@@ -164,6 +164,8 @@ const initialState: BrowserAutomationState = {
   collaboration: {
     currentUser: null,
     team: null,
+    sync: false,
+    currentTeam: null,
     notifications: [],
     sharedTests: [],
     library: {
@@ -184,6 +186,11 @@ const initialState: BrowserAutomationState = {
       sortBy: 'lastModified',
       sortOrder: 'desc',
       viewMode: 'grid',
+      stats: {
+        totalTests: 0,
+        sharedTests: 0,
+        reviewsPending: 0,
+      },
     },
     comments: [],
     reviews: [],
@@ -279,6 +286,9 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             viewport: {
               width: window.innerWidth,
               height: window.innerHeight,
+              devicePixelRatio: window.devicePixelRatio || 1,
+              isLandscape: window.innerWidth > window.innerHeight,
+              isMobile: window.innerWidth < 768,
             },
             userAgent: navigator.userAgent,
             events: [],
@@ -787,7 +797,13 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
           eventCount: events.length,
           duration: state.recording.duration,
           url: window.location.href,
-          viewport: { width: window.innerWidth, height: window.innerHeight },
+          viewport: {
+            width: window.innerWidth,
+            height: window.innerHeight,
+            devicePixelRatio: window.devicePixelRatio || 1,
+            isLandscape: window.innerWidth > window.innerHeight,
+            isMobile: window.innerWidth < 768,
+          },
           assertions: 0,
           selectors: events.length,
         },

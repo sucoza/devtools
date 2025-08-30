@@ -418,7 +418,7 @@ export class CommentManager {
   }> {
     const comments = await this.storage.queryComments({ testId });
     const dates = comments.map(c => c.createdAt);
-    const dateRange = dates.length > 0 ? [Math.min(...dates), Math.max(...dates)] : null;
+    const dateRange: [number, number] | null = dates.length > 0 ? [Math.min(...dates), Math.max(...dates)] : null;
 
     return {
       comments,

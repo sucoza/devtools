@@ -5,7 +5,7 @@
 
 import type {
   RecordedEvent,
-  EventTarget,
+  RecordedEventTarget,
   EventContext,
   ViewportInfo,
   RecordingSession,
@@ -52,7 +52,7 @@ export const createMockViewport = (overrides: Partial<ViewportInfo> = {}): Viewp
 /**
  * Create mock event target
  */
-export const createMockEventTarget = (overrides: Partial<EventTarget> = {}): EventTarget => ({
+export const createMockEventTarget = (overrides: Partial<RecordedEventTarget> = {}): RecordedEventTarget => ({
   selector: '#test-button',
   xpath: '//*[@id="test-button"]',
   textContent: 'Click me',

@@ -91,6 +91,7 @@ export interface ExtractionContext {
   placeholder?: string;
   name?: string;
   id?: string;
+  category?: string;
 }
 
 export interface DataSet {

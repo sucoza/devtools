@@ -177,7 +177,7 @@ export class ReviewManager {
     const review = await this.createReview({
       testId,
       reviewerId: options.reviewerId,
-      criteria: options.criteria || this.workflowEngine.getDefaultCriteria(),
+      criteria: { ...this.workflowEngine.getDefaultCriteria(), ...options.criteria },
       checklist: [],
       dueDate: options.dueDate,
       priority: options.priority || 'medium',

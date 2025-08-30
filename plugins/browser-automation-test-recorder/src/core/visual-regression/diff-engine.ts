@@ -204,7 +204,7 @@ export class DiffEngine {
 
     // Apply diff overlay
     if (diffResult.diffBuffer) {
-      const overlayImageData = new ImageData(diffResult.diffBuffer, currentData.width, currentData.height);
+      const overlayImageData = new ImageData(new Uint8ClampedArray(diffResult.diffBuffer), currentData.width, currentData.height);
       
       ctx.globalAlpha = opts.opacity;
       ctx.globalCompositeOperation = 'multiply';
@@ -490,7 +490,7 @@ export class DiffEngine {
     canvas.width = width;
     canvas.height = height;
     
-    const imageData = new ImageData(buffer, width, height);
+    const imageData = new ImageData(new Uint8ClampedArray(buffer), width, height);
     ctx.putImageData(imageData, 0, 0);
     
     return canvas.toDataURL('image/png');

@@ -25,6 +25,8 @@ export type {
   DataValidation,
   TestGenerationOptions,
   ExportOptions,
+  RecordingMode,
+  PlaybackMode,
   // Keep unique devtools types only
   AssertionResult as DevToolsAssertionResult,
   EventExecutionResult as DevToolsEventExecutionResult,

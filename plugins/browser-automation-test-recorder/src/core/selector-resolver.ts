@@ -4,7 +4,7 @@
  */
 
 import type {
-  EventTarget,
+  RecordedEventTarget,
   SelectorStrategy,
   SelectorOptions,
   ElementPathNode,
@@ -91,7 +91,7 @@ export class SelectorResolver {
    */
   async resolveSelector(
     originalSelector: string,
-    targetInfo: EventTarget,
+    targetInfo: RecordedEventTarget,
     options: SelectorOptions = {} as SelectorOptions,
     maxRetries: number = 3
   ): Promise<SelectorResolutionResult> {
@@ -230,7 +230,7 @@ export class SelectorResolver {
    */
   private async attemptHealing(
     originalSelector: string,
-    targetInfo: EventTarget,
+    targetInfo: RecordedEventTarget,
     options: SelectorOptions
   ): Promise<SelectorResolutionResult | null> {
     const criteria = this.buildMatchingCriteria(targetInfo);
@@ -718,7 +718,7 @@ export class SelectorResolver {
   /**
    * Build matching criteria from event target info
    */
-  private buildMatchingCriteria(targetInfo: EventTarget): ElementMatchingCriteria {
+  private buildMatchingCriteria(targetInfo: RecordedEventTarget): ElementMatchingCriteria {
     return {
       textContent: targetInfo.textContent,
       attributes: {

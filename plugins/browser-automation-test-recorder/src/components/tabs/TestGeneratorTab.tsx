@@ -179,6 +179,8 @@ export default function TestGeneratorTab({ state, dispatch, compact }: TabCompon
       puppeteer: ['javascript', 'typescript'],
       testcafe: ['javascript', 'typescript'],
       webdriver: ['javascript'],
+      typescript: ['typescript'],
+      javascript: ['javascript'],
       custom: ['javascript', 'typescript']
     };
     return languageMap[framework] || ['javascript'];

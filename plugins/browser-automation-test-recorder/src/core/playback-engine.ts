@@ -113,7 +113,7 @@ export class PlaybackEngine {
    */
   async playEvents(
     events: RecordedEvent[],
-    options: PlaybackEngineOptions = {}
+    options: Partial<PlaybackEngineOptions> = {}
   ): Promise<PlaybackStatus> {
     const defaultOptions: PlaybackEngineOptions = {
       speed: 1.0,
@@ -344,13 +344,18 @@ export class PlaybackEngine {
   /**
    * Step through a single event (debug mode)
    */
-  async stepEvent(event: RecordedEvent, options: PlaybackEngineOptions = {}): Promise<EventExecutionResult> {
+  async stepEvent(event: RecordedEvent, options: Partial<PlaybackEngineOptions> = {}): Promise<EventExecutionResult> {
     this.log('info', `Stepping through event: ${event.type}`);
     
-    const stepOptions = {
+    const stepOptions: PlaybackEngineOptions = {
+      speed: 1.0,
+      timeout: 5000,
+      continueOnError: false,
+      screenshotOnError: true,
+      highlightElements: true,
+      waitBetweenEvents: 100,
       ...options,
       stepMode: true,
-      highlightElements: true,
     };
 
     return this.executeEvent(event, stepOptions);
@@ -1198,7 +1203,24 @@ export class PlaybackEngine {
    */
   private log(level: string, message: string): void {
     const timestamp = new Date().toISOString();
-    console[level as keyof Console](`[${timestamp}] PlaybackEngine: ${message}`);
+    const logMessage = `[${timestamp}] PlaybackEngine: ${message}`;
+    
+    switch (level) {
+      case 'error':
+        console.error(logMessage);
+        break;
+      case 'warn':
+        console.warn(logMessage);
+        break;
+      case 'info':
+        console.info(logMessage);
+        break;
+      case 'debug':
+        console.debug(logMessage);
+        break;
+      default:
+        console.log(logMessage);
+    }
   }
 
   /**

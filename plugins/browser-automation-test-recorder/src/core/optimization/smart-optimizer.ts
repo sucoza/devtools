@@ -756,9 +756,13 @@ export class SmartOptimizer {
       return acc;
     }, {} as Record<string, number>);
     
-    return Object.keys(frequency).reduce((a, b) => 
-      frequency[a] > frequency[b] ? a as any : b as any
+    // Find the most frequent string key and map back to original value
+    const mostFrequentKey = Object.keys(frequency).reduce((a, b) => 
+      frequency[a] > frequency[b] ? a : b
     );
+    
+    // Find the original array element that matches this key
+    return array.find(item => String(item) === mostFrequentKey) as T;
   }
 
   private getTargetName(event: RecordedEvent): string {

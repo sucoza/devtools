@@ -63,9 +63,9 @@ export const CollaborationTab: React.FC<CollaborationTabProps> = ({
   const [selectedTestId, setSelectedTestId] = useState<string | null>(null);
 
   const collaboration = state.collaboration;
-  const isConnected = collaboration?.sync?.isConnected ?? false;
+  const isConnected = collaboration?.sync ?? false;
   const currentUser = collaboration?.currentUser;
-  const currentTeam = collaboration?.currentTeam;
+  const currentTeam = collaboration?.team;
 
   // Handle panel switching
   const handlePanelChange = (panel: string) => {
@@ -109,8 +109,8 @@ export const CollaborationTab: React.FC<CollaborationTabProps> = ({
         )}
       />
       {isConnected ? 'Connected' : 'Offline'}
-      {currentTeam && (
-        <span className="ml-2">• {currentTeam.name}</span>
+      {collaboration?.team && (
+        <span className="ml-2">• {collaboration.team.name}</span>
       )}
     </div>
   );
@@ -151,7 +151,7 @@ export const CollaborationTab: React.FC<CollaborationTabProps> = ({
         id: 'team',
         label: 'Team',
         icon: Users,
-        badge: currentTeam?.members?.length
+        badge: collaboration?.team?.members?.length
       },
       {
         id: 'activity',

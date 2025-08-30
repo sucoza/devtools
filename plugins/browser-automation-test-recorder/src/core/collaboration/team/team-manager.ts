@@ -284,7 +284,7 @@ export class TeamManager {
         inviterId: inviter.id,
         email,
         role: options.role,
-        permissions: options.permissions || this.permissionManager.getDefaultPermissions(options.role),
+        permissions: { ...this.permissionManager.getDefaultPermissions(options.role), ...options.permissions },
         message: options.message,
         expiresAt: options.expiresAt || (Date.now() + (7 * 24 * 60 * 60 * 1000)) // 7 days
       });

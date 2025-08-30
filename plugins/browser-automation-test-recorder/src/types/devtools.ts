@@ -159,7 +159,7 @@ export interface RecordingSession {
   name: string;
   startTime: number;
   url: string;
-  viewport: { width: number; height: number };
+  viewport: ViewportInfo;
   userAgent: string;
   events: string[]; // Event IDs
   metadata: Record<string, any>;
@@ -416,6 +416,8 @@ export type TestFormat =
   | 'cypress'
   | 'testcafe'
   | 'webdriver'
+  | 'typescript'
+  | 'javascript'
   | 'custom';
 
 /**
@@ -494,26 +496,6 @@ export interface TestAssertion {
 // PlaybackMetrics is exported from playback-monitor.ts via core exports
 
 /**
- * Assertion types
- */
-export type AssertionType = 
-  | 'text-equals'
-  | 'text-contains'
-  | 'text-matches'
-  | 'value-equals'
-  | 'attribute-equals'
-  | 'visible'
-  | 'hidden'
-  | 'enabled'
-  | 'disabled'
-  | 'count-equals'
-  | 'exists'
-  | 'url-equals'
-  | 'url-contains'
-  | 'title-equals'
-  | 'custom';
-
-/**
  * Component props for DevTools panel
  */
 export interface BrowserAutomationDevToolsPanelProps {
@@ -531,6 +513,7 @@ export interface BrowserAutomationDevToolsPanelProps {
 export type { 
   EventType, 
   RecordedEvent, 
+  RecordedEventTarget,
   ElementInfo, 
   ViewportInfo, 
   ActionTiming, 
@@ -539,6 +522,8 @@ export type {
   XPathSelector,
   DataTestIdSelector,
   AriaSelector,
+  SelectorOptions,
+  AssertionType,
 } from './automation';
 
 /**
@@ -548,22 +533,13 @@ export interface RecordingOptions {
   captureScreenshots: boolean;
   captureSelectors: boolean;
   captureTimings: boolean;
-  selectorOptions: {
-    mode: SelectorMode;
-    strategy: SelectorStrategy;
-    timeout: number;
-    retries: number;
-    includeId: boolean;
-    includeClass: boolean;
-    includeAttributes: boolean;
-    includeText: boolean;
-    includePosition: boolean;
-    optimize: boolean;
-    unique: boolean;
-    stable: boolean;
-    generateAlternatives: boolean;
-    maxAlternatives: number;
-  };
+  captureConsole: boolean;
+  captureNetwork: boolean;
+  capturePerformance: boolean;
+  ignoredEvents: EventType[];
+  debounceMs: number;
+  maxEvents: number;
+  selectorOptions: SelectorOptions;
 }
 
 export type ScreenshotMode = 'none' | 'on-error' | 'all' | 'key-events';
@@ -593,13 +569,6 @@ export interface CollaborationPanel {
   };
 }
 
-export interface PlaybackError {
-  id: string;
-  message: string;
-  stack?: string;
-  timestamp: number;
-  eventId?: string;
-}
 
 // PlaybackMetrics is exported from playback-monitor.ts
 
@@ -774,6 +743,9 @@ export interface CollaborationConflict {
 
 // Import types from automation.ts for use in devtools types
 import type {
+  ViewportInfo,
+  AssertionType,
+  SelectorOptions,
   CollaborationUser,
   UserRole,
   UserPermissions,

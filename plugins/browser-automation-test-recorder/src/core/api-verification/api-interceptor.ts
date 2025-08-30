@@ -872,7 +872,5 @@ declare global {
       startTime: number;
       requestId: string;
     };
-    getAllRequestHeaders?(): string;
-    getAllResponseHeaders?(): string;
   }
 }

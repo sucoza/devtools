@@ -76,7 +76,7 @@ export interface RecordedEvent {
   sequence: number;
   
   // Target element information
-  target: EventTarget;
+  target: RecordedEventTarget;
   
   // Event-specific data
   data: EventData;
@@ -91,7 +91,7 @@ export interface RecordedEvent {
 /**
  * Event target information
  */
-export interface EventTarget {
+export interface RecordedEventTarget {
   // Element identification
   selector: string;
   xpath?: string;
@@ -104,6 +104,7 @@ export interface EventTarget {
   name?: string;
   type?: string;
   value?: string;
+  placeholder?: string;
   
   // Element position and size
   boundingRect: DOMRect;
@@ -454,29 +455,59 @@ export interface EventGroup {
  * Selector generation options
  */
 export interface SelectorOptions {
+  // Base configuration
+  mode?: SelectorMode;
+  strategy?: SelectorStrategy;
+  timeout?: number;
+  retries?: number;
+  
   // Selector types to generate
-  includeId: boolean;
-  includeClass: boolean;
-  includeAttributes: boolean;
-  includeText: boolean;
-  includePosition: boolean;
+  includeId?: boolean;
+  includeClass?: boolean;
+  includeAttributes?: boolean;
+  includeText?: boolean;
+  includePosition?: boolean;
   
   // Selector optimization
-  optimize: boolean;
-  unique: boolean;
-  stable: boolean;
+  optimize?: boolean;
+  unique?: boolean;
+  stable?: boolean;
   
   // Fallback options
-  generateAlternatives: boolean;
-  maxAlternatives: number;
+  generateAlternatives?: boolean;
+  maxAlternatives?: number;
+  
+  // Priority settings
+  priority?: ('id' | 'data-testid' | 'aria-label' | 'text' | 'css' | 'xpath')[];
   
   // Custom options
-  customAttributes: string[];
-  ignoreAttributes: string[];
+  customAttributes?: string[];
+  ignoreAttributes?: string[];
   
   // Framework-specific options
   testIdAttribute?: string;
-  ariaLabelFallback: boolean;
+  ariaLabelFallback?: boolean;
+}
+
+/**
+ * Selector modes
+ */
+export type SelectorMode = 
+  | 'auto'       // Automatic best selector
+  | 'css'        // CSS selectors only
+  | 'xpath'      // XPath selectors only
+  | 'text'       // Text-based selectors
+  | 'data-testid' // Test ID attributes
+  | 'custom';    // Custom strategy
+
+/**
+ * Selector strategies
+ */
+export interface SelectorStrategy {
+  priority: ('id' | 'data-testid' | 'aria-label' | 'text' | 'css' | 'xpath')[];
+  fallback: boolean;
+  optimize: boolean;
+  includePosition: boolean;
 }
 
 /**
@@ -660,12 +691,15 @@ export interface ConnectionOptions {
  */
 export interface RecordingOptions {
   captureScreenshots: boolean;
+  captureSelectors: boolean;
+  captureTimings: boolean;
   captureConsole: boolean;
   captureNetwork: boolean;
   capturePerformance: boolean;
   ignoredEvents: EventType[];
   selectorOptions: SelectorOptions;
   debounceMs: number;
+  maxEvents: number;
 }
 
 /**
@@ -1329,11 +1363,31 @@ export interface TestCase {
 }
 
 /**
+ * Assertion types
+ */
+export type AssertionType = 
+  | 'text-equals'
+  | 'text-contains'
+  | 'text-matches'
+  | 'value-equals'
+  | 'attribute-equals'
+  | 'visible'
+  | 'hidden'
+  | 'enabled'
+  | 'disabled'
+  | 'count-equals'
+  | 'exists'
+  | 'url-equals'
+  | 'url-contains'
+  | 'title-equals'
+  | 'custom';
+
+/**
  * Test assertion for validation
  */
 export interface TestAssertion {
   id: string;
-  type: string;
+  type: AssertionType;
   selector: string;
   expected: any;
   description: string;
@@ -1406,4 +1460,69 @@ export interface RecordingSession {
   userAgent: string;
   events: string[]; // Event IDs
   metadata: Record<string, any>;
+}
+
+/**
+ * Element information for DevTools integration
+ */
+export interface ElementInfo {
+  selector: string;
+  xpath?: string;
+  tagName: string;
+  id?: string;
+  className?: string;
+  textContent?: string;
+  attributes: Record<string, string>;
+  boundingRect: DOMRect;
+  isVisible: boolean;
+}
+
+/**
+ * Action timing information
+ */
+export interface ActionTiming {
+  startTime: number;
+  endTime: number;
+  duration: number;
+  networkDelay?: number;
+  renderDelay?: number;
+}
+
+/**
+ * CSS Selector type
+ */
+export interface CSSSelector {
+  type: 'css';
+  value: string;
+  specificity: number;
+  reliability: number;
+}
+
+/**
+ * XPath Selector type
+ */
+export interface XPathSelector {
+  type: 'xpath';
+  value: string;
+  reliability: number;
+}
+
+/**
+ * Data Test ID Selector type
+ */
+export interface DataTestIdSelector {
+  type: 'data-testid';
+  value: string;
+  attribute: string;
+  reliability: number;
+}
+
+/**
+ * Aria Selector type
+ */
+export interface AriaSelector {
+  type: 'aria';
+  value: string;
+  attribute: string;
+  reliability: number;
 }

@@ -16,6 +16,7 @@ export interface BaselineImage {
   dimensions: { width: number; height: number };
   hash: string; // image hash for comparison
   createdAt: number;
+  updatedAt?: number;
   version: string;
   metadata: BaselineMetadata;
 }
@@ -397,7 +398,7 @@ export class BaselineManager {
   private async calculateImageHash(imageData: string | Uint8Array): Promise<string> {
     const data = typeof imageData === 'string' 
       ? new TextEncoder().encode(imageData)
-      : imageData;
+      : new Uint8Array(imageData);
       
     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -417,7 +418,7 @@ export class BaselineManager {
       if (typeof imageData === 'string') {
         img.src = imageData.startsWith('data:') ? imageData : `data:image/png;base64,${imageData}`;
       } else {
-        const blob = new Blob([imageData], { type: 'image/png' });
+        const blob = new Blob([new Uint8Array(imageData)], { type: 'image/png' });
         img.src = URL.createObjectURL(blob);
       }
     });

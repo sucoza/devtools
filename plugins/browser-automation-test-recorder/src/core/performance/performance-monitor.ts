@@ -905,18 +905,21 @@ export class PerformanceMonitor {
   private evaluateAssertion(assertion: PerformanceAssertion, value: number): boolean {
     switch (assertion.operator) {
       case 'lt':
-        return value < assertion.value as number;
+        return typeof assertion.value === 'number' && value < assertion.value;
       case 'lte':
-        return value <= assertion.value as number;
+        return typeof assertion.value === 'number' && value <= assertion.value;
       case 'gt':
-        return value > assertion.value as number;
+        return typeof assertion.value === 'number' && value > assertion.value;
       case 'gte':
-        return value >= assertion.value as number;
+        return typeof assertion.value === 'number' && value >= assertion.value;
       case 'eq':
-        return value === assertion.value as number;
+        return typeof assertion.value === 'number' && value === assertion.value;
       case 'between':
-        const [min, max] = assertion.value as [number, number];
-        return value >= min && value <= max;
+        if (Array.isArray(assertion.value) && assertion.value.length === 2) {
+          const [min, max] = assertion.value;
+          return value >= min && value <= max;
+        }
+        return false;
       default:
         return false;
     }

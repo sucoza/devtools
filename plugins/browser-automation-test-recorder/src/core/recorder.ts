@@ -9,7 +9,7 @@ import type {
   EventData,
   EventContext,
   EventMetadata,
-  EventTarget,
+  RecordedEventTarget,
   RecordingOptions,
   MouseEventData,
   KeyboardEventData,
@@ -44,6 +44,8 @@ export class EventRecorder {
   // Recording options
   private options: RecordingOptions = {
     captureScreenshots: true,
+    captureSelectors: true,
+    captureTimings: true,
     captureConsole: true,
     captureNetwork: false,
     capturePerformance: false,
@@ -65,6 +67,7 @@ export class EventRecorder {
       ariaLabelFallback: true,
     },
     debounceMs: 100,
+    maxEvents: 1000,
   };
 
   // Event listeners map for cleanup
@@ -79,7 +82,7 @@ export class EventRecorder {
   
   constructor(
     selectorEngine: SelectorEngine,
-    devToolsClient: BrowserAutomationDevToolsClient
+    devToolsClient: BrowserAutomationEventClient
   ) {
     this.selectorEngine = selectorEngine;
     this.devToolsClient = devToolsClient;
@@ -255,7 +258,6 @@ export class EventRecorder {
 
     const navigationListener = (type: 'pushstate' | 'replacestate', url: string) => {
       this.recordNavigationEvent({
-        type: 'navigation',
         url,
         title: document.title,
         referrer: document.referrer,
@@ -377,7 +379,7 @@ export class EventRecorder {
       this.eventBuffer.push(recordedEvent);
       
       // Emit event to DevTools
-      this.devToolsClient.emit('event-recorded', { event: recordedEvent });
+      this.devToolsClient.emit('recorder:event-added', recordedEvent);
       
       // Update last event time
       this.lastEventTime = Date.now();
@@ -390,7 +392,7 @@ export class EventRecorder {
   /**
    * Extract comprehensive target information from event
    */
-  private async extractEventTarget(event: Event): Promise<EventTarget> {
+  private async extractEventTarget(event: Event): Promise<RecordedEventTarget> {
     const element = event.target as Element;
     if (!element || !element.tagName) {
       throw new Error('Invalid event target');
@@ -430,6 +432,16 @@ export class EventRecorder {
         right: boundingRect.right,
         bottom: boundingRect.bottom,
         left: boundingRect.left,
+        toJSON: () => ({
+          x: boundingRect.x,
+          y: boundingRect.y,
+          width: boundingRect.width,
+          height: boundingRect.height,
+          top: boundingRect.top,
+          right: boundingRect.right,
+          bottom: boundingRect.bottom,
+          left: boundingRect.left,
+        }),
       },
       path,
       alternativeSelectors,
@@ -628,6 +640,10 @@ export class EventRecorder {
         boundingRect: {
           x: 0, y: 0, width: window.innerWidth, height: window.innerHeight,
           top: 0, right: window.innerWidth, bottom: window.innerHeight, left: 0,
+          toJSON: () => ({
+            x: 0, y: 0, width: window.innerWidth, height: window.innerHeight,
+            top: 0, right: window.innerWidth, bottom: window.innerHeight, left: 0,
+          }),
         },
         path: [],
         alternativeSelectors: [],
@@ -661,7 +677,7 @@ export class EventRecorder {
     };
 
     this.eventBuffer.push(recordedEvent);
-    this.devToolsClient.emit('event-recorded', { event: recordedEvent });
+    this.devToolsClient.emit('recorder:event-added', recordedEvent);
   }
 
   /**
@@ -759,7 +775,7 @@ export class EventRecorder {
   /**
    * Calculate reliability metrics for recorded event
    */
-  private async calculateReliabilityMetrics(target: EventTarget, event: Event): Promise<ReliabilityMetrics> {
+  private async calculateReliabilityMetrics(target: RecordedEventTarget, event: Event): Promise<ReliabilityMetrics> {
     const element = event.target as Element;
     
     // Calculate selector reliability score
@@ -831,7 +847,7 @@ export class EventRecorder {
   /**
    * Capture screenshot of current page or element
    */
-  private async captureScreenshot(target: EventTarget): Promise<any> {
+  private async captureScreenshot(target: RecordedEventTarget): Promise<any> {
     try {
       // This would integrate with Chrome DevTools Protocol
       // For now, return placeholder

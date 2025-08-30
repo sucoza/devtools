@@ -154,6 +154,8 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
       const state = this.storeApi.getState();
       const options: RecordingOptions = {
         ...state.settings.recordingOptions,
+        captureSelectors: true,
+        captureTimings: true,
         selectorOptions: {
           mode: state.settings.selectorOptions?.mode || 'auto',
           strategy: state.settings.selectorOptions?.strategy || {
@@ -164,16 +166,20 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
           },
           timeout: state.settings.selectorOptions?.timeout || 5000,
           retries: state.settings.selectorOptions?.retries || 3,
-          includeId: state.settings.selectorOptions?.includeId ?? true,
-          includeClass: state.settings.selectorOptions?.includeClass ?? true,
-          includeAttributes: state.settings.selectorOptions?.includeAttributes ?? true,
-          includeText: state.settings.selectorOptions?.includeText ?? true,
-          includePosition: state.settings.selectorOptions?.includePosition ?? false,
-          optimize: state.settings.selectorOptions?.optimize ?? true,
-          unique: state.settings.selectorOptions?.unique ?? true,
-          stable: state.settings.selectorOptions?.stable ?? true,
-          generateAlternatives: state.settings.selectorOptions?.generateAlternatives ?? true,
-          maxAlternatives: state.settings.selectorOptions?.maxAlternatives ?? 3,
+          includeId: true,
+          includeClass: true,
+          includeAttributes: true,
+          includeText: true,
+          includePosition: false,
+          optimize: true,
+          unique: true,
+          stable: true,
+          generateAlternatives: true,
+          maxAlternatives: 3,
+          priority: ['data-testid', 'id', 'aria-label', 'text', 'css', 'xpath'],
+          customAttributes: [],
+          ignoreAttributes: [],
+          ariaLabelFallback: true,
         },
       };
       
@@ -219,6 +225,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
       
       this.emit('recorder:state', this.storeApi.getState());
       this.emit('recorder:processing-complete', {
+        success: true,
         originalCount: processingResult.originalCount,
         processedCount: processingResult.processedCount,
         optimizations: processingResult.optimizations,

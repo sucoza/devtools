@@ -13,7 +13,7 @@ import type {
   ScrollEventData,
   WaitEventData,
   AssertionEventData,
-  EventTarget,
+  RecordedEventTarget,
 } from '../../types';
 import type { EventGroup, CodeGenerationConfig } from '../code-generator';
 

@@ -696,7 +696,22 @@ export class PlaybackMonitor {
       const logMessage = `[${timestamp}] PlaybackMonitor: ${message}`;
       
       if (this.config.logToConsole) {
-        console[level as keyof Console](logMessage);
+        switch (level) {
+          case 'error':
+            console.error(logMessage);
+            break;
+          case 'warn':
+            console.warn(logMessage);
+            break;
+          case 'info':
+            console.info(logMessage);
+            break;
+          case 'debug':
+            console.debug(logMessage);
+            break;
+          default:
+            console.log(logMessage);
+        }
       }
       
       // File logging would be implemented here if needed

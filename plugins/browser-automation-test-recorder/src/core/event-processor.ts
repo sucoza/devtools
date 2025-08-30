@@ -184,10 +184,10 @@ export class EventProcessor {
     // Apply grouping
     if (filters.groupBy === 'type') {
       events.sort((a, b) => a.type.localeCompare(b.type));
-    } else if (filters.groupBy === 'selector') {
+    } else if (filters.groupBy === 'element') {
       events.sort((a, b) => a.target.selector.localeCompare(b.target.selector));
-    } else if (filters.groupBy === 'timestamp') {
-      events.sort((a, b) => a.timestamp - b.timestamp);
+    } else if (filters.groupBy === 'page') {
+      events.sort((a, b) => a.context.url.localeCompare(b.context.url));
     }
 
     return events;
@@ -608,6 +608,7 @@ export class EventProcessor {
         boundingRect: {
           x: 0, y: 0, width: 0, height: 0,
           top: 0, right: 0, bottom: 0, left: 0,
+          toJSON: () => ({ x: 0, y: 0, width: 0, height: 0, top: 0, right: 0, bottom: 0, left: 0 }),
         },
         path: [],
         alternativeSelectors: [],

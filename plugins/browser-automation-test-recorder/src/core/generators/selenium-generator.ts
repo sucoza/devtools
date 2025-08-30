@@ -265,7 +265,7 @@ ${this.indent(testCode, 2)}
       case 'focus':
         return this.generateFocusCode(event);
       case 'select':
-        return this.generateSelectCode(event);
+        return this.generateSelectEventCode(event);
       default:
         return this.generateCustomEventCode(event);
     }
@@ -650,7 +650,7 @@ ${this.indent(testCode, 2)}
   /**
    * Select event code generation
    */
-  generateSelectCode(event: RecordedEvent): string {
+  private generateSelectEventCode(event: RecordedEvent): string {
     // This is handled in generateInputCode for select elements
     return this.generateCommentForLanguage('Select event handled by input processing');
   }
