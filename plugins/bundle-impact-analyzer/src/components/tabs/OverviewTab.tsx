@@ -2,7 +2,6 @@ import React from 'react';
 import { 
   Package, 
   FileText, 
-  TrendingUp, 
   TrendingDown,
   AlertTriangle,
   CheckCircle,
@@ -13,7 +12,7 @@ import type { BundleAnalyzerState } from '../../types';
 
 interface OverviewTabProps {
   state: BundleAnalyzerState;
-  eventClient: any;
+  eventClient: unknown;
 }
 
 export function OverviewTab({ state, eventClient }: OverviewTabProps) {

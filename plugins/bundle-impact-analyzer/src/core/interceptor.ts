@@ -31,7 +31,7 @@ export class BundleInterceptor {
     this.setupBuildToolInterceptors();
     this.setupModuleInterception();
     
-    console.log('[Bundle Interceptor] Started bundle tracking');
+    // console.log('[Bundle Interceptor] Started bundle tracking');
   }
 
   /**
@@ -43,7 +43,7 @@ export class BundleInterceptor {
     this.isActive = false;
     this.cleanup();
     
-    console.log('[Bundle Interceptor] Stopped bundle tracking');
+    // console.log('[Bundle Interceptor] Stopped bundle tracking');
   }
 
   /**
@@ -196,7 +196,6 @@ export class BundleInterceptor {
     
     if (!originalImport) return;
 
-    const self = this;
     (window as any).__original_import__ = originalImport;
     
     // Replace global import function
@@ -219,8 +218,8 @@ export class BundleInterceptor {
           this.trackImport(specifier, true);
         }
       };
-    } catch (error) {
-      console.warn('[Bundle Interceptor] Could not intercept dynamic imports:', error);
+    } catch {
+      // console.warn('[Bundle Interceptor] Could not intercept dynamic imports:', error);
     }
   }
 
@@ -229,8 +228,7 @@ export class BundleInterceptor {
    */
   private interceptRequire() {
     if (typeof require !== 'undefined' && typeof module !== 'undefined') {
-      const originalRequire = require;
-      const self = this;
+      // Note: Module interception logic removed due to complexity
       
       // This is a simplified approach - in practice, this would need
       // more sophisticated handling for different module systems
@@ -295,7 +293,10 @@ export class BundleInterceptor {
       if (!this.importGraph.has(currentModule)) {
         this.importGraph.set(currentModule, new Set());
       }
-      this.importGraph.get(currentModule)!.add(specifier);
+      const importSet = this.importGraph.get(currentModule);
+      if (importSet) {
+        importSet.add(specifier);
+      }
     }
 
     // Create module entry if it doesn't exist
@@ -365,7 +366,9 @@ export class BundleInterceptor {
     if ((window as any).__original_import__) {
       try {
         window.eval(`window.import = window.__original_import__;`);
-      } catch {}
+      } catch {
+        // Ignore eval errors
+      }
     }
     
     if ((window as any).__bundleInterceptor__) {
@@ -465,12 +468,12 @@ class WebpackInterceptor {
     if (!webpackRequire || webpackRequire.__intercepted__) return;
 
     const originalRequire = webpackRequire;
-    const self = this;
+    const trackRequire = this.trackWebpackRequire.bind(this);
 
-    (window as any).__webpack_require__ = function(moduleId: string) {
+    (window as any).__webpack_require__ = function(moduleId: string, ...args: unknown[]) {
       // Track the require
-      self.trackWebpackRequire(moduleId);
-      return originalRequire.apply(this, arguments);
+      trackRequire(moduleId);
+      return originalRequire.apply(this, [moduleId, ...args]);
     };
 
     // Copy properties
@@ -481,10 +484,10 @@ class WebpackInterceptor {
     (window as any).__webpack_require__.__intercepted__ = true;
   }
 
-  private trackWebpackRequire(moduleId: string) {
+  private trackWebpackRequire(_moduleId: string) {
     // Track webpack module access
     // This helps build the dependency graph
-    console.debug(`[Webpack Interceptor] Module required: ${moduleId}`);
+    // console.debug(`[Webpack Interceptor] Module required: ${moduleId}`);
   }
 }
 
@@ -512,8 +515,8 @@ class ViteInterceptor {
       const hot = (import.meta as any).hot;
       
       // Track HMR updates
-      hot.on('vite:beforeUpdate', (payload) => {
-        console.debug('[Vite Interceptor] HMR update:', payload);
+      hot.on('vite:beforeUpdate', (_payload: unknown) => {
+        // console.debug('[Vite Interceptor] HMR update:', payload);
       });
     }
   }

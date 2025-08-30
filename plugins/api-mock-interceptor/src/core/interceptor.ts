@@ -173,9 +173,9 @@ export class ApiInterceptor {
     }
 
     this.isInterceptingXHR = true;
-    const interceptor = this;
+    // Store reference to interceptor for closure
 
-    const OriginalXHR = interceptor.originalXMLHttpRequest;
+    const OriginalXHR = this.originalXMLHttpRequest;
     (window as any).XMLHttpRequest = function(this: XMLHttpRequest) {
       const xhr = new OriginalXHR();
       const requestId = generateId();

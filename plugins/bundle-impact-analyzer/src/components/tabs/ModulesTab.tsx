@@ -13,7 +13,7 @@ import type { BundleAnalyzerState, BundleModule } from '../../types';
 
 interface ModulesTabProps {
   state: BundleAnalyzerState;
-  eventClient: any;
+  eventClient: unknown;
 }
 
 export function ModulesTab({ state, eventClient }: ModulesTabProps) {

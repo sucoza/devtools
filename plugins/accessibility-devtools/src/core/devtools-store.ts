@@ -6,7 +6,6 @@ import type {
   AccessibilityAuditResult,
   AccessibilityIssue,
   ScanPerformanceMetrics,
-  ColorContrastResult,
   KeyboardNavigationIssue,
   ARIAValidationIssue,
   LandmarkInfo,
@@ -158,7 +157,7 @@ export const useAccessibilityDevToolsStore = create<AccessibilityDevToolsStore>(
        * Dispatch actions to update state
        */
       dispatch: (action: AccessibilityDevToolsAction) => {
-        const state = get();
+        const _state = get();
         
         switch (action.type) {
           case 'scan/start':
@@ -167,7 +166,7 @@ export const useAccessibilityDevToolsStore = create<AccessibilityDevToolsStore>(
             }));
             break;
             
-          case 'scan/complete':
+          case 'scan/complete': {
             const audit = action.payload;
             const violations = audit.violations.length;
             const critical = audit.violations.filter(v => v.impact === 'critical').length;
@@ -197,6 +196,7 @@ export const useAccessibilityDevToolsStore = create<AccessibilityDevToolsStore>(
             // Add to history
             get().addToHistory(audit);
             break;
+          }
             
           case 'scan/pause':
             set(state => ({
@@ -335,7 +335,7 @@ export const useAccessibilityDevToolsStore = create<AccessibilityDevToolsStore>(
             break;
             
           case 'filters/reset':
-            set(state => ({
+            set(_state => ({
               filters: {
                 ...initialState.filters,
                 severity: new Set(['critical', 'serious', 'moderate', 'minor']),
@@ -364,7 +364,7 @@ export const useAccessibilityDevToolsStore = create<AccessibilityDevToolsStore>(
             break;
             
           case 'history/clear':
-            set(state => ({ auditHistory: [] }));
+            set(_state => ({ auditHistory: [] }));
             break;
             
           case 'history/remove':
@@ -386,27 +386,27 @@ export const useAccessibilityDevToolsStore = create<AccessibilityDevToolsStore>(
             break;
             
           case 'performance/clear':
-            set(state => ({ performanceMetrics: [] }));
+            set(_state => ({ performanceMetrics: [] }));
             break;
             
           case 'color-contrast/update':
-            set(state => ({ colorContrastResults: action.payload }));
+            set(_state => ({ colorContrastResults: action.payload }));
             break;
             
           case 'keyboard-nav/update':
-            set(state => ({ keyboardNavigationIssues: action.payload }));
+            set(_state => ({ keyboardNavigationIssues: action.payload }));
             break;
             
           case 'aria-validation/update':
-            set(state => ({ ariaValidationIssues: action.payload }));
+            set(_state => ({ ariaValidationIssues: action.payload }));
             break;
             
           case 'landmarks/update':
-            set(state => ({ landmarks: action.payload }));
+            set(_state => ({ landmarks: action.payload }));
             break;
             
           case 'focus-issues/update':
-            set(state => ({ focusIssues: action.payload }));
+            set(_state => ({ focusIssues: action.payload }));
             break;
         }
       },

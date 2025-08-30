@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { clsx } from 'clsx';
 import { 
   MapPin, 
   Eye, 
-  Trees, 
   RotateCw,
   ChevronRight,
   ChevronDown,
@@ -24,11 +23,7 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
   const [showOverlay, setShowOverlay] = useState(false);
 
-  useEffect(() => {
-    runAnalysis();
-  }, []);
-
-  const runAnalysis = async () => {
+  const runAnalysis = useCallback(async () => {
     setIsAnalyzing(true);
     try {
       const landmarkStructure = analyzeLandmarks();
@@ -38,7 +33,11 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
     } finally {
       setIsAnalyzing(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    runAnalysis();
+  }, [runAnalysis]);
 
   const analyzeLandmarks = (): LandmarkInfo[] => {
     const landmarks: LandmarkInfo[] = [];
@@ -215,7 +214,7 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
     removeLandmarkOverlays(); // Clean up existing overlays
     
     const allLandmarks = flattenLandmarks(landmarks);
-    allLandmarks.forEach((landmark, index) => {
+    allLandmarks.forEach((landmark, _index) => {
       const element = landmark.element;
       const rect = element.getBoundingClientRect();
       

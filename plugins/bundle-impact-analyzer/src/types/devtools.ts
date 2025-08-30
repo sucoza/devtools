@@ -38,7 +38,7 @@ export interface BundleAnalyzerState {
 
 export interface BundleAnalyzerEvent {
   type: 'bundle-analyzed' | 'module-updated' | 'chunk-updated' | 'analysis-started' | 'analysis-error';
-  data?: any;
+  data?: unknown;
   timestamp: number;
 }
 
@@ -59,7 +59,7 @@ export interface BundleAnalyzerConfig {
 export interface DevToolsMessage {
   type: 'bundle-impact-analyzer';
   subtype: 'init' | 'update' | 'analyze' | 'config-change';
-  payload: any;
+  payload: unknown;
   timestamp: number;
 }
 
@@ -71,5 +71,5 @@ export interface AnalysisJob {
   startTime: number;
   endTime?: number;
   error?: string;
-  result?: any;
+  result?: unknown;
 }

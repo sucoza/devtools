@@ -33,7 +33,7 @@ export const ErrorList: React.FC = () => {
     : config.theme
 
   const filteredAndSortedErrors = useMemo(() => {
-    let filtered = errors.filter((error) => {
+    const filtered = errors.filter((error) => {
       const matchesSearch = !searchQuery || 
         error.message.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (error.componentStack?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)

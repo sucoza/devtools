@@ -41,7 +41,7 @@ export function SettingsTab() {
       } else {
         alert(`Import failed: ${result.error}`);
       }
-    } catch (error) {
+    } catch {
       alert('Invalid JSON format');
     }
   };

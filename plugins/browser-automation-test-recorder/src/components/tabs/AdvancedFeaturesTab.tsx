@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import { Play, Pause, Settings, Camera, Network, Zap, Shield, Database, Users, TrendingUp, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import { Play, Pause, Settings, Camera, Network, Zap, Shield, Database, Users, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import { useBrowserAutomationStore } from '../../core/devtools-store';
 
 interface AdvancedFeaturesTabProps {
@@ -17,10 +17,10 @@ export const AdvancedFeaturesTab: React.FC<AdvancedFeaturesTabProps> = ({ classN
   
   const {
     // Store methods would be extended to support advanced features
-    events,
-    recording,
-    playback,
-    settings,
+    events: _events,
+    recording: _recording,
+    playback: _playback,
+    settings: _settings,
   } = useBrowserAutomationStore();
 
   const features = [
@@ -164,7 +164,7 @@ export const AdvancedFeaturesTab: React.FC<AdvancedFeaturesTabProps> = ({ classN
 
 // Visual Regression Panel
 const VisualRegressionPanel: React.FC = () => {
-  const [baselines, setBaselines] = useState<any[]>([]);
+  const [baselines, _setBaselines] = useState<unknown[]>([]);
   const [selectedBaseline, setSelectedBaseline] = useState<string>('');
   const [thresholdValue, setThresholdValue] = useState(0.1);
 
@@ -243,8 +243,8 @@ const VisualRegressionPanel: React.FC = () => {
 
 // API Verification Panel
 const ApiVerificationPanel: React.FC = () => {
-  const [interceptedRequests, setInterceptedRequests] = useState<any[]>([]);
-  const [validationRules, setValidationRules] = useState<any[]>([]);
+  const [_interceptedRequests, _setInterceptedRequests] = useState<unknown[]>([]);
+  const [_validationRules, _setValidationRules] = useState<unknown[]>([]);
 
   return (
     <div className="api-verification-panel">
@@ -488,7 +488,7 @@ const AccessibilityTestingPanel: React.FC = () => {
               <div className="violation-description">Image missing alternative text</div>
             </div>
             <div className="violation-element">
-              <code>img[src="hero.jpg"]</code>
+              <code>img[src=&quot;hero.jpg&quot;]</code>
             </div>
           </div>
         </div>

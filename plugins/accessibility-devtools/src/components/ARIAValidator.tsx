@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { clsx } from 'clsx';
 import { 
   Shield, 
@@ -25,9 +25,9 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
 
   useEffect(() => {
     runAnalysis();
-  }, []);
+  }, [runAnalysis]);
 
-  const runAnalysis = async () => {
+  const runAnalysis = useCallback(async () => {
     setIsAnalyzing(true);
     try {
       const detectedIssues = await validateARIA();
@@ -37,7 +37,7 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
     } finally {
       setIsAnalyzing(false);
     }
-  };
+  }, []);
 
   const validateARIA = async (): Promise<ARIAValidationIssue[]> => {
     const issues: ARIAValidationIssue[] = [];

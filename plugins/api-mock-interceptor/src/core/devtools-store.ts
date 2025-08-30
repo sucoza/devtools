@@ -1,10 +1,10 @@
-import type { DevToolsState, DevToolsAction, ApiCall, MockRule, MockScenario, ApiStats } from '../types';
+import type { DevToolsState, DevToolsAction, ApiCall, MockRule, ApiStats } from '../types';
 import { initialDevToolsState } from '../types/devtools';
 import { getStorageEngine } from './storage';
 import { getApiInterceptor } from './interceptor';
 import { getRequestMatcher } from './matcher';
 import { getMockResponseEngine } from './mocker';
-import { generateId, getTimestamp } from '../utils';
+import { getTimestamp } from '../utils';
 
 /**
  * DevTools store for managing API interceptor state
@@ -106,7 +106,7 @@ class DevToolsStore {
   /**
    * Set network conditions
    */
-  setNetworkConditions(conditions: any): void {
+  setNetworkConditions(conditions: unknown): void {
     this.dispatch({ type: 'network/conditions/update', payload: conditions });
   }
 
@@ -126,7 +126,7 @@ class DevToolsStore {
           stats: this.updateStats(state.stats, action.payload),
         };
 
-      case 'api/call/update':
+      case 'api/call/update': {
         const existingCall = state.apiCalls[action.payload.id];
         if (!existingCall) return state;
         
@@ -139,9 +139,10 @@ class DevToolsStore {
           },
           stats: this.recalculateStats(Object.values({ ...state.apiCalls, [action.payload.id]: updatedCall })),
         };
+      }
 
-      case 'api/call/remove':
-        const { [action.payload]: removed, ...remainingCalls } = state.apiCalls;
+      case 'api/call/remove': {
+        const { [action.payload]: _removed, ...remainingCalls } = state.apiCalls;
         return {
           ...state,
           apiCalls: remainingCalls,
@@ -151,6 +152,7 @@ class DevToolsStore {
             selectedCallId: state.ui.selectedCallId === action.payload ? undefined : state.ui.selectedCallId,
           },
         };
+      }
 
       case 'api/calls/clear':
         return {
@@ -180,7 +182,7 @@ class DevToolsStore {
           },
         };
 
-      case 'mock/rule/update':
+      case 'mock/rule/update': {
         const existingRule = state.mockRules[action.payload.id];
         if (!existingRule) return state;
         
@@ -195,9 +197,10 @@ class DevToolsStore {
             },
           },
         };
+      }
 
-      case 'mock/rule/remove':
-        const { [action.payload]: removedRule, ...remainingRules } = state.mockRules;
+      case 'mock/rule/remove': {
+        const { [action.payload]: _removedRule, ...remainingRules } = state.mockRules;
         return {
           ...state,
           mockRules: remainingRules,
@@ -206,8 +209,9 @@ class DevToolsStore {
             selectedRuleId: state.ui.selectedRuleId === action.payload ? undefined : state.ui.selectedRuleId,
           },
         };
+      }
 
-      case 'mock/rule/toggle':
+      case 'mock/rule/toggle': {
         const ruleToToggle = state.mockRules[action.payload];
         if (!ruleToToggle) return state;
         
@@ -222,6 +226,7 @@ class DevToolsStore {
             },
           },
         };
+      }
 
       case 'mock/rules/clear':
         return {
@@ -243,7 +248,7 @@ class DevToolsStore {
           },
         };
 
-      case 'mock/scenario/update':
+      case 'mock/scenario/update': {
         const existingScenario = state.mockScenarios[action.payload.id];
         if (!existingScenario) return state;
         
@@ -258,9 +263,10 @@ class DevToolsStore {
             },
           },
         };
+      }
 
-      case 'mock/scenario/remove':
-        const { [action.payload]: removedScenario, ...remainingScenarios } = state.mockScenarios;
+      case 'mock/scenario/remove': {
+        const { [action.payload]: _removedScenario, ...remainingScenarios } = state.mockScenarios;
         return {
           ...state,
           mockScenarios: remainingScenarios,
@@ -270,6 +276,7 @@ class DevToolsStore {
             selectedScenarioId: state.ui.selectedScenarioId === action.payload ? undefined : state.ui.selectedScenarioId,
           },
         };
+      }
 
       case 'mock/scenario/activate':
         return {

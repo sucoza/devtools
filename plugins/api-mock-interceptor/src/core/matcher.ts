@@ -1,4 +1,4 @@
-import type { ApiRequest, RequestMatcher, HttpMethod } from '../types';
+import type { ApiRequest, RequestMatcher } from '../types';
 import { matchUrl } from '../utils';
 
 /**

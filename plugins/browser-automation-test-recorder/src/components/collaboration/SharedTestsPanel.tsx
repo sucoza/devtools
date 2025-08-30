@@ -7,8 +7,6 @@ import React, { useState } from 'react';
 import { clsx } from 'clsx';
 import {
   Share2,
-  Eye,
-  Copy,
   Download,
   GitBranch,
   MoreVertical,
@@ -18,7 +16,6 @@ import {
   Calendar,
   User,
   MessageSquare,
-  Star,
   Play,
   Edit,
   Trash2,
@@ -33,7 +30,7 @@ import type {
 
 export interface SharedTestsPanelProps {
   state: BrowserAutomationState;
-  dispatch: (action: any) => void;
+  dispatch: (action: unknown) => void;
   compact?: boolean;
   searchQuery?: string;
   selectedTestId?: string | null;
@@ -46,7 +43,7 @@ export interface SharedTestsPanelProps {
 export const SharedTestsPanel: React.FC<SharedTestsPanelProps> = ({
   state,
   dispatch,
-  compact = false,
+  _compact = false,
   searchQuery = '',
   selectedTestId,
   onTestSelect
@@ -110,12 +107,13 @@ export const SharedTestsPanel: React.FC<SharedTestsPanelProps> = ({
           payload: test.id
         });
         break;
-      case 'copy-link':
+      case 'copy-link': {
         // Copy share link
         const shareUrl = `${window.location.origin}/shared/${test.shareId}`;
         await navigator.clipboard.writeText(shareUrl);
         // Show toast notification
         break;
+      }
       case 'download':
         // Download test
         dispatch({
@@ -342,7 +340,7 @@ export const SharedTestsPanel: React.FC<SharedTestsPanelProps> = ({
           {/* Sort dropdown */}
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e) => setSortBy(e.target.value as 'created' | 'updated' | 'popularity')}
             className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="updated">Recently Updated</option>
@@ -361,7 +359,7 @@ export const SharedTestsPanel: React.FC<SharedTestsPanelProps> = ({
           ].map(filter => (
             <button
               key={filter.id}
-              onClick={() => setSelectedFilter(filter.id as any)}
+              onClick={() => setSelectedFilter(filter.id as 'all' | 'mine' | 'shared' | 'public')}
               className={clsx(
                 'flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors',
                 selectedFilter === filter.id

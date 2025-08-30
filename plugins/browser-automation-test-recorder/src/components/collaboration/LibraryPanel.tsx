@@ -3,7 +3,7 @@
  * Interface for browsing and managing team test library
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { clsx } from 'clsx';
 import {
   Library,
@@ -13,28 +13,21 @@ import {
   Download,
   Eye,
   GitBranch,
-  Play,
   MoreVertical,
-  Tag,
-  Calendar,
-  User,
-  TrendingUp,
   Plus,
   Grid,
-  List
+  List,
+  User
 } from 'lucide-react';
 
 import type {
   BrowserAutomationState,
-  LibraryTest,
-  TestCategory,
   LibraryTestStatus,
-  TestUsageStats
 } from '../../types';
 
 export interface LibraryPanelProps {
   state: BrowserAutomationState;
-  dispatch: (action: any) => void;
+  dispatch: (action: unknown) => void;
   compact?: boolean;
   searchQuery?: string;
   selectedTestId?: string | null;
@@ -47,7 +40,7 @@ export interface LibraryPanelProps {
 export const LibraryPanel: React.FC<LibraryPanelProps> = ({
   state,
   dispatch,
-  compact = false,
+  compact: _compact = false,
   searchQuery = '',
   selectedTestId,
   onTestSelect
@@ -510,7 +503,7 @@ export const LibraryPanel: React.FC<LibraryPanelProps> = ({
             {/* Sort dropdown */}
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => setSortBy(e.target.value as 'name' | 'created' | 'updated' | 'popularity' | 'quality')}
               className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="popularity">Most Popular</option>

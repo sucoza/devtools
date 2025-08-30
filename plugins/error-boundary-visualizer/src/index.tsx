@@ -207,7 +207,7 @@ export function useErrorBoundary() {
 // Development helpers
 if (process.env.NODE_ENV === 'development') {
   // Add global helpers for development
-  ;(window as any).__ERROR_BOUNDARY_DEVTOOLS__ = {
+  (window as any).__ERROR_BOUNDARY_DEVTOOLS__ = {
     reportError,
     initializeErrorBoundaryDevTools,
   }

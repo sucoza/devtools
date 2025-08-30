@@ -89,7 +89,7 @@ export class MockResponseEngine {
         Object.defineProperty(xhr, 'response', { value: responseText, writable: false });
 
         // Mock getAllResponseHeaders
-        const originalGetAllResponseHeaders = xhr.getAllResponseHeaders;
+        const _originalGetAllResponseHeaders = xhr.getAllResponseHeaders;
         xhr.getAllResponseHeaders = () => {
           const headers = mockResponse.headers || {};
           return Object.entries(headers)
@@ -98,7 +98,7 @@ export class MockResponseEngine {
         };
 
         // Mock getResponseHeader
-        const originalGetResponseHeader = xhr.getResponseHeader;
+        const _originalGetResponseHeader = xhr.getResponseHeader;
         xhr.getResponseHeader = (name: string) => {
           const headers = mockResponse.headers || {};
           const headerName = Object.keys(headers).find(key => key.toLowerCase() === name.toLowerCase());
@@ -114,7 +114,7 @@ export class MockResponseEngine {
         if (xhr.onload) {
           xhr.onload({} as ProgressEvent);
         }
-      } catch (error) {
+      } catch {
         // Trigger error event
         Object.defineProperty(xhr, 'readyState', { value: 4, writable: false });
         

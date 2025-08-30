@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type {
   BundleAnalyzerState,
-  BundleAnalyzerEvent,
   BundleAnalyzerConfig,
   BundleModule,
   BundleChunk,
@@ -97,7 +96,7 @@ interface BundleAnalyzerStore extends BundleAnalyzerState {
   jobs: AnalysisJob[];
   startJob: (job: Omit<AnalysisJob, 'id' | 'startTime'>) => string;
   updateJob: (jobId: string, updates: Partial<AnalysisJob>) => void;
-  completeJob: (jobId: string, result?: any) => void;
+  completeJob: (jobId: string, result?: unknown) => void;
   failJob: (jobId: string, error: string) => void;
 }
 
@@ -133,7 +132,7 @@ export const useBundleAnalyzerStore = create<BundleAnalyzerStore>()(
         progress: 0,
       });
       
-      set(state => ({
+      set(() => ({
         isAnalyzing: true,
         lastAnalysisTime: Date.now(),
       }));
@@ -146,7 +145,7 @@ export const useBundleAnalyzerStore = create<BundleAnalyzerStore>()(
         } else {
           clearInterval(interval);
           get().completeJob(jobId, { message: 'Analysis complete' });
-          set(state => ({ isAnalyzing: false }));
+          set(() => ({ isAnalyzing: false }));
         }
       }, 200);
     },
@@ -237,7 +236,7 @@ export const useBundleAnalyzerStore = create<BundleAnalyzerStore>()(
     generateRecommendations: () => {
       const state = get();
       const recommendations: OptimizationRecommendation[] = [];
-      const { modules, chunks, config } = state;
+      const { modules, config } = state;
 
       // Large module recommendations
       modules.forEach(module => {
@@ -273,7 +272,10 @@ export const useBundleAnalyzerStore = create<BundleAnalyzerStore>()(
         if (!moduleNames.has(name)) {
           moduleNames.set(name, []);
         }
-        moduleNames.get(name)!.push(module);
+        const moduleList = moduleNames.get(name);
+        if (moduleList) {
+          moduleList.push(module);
+        }
       });
 
       moduleNames.forEach((mods, name) => {
@@ -446,7 +448,7 @@ export const useBundleAnalyzerStore = create<BundleAnalyzerStore>()(
     },
 
     clearFilters: () => {
-      set(state => ({
+      set(() => ({
         filters: {
           showOnlyLargeModules: false,
           showOnlyUnusedCode: false,
@@ -552,7 +554,7 @@ export const useBundleAnalyzerStore = create<BundleAnalyzerStore>()(
       }));
     },
 
-    completeJob: (jobId: string, result?: any) => {
+    completeJob: (jobId: string, result?: unknown) => {
       set(state => ({
         jobs: state.jobs.map(job =>
           job.id === jobId

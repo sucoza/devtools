@@ -4,7 +4,7 @@ import type { BundleAnalyzerState } from '../../types';
 
 interface CDNAnalysisTabProps {
   state: BundleAnalyzerState;
-  eventClient: any;
+  eventClient: unknown;
 }
 
 export function CDNAnalysisTab({ state, eventClient }: CDNAnalysisTabProps) {

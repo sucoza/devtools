@@ -1,4 +1,4 @@
-import type { Result as AxeResult, NodeResult } from 'axe-core';
+// import type { Result as AxeResult, NodeResult } from 'axe-core';
 
 // Core accessibility types
 export type SeverityLevel = 'critical' | 'serious' | 'moderate' | 'minor';
@@ -108,7 +108,7 @@ export interface FocusIssue {
 
 // Audit configuration
 export interface AccessibilityConfig {
-  rules?: Record<string, { enabled: boolean; options?: any }>;
+  rules?: Record<string, { enabled: boolean; options?: unknown }>;
   tags?: string[];
   wcagLevel: WCAGLevel;
   includeExperimental: boolean;

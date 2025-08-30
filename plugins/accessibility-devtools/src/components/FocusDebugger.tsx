@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { clsx } from 'clsx';
 import { 
   Focus, 
@@ -24,12 +24,29 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
   const [isDebugging, setIsDebugging] = useState(false);
   const [currentFocusedElement, setCurrentFocusedElement] = useState<Element | null>(null);
   const [focusHistory, setFocusHistory] = useState<{element: Element, timestamp: number}[]>([]);
+  const [_currentFocusChain, setCurrentFocusChain] = useState<Element[]>([]);
   const [settings, setSettings] = useState({
     highlightFocusRings: true,
     trackFocusHistory: true,
     detectInvisibleFocus: true,
     detectPoorContrast: true,
   });
+
+  const startFocusDebugging = useCallback(() => {
+    analyzeFocusIssues();
+    attachFocusListeners();
+    if (settings.highlightFocusRings) {
+      injectFocusStyles();
+    }
+  }, [settings.highlightFocusRings]);
+
+  const stopFocusDebugging = useCallback(() => {
+    detachFocusListeners();
+    removeFocusStyles();
+    setCurrentFocusChain([]);
+    setFocusHistory([]);
+    removeHighlights();
+  }, []);
 
   useEffect(() => {
     if (isDebugging) {
@@ -39,21 +56,7 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
     }
 
     return () => stopFocusDebugging();
-  }, [isDebugging]);
-
-  const startFocusDebugging = () => {
-    analyzeFocusIssues();
-    attachFocusListeners();
-    if (settings.highlightFocusRings) {
-      injectFocusStyles();
-    }
-  };
-
-  const stopFocusDebugging = () => {
-    detachFocusListeners();
-    removeFocusStyles();
-    removeHighlights();
-  };
+  }, [isDebugging, startFocusDebugging, stopFocusDebugging]);
 
   const analyzeFocusIssues = () => {
     const issues: FocusIssue[] = [];
@@ -207,7 +210,7 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
     highlightFocusedElement(element);
   };
 
-  const handleFocusOut = (event: FocusEvent) => {
+  const handleFocusOut = (_event: FocusEvent) => {
     removeHighlights();
   };
 

@@ -4,7 +4,7 @@ import type { BundleAnalyzerState, OptimizationRecommendation } from '../../type
 
 interface RecommendationsTabProps {
   state: BundleAnalyzerState;
-  eventClient: any;
+  eventClient: unknown;
 }
 
 export function RecommendationsTab({ state, eventClient }: RecommendationsTabProps) {

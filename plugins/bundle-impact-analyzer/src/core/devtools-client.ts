@@ -1,6 +1,5 @@
 import type {
   BundleAnalyzerState,
-  BundleAnalyzerEvent,
   BundleAnalyzerConfig,
   BundleModule,
   BundleChunk,
@@ -97,7 +96,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
   private setupJobNotifications() {
     // Subscribe to job updates in the store
     let previousJobs: AnalysisJob[] = [];
-    const unsubscribeJobs = this.store.subscribe(
+    this.store.subscribe(
       (state) => {
         const jobs = state.jobs;
         const newJobs = jobs.filter(job => 
@@ -259,7 +258,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
       const response = await fetch(url, { method: 'HEAD' });
       const contentLength = response.headers.get('Content-Length');
       return contentLength ? parseInt(contentLength, 10) : 0;
-    } catch (error) {
+    } catch {
       return 0;
     }
   }
@@ -273,11 +272,14 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
     // Monkey patch dynamic import (if possible)
     const originalImport = window.eval('(function() { return this; })()')?.import;
     if (typeof originalImport === 'function') {
-      const self = this;
-      window.eval('(function() { return this; })()')!.import = function(specifier: string) {
-        self.trackDynamicImport(specifier);
-        return originalImport.call(this, specifier);
-      };
+      const trackImport = this.trackDynamicImport.bind(this);
+      const globalObj = window.eval('(function() { return this; })()')
+      if (globalObj) {
+        globalObj.import = function(specifier: string) {
+          trackImport(specifier);
+          return originalImport.call(this, specifier);
+        };
+      }
     }
   }
 
@@ -306,12 +308,12 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
    */
   private setupBuildToolIntegration() {
     // Check for webpack
-    if (typeof window !== 'undefined' && (window as any).__webpack_require__) {
+    if (typeof window !== 'undefined' && (window as unknown as { __webpack_require__?: unknown }).__webpack_require__) {
       this.setupWebpackIntegration();
     }
     
     // Check for Vite
-    if (typeof window !== 'undefined' && (window as any).__vite_plugin_react_preamble_installed__) {
+    if (typeof window !== 'undefined' && (window as unknown as { __vite_plugin_react_preamble_installed__?: unknown }).__vite_plugin_react_preamble_installed__) {
       this.setupViteIntegration();
     }
   }
@@ -320,7 +322,7 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
    * Set up webpack integration
    */
   private setupWebpackIntegration() {
-    const webpackRequire = (window as any).__webpack_require__;
+    const webpackRequire = (window as unknown as { __webpack_require__?: unknown }).__webpack_require__;
     if (!webpackRequire) return;
 
     const buildInfo: BundleBuildInfo = {
@@ -347,9 +349,9 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
     const buildInfo: BundleBuildInfo = {
       buildTool: 'vite',
       buildTime: Date.now(),
-      environment: (import.meta as any).env?.PROD ? 'production' : 'development',
+      environment: (import.meta as unknown as { env?: { PROD?: boolean } }).env?.PROD ? 'production' : 'development',
       optimization: {
-        minimize: (import.meta as any).env?.PROD,
+        minimize: (import.meta as unknown as { env?: { PROD?: boolean } }).env?.PROD,
         treeShaking: true,
         splitChunks: true,
         sideEffects: false,

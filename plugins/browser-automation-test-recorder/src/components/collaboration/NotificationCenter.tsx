@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { clsx } from 'clsx';
-import { X, Bell, Check, Archive } from 'lucide-react';
+import { X, Bell, Check } from 'lucide-react';
 import type { CollaborationNotification } from '../../types';
 
 export interface NotificationCenterProps {

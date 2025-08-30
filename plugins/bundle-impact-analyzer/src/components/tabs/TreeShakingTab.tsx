@@ -1,13 +1,12 @@
 import React from 'react';
-import { TreePine, AlertTriangle, CheckCircle } from 'lucide-react';
 import type { BundleAnalyzerState } from '../../types';
 
 interface TreeShakingTabProps {
   state: BundleAnalyzerState;
-  eventClient: any;
+  eventClient: unknown;
 }
 
-export function TreeShakingTab({ state, eventClient }: TreeShakingTabProps) {
+export function TreeShakingTab({ state }: TreeShakingTabProps) {
   const formatSize = (bytes: number) => {
     if (bytes === 0) return '0 B';
     const k = 1024;

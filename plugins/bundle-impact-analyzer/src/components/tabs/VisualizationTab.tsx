@@ -4,7 +4,7 @@ import type { BundleAnalyzerState } from '../../types';
 
 interface VisualizationTabProps {
   state: BundleAnalyzerState;
-  eventClient: any;
+  eventClient: unknown;
 }
 
 export function VisualizationTab({ state, eventClient }: VisualizationTabProps) {

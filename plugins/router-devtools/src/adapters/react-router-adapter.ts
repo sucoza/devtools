@@ -15,16 +15,16 @@ import {
 declare global {
   interface Window {
     __REACT_ROUTER_DEVTOOLS__?: {
-      router?: any;
-      routes?: any[];
+      router?: unknown;
+      routes?: unknown[];
     };
   }
 }
 
 export class ReactRouterAdapter implements IRouterAdapter {
   private listeners: ((state: NavigationState) => void)[] = [];
-  private router: any = null;
-  private routes: any[] = [];
+  private router: unknown = null;
+  private routes: unknown[] = [];
 
   constructor() {
     this.initialize();
@@ -186,7 +186,7 @@ export class ReactRouterAdapter implements IRouterAdapter {
     let newPath = currentPath;
     Object.entries(params).forEach(([key, value]) => {
       // Simple parameter replacement - in reality, you'd need proper route matching
-      const paramPattern = new RegExp(`/([^/]*)`);
+      const _paramPattern = new RegExp(`/([^/]*)`);
       if (currentPath.includes(`/:${key}`)) {
         newPath = currentPath.replace(`/:${key}`, `/${value}`);
       }
@@ -326,14 +326,14 @@ export class ReactRouterAdapter implements IRouterAdapter {
   /**
    * Convert React Router routes to RouteInfo format
    */
-  private convertRoutesToRouteInfo(routes: any[]): RouteInfo[] {
+  private convertRoutesToRouteInfo(routes: unknown[]): RouteInfo[] {
     return routes.map(route => this.convertRouteToRouteInfo(route));
   }
 
   /**
    * Convert a single React Router route to RouteInfo
    */
-  private convertRouteToRouteInfo(route: any): RouteInfo {
+  private convertRouteToRouteInfo(route: unknown): RouteInfo {
     return {
       id: route.id || this.generateRouteId(route.path),
       path: route.path || '',

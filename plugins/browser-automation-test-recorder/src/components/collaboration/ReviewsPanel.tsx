@@ -9,14 +9,14 @@ import type { BrowserAutomationState } from '../../types';
 
 export interface ReviewsPanelProps {
   state: BrowserAutomationState;
-  dispatch: (action: any) => void;
+  dispatch: (action: unknown) => void;
   compact?: boolean;
   searchQuery?: string;
   selectedTestId?: string | null;
   onTestSelect?: (testId: string) => void;
 }
 
-export const ReviewsPanel: React.FC<ReviewsPanelProps> = ({ state, dispatch }) => {
+export const ReviewsPanel: React.FC<ReviewsPanelProps> = ({ _state, _dispatch }) => {
   return (
     <div className="flex-1 flex items-center justify-center p-8 text-center">
       <div>

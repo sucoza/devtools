@@ -16,7 +16,7 @@ export function calculateContrastRatio(foreground: string, background: string): 
     const darker = Math.min(fgLuminance, bgLuminance);
     
     return (lighter + 0.05) / (darker + 0.05);
-  } catch (error) {
+  } catch {
     console.warn('Error calculating contrast ratio:', error);
     return 0;
   }
@@ -78,7 +78,7 @@ export function getElementColors(element: Element): {
     }
     
     return { foreground, background };
-  } catch (error) {
+  } catch {
     console.warn('Error extracting colors:', error);
     return null;
   }
@@ -128,7 +128,7 @@ export function toHex(color: string): string {
   try {
     const colorObj = new Color(color);
     return colorObj.toString({ format: 'hex' });
-  } catch (error) {
+  } catch {
     return color;
   }
 }
@@ -140,7 +140,7 @@ export function toRgb(color: string): string {
   try {
     const colorObj = new Color(color);
     return colorObj.toString({ format: 'rgb' });
-  } catch (error) {
+  } catch {
     return color;
   }
 }
@@ -182,7 +182,7 @@ export function suggestAccessibleColors(
         suggestions.backgroundSuggestions.push(lighter.toString({ format: 'hex' }));
       }
     }
-  } catch (error) {
+  } catch {
     console.warn('Error generating color suggestions:', error);
   }
   
@@ -262,7 +262,7 @@ export function isLightColor(color: string): boolean {
   try {
     const colorObj = new Color(color);
     return colorObj.luminance > 0.5;
-  } catch (error) {
+  } catch {
     return false;
   }
 }

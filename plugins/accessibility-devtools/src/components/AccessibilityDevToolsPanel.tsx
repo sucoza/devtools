@@ -6,15 +6,13 @@ import {
   Play, 
   Pause, 
   Square, 
-  Settings, 
   Shield, 
   AlertTriangle, 
   Palette, 
   Keyboard, 
   Focus,
   MapPin,
-  BarChart3,
-  Filter
+  BarChart3
 } from 'lucide-react';
 import { useAccessibilityAudit } from '../hooks/useAccessibilityAudit';
 import { IssueList } from './IssueList';
@@ -35,10 +33,10 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
   const {
     currentAudit,
     scanState,
-    scanOptions,
+    scanOptions: _scanOptions,
     ui,
-    selectedIssue,
-    filters,
+    selectedIssue: _selectedIssue,
+    filters: _filters,
     settings,
     startScan,
     stopScan,

@@ -216,7 +216,7 @@ export function formatWCAGCriterion(criterion: string): string {
 export function calculateWCAGCompliance(
   totalRules: number,
   failedRules: number,
-  level: WCAGLevel = 'AA'
+  _level: WCAGLevel = 'AA'
 ): number {
   if (totalRules === 0) return 100;
   

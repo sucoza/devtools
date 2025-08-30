@@ -9,14 +9,14 @@ import type { BrowserAutomationState } from '../../types';
 
 export interface TeamPanelProps {
   state: BrowserAutomationState;
-  dispatch: (action: any) => void;
+  dispatch: (action: unknown) => void;
   compact?: boolean;
   searchQuery?: string;
   selectedTestId?: string | null;
   onTestSelect?: (testId: string) => void;
 }
 
-export const TeamPanel: React.FC<TeamPanelProps> = ({ state, dispatch }) => {
+export const TeamPanel: React.FC<TeamPanelProps> = ({ _state, _dispatch }) => {
   return (
     <div className="flex-1 flex items-center justify-center p-8 text-center">
       <div>

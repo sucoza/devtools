@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { clsx } from 'clsx';
 import { Plus, Play, Pause, Edit, Trash2 } from 'lucide-react';
 import { useInterceptor } from '../hooks/useInterceptor';

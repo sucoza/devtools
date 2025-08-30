@@ -18,7 +18,6 @@ import {
 import type {
   BrowserAutomationDevToolsPanelProps,
   DevToolsTab,
-  BrowserAutomationState,
 } from '../types';
 import {
   createBrowserAutomationEventClient,
@@ -43,7 +42,7 @@ export function BrowserAutomationPanel({
   style,
   theme = 'auto',
   compact = false,
-  defaultTab = 'recorder',
+  defaultTab: _defaultTab = 'recorder',
   onTabChange,
   onEvent,
   children,
@@ -67,7 +66,7 @@ export function BrowserAutomationPanel({
   };
 
   // Handle events
-  const handleEvent = (action: any) => {
+  const handleEvent = (action: unknown) => {
     eventClient.dispatch(action);
     onEvent?.(action);
   };
@@ -76,8 +75,8 @@ export function BrowserAutomationPanel({
   const tabs: Array<{
     id: DevToolsTab;
     label: string;
-    icon: React.ComponentType<any>;
-    component: React.ComponentType<any>;
+    icon: React.ComponentType<{ size?: number }>;
+    component: React.ComponentType<{ state: unknown; dispatch: (action: unknown) => void; compact?: boolean }>;
   }> = [
     {
       id: 'recorder',

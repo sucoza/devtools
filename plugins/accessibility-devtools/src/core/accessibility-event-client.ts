@@ -132,7 +132,7 @@ export class AccessibilityDevToolsEventClient implements AccessibilityEventClien
   /**
    * Update scan options
    */
-  updateScanOptions = (options: any): void => {
+  updateScanOptions = (options: unknown): void => {
     this.dispatch({ type: 'options/update', payload: options });
   };
   
@@ -194,7 +194,7 @@ export class AccessibilityDevToolsEventClient implements AccessibilityEventClien
   /**
    * Import audit data
    */
-  importData = (data: any): void => {
+  importData = (data: unknown): void => {
     this.dispatch({ type: 'history/import', payload: data });
   };
   

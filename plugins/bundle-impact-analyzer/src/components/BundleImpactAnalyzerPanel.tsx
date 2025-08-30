@@ -22,6 +22,7 @@ import {
   createBundleAnalyzerEventClient,
   getBundleAnalyzerEventClient,
   startBundleInterception,
+  BundleAnalyzerDevToolsEventClient,
 } from '../core';
 
 // Tab components (we'll create these as placeholders for now)
@@ -41,7 +42,7 @@ export interface BundleImpactAnalyzerPanelProps {
   compact?: boolean;
   defaultTab?: BundleAnalyzerTab;
   onTabChange?: (tab: BundleAnalyzerTab) => void;
-  onEvent?: (event: any) => void;
+  onEvent?: (event: unknown) => void;
   children?: React.ReactNode;
 }
 
@@ -65,7 +66,7 @@ export function BundleImpactAnalyzerPanel({
   compact = false,
   defaultTab = 'overview',
   onTabChange,
-  onEvent,
+  onEvent: _onEvent,
   children,
 }: BundleImpactAnalyzerPanelProps) {
   // Create or get event client
@@ -99,17 +100,14 @@ export function BundleImpactAnalyzerPanel({
     onTabChange?.(tab);
   };
 
-  // Handle events
-  const handleEvent = (action: any) => {
-    onEvent?.(action);
-  };
+  // Handle events - removed unused function
 
   // Tab configuration
   const tabs: Array<{
     id: BundleAnalyzerTab;
     label: string;
-    icon: React.ComponentType<any>;
-    component: React.ComponentType<{ state: BundleAnalyzerState; eventClient: any }>;
+    icon: React.ComponentType<{ size?: number }>;
+    component: React.ComponentType<{ state: BundleAnalyzerState; eventClient: BundleAnalyzerDevToolsEventClient }>;
     badge?: string | number;
   }> = [
     {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { clsx } from 'clsx';
-import { Plus, Edit, Trash2, ToggleLeft, Play, Pause } from 'lucide-react';
+import { Plus, Edit, Trash2, Play, Pause } from 'lucide-react';
 import { useInterceptor } from '../hooks/useInterceptor';
 import { MockRuleEditor } from './MockRuleEditor';
 import { generateId, getTimestamp } from '../utils';

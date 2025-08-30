@@ -46,7 +46,7 @@ export function IssueList({ showOverview = false, className }: IssueListProps) {
   const stats = getIssueStats();
   const filteredStats = getFilteredStats();
   const uniqueRuleIds = getUniqueRuleIds();
-  const uniqueTags = getUniqueTags();
+  const _uniqueTags: string[] = getUniqueTags();
 
   const toggleIssueExpansion = (issueId: string) => {
     const newExpanded = new Set(expandedIssues);
@@ -398,7 +398,7 @@ function IssueItem({
                           title="Highlight element"
                           onClick={() => {
                             // Would implement element highlighting
-                            console.log('Highlight element:', node.target[0]);
+                            // TODO: Implement element highlighting
                           }}
                         >
                           <Eye className="w-3 h-3" />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { clsx } from 'clsx';
 import { 
   Palette, 
@@ -7,13 +7,11 @@ import {
   XCircle, 
   AlertTriangle,
   RotateCw,
-  Download,
-  Settings
+  Download
 } from 'lucide-react';
 import { useAccessibilityDevToolsStore } from '../core/devtools-store';
 import { 
   analyzeColorContrast, 
-  calculateContrastRatio,
   formatContrastRatio,
   getContrastLevelDescription
 } from '../utils/color-utils';
@@ -34,14 +32,7 @@ export function ColorContrastAnalyzer({ className }: ColorContrastAnalyzerProps)
 
   const colorContrastResults = store.colorContrastResults;
 
-  // Run analysis on mount
-  useEffect(() => {
-    if (colorContrastResults.length === 0) {
-      runAnalysis();
-    }
-  }, []);
-
-  const runAnalysis = async () => {
+  const runAnalysis = useCallback(async () => {
     setIsAnalyzing(true);
     try {
       // Run color contrast analysis
@@ -52,7 +43,14 @@ export function ColorContrastAnalyzer({ className }: ColorContrastAnalyzerProps)
     } finally {
       setIsAnalyzing(false);
     }
-  };
+  }, [store]);
+
+  // Run analysis on mount
+  useEffect(() => {
+    if (colorContrastResults.length === 0) {
+      runAnalysis();
+    }
+  }, [colorContrastResults.length, runAnalysis]);
 
   const filteredResults = colorContrastResults.filter(result => {
     switch (filterBy) {
@@ -241,7 +239,7 @@ export function ColorContrastAnalyzer({ className }: ColorContrastAnalyzerProps)
                 result={result}
                 onHighlight={() => {
                   // Would implement element highlighting
-                  console.log('Highlight element:', result.selector);
+                  // TODO: Implement element highlighting
                 }}
               />
             ))}

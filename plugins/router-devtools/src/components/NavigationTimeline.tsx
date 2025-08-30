@@ -20,7 +20,7 @@ interface TimelineEntryProps {
   onNavigate: (to: string, options?: { replace?: boolean }) => void;
 }
 
-function TimelineEntry({ entry, index, isLatest, isCurrent, onNavigate }: TimelineEntryProps) {
+function TimelineEntry({ entry, _index, isLatest, isCurrent, onNavigate }: TimelineEntryProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   
   const handleNavigateToEntry = () => {

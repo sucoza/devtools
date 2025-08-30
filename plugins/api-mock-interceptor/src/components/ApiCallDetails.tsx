@@ -25,7 +25,7 @@ export function ApiCallDetails({ call }: ApiCallDetailsProps) {
     }
   };
 
-  const formatJson = (obj: any) => {
+  const formatJson = (obj: unknown) => {
     if (obj === null || obj === undefined) return 'null';
     if (typeof obj === 'string') return obj;
     return JSON.stringify(obj, null, 2);

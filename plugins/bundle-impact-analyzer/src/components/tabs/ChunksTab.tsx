@@ -1,13 +1,13 @@
 import React from 'react';
-import { FileText, Package, Activity } from 'lucide-react';
+import { FileText, Package } from 'lucide-react';
 import type { BundleAnalyzerState } from '../../types';
 
 interface ChunksTabProps {
   state: BundleAnalyzerState;
-  eventClient: any;
+  eventClient: unknown;
 }
 
-export function ChunksTab({ state, eventClient }: ChunksTabProps) {
+export function ChunksTab({ state }: ChunksTabProps) {
   const formatSize = (bytes: number) => {
     if (bytes === 0) return '0 B';
     const k = 1024;

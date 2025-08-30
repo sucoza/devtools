@@ -1,5 +1,5 @@
 import { useSyncExternalStore, useCallback } from 'react';
-import type { DevToolsState, ApiCall, MockRule, MockScenario, NetworkConditions } from '../types';
+import type { DevToolsState, MockRule, MockScenario, NetworkConditions } from '../types';
 import { getDevToolsStore } from '../core/devtools-store';
 
 /**

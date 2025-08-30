@@ -7,7 +7,7 @@ export interface ApiRequest {
   url: string;
   method: HttpMethod;
   headers: Record<string, string>;
-  body?: any;
+  body?: unknown;
   timestamp: number;
   duration?: number;
 }
@@ -17,7 +17,7 @@ export interface ApiResponse {
   status: number;
   statusText: string;
   headers: Record<string, string>;
-  body?: any;
+  body?: unknown;
   timestamp: number;
 }
 
@@ -52,7 +52,7 @@ export interface RequestMatcher {
   urlPattern?: string; // regex pattern
   method?: HttpMethod | HttpMethod[];
   headers?: Record<string, string>;
-  body?: any;
+  body?: unknown;
 }
 
 // Mock response configuration
@@ -60,7 +60,7 @@ export interface MockResponse {
   status: number;
   statusText?: string;
   headers?: Record<string, string>;
-  body?: any;
+  body?: unknown;
   delay?: number; // milliseconds
 }
 

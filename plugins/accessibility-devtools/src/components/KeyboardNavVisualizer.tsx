@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { clsx } from 'clsx';
 import { 
   Keyboard, 
@@ -36,9 +36,9 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
       return () => clearInterval(interval);
     }
     return undefined;
-  }, [isVisualizing]);
+  }, [isVisualizing, analyzeFocusableElements]);
 
-  const analyzeFocusableElements = () => {
+  const analyzeFocusableElements = useCallback(() => {
     // Find all focusable elements
     const focusableSelectors = [
       'a[href]',
@@ -119,7 +119,7 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
     });
 
     setIssues(detectedIssues);
-  };
+  }, []);
 
   const startVisualization = () => {
     setIsVisualizing(true);

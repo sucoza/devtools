@@ -1,16 +1,16 @@
 import React from 'react';
-import { Settings, ToggleLeft, ToggleRight } from 'lucide-react';
+import { ToggleLeft, ToggleRight } from 'lucide-react';
 import type { BundleAnalyzerState } from '../../types';
 
 interface SettingsTabProps {
   state: BundleAnalyzerState;
-  eventClient: any;
+  eventClient: unknown;
 }
 
 export function SettingsTab({ state, eventClient }: SettingsTabProps) {
   const config = state.config;
 
-  const handleConfigChange = (key: keyof typeof config, value: any) => {
+  const handleConfigChange = (key: keyof typeof config, value: unknown) => {
     eventClient.updateConfig({ [key]: value });
   };
 

@@ -2,7 +2,6 @@ import { useEffect, useCallback } from 'react';
 import { useAccessibilityDevToolsStore } from '../core/devtools-store';
 import type {
   AccessibilityIssue,
-  AccessibilityAuditResult,
   ScanOptions,
   AccessibilityDevToolsState,
 } from '../types';
@@ -217,7 +216,11 @@ export function useAccessibilityAudit() {
           case 'p':
             event.preventDefault();
             if (scanState.isScanning) {
-              scanState.isPaused ? resumeScan() : pauseScan();
+              if (scanState.isPaused) {
+                resumeScan();
+              } else {
+                pauseScan();
+              }
             }
             break;
           case 's':

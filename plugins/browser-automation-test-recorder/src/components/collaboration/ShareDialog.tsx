@@ -8,21 +8,14 @@ import { clsx } from 'clsx';
 import {
   X,
   Share2,
-  Copy,
   Globe,
   Users,
   Lock,
-  Eye,
   Edit,
   MessageSquare,
   Download,
   GitBranch,
-  Calendar,
-  Tag,
-  Link,
-  QrCode,
-  Code,
-  Settings
+  Tag
 } from 'lucide-react';
 
 import type {
@@ -194,7 +187,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
               name="visibility"
               value="private"
               checked={formData.visibility === 'private'}
-              onChange={(e) => setFormData(prev => ({ ...prev, visibility: e.target.value as any }))}
+              onChange={(e) => setFormData(prev => ({ ...prev, visibility: e.target.value as 'private' | 'team' | 'public' }))}
               className="mr-3"
             />
             <Lock size={16} className="mr-2 text-gray-500" />
@@ -210,7 +203,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
               name="visibility"
               value="team"
               checked={formData.visibility === 'team'}
-              onChange={(e) => setFormData(prev => ({ ...prev, visibility: e.target.value as any }))}
+              onChange={(e) => setFormData(prev => ({ ...prev, visibility: e.target.value as 'private' | 'team' | 'public' }))}
               className="mr-3"
             />
             <Users size={16} className="mr-2 text-gray-500" />
@@ -226,7 +219,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
               name="visibility"
               value="public"
               checked={formData.visibility === 'public'}
-              onChange={(e) => setFormData(prev => ({ ...prev, visibility: e.target.value as any }))}
+              onChange={(e) => setFormData(prev => ({ ...prev, visibility: e.target.value as 'private' | 'team' | 'public' }))}
               className="mr-3"
             />
             <Globe size={16} className="mr-2 text-gray-500" />

@@ -9,10 +9,10 @@ interface FilterConfig {
   options: Array<{
     key: string;
     label: string;
-    values: Array<{ value: any; label: string }>;
+    values: Array<{ value: unknown; label: string }>;
     multiple: boolean;
   }>;
-  [key: string]: any; // Allow additional properties
+  [key: string]: unknown; // Allow additional properties
 }
 
 /**
@@ -63,7 +63,7 @@ export function FilterPanel() {
 
   const handleFilterChange = (updates: Partial<FilterConfig>) => {
     // Map shared component updates back to plugin-specific filter format
-    const pluginUpdates: any = {};
+    const pluginUpdates: unknown = {};
     
     if ('searchText' in updates) {
       pluginUpdates.url = updates.searchText;

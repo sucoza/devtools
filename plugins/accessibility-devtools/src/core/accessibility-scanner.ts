@@ -31,7 +31,7 @@ export class AccessibilityScanner {
    */
   private setupAxe(): void {
     // Configure axe-core
-    const axeConfig: any = {
+    const axeConfig: unknown = {
       branding: {
         brand: 'TanStack DevTools',
         application: 'accessibility-scanner',
@@ -68,7 +68,7 @@ export class AccessibilityScanner {
    */
   async scan(
     element: Element | Document = document,
-    options: Partial<ScanOptions> = {}
+    _options: Partial<ScanOptions> = {}
   ): Promise<AccessibilityAuditResult> {
     if (this.isScanning) {
       throw new Error('Scan already in progress');
@@ -81,7 +81,7 @@ export class AccessibilityScanner {
     
     try {
       // Prepare axe options
-      const axeOptions: any = {
+      const axeOptions: unknown = {
         elementRef: this.config.elementRef,
         ancestry: this.config.ancestry || false,
         xpath: this.config.xpath || false,
@@ -96,7 +96,7 @@ export class AccessibilityScanner {
       const results = await axe.run(element, axeOptions);
       
       const endTime = performance.now();
-      const scanDuration = endTime - startTime;
+      const _scanDuration = endTime - startTime;
       
       // Transform axe results to our format
       const auditResult: AccessibilityAuditResult = {
@@ -134,7 +134,7 @@ export class AccessibilityScanner {
   /**
    * Transform axe result to our accessibility issue format
    */
-  private transformAxeResult = (axeResult: any): AccessibilityIssue => {
+  private transformAxeResult = (axeResult: unknown): AccessibilityIssue => {
     return {
       id: `${axeResult.id}-${Date.now()}`,
       rule: axeResult.id,
@@ -152,7 +152,7 @@ export class AccessibilityScanner {
   /**
    * Transform axe node to our accessibility node format
    */
-  private transformAxeNode = (axeNode: any): AccessibilityNode => {
+  private transformAxeNode = (axeNode: unknown): AccessibilityNode => {
     const node: AccessibilityNode = {
       html: axeNode.html,
       target: axeNode.target,
@@ -176,7 +176,7 @@ export class AccessibilityScanner {
       if (element) {
         node.boundingRect = element.getBoundingClientRect();
       }
-    } catch (error) {
+    } catch {
       // Ignore selector errors
     }
     
@@ -186,7 +186,7 @@ export class AccessibilityScanner {
   /**
    * Determine violation type from axe result context
    */
-  private determineViolationType(axeResult: any): 'violation' | 'incomplete' | 'inapplicable' | 'passes' {
+  private determineViolationType(_axeResult: unknown): 'violation' | 'incomplete' | 'inapplicable' | 'passes' {
     // This would be determined by the context in which transformAxeResult is called
     // For now, default to violation
     return 'violation';
