@@ -194,7 +194,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
       
       this.emit('recorder:state', this.storeApi.getState());
     } catch (error) {
-      console.error('Failed to start recording:', error);
+      // // console.error('Failed to start recording:', error);
       this.emit('recorder:error', {
         message: `Failed to start recording: ${error instanceof Error ? error.message : String(error)}`,
         stack: error instanceof Error ? error.stack : undefined,
@@ -231,7 +231,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
         optimizations: processingResult.optimizations,
       });
     } catch (error) {
-      console.error('Failed to stop recording:', error);
+      // // console.error('Failed to stop recording:', error);
       this.emit('recorder:error', {
         message: `Failed to stop recording: ${error instanceof Error ? error.message : String(error)}`,
         stack: error instanceof Error ? error.stack : undefined,
@@ -356,7 +356,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
     // Also try CDP highlighting if available
     if (selector && this.cdpClient.isConnectedToCDP()) {
       this.cdpClient.highlightElement(selector).catch(error => {
-        console.warn('CDP highlighting failed:', error);
+        // // console.warn('CDP highlighting failed:', error);
       });
     }
     
@@ -450,7 +450,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
       this.emit('recorder:cdp-connected', { connected: true });
       return true;
     } catch (error) {
-      console.warn('CDP connection failed:', error);
+      // // console.warn('CDP connection failed:', error);
       this.emit('recorder:cdp-connected', { connected: false });
       return false;
     }
@@ -467,17 +467,17 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
   /**
    * Take screenshot using CDP or fallback method
    */
-  async takeScreenshot(options?: any): Promise<any> {
+  async takeScreenshot(options?: unknown): Promise<unknown> {
     try {
       if (this.cdpClient.isConnectedToCDP()) {
         return await this.cdpClient.takeScreenshot(options);
       } else {
         // Fallback screenshot implementation
-        console.warn('CDP not available, screenshot functionality limited');
+        // // console.warn('CDP not available, screenshot functionality limited');
         return null;
       }
     } catch (error) {
-      console.error('Screenshot failed:', error);
+      // // console.error('Screenshot failed:', error);
       return null;
     }
   }

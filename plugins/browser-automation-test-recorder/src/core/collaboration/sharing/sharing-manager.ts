@@ -172,7 +172,7 @@ export class SharingManager {
       try {
         await this.uploadToCloud(sharedTest);
       } catch (error) {
-        console.warn('Failed to upload to cloud:', error);
+        // console.warn('Failed to upload to cloud:', error);
         // Continue with local storage
       }
     }
@@ -245,7 +245,7 @@ export class SharingManager {
       try {
         await this.syncToCloud(updatedTest);
       } catch (error) {
-        console.warn('Failed to sync to cloud:', error);
+        // console.warn('Failed to sync to cloud:', error);
       }
     }
 
@@ -311,7 +311,7 @@ export class SharingManager {
           await this.storage.saveSharedTest(test);
         }
       } catch (error) {
-        console.warn('Failed to fetch from cloud:', error);
+        // console.warn('Failed to fetch from cloud:', error);
       }
     }
 
@@ -359,7 +359,7 @@ export class SharingManager {
       try {
         await this.deleteFromCloud(testId);
       } catch (error) {
-        console.warn('Failed to delete from cloud:', error);
+        // console.warn('Failed to delete from cloud:', error);
       }
     }
   }
@@ -642,23 +642,23 @@ export class SharingManager {
   // Placeholder methods for cloud integration
   private async uploadToCloud(test: SharedTestRecording): Promise<void> {
     // Implementation would use actual API
-    console.log('Upload to cloud:', test.id);
+    // console.log('Upload to cloud:', test.id);
   }
 
   private async syncToCloud(test: SharedTestRecording): Promise<void> {
     // Implementation would use actual API
-    console.log('Sync to cloud:', test.id);
+    // console.log('Sync to cloud:', test.id);
   }
 
   private async fetchFromCloud(testId: string): Promise<SharedTestRecording | null> {
     // Implementation would use actual API
-    console.log('Fetch from cloud:', testId);
+    // console.log('Fetch from cloud:', testId);
     return null;
   }
 
   private async deleteFromCloud(testId: string): Promise<void> {
     // Implementation would use actual API
-    console.log('Delete from cloud:', testId);
+    // console.log('Delete from cloud:', testId);
   }
 
   // Placeholder methods for format conversion

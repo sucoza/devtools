@@ -60,7 +60,7 @@ export interface BaselineStorageConfig {
     provider: 'aws' | 'gcp' | 'azure' | 'custom';
     bucket: string;
     region?: string;
-    credentials?: any;
+    credentials?: unknown;
   };
   gitConfig?: {
     repository: string;
@@ -142,7 +142,8 @@ export class BaselineManager {
     
     // Check cache first
     if (this.cache.has(id)) {
-      const cached = this.cache.get(id)!;
+      const cached = this.cache.get(id);
+      if (!cached) return null;
       if (!environment || cached.metadata.environment === environment) {
         return cached;
       }
@@ -198,8 +199,8 @@ export class BaselineManager {
       await this.removeBaseline(id);
       this.cache.delete(id);
       return true;
-    } catch (error) {
-      console.error('Failed to delete baseline:', error);
+    } catch {
+      // // console.error('Failed to delete baseline');
       return false;
     }
   }
@@ -222,7 +223,8 @@ export class BaselineManager {
    */
   async getBaselineSet(id: string): Promise<BaselineSet | null> {
     if (this.sets.has(id)) {
-      return this.sets.get(id)!;
+      const baselineSet = this.sets.get(id);
+      if (baselineSet) return baselineSet;
     }
 
     if (this.config.type === 'local') {
@@ -246,7 +248,7 @@ export class BaselineManager {
     options?: {
       threshold?: number;
       ignoreRegions?: Array<{ x: number; y: number; width: number; height: number }>;
-      pixelMatchOptions?: any;
+      pixelMatchOptions?: unknown;
     }
   ): Promise<VisualComparisonResult> {
     const baseline = await this.getBaseline(baselineId);
@@ -299,11 +301,12 @@ export class BaselineManager {
   /**
    * Load baseline from configured storage
    */
-  private async loadBaseline(id: string, environment?: string): Promise<BaselineImage | null> {
+  private async loadBaseline(id: string, _environment?: string): Promise<BaselineImage | null> {
     switch (this.config.type) {
-      case 'local':
+      case 'local': {
         const stored = localStorage.getItem(`baseline_${id}`);
         return stored ? JSON.parse(stored) : null;
+      }
       
       case 'cloud':
         return await this.loadFromCloud(id, environment);
@@ -357,39 +360,39 @@ export class BaselineManager {
   /**
    * Cloud storage implementation (placeholder)
    */
-  private async storeInCloud(baseline: BaselineImage): Promise<void> {
+  private async storeInCloud(_baseline: BaselineImage): Promise<void> {
     // Implement cloud storage logic based on provider
-    console.log('Storing baseline in cloud:', baseline.id);
+    // // console.log('Storing baseline in cloud:', baseline.id);
   }
 
-  private async loadFromCloud(id: string, environment?: string): Promise<BaselineImage | null> {
+  private async loadFromCloud(_id: string, _environment?: string): Promise<BaselineImage | null> {
     // Implement cloud loading logic
-    console.log('Loading baseline from cloud:', id);
+    // // console.log('Loading baseline from cloud:', id);
     return null;
   }
 
-  private async removeFromCloud(id: string): Promise<void> {
+  private async removeFromCloud(_id: string): Promise<void> {
     // Implement cloud removal logic
-    console.log('Removing baseline from cloud:', id);
+    // // console.log('Removing baseline from cloud:', id);
   }
 
   /**
    * Git storage implementation (placeholder)
    */
-  private async storeInGit(baseline: BaselineImage): Promise<void> {
+  private async storeInGit(_baseline: BaselineImage): Promise<void> {
     // Implement git storage logic
-    console.log('Storing baseline in git:', baseline.id);
+    // // console.log('Storing baseline in git:', baseline.id);
   }
 
-  private async loadFromGit(id: string, environment?: string): Promise<BaselineImage | null> {
+  private async loadFromGit(_id: string, _environment?: string): Promise<BaselineImage | null> {
     // Implement git loading logic
-    console.log('Loading baseline from git:', id);
+    // // console.log('Loading baseline from git:', id);
     return null;
   }
 
-  private async removeFromGit(id: string): Promise<void> {
+  private async removeFromGit(_id: string): Promise<void> {
     // Implement git removal logic
-    console.log('Removing baseline from git:', id);
+    // // console.log('Removing baseline from git:', id);
   }
 
   /**

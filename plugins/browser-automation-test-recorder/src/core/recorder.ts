@@ -8,7 +8,6 @@ import type {
   EventType,
   EventData,
   EventContext,
-  EventMetadata,
   RecordedEventTarget,
   RecordingOptions,
   MouseEventData,
@@ -18,13 +17,20 @@ import type {
   ScrollEventData,
   ViewportInfo,
   PerformanceInfo,
-  NetworkInfo,
   ConsoleInfo,
   ReliabilityMetrics,
   ElementPathNode,
 } from '../types';
 import { SelectorEngine } from './selector-engine';
 import type { BrowserAutomationEventClient } from './devtools-client';
+
+interface PerformanceWithMemory extends Performance {
+  memory?: {
+    usedJSHeapSize: number;
+    totalJSHeapSize: number;
+    jsHeapSizeLimit: number;
+  };
+}
 
 /**
  * Event recording manager with intelligent event capture and processing
@@ -121,7 +127,7 @@ export class EventRecorder {
     // Record initial page state
     await this.recordPageState();
     
-    console.log(`EventRecorder: Started recording session ${this.sessionId}`);
+    // // console.log(`EventRecorder: Started recording session ${this.sessionId}`);
   }
 
   /**
@@ -145,7 +151,7 @@ export class EventRecorder {
     const events = [...this.eventBuffer];
     this.eventBuffer = [];
     
-    console.log(`EventRecorder: Stopped recording, captured ${events.length} events`);
+    // // console.log(`EventRecorder: Stopped recording, captured ${events.length} events`);
     return events;
   }
 
@@ -155,7 +161,7 @@ export class EventRecorder {
   pauseRecording(): void {
     if (!this.isRecording) return;
     this.isPaused = true;
-    console.log('EventRecorder: Recording paused');
+    // // console.log('EventRecorder: Recording paused');
   }
 
   /**
@@ -164,7 +170,7 @@ export class EventRecorder {
   resumeRecording(): void {
     if (!this.isRecording) return;
     this.isPaused = false;
-    console.log('EventRecorder: Recording resumed');
+    // // console.log('EventRecorder: Recording resumed');
   }
 
   /**
@@ -266,13 +272,13 @@ export class EventRecorder {
     };
 
     history.pushState = function(state, title, url) {
-      const result = originalPushState.apply(this, arguments);
+      const result = originalPushState.apply(this, [state, title, url]);
       navigationListener('pushstate', url?.toString() || location.href);
       return result;
     };
 
     history.replaceState = function(state, title, url) {
-      const result = originalReplaceState.apply(this, arguments);
+      const result = originalReplaceState.apply(this, [state, title, url]);
       navigationListener('replacestate', url?.toString() || location.href);
       return result;
     };
@@ -306,7 +312,7 @@ export class EventRecorder {
   /**
    * Check if event should be debounced
    */
-  private shouldDebounceEvent(eventType: EventType, event: Event): boolean {
+  private shouldDebounceEvent(eventType: EventType, _event: Event): boolean {
     const debounceTypes: EventType[] = ['mousemove', 'scroll', 'resize', 'input'];
     return debounceTypes.includes(eventType);
   }
@@ -385,7 +391,7 @@ export class EventRecorder {
       this.lastEventTime = Date.now();
       
     } catch (error) {
-      console.error('EventRecorder: Error processing event:', error);
+      // console.error('EventRecorder: Error processing event:', error);
     }
   }
 
@@ -420,9 +426,9 @@ export class EventRecorder {
       tagName: element.tagName.toLowerCase(),
       id: element.id || undefined,
       className: element.className || undefined,
-      name: (element as any).name || undefined,
-      type: (element as any).type || undefined,
-      value: (element as any).value || undefined,
+      name: (element as HTMLInputElement).name || undefined,
+      type: (element as HTMLInputElement).type || undefined,
+      value: (element as HTMLInputElement).value || undefined,
       boundingRect: {
         x: boundingRect.x,
         y: boundingRect.y,
@@ -723,7 +729,7 @@ export class EventRecorder {
   private getPerformanceInfo(): PerformanceInfo {
     const perf = performance;
     const timing = perf.timing;
-    const memory = (perf as any).memory;
+    const memory = (perf as PerformanceWithMemory).memory;
 
     return {
       domContentLoaded: timing.domContentLoadedEventEnd - timing.navigationStart,
@@ -847,7 +853,7 @@ export class EventRecorder {
   /**
    * Capture screenshot of current page or element
    */
-  private async captureScreenshot(target: RecordedEventTarget): Promise<any> {
+  private async captureScreenshot(target: RecordedEventTarget): Promise<unknown> {
     try {
       // This would integrate with Chrome DevTools Protocol
       // For now, return placeholder
@@ -860,7 +866,7 @@ export class EventRecorder {
         dimensions: { width: 0, height: 0 },
       };
     } catch (error) {
-      console.error('EventRecorder: Failed to capture screenshot:', error);
+      // console.error('EventRecorder: Failed to capture screenshot:', error);
       return undefined;
     }
   }
@@ -884,7 +890,7 @@ export class EventRecorder {
   private initializePerformanceMonitoring(): void {
     if (!window.PerformanceObserver) return;
 
-    this.performanceObserver = new PerformanceObserver((list) => {
+    this.performanceObserver = new PerformanceObserver((_list) => {
       // Process performance entries if needed
     });
 
@@ -897,7 +903,7 @@ export class EventRecorder {
    * Initialize mutation observer for DOM changes
    */
   private initializeMutationObserver(): void {
-    this.mutationObserver = new MutationObserver((mutations) => {
+    this.mutationObserver = new MutationObserver((_mutations) => {
       // Process DOM mutations if needed for element stability tracking
     });
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { clsx } from 'clsx';
-import { Play, Square, Pause, RotateCcw, Settings, Target, Camera, Wifi } from 'lucide-react';
+import { Play, Square, Pause, RotateCcw, Camera, Wifi } from 'lucide-react';
 
 import type { TabComponentProps } from '../../types';
 import { createBrowserAutomationEventClient } from '../../core/devtools-client';
@@ -8,7 +8,7 @@ import { createBrowserAutomationEventClient } from '../../core/devtools-client';
 /**
  * Recording control tab component
  */
-export default function RecorderTab({ state, dispatch, compact }: TabComponentProps) {
+export default function RecorderTab({ state, dispatch, compact: _compact }: TabComponentProps) {
   const { recording } = state;
   const [isLoading, setIsLoading] = useState(false);
   const [cdpConnected, setCdpConnected] = useState(false);
@@ -25,7 +25,7 @@ export default function RecorderTab({ state, dispatch, compact }: TabComponentPr
         setRealTimeEventCount(prev => prev + 1);
         setLastEventTime(Date.now());
       } else if (type === 'recorder:cdp-connected') {
-        setCdpConnected((event as any).connected);
+        setCdpConnected((event as { connected: boolean }).connected);
       }
     });
 
@@ -42,8 +42,8 @@ export default function RecorderTab({ state, dispatch, compact }: TabComponentPr
     try {
       await eventClient.startRecording();
       setRealTimeEventCount(0);
-    } catch (error) {
-      console.error('Failed to start recording:', error);
+    } catch {
+      // console.error('Failed to start recording');
     } finally {
       setIsLoading(false);
     }
@@ -53,8 +53,8 @@ export default function RecorderTab({ state, dispatch, compact }: TabComponentPr
     setIsLoading(true);
     try {
       await eventClient.stopRecording();
-    } catch (error) {
-      console.error('Failed to stop recording:', error);
+    } catch {
+      // console.error('Failed to stop recording');
     } finally {
       setIsLoading(false);
     }
@@ -78,11 +78,11 @@ export default function RecorderTab({ state, dispatch, compact }: TabComponentPr
     try {
       const screenshot = await eventClient.takeScreenshot({ fullPage: false });
       if (screenshot) {
-        console.log('Screenshot captured:', screenshot);
+        // console.log('Screenshot captured:', screenshot);
         // Could emit event or show notification
       }
-    } catch (error) {
-      console.error('Screenshot failed:', error);
+    } catch {
+      // console.error('Screenshot failed');
     }
   };
 

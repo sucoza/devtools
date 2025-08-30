@@ -58,7 +58,7 @@ export type BrowserAutomationAction =
   | { type: 'collaboration/share/create'; payload: SharingSettings }
   | { type: 'collaboration/share/update'; payload: { id: string; settings: Partial<SharingSettings> } }
   | { type: 'collaboration/share/delete'; payload: string }
-  | { type: 'collaboration/share/show'; payload: any }
+  | { type: 'collaboration/share/show'; payload: unknown }
   | { type: 'collaboration/share/hide' }
   | { type: 'collaboration/comment/add'; payload: TestComment }
   | { type: 'collaboration/comment/update'; payload: { id: string; content: string } }
@@ -67,15 +67,15 @@ export type BrowserAutomationAction =
   | { type: 'collaboration/review/complete'; payload: { reviewId: string; status: ReviewStatus; comments?: string } }
   | { type: 'collaboration/team/join'; payload: string }
   | { type: 'collaboration/team/leave'; payload: string }
-  | { type: 'collaboration/team/set'; payload: any }
-  | { type: 'collaboration/user/set'; payload: any }
+  | { type: 'collaboration/team/set'; payload: unknown }
+  | { type: 'collaboration/user/set'; payload: unknown }
   | { type: 'collaboration/panel/set'; payload: string }
   | { type: 'collaboration/library/sync' }
   | { type: 'collaboration/library/search'; payload: string }
-  | { type: 'collaboration/library/filter'; payload: any }
+  | { type: 'collaboration/library/filter'; payload: unknown }
   | { type: 'collaboration/library/sort'; payload: { sortBy: string; sortOrder: 'asc' | 'desc' } }
   | { type: 'collaboration/library/view'; payload: 'grid' | 'list' }
-  | { type: 'collaboration/notification/add'; payload: any }
+  | { type: 'collaboration/notification/add'; payload: unknown }
   | { type: 'collaboration/notification/read'; payload: string }
   | { type: 'collaboration/notification/mark-read'; payload: string };
 
@@ -90,7 +90,7 @@ export interface BrowserAutomationEvents {
   'recorder:test-generated': GeneratedTest;
   'recorder:selector-highlight': { selector: string | null };
   'recorder:error': { message: string; stack?: string };
-  'recorder:processing-complete': { success: boolean; message?: string; originalCount?: number; processedCount?: number; optimizations?: any };
+  'recorder:processing-complete': { success: boolean; message?: string; originalCount?: number; processedCount?: number; optimizations?: unknown };
   'recorder:cdp-connected': { connected: boolean };
 }
 
@@ -162,7 +162,7 @@ export interface RecordingSession {
   viewport: ViewportInfo;
   userAgent: string;
   events: string[]; // Event IDs
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 /**
@@ -246,8 +246,8 @@ export interface EventExecutionResult {
  */
 export interface AssertionResult {
   type: string;
-  expected: any;
-  actual: any;
+  expected: unknown;
+  actual: unknown;
   passed: boolean;
   message: string;
 }
@@ -489,7 +489,7 @@ export interface TestAssertion {
   id: string;
   type: AssertionType;
   selector: string;
-  expected: any;
+  expected: unknown;
   description: string;
 }
 
@@ -636,9 +636,9 @@ export interface CollaborationState {
   
   // Library state
   library: {
-    tests: any[];
-    categories: any[];
-    templates: any[];
+    tests: unknown[];
+    categories: unknown[];
+    templates: unknown[];
     searchQuery: string;
     filters: {
       category: string | null;
@@ -665,7 +665,7 @@ export interface CollaborationState {
   reviews: TestReview[];
   
   // UI state
-  activeShareDialog: any | null;
+  activeShareDialog: unknown | null;
   collaborationPanel: string;
 }
 
@@ -736,8 +736,8 @@ export interface CollaborationConflict {
   id: string;
   type: 'test' | 'comment' | 'review';
   entityId: string;
-  localVersion: any;
-  remoteVersion: any;
+  localVersion: unknown;
+  remoteVersion: unknown;
   timestamp: number;
 }
 
@@ -747,20 +747,13 @@ import type {
   AssertionType,
   SelectorOptions,
   CollaborationUser,
-  UserRole,
-  UserPermissions,
-  CollaborationTeam,
-  TeamSettings,
   SharedTestRecording,
   SharingSettings,
   TestComment,
   TestReview,
   ReviewStatus,
   ReviewCriteria,
-  TestLibrary,
-  LibraryTest,
   LibraryTestStatus,
-  ActivityFeedItem,
   CollaborationNotification,
   EventType,
   RecordedEvent

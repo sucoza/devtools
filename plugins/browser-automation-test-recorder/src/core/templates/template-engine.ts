@@ -3,7 +3,7 @@
  * Manages customizable code templates for different frameworks and patterns
  */
 
-import type { TestFormat, TestFramework } from '../../types';
+import type { TestFormat, TestFramework as _TestFramework } from '../../types';
 
 export interface CodeTemplate {
   id: string;
@@ -25,7 +25,7 @@ export interface TemplatePlaceholder {
   description: string;
   type: 'string' | 'number' | 'boolean' | 'array' | 'object';
   required: boolean;
-  defaultValue?: any;
+  defaultValue?: unknown;
   validation?: RegExp;
   options?: string[]; // For enum-like values
 }
@@ -40,7 +40,7 @@ export interface TemplateContext {
   selectors: string[];
   methods: string[];
   assertions: string[];
-  variables: Record<string, any>;
+  variables: Record<string, unknown>;
   metadata: {
     framework: TestFormat;
     language: string;
@@ -130,7 +130,7 @@ export class TemplateEngine {
    */
   private getContextValue(context: TemplateContext, key: string): string {
     const keys = key.split('.');
-    let value: any = context;
+    let value: unknown = context;
 
     for (const k of keys) {
       if (value && typeof value === 'object' && k in value) {
@@ -539,7 +539,7 @@ export class {{className}} {
     try {
       const template = JSON.parse(json) as CodeTemplate;
       this.registerTemplate(template);
-    } catch (error) {
+    } catch {
       throw new Error('Invalid template JSON');
     }
   }

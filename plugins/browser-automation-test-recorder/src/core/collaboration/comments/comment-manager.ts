@@ -6,10 +6,8 @@
 import type {
   TestComment,
   CommentAttachment,
-  CommentReaction,
   CommentPosition,
   CollaborationUser,
-  CollaborationNotification
 } from '../../../types';
 
 /**
@@ -762,7 +760,7 @@ class NotificationManager {
     this.config = config;
   }
 
-  async sendMentionNotification(mention: MentionNotification): Promise<void> {
+  async sendMentionNotification(_mention: MentionNotification): Promise<void> {
     // Send notification for user mention
     if (this.config.inApp) {
       // Create in-app notification
@@ -777,14 +775,14 @@ class NotificationManager {
     }
   }
 
-  async sendCommentNotification(comment: TestComment): Promise<void> {
+  async sendCommentNotification(_comment: TestComment): Promise<void> {
     // Send notification for new comment
     if (this.config.inApp) {
       // Create in-app notification
     }
   }
 
-  async markNotificationsRead(userId: string, commentIds: string[]): Promise<void> {
+  async markNotificationsRead(_userId: string, _commentIds: string[]): Promise<void> {
     // Mark notifications as read for user
   }
 }

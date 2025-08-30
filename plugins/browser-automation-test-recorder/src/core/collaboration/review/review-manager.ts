@@ -586,7 +586,7 @@ export class ReviewManager {
   ): Promise<void> {
     // Implementation would apply the change to the test recording
     // This is a simplified version - real implementation would modify events
-    console.log('Applying change:', change);
+    // console.log('Applying change:', change);
   }
 
   private canApplyChanges(

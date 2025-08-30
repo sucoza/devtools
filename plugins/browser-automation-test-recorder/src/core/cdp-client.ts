@@ -42,8 +42,8 @@ interface CDPEvent {
 export class CDPClient {
   private websocket: WebSocket | null = null;
   private messageId = 1;
-  private pendingMessages = new Map<number, { resolve: Function; reject: Function; method: string }>();
-  private eventListeners = new Map<string, Function[]>();
+  private pendingMessages = new Map<number, { resolve: (value?: any) => void; reject: (reason?: any) => void; method: string }>();
+  private eventListeners = new Map<string, ((data: unknown) => void)[]>();
   private isConnected = false;
   private connectionOptions: ConnectionOptions = {};
   
@@ -70,9 +70,6 @@ export class CDPClient {
       ...options,
     };
 
-    const protocol = this.connectionOptions.secure ? 'wss' : 'ws';
-    const url = `${protocol}://${this.connectionOptions.host}:${this.connectionOptions.port}/devtools/browser`;
-
     try {
       // Get available targets
       const targets = await this.getTargets();
@@ -97,13 +94,13 @@ export class CDPClient {
         this.websocket.onopen = () => {
           clearTimeout(timeout);
           this.isConnected = true;
-          console.log('CDPClient: Connected to DevTools Protocol');
+          // // console.log('CDPClient: Connected to DevTools Protocol');
           resolve();
         };
 
         this.websocket.onerror = (error) => {
           clearTimeout(timeout);
-          console.error('CDPClient: WebSocket error:', error);
+          // // // console.error('CDPClient: WebSocket error:', error);
           reject(new Error('Failed to connect to CDP'));
         };
 
@@ -114,12 +111,12 @@ export class CDPClient {
         this.websocket.onclose = () => {
           this.isConnected = false;
           this.cleanup();
-          console.log('CDPClient: Connection closed');
+          // // // console.log('CDPClient: Connection closed');
         };
       });
 
     } catch (error) {
-      console.error('CDPClient: Connection failed:', error);
+      // // // console.error('CDPClient: Connection failed:', error);
       throw error;
     }
   }
@@ -252,7 +249,7 @@ export class CDPClient {
 
       return null;
     } catch (error) {
-      console.error('CDPClient: Error finding element:', error);
+      // // console.error('CDPClient: Error finding element:', error);
       return null;
     }
   }
@@ -272,7 +269,7 @@ export class CDPClient {
 
       return result.node;
     } catch (error) {
-      console.error('CDPClient: Error getting node info:', error);
+      // // console.error('CDPClient: Error getting node info:', error);
       return null;
     }
   }
@@ -287,7 +284,7 @@ export class CDPClient {
       // Find element
       const element = await this.findElement(selector);
       if (!element || !element.objectId) {
-        console.warn('CDPClient: Element not found for highlighting:', selector);
+        // // console.warn('CDPClient: Element not found for highlighting:', selector);
         return;
       }
 
@@ -318,7 +315,7 @@ export class CDPClient {
       }, 3000);
 
     } catch (error) {
-      console.error('CDPClient: Error highlighting element:', error);
+      // // console.error('CDPClient: Error highlighting element:', error);
     }
   }
 
@@ -342,7 +339,7 @@ export class CDPClient {
 
       return returnByValue ? result.result.value : result.result;
     } catch (error) {
-      console.error('CDPClient: Error executing script:', error);
+      // // console.error('CDPClient: Error executing script:', error);
       throw error;
     }
   }
@@ -409,7 +406,7 @@ export class CDPClient {
   /**
    * Add event listener for CDP events
    */
-  addEventListener(event: string, callback: Function): void {
+  addEventListener(event: string, callback: (data: unknown) => void): void {
     if (!this.eventListeners.has(event)) {
       this.eventListeners.set(event, []);
     }
@@ -419,7 +416,7 @@ export class CDPClient {
   /**
    * Remove event listener
    */
-  removeEventListener(event: string, callback: Function): void {
+  removeEventListener(event: string, callback: (data: unknown) => void): void {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
       const index = listeners.indexOf(callback);
@@ -499,7 +496,7 @@ export class CDPClient {
           try {
             callback(message.params);
           } catch (error) {
-            console.error('CDPClient: Error in event listener:', error);
+            // // console.error('CDPClient: Error in event listener:', error);
           }
         });
       }
@@ -512,17 +509,17 @@ export class CDPClient {
   private setupEventListeners(): void {
     // Handle console messages
     this.addEventListener('Runtime.consoleAPICalled', (params: any) => {
-      console.log('CDP Console:', params);
+      // // console.log('CDP Console:', params);
     });
 
     // Handle JavaScript exceptions
     this.addEventListener('Runtime.exceptionThrown', (params: any) => {
-      console.error('CDP Exception:', params.exceptionDetails);
+      // // console.error('CDP Exception:', params.exceptionDetails);
     });
 
     // Handle network events
     this.addEventListener('Network.requestWillBeSent', (params: any) => {
-      console.log('CDP Network Request:', params.request.url);
+      // // console.log('CDP Network Request:', params.request.url);
     });
   }
 

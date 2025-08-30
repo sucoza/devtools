@@ -823,8 +823,8 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
     exportData: async (options: ExportOptions): Promise<void> => {
       const state = get();
       // This would implement actual export logic
-      console.log('Exporting data with options:', options);
-      console.log('State to export:', state);
+      // console.log('Exporting data with options:', options);
+      // console.log('State to export:', state);
     },
 
     importTestCase: (testCase: TestCase) => {

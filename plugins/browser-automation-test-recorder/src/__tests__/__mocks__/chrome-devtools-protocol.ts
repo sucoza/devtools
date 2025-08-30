@@ -210,11 +210,11 @@ export const createMockCDPClient = () => ({
 export const createMockCDPSession = () => {
   const client = createMockCDPClient();
   
-  const clientWithIndex = client as any;
+  const clientWithIndex = client as Record<string, Record<string, (...args: unknown[]) => Promise<unknown>>>;
   
   return {
     ...client,
-    send: vi.fn().mockImplementation((method: string, params?: any) => {
+    send: vi.fn().mockImplementation((method: string, params?: unknown) => {
       // Route CDP commands to appropriate domain methods
       const [domain, command] = method.split('.');
       if (clientWithIndex[domain] && clientWithIndex[domain][command]) {

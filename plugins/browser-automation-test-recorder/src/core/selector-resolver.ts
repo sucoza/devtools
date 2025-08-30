@@ -5,12 +5,9 @@
 
 import type {
   RecordedEventTarget,
-  SelectorStrategy,
   SelectorOptions,
   ElementPathNode,
   CDPRemoteObject,
-  CDPDOMNode,
-  ReliabilityMetrics,
 } from '../types';
 
 import { CDPClient } from './cdp-client';
@@ -119,7 +116,7 @@ export class SelectorResolver {
       }
     }
 
-    const lastResult: SelectorResolutionResult | null = null;
+    // Track resolution attempts
     let attempts = 0;
 
     // Try original selector first
@@ -253,7 +250,7 @@ export class SelectorResolver {
           return result;
         }
       } catch (error) {
-        console.warn(`Healing strategy ${strategy.name} failed:`, error);
+        // console.warn(`Healing strategy ${strategy.name} failed:`, error);
       }
     }
 
@@ -298,7 +295,7 @@ export class SelectorResolver {
    */
   private async healByTextContent(
     criteria: ElementMatchingCriteria,
-    options: SelectorOptions
+    _options: SelectorOptions
   ): Promise<SelectorResolutionResult | null> {
     if (!criteria.textContent) return null;
 
@@ -352,7 +349,7 @@ export class SelectorResolver {
    */
   private async healByAttributes(
     criteria: ElementMatchingCriteria,
-    options: SelectorOptions
+    _options: SelectorOptions
   ): Promise<SelectorResolutionResult | null> {
     const importantAttrs = ['id', 'data-testid', 'name', 'class', 'aria-label'];
     
@@ -419,7 +416,7 @@ export class SelectorResolver {
    */
   private async healByPosition(
     criteria: ElementMatchingCriteria,
-    options: SelectorOptions
+    _options: SelectorOptions
   ): Promise<SelectorResolutionResult | null> {
     const { position, size, tagName } = criteria;
     
@@ -485,7 +482,7 @@ export class SelectorResolver {
         }
       }
     } catch (error) {
-      console.warn('Position healing failed:', error);
+      // console.warn('Position healing failed:', error);
     }
 
     return null;
@@ -496,7 +493,7 @@ export class SelectorResolver {
    */
   private async healByHierarchy(
     criteria: ElementMatchingCriteria,
-    options: SelectorOptions
+    _options: SelectorOptions
   ): Promise<SelectorResolutionResult | null> {
     const path = criteria.path;
     if (path.length === 0) return null;
@@ -563,7 +560,7 @@ export class SelectorResolver {
   private async healByFuzzyMatch(
     originalSelector: string,
     criteria: ElementMatchingCriteria,
-    options: SelectorOptions
+    _options: SelectorOptions
   ): Promise<SelectorResolutionResult | null> {
     // Extract selector components
     const components = this.parseSelector(originalSelector);
@@ -601,7 +598,7 @@ export class SelectorResolver {
    */
   private async healByDomAnalysis(
     criteria: ElementMatchingCriteria,
-    options: SelectorOptions
+    _options: SelectorOptions
   ): Promise<SelectorResolutionResult | null> {
     // Analyze current DOM structure to find similar elements
     const script = `
@@ -662,7 +659,7 @@ export class SelectorResolver {
         }
       }
     } catch (error) {
-      console.warn('DOM analysis healing failed:', error);
+      // console.warn('DOM analysis healing failed:', error);
     }
 
     return null;
@@ -771,7 +768,7 @@ export class SelectorResolver {
       `, false);
       
       return result && result.type === 'object' && result.subtype === 'node' ? result : null;
-    } catch (error) {
+    } catch {
       return null;
     }
   }
@@ -801,7 +798,7 @@ export class SelectorResolver {
 
       // Basic verification
       return result.tagMatch && result.textMatch;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -874,7 +871,7 @@ export class SelectorResolver {
       `);
 
       return result;
-    } catch (error) {
+    } catch {
       return null;
     }
   }

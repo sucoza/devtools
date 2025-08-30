@@ -1042,7 +1042,7 @@ class ActivityTracker {
     if (!this.config.enabled) return;
 
     // Implementation would store activity in database
-    console.log('Activity recorded:', activity);
+    // console.log('Activity recorded:', activity);
   }
 }
 

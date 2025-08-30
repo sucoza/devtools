@@ -187,7 +187,7 @@ export interface FormEventData {
   value?: string;
   selectedOptions?: string[];
   files?: FileInfo[];
-  formData?: Record<string, any>;
+  formData?: Record<string, unknown>;
 }
 
 /**
@@ -241,8 +241,8 @@ export interface WaitEventData {
 export interface AssertionEventData {
   type: 'assertion';
   assertionType: string;
-  expected: any;
-  actual?: any;
+  expected: unknown;
+  actual?: unknown;
   message: string;
   passed?: boolean;
 }
@@ -253,7 +253,7 @@ export interface AssertionEventData {
 export interface CustomEventData {
   type: 'custom';
   eventType: string;
-  payload: Record<string, any>;
+  payload: Record<string, unknown>;
 }
 
 /**
@@ -361,7 +361,7 @@ export interface ConsoleMessage {
   id: string;
   level: 'log' | 'info' | 'warn' | 'error' | 'debug';
   text: string;
-  args: any[];
+  args: unknown[];
   timestamp: number;
   source?: string;
   line?: number;
@@ -389,7 +389,7 @@ export interface EventMetadata {
   group?: EventGroup;
   
   // Custom properties
-  custom: Record<string, any>;
+  custom: Record<string, unknown>;
 }
 
 /**
@@ -563,7 +563,7 @@ export interface CDPRemoteObject {
   type: 'object' | 'function' | 'undefined' | 'string' | 'number' | 'boolean' | 'symbol' | 'bigint';
   subtype?: string;
   className?: string;
-  value?: any;
+  value?: unknown;
   unserializableValue?: string;
   description?: string;
   objectId?: string;
@@ -626,8 +626,8 @@ export interface EventExecutionResult {
  */
 export interface AssertionResult {
   type: string;
-  expected: any;
-  actual: any;
+  expected: unknown;
+  actual: unknown;
   passed: boolean;
   message: string;
 }
@@ -671,7 +671,7 @@ export interface AutomationEngine {
   // Utilities
   waitForElement(selector: string, timeout: number): Promise<boolean>;
   waitForNavigation(timeout: number): Promise<void>;
-  executeScript(script: string): Promise<any>;
+  executeScript(script: string): Promise<unknown>;
 }
 
 /**
@@ -801,7 +801,7 @@ export interface TeamIntegrations {
   slack?: SlackIntegration;
   jira?: JiraIntegration;
   github?: GitHubIntegration;
-  custom: Record<string, any>;
+  custom: Record<string, unknown>;
 }
 
 /**
@@ -1187,7 +1187,7 @@ export interface TemplateParameter {
   type: 'string' | 'number' | 'boolean' | 'selector';
   description: string;
   required: boolean;
-  defaultValue?: any;
+  defaultValue?: unknown;
   validation?: ParameterValidation;
 }
 
@@ -1253,7 +1253,7 @@ export interface CIIntegration {
   type: 'jenkins' | 'github_actions' | 'gitlab_ci' | 'azure_devops';
   enabled: boolean;
   webhook?: string;
-  config: Record<string, any>;
+  config: Record<string, unknown>;
 }
 
 /**
@@ -1262,7 +1262,7 @@ export interface CIIntegration {
 export interface TestRunnerIntegration {
   type: 'playwright' | 'cypress' | 'selenium' | 'puppeteer';
   enabled: boolean;
-  config: Record<string, any>;
+  config: Record<string, unknown>;
 }
 
 /**
@@ -1274,7 +1274,7 @@ export interface RepositoryIntegration {
   repository: string;
   branch: string;
   path: string;
-  config: Record<string, any>;
+  config: Record<string, unknown>;
 }
 
 /**
@@ -1303,7 +1303,7 @@ export interface ActivityFeedItem {
   type: ActivityType;
   actor: CollaborationUser;
   target: ActivityTarget;
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
   timestamp: number;
   read: boolean;
 }
@@ -1341,7 +1341,7 @@ export interface CollaborationNotification {
   type: NotificationEvent;
   title: string;
   message: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
   read: boolean;
   actionUrl?: string;
   createdAt: number;
@@ -1389,7 +1389,7 @@ export interface TestAssertion {
   id: string;
   type: AssertionType;
   selector: string;
-  expected: any;
+  expected: unknown;
   description: string;
 }
 
@@ -1459,7 +1459,7 @@ export interface RecordingSession {
   viewport: ViewportInfo;
   userAgent: string;
   events: string[]; // Event IDs
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 }
 
 /**

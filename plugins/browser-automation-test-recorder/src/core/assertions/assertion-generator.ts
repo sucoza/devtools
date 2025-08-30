@@ -7,8 +7,6 @@ import type {
   RecordedEvent, 
   NavigationEventData, 
   FormEventData, 
-  MouseEventData,
-  AssertionEventData,
   TestFormat 
 } from '../../types';
 
@@ -253,7 +251,7 @@ export class AssertionGenerator {
    * Generate click-specific assertions
    */
   private generateClickAssertions(context: AssertionContext): GeneratedAssertion[] {
-    const { currentEvent, nextEvents, pageState } = context;
+    const { currentEvent, nextEvents } = context;
     const assertions: GeneratedAssertion[] = [];
 
     // Element visibility assertion
@@ -467,7 +465,7 @@ export class AssertionGenerator {
   /**
    * Generate page-level assertions
    */
-  private generatePageLevelAssertions(pageState: PageState, events: RecordedEvent[]): GeneratedAssertion[] {
+  private generatePageLevelAssertions(pageState: PageState, _events: RecordedEvent[]): GeneratedAssertion[] {
     const assertions: GeneratedAssertion[] = [];
 
     // Console error assertion
@@ -550,7 +548,7 @@ export class AssertionGenerator {
   /**
    * Infer user intent from event and context
    */
-  private inferUserIntent(event: RecordedEvent, allEvents: RecordedEvent[]): string {
+  private inferUserIntent(event: RecordedEvent, _allEvents: RecordedEvent[]): string {
     switch (event.type) {
       case 'navigation':
         return 'navigate';
@@ -558,7 +556,7 @@ export class AssertionGenerator {
         return 'fill_form';
       case 'submit':
         return 'submit_form';
-      case 'click':
+      case 'click': {
         const target = event.target.tagName.toLowerCase();
         if (target === 'button' || (target === 'input' && event.target.type === 'button')) {
           return 'click_button';
@@ -566,6 +564,7 @@ export class AssertionGenerator {
           return 'click_link';
         }
         return 'interact';
+      }
       default:
         return 'interact';
     }

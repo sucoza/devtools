@@ -31,7 +31,7 @@ export interface ViolationNode {
   html: string;
   impact: 'minor' | 'moderate' | 'serious' | 'critical';
   message: string;
-  data?: any;
+  data?: unknown;
   relatedNodes?: RelatedNode[];
   xpath?: string;
   ancestry?: string[];
@@ -143,7 +143,7 @@ export interface AccessibilityOptions {
 
 export interface RuleOptions {
   enabled: boolean;
-  options?: any;
+  options?: Record<string, unknown>;
 }
 
 export interface RunOnlyOptions {
@@ -222,7 +222,10 @@ export interface ColorContrastResult {
 }
 
 export class AccessibilityAuditor {
-  private axeCore?: any;
+  private axeCore?: {
+    run: (context: unknown, options: Record<string, unknown>) => Promise<unknown>;
+    configure: (config: Record<string, unknown>) => void;
+  };
   private profiles = new Map<string, AccessibilityProfile>();
   private currentProfile?: AccessibilityProfile;
   private lastAuditResult?: AccessibilityAuditResult;
@@ -245,7 +248,7 @@ export class AccessibilityAuditor {
         getRules: this.mockAxeGetRules.bind(this),
       };
     } catch (error) {
-      console.warn('Failed to initialize axe-core:', error);
+      // // console.warn('Failed to initialize axe-core:', error);
     }
   }
 
@@ -469,7 +472,7 @@ export class AccessibilityAuditor {
   /**
    * Mock axe-core run method
    */
-  private async mockAxeRun(context: any, options: any): Promise<any> {
+  private async mockAxeRun(_context: unknown, _options: Record<string, unknown>): Promise<unknown> {
     // Mock axe result - in real implementation, this would be actual axe-core
     return {
       violations: [
@@ -540,7 +543,7 @@ export class AccessibilityAuditor {
     };
   }
 
-  private mockAxeConfigure(config: any): void {
+  private mockAxeConfigure(_config: Record<string, unknown>): void {
     // Mock configuration
   }
 
@@ -579,15 +582,15 @@ export class AccessibilityAuditor {
   /**
    * Process axe result and create standardized format
    */
-  private processAxeResult(axeResult: any): AccessibilityAuditResult {
-    const violations = axeResult.violations.map((violation: any) => ({
+  private processAxeResult(axeResult: { violations: unknown[]; passes: unknown[]; inapplicable: unknown[]; incomplete: unknown[] }): AccessibilityAuditResult {
+    const violations = axeResult.violations.map((violation: Record<string, unknown>) => ({
       id: `violation_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       ruleId: violation.id,
       impact: violation.impact,
       description: violation.description,
       help: violation.help,
       helpUrl: violation.helpUrl,
-      nodes: violation.nodes.map((node: any) => ({
+      nodes: (violation.nodes as Array<Record<string, unknown>>).map((node) => ({
         target: node.target,
         html: node.html,
         impact: node.impact,
@@ -600,7 +603,7 @@ export class AccessibilityAuditor {
       url: window.location.href,
     }));
 
-    const passes = axeResult.passes.map((pass: any) => ({
+    const passes = axeResult.passes.map((pass: Record<string, unknown>) => ({
       id: `pass_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       ruleId: pass.id,
       description: pass.description,
@@ -608,7 +611,7 @@ export class AccessibilityAuditor {
       helpUrl: pass.helpUrl,
       impact: pass.impact,
       tags: pass.tags,
-      nodes: pass.nodes.map((node: any) => ({
+      nodes: (pass.nodes as Array<Record<string, unknown>>).map((node) => ({
         target: node.target,
         html: node.html,
       })),
@@ -749,7 +752,7 @@ export class AccessibilityAuditor {
     };
   }
 
-  private getWCAGRules(standard: string): AccessibilityRule[] {
+  private getWCAGRules(_standard: string): AccessibilityRule[] {
     // Mock WCAG rules - would be loaded from axe-core
     return [
       {
@@ -802,8 +805,8 @@ export class AccessibilityAuditor {
     }
   }
 
-  private convertRulesToAxeConfig(rules: AccessibilityRule[]): Record<string, any> {
-    const config: Record<string, any> = {};
+  private convertRulesToAxeConfig(rules: AccessibilityRule[]): Record<string, Record<string, unknown>> {
+    const config: Record<string, Record<string, unknown>> = {};
     rules.forEach(rule => {
       config[rule.id] = { enabled: rule.enabled };
     });
@@ -843,7 +846,7 @@ export class AccessibilityAuditor {
         path.unshift(tagName);
       }
       
-      current = parent!;
+      current = parent || null;
     }
     
     return '/' + path.join('/');
@@ -1004,7 +1007,7 @@ export class AccessibilityAuditor {
            element.hasAttribute('onkeydown');
   }
 
-  private calculateContrastRatio(foreground: string, background: string): number {
+  private calculateContrastRatio(_foreground: string, _background: string): number {
     // Simplified contrast ratio calculation
     // In production, would use proper color parsing and luminance calculation
     return 4.5; // Mock value

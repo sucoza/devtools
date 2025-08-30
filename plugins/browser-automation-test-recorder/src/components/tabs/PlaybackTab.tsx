@@ -5,8 +5,7 @@ import {
   Pause, 
   Square, 
   SkipForward, 
-  StepForward,
-  Settings, 
+  StepForward, 
   AlertTriangle,
   CheckCircle,
   XCircle,
@@ -32,12 +31,12 @@ export default function PlaybackTab({ state, dispatch, compact }: TabComponentPr
   
   // Local state for enhanced UI
   const [playbackMetrics, setPlaybackMetrics] = useState<PlaybackMetrics | null>(null);
-  const [currentError, setCurrentError] = useState<PlaybackError | null>(null);
+  const [_currentError, _setCurrentError] = useState<PlaybackError | null>(null);
   const [lastResult, setLastResult] = useState<EventExecutionResult | null>(null);
   const [isStepMode, setIsStepMode] = useState(false);
   const [showBreakpoints, setShowBreakpoints] = useState(false);
   const [breakpoints, setBreakpoints] = useState<Set<string>>(new Set());
-  const [liveScreenshot, setLiveScreenshot] = useState<string | null>(null);
+  const [liveScreenshot, _setLiveScreenshot] = useState<string | null>(null);
   
   // Real-time updates simulation (would integrate with actual playback engine)
   useEffect(() => {
@@ -360,7 +359,7 @@ export default function PlaybackTab({ state, dispatch, compact }: TabComponentPr
         <div className="errors-section">
           <h3>Recent Errors</h3>
           <div className="error-list">
-            {playback.errors.slice(-3).map((error, index) => (
+            {playback.errors.slice(-3).map((error, _index) => (
               <div key={error.id} className="error-item">
                 <div className="error-icon">
                   <XCircle size={16} />

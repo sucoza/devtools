@@ -3,6 +3,28 @@
  * Tracks Web Vitals, performance regressions, and system metrics during test execution
  */
 
+interface LayoutShiftEntry extends PerformanceEntry {
+  value: number;
+  hadRecentInput: boolean;
+  sources: LayoutShiftSource[];
+}
+
+interface PerformanceWithMemory extends Performance {
+  memory?: {
+    usedJSHeapSize: number;
+    totalJSHeapSize: number;
+    jsHeapSizeLimit: number;
+  };
+}
+
+interface NavigatorWithConnection extends Navigator {
+  connection?: {
+    effectiveType?: string;
+    downlink?: number;
+    rtt?: number;
+  };
+}
+
 export interface PerformanceMetrics {
   // Core Web Vitals
   webVitals: WebVitals;
@@ -278,7 +300,7 @@ export interface PerformanceDataPoint {
   value: number;
   version?: string;
   environment?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface PerformanceProfile {
@@ -556,7 +578,7 @@ export class PerformanceMonitor {
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           if (entry.entryType === 'layout-shift') {
-            const shiftEntry = entry as any; // LayoutShift interface
+            const shiftEntry = entry as LayoutShiftEntry; // LayoutShift interface
             this.recordLayoutShift({
               startTime: shiftEntry.startTime,
               value: shiftEntry.value,
@@ -753,7 +775,7 @@ export class PerformanceMonitor {
 
   // Additional helper methods would be implemented here...
   private getMemoryInfo(): MemoryInfo {
-    const memory = (performance as any).memory;
+    const memory = (performance as PerformanceWithMemory).memory;
     return {
       usedJSHeapSize: memory?.usedJSHeapSize || 0,
       totalJSHeapSize: memory?.totalJSHeapSize || 0,
@@ -804,7 +826,7 @@ export class PerformanceMonitor {
   }
 
   private getNetworkMetrics(): NetworkMetrics {
-    const connection = (navigator as any).connection;
+    const connection = (navigator as NavigatorWithConnection).connection;
     return {
       requestCount: performance.getEntriesByType('resource').length,
       failedRequests: 0,
@@ -889,11 +911,11 @@ export class PerformanceMonitor {
 
   private getMetricValue(metrics: PerformanceMetrics, path: string): number | undefined {
     const parts = path.split('.');
-    let current: any = metrics;
+    let current: unknown = metrics;
     
     for (const part of parts) {
       if (current && typeof current === 'object') {
-        current = current[part];
+        current = (current as Record<string, unknown>)[part];
       } else {
         return undefined;
       }

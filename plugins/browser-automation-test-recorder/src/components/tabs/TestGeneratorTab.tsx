@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { clsx } from 'clsx';
 import { 
-  Code, Download, Upload, FileText, Settings, Play, Copy, Eye, 
-  Palette, Zap, RefreshCw, ChevronDown, ChevronRight, Terminal,
-  Layers, Package, Globe, Smartphone
+  Code, Download, FileText, Settings, Copy, Eye, 
+  Zap, RefreshCw, ChevronDown, ChevronRight, Terminal,
+  Layers, Package, Globe
 } from 'lucide-react';
 
-import type { TabComponentProps, TestFormat, TestFramework } from '../../types';
+import type { TabComponentProps, TestFormat } from '../../types';
 import { CodeGenerator } from '../../core/code-generator';
-import { TemplateEngine } from '../../core/templates/template-engine';
+import { TemplateEngine as _TemplateEngine } from '../../core/templates/template-engine';
 
 interface GeneratedTestFile {
   filename: string;
@@ -29,8 +28,8 @@ interface CodePreviewState {
 /**
  * Enhanced Test generation and export tab component
  */
-export default function TestGeneratorTab({ state, dispatch, compact }: TabComponentProps) {
-  const { settings } = state;
+export default function TestGeneratorTab({ state, dispatch, compact: _compact }: TabComponentProps) {
+  const { settings: _settings } = state;
   const hasEvents = state.events.length > 0;
   
   // Enhanced state management
@@ -71,7 +70,7 @@ export default function TestGeneratorTab({ state, dispatch, compact }: TabCompon
       const codeGenerator = new CodeGenerator({
         format: selectedFramework,
         framework: 'jest',
-        language: selectedLanguage as any,
+        language: selectedLanguage as 'javascript' | 'typescript' | 'python' | 'csharp',
         includeAssertions: codeGenOptions.includeAssertions,
         includeComments: codeGenOptions.includeComments,
         includeSetup: codeGenOptions.includeSetup,
@@ -375,7 +374,7 @@ export default function TestGeneratorTab({ state, dispatch, compact }: TabCompon
               <div className="empty-preview">
                 <Code size={48} opacity={0.3} />
                 <p>No code generated yet.</p>
-                <p>Configure your options and click "Generate Test" to see the code.</p>
+                <p>Configure your options and click &quot;Generate Test&quot; to see the code.</p>
               </div>
             ) : (
               <>

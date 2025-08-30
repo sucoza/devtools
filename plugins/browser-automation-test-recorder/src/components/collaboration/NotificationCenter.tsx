@@ -54,7 +54,7 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({
                 No notifications
               </h4>
               <p className="text-gray-600">
-                You're all caught up! New notifications will appear here.
+                You&apos;re all caught up! New notifications will appear here.
               </p>
             </div>
           ) : (

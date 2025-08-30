@@ -2,7 +2,7 @@
  * Utility functions for browser automation test recorder
  */
 
-import type { RecordedEvent, EventType, SelectorOptions } from '../types';
+import type { RecordedEvent } from '../types';
 
 /**
  * Generate unique ID with timestamp and random component
@@ -14,7 +14,7 @@ export function generateId(prefix: string = 'id'): string {
 /**
  * Debounce function calls
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number,
   immediate: boolean = false
@@ -39,13 +39,13 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Throttle function calls
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean = false;
   
-  return function executedFunction(this: any, ...args: Parameters<T>) {
+  return function executedFunction(this: unknown, ...args: Parameters<T>) {
     if (!inThrottle) {
       func.apply(this, args);
       inThrottle = true;
@@ -58,7 +58,7 @@ export function throttle<T extends (...args: any[]) => any>(
  * Escape CSS selector special characters
  */
 export function escapeCSSSelector(str: string): string {
-  return str.replace(/[!"#$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, '\\$&');
+  return str.replace(/[!"#$%&'()*+,./:;<=>?@[\\\]^`{|}~]/g, '\\$&');
 }
 
 /**
@@ -323,21 +323,21 @@ export function deepClone<T>(obj: T): T {
   }
   
   if (obj instanceof Date) {
-    return new Date(obj.getTime()) as any;
+    return new Date(obj.getTime()) as T;
   }
   
   if (Array.isArray(obj)) {
-    return obj.map(item => deepClone(item)) as any;
+    return obj.map(item => deepClone(item)) as T;
   }
   
-  const cloned: any = {};
+  const cloned: Record<string, unknown> = {};
   for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
       cloned[key] = deepClone(obj[key]);
     }
   }
   
-  return cloned;
+  return cloned as T;
 }
 
 /**
@@ -414,21 +414,25 @@ export function eventToTestStep(event: RecordedEvent): string {
     case 'click':
       return `Click on ${getElementDescription(event.target)}`;
     
-    case 'input':
-      const inputData = event.data as any;
-      return `Type "${inputData.inputValue}" into ${getElementDescription(event.target)}`;
+    case 'input': {
+      const inputData = event.data as { inputValue?: string };
+      return `Type "${inputData.inputValue || ''}" into ${getElementDescription(event.target)}`;
+    }
     
-    case 'change':
-      const changeData = event.data as any;
-      return `Change ${getElementDescription(event.target)} to "${changeData.value}"`;
+    case 'change': {
+      const changeData = event.data as { value?: string };
+      return `Change ${getElementDescription(event.target)} to "${changeData.value || ''}"`;      
+    }
     
-    case 'navigation':
-      const navData = event.data as any;
-      return `Navigate to ${navData.url}`;
+    case 'navigation': {
+      const navData = event.data as { url?: string };
+      return `Navigate to ${navData.url || ''}`;      
+    }
     
-    case 'wait':
-      const waitData = event.data as any;
-      return `Wait ${waitData.duration}ms for ${waitData.condition}`;
+    case 'wait': {
+      const waitData = event.data as { duration?: number; condition?: string };
+      return `Wait ${waitData.duration || 0}ms for ${waitData.condition || 'condition'}`;      
+    }
     
     default:
       return `${event.type} on ${getElementDescription(event.target)}`;
@@ -438,7 +442,7 @@ export function eventToTestStep(event: RecordedEvent): string {
 /**
  * Get human-readable element description
  */
-function getElementDescription(target: any): string {
+function getElementDescription(target: { textContent?: string; id?: string; name?: string; tagName?: string }): string {
   if (target.textContent) {
     return `"${target.textContent.substring(0, 30)}${target.textContent.length > 30 ? '...' : ''}"`;
   }

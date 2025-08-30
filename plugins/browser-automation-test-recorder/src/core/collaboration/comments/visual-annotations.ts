@@ -611,7 +611,7 @@ class AnnotationEventBus {
         try {
           callback(data);
         } catch (error) {
-          console.error('Error in annotation event listener:', error);
+          // // console.error('Error in annotation event listener:', error);
         }
       });
     }

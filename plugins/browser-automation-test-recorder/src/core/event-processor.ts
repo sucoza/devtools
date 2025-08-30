@@ -98,7 +98,7 @@ export class EventProcessor {
   addEvent(event: RecordedEvent): void {
     // Check buffer size limit
     if (this.rawEventBuffer.length >= this.processingOptions.maxEventBufferSize) {
-      console.warn('EventProcessor: Buffer size limit reached, discarding oldest events');
+      // console.warn('EventProcessor: Buffer size limit reached, discarding oldest events');
       this.rawEventBuffer.shift();
     }
 
@@ -115,7 +115,7 @@ export class EventProcessor {
    */
   async processAllEvents(): Promise<ProcessingResult> {
     if (this.processingInProgress) {
-      console.warn('EventProcessor: Processing already in progress');
+      // console.warn('EventProcessor: Processing already in progress');
       return this.getEmptyResult();
     }
 

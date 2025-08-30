@@ -194,7 +194,8 @@ export class DiffEngine {
 
     const currentData = await this.toImageData(currentImage);
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d')!;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('Could not get canvas context');
     
     canvas.width = currentData.width;
     canvas.height = currentData.height;
@@ -248,7 +249,7 @@ export class DiffEngine {
     svg.setAttribute('height', '100%');
     svg.setAttribute('style', 'position: absolute; top: 0; left: 0; pointer-events: none;');
 
-    regions.forEach((region, index) => {
+    regions.forEach((region, _index) => {
       const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       const color = this.getSeverityColor(region.severity);
       
@@ -389,12 +390,12 @@ export class DiffEngine {
    * Analyze differences and provide insights
    */
   private async analyzeDifferences(
-    baseline: ImageData,
-    current: ImageData,
+    _baseline: ImageData,
+    _current: ImageData,
     diffResult: { pixelDiff: number; diffBuffer: Uint8ClampedArray | null; regions: DetailedDiffRegion[] },
-    options: DiffOptions
+    _options: DiffOptions
   ): Promise<DiffAnalysis> {
-    const totalPixels = baseline.width * baseline.height;
+    const totalPixels = _baseline.width * _baseline.height;
     const diffPercentage = (diffResult.pixelDiff / totalPixels) * 100;
 
     // Determine overall severity
@@ -470,7 +471,8 @@ export class DiffEngine {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d')!;
+        const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('Could not get canvas context');
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
@@ -486,7 +488,8 @@ export class DiffEngine {
    */
   private bufferToBase64(buffer: Uint8ClampedArray, width: number, height: number): string {
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d')!;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('Could not get canvas context');
     canvas.width = width;
     canvas.height = height;
     

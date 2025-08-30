@@ -6,14 +6,14 @@ import type { TabComponentProps } from '../../types';
 /**
  * Settings and configuration tab component
  */
-export default function SettingsTab({ state, dispatch, compact }: TabComponentProps) {
+export default function SettingsTab({ state, dispatch, compact: _compact }: TabComponentProps) {
   const { settings } = state;
 
   const handleResetSettings = () => {
     dispatch({ type: 'settings/reset' });
   };
 
-  const handleSettingChange = (sectionIndex: number, fieldKey: string, value: any) => {
+  const handleSettingChange = (sectionIndex: number, fieldKey: string, value: unknown) => {
     const sectionKeys = ['recordingOptions', 'selectorOptions', 'playbackOptions', 'uiOptions'];
     const sectionKey = sectionKeys[sectionIndex];
     
@@ -212,7 +212,7 @@ export default function SettingsTab({ state, dispatch, compact }: TabComponentPr
           <button
             onClick={() => {
               // This would trigger a file picker
-              console.log('Import settings');
+              // console.log('Import settings');
             }}
             className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors"
           >

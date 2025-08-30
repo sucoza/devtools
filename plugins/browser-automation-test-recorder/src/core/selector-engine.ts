@@ -3,7 +3,7 @@
  * Generates reliable, maintainable selectors for browser automation
  */
 
-import type { SelectorOptions, SelectorStrategy, SelectorMode } from '../types';
+import type { SelectorOptions } from '../types';
 
 /**
  * Selector generation strategies with reliability scoring
@@ -91,7 +91,7 @@ export class SelectorEngine {
 
     // If no viable candidates with strict requirements, fallback
     if (viableCandidates.length === 0) {
-      console.warn('SelectorEngine: No viable candidates with strict requirements, using fallback');
+      // console.warn('SelectorEngine: No viable candidates with strict requirements, using fallback');
       viableCandidates = candidates.slice(0, 3); // Take top 3 candidates
     }
 
@@ -256,7 +256,7 @@ export class SelectorEngine {
       score += stability * 0.2;
 
     } catch (error) {
-      console.error('SelectorEngine: Error evaluating stability:', error);
+      // console.error('SelectorEngine: Error evaluating stability:', error);
       score = 0.1; // Minimum score for failed evaluation
     }
 
@@ -288,7 +288,7 @@ export class SelectorEngine {
       }
 
       if (!element) {
-        console.warn('SelectorEngine: Element not found for highlighting:', selector);
+        // console.warn('SelectorEngine: Element not found for highlighting:', selector);
         return;
       }
 
@@ -312,7 +312,7 @@ export class SelectorEngine {
       }, 5000);
 
     } catch (error) {
-      console.error('SelectorEngine: Error highlighting element:', error);
+      // console.error('SelectorEngine: Error highlighting element:', error);
     }
   }
 

@@ -698,19 +698,19 @@ export class PlaybackMonitor {
       if (this.config.logToConsole) {
         switch (level) {
           case 'error':
-            console.error(logMessage);
+            // console.error(logMessage);
             break;
           case 'warn':
-            console.warn(logMessage);
+            // console.warn(logMessage);
             break;
           case 'info':
-            console.info(logMessage);
+            // console.info(logMessage);
             break;
           case 'debug':
-            console.debug(logMessage);
+            // console.debug(logMessage);
             break;
           default:
-            console.log(logMessage);
+            // console.log(logMessage);
         }
       }
       

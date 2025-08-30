@@ -412,7 +412,8 @@ export class APIInterceptor {
     };
 
     XMLHttpRequest.prototype.send = function(body?: Document | XMLHttpRequestBodyInit | null): void {
-      const self = this;
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const requestInstance = this;
       const interceptorData = this._apiInterceptorData;
       
       if (!interceptorData) {
@@ -450,11 +451,11 @@ export class APIInterceptor {
         const apiResponse: APIResponse = {
           id: `response_${interceptorData.requestId}`,
           requestId: interceptorData.requestId,
-          status: self.status,
-          statusText: self.statusText,
-          headers: self.getAllResponseHeaders ? parseHeaders(self.getAllResponseHeaders()) : {},
-          body: self.responseText,
-          size: self.responseText ? self.responseText.length : 0,
+          status: requestInstance.status,
+          statusText: requestInstance.statusText,
+          headers: requestInstance.getAllResponseHeaders ? parseHeaders(requestInstance.getAllResponseHeaders()) : {},
+          body: requestInstance.responseText,
+          size: requestInstance.responseText ? requestInstance.responseText.length : 0,
           duration,
           timestamp: Date.now(),
           metadata: {
@@ -814,12 +815,14 @@ export class APIInterceptor {
         return { passed: Number(actualValue) > Number(condition.value), actualValue };
       case 'less_than':
         return { passed: Number(actualValue) < Number(condition.value), actualValue };
-      case 'matches':
+      case 'matches': {
         const regex = new RegExp(condition.pattern!);
         return { passed: regex.test(String(actualValue)), actualValue };
-      case 'not_matches':
+      }
+      case 'not_matches': {
         const notRegex = new RegExp(condition.pattern!);
         return { passed: !notRegex.test(String(actualValue)), actualValue };
+      }
       default:
         return { passed: false, actualValue };
     }

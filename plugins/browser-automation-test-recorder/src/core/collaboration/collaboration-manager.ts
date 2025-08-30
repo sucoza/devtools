@@ -126,9 +126,9 @@ export class CollaborationManager {
       this.initialized = true;
       this.connected = true;
 
-      console.log('Collaboration system initialized successfully');
+      // // console.log('Collaboration system initialized successfully');
     } catch (error) {
-      console.error('Failed to initialize collaboration system:', error);
+      // // console.error('Failed to initialize collaboration system:', error);
       throw error;
     }
   }
@@ -155,7 +155,7 @@ export class CollaborationManager {
     this.currentUser = null;
     this.currentTeam = null;
 
-    console.log('Collaboration system shutdown');
+    // // console.log('Collaboration system shutdown');
   }
 
   /**
@@ -465,17 +465,17 @@ export class CollaborationManager {
   /**
    * Activity and notifications
    */
-  async getActivityFeed(limit = 50): Promise<ActivityFeedItem[]> {
+  async getActivityFeed(_limit = 50): Promise<ActivityFeedItem[]> {
     // Implementation would fetch recent activity
     return [];
   }
 
-  async getNotifications(unreadOnly = false): Promise<CollaborationNotification[]> {
+  async getNotifications(_unreadOnly = false): Promise<CollaborationNotification[]> {
     // Implementation would fetch notifications
     return [];
   }
 
-  async markNotificationRead(notificationId: string): Promise<void> {
+  async markNotificationRead(_notificationId: string): Promise<void> {
     // Implementation would mark notification as read
   }
 
@@ -571,7 +571,7 @@ export class CollaborationManager {
       try {
         await this.performSync();
       } catch (error) {
-        console.error('Sync error:', error);
+        // // console.error('Sync error:', error);
       }
     }, this.config.sync.interval);
 
@@ -581,17 +581,17 @@ export class CollaborationManager {
 
   private async performSync(): Promise<void> {
     // Implementation would sync with remote server
-    console.log('Performing collaboration sync...');
+    // // console.log('Performing collaboration sync...');
   }
 
   private async connectNotifications(): Promise<void> {
     // Implementation would connect to real-time notification service
-    console.log('Connecting to notifications...');
+    // // console.log('Connecting to notifications...');
   }
 
   private async disconnectNotifications(): Promise<void> {
     // Implementation would disconnect from notification service
-    console.log('Disconnecting from notifications...');
+    // // console.log('Disconnecting from notifications...');
   }
 
   private emitNotification(notification: CollaborationNotification): void {
@@ -601,7 +601,7 @@ export class CollaborationManager {
         try {
           handler(notification);
         } catch (error) {
-          console.error('Error in notification handler:', error);
+          // // console.error('Error in notification handler:', error);
         }
       });
     }

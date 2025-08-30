@@ -7,7 +7,7 @@ import type { TabComponentProps } from '../../types';
 /**
  * Events list and management tab component
  */
-export default function EventsTab({ state, dispatch, compact }: TabComponentProps) {
+export default function EventsTab({ state, dispatch, compact: _compact }: TabComponentProps) {
   const { events, ui } = state;
   const filteredEvents = events; // This would use the actual filtering logic
 
@@ -50,13 +50,13 @@ export default function EventsTab({ state, dispatch, compact }: TabComponentProp
               <label key={eventType} className="filter-checkbox">
                 <input
                   type="checkbox"
-                  checked={ui.filters.eventTypes.has(eventType as any)}
+                  checked={ui.filters.eventTypes.has(eventType as string)}
                   onChange={(e) => {
                     const newTypes = new Set(ui.filters.eventTypes);
                     if (e.target.checked) {
-                      newTypes.add(eventType as any);
+                      newTypes.add(eventType as string);
                     } else {
-                      newTypes.delete(eventType as any);
+                      newTypes.delete(eventType as string);
                     }
                     dispatch({
                       type: 'ui/filter/update',
@@ -94,7 +94,7 @@ export default function EventsTab({ state, dispatch, compact }: TabComponentProp
           </div>
         ) : (
           <div className="events-list">
-            {filteredEvents.map((event, index) => (
+            {filteredEvents.map((event, _index) => (
               <div
                 key={event.id}
                 className={clsx('event-item', {

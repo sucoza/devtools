@@ -3,7 +3,7 @@
  * Main interface for team collaboration features including sharing, library, comments, and reviews
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { clsx } from 'clsx';
 import {
   Share2,
@@ -13,22 +13,12 @@ import {
   Users,
   Activity,
   Search,
-  Filter,
-  Plus,
   Settings,
   Bell,
-  Upload,
-  Download
+  Upload
 } from 'lucide-react';
 
 import type {
-  CollaborationUser,
-  CollaborationTeam,
-  SharedTestRecording,
-  TestLibrary,
-  TestComment,
-  TestReview,
-  CollaborationState,
   BrowserAutomationState
 } from '../../types';
 
@@ -43,7 +33,7 @@ import { NotificationCenter } from '../collaboration/NotificationCenter';
 
 export interface CollaborationTabProps {
   state: BrowserAutomationState;
-  dispatch: (action: any) => void;
+  dispatch: (action: unknown) => void;
   compact?: boolean;
 }
 
@@ -65,7 +55,7 @@ export const CollaborationTab: React.FC<CollaborationTabProps> = ({
   const collaboration = state.collaboration;
   const isConnected = collaboration?.sync ?? false;
   const currentUser = collaboration?.currentUser;
-  const currentTeam = collaboration?.team;
+  const _currentTeam = collaboration?.team;
 
   // Handle panel switching
   const handlePanelChange = (panel: string) => {
@@ -120,7 +110,7 @@ export const CollaborationTab: React.FC<CollaborationTabProps> = ({
     const panels: Array<{
       id: string;
       label: string;
-      icon: React.ComponentType<any>;
+      icon: React.ComponentType<unknown>;
       badge?: number;
     }> = [
       {
@@ -266,7 +256,7 @@ export const CollaborationTab: React.FC<CollaborationTabProps> = ({
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
               onClick={() => {
                 // Handle sign in
-                console.log('Sign in clicked');
+                // console.log('Sign in clicked');
               }}
             >
               Sign In

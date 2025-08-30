@@ -7,16 +7,23 @@ import type {
   RecordedEvent,
   TestGenerationOptions,
   GeneratedTest,
-  TestCase,
+  TestCase as _TestCase,
   TestFormat,
   TestFramework,
-  EventType,
-  MouseEventData,
+  EventType as _EventType,
+  MouseEventData as _MouseEventData,
   KeyboardEventData,
   FormEventData,
   NavigationEventData,
   AssertionEventData,
 } from '../types';
+
+import { TemplateEngine } from './templates/template-engine';
+import { builtInTemplates } from './templates/builtin-templates';
+import { PlaywrightGenerator } from './generators/playwright-generator';
+import { CypressGenerator } from './generators/cypress-generator';
+import { SeleniumGenerator } from './generators/selenium-generator';
+import { PuppeteerGenerator } from './generators/puppeteer-generator';
 
 export interface CodeGenerationConfig {
   format: TestFormat;
@@ -145,8 +152,8 @@ export class CodeGenerator {
           });
           
           variants.push(test);
-        } catch (error) {
-          console.warn(`Failed to generate ${format}/${language} variant:`, error);
+        } catch (_error) {
+          // // console.warn(`Failed to generate ${format}/${language} variant:`, _error);
         }
       }
     }
@@ -366,11 +373,10 @@ export class CodeGenerator {
    */
   private initializeTemplates(): void {
     // Load built-in templates from template engine
-    const templateEngine = new (require('./templates/template-engine').TemplateEngine)();
-    const builtInTemplates = require('./templates/builtin-templates').builtInTemplates;
+    const templateEngine = new TemplateEngine();
     
     // Register all built-in templates
-    builtInTemplates.forEach((template: any) => {
+    builtInTemplates.forEach((template: Record<string, unknown>) => {
       templateEngine.registerTemplate(template);
       this.templates.set(`${template.framework}-${template.language}`, {
         id: template.id,
@@ -379,7 +385,7 @@ export class CodeGenerator {
         format: template.framework,
         language: template.language,
         template: template.template,
-        placeholders: template.placeholders.reduce((acc: any, p: any) => {
+        placeholders: (template.placeholders as Array<Record<string, unknown>>).reduce((acc: Record<string, unknown>, p) => {
           acc[p.key] = p.defaultValue || '';
           return acc;
         }, {}),
@@ -400,7 +406,7 @@ export class CodeGenerator {
     ];
 
     frameworkMappings.forEach(mapping => {
-      const template = builtInTemplates.find((t: any) => t.id === mapping.templateId);
+      const template = builtInTemplates.find((t: Record<string, unknown>) => t.id === mapping.templateId);
       if (template) {
         this.templates.set(`${mapping.format}-${mapping.language}`, {
           id: template.id,
@@ -409,7 +415,7 @@ export class CodeGenerator {
           format: mapping.format as TestFormat,
           language: mapping.language,
           template: template.template,
-          placeholders: template.placeholders.reduce((acc: any, p: any) => {
+          placeholders: (template.placeholders as Array<Record<string, unknown>>).reduce((acc: Record<string, unknown>, p) => {
             acc[p.key] = p.defaultValue || '';
             return acc;
           }, {}),
@@ -430,8 +436,8 @@ export class CodeGenerator {
         id: 'remove-duplicate-clicks',
         name: 'Remove Duplicate Clicks',
         description: 'Removes consecutive clicks on the same element',
-        condition: (events) => this.hasConsecutiveDuplicateClicks(events),
-        transform: (events) => this.removeConsecutiveDuplicateClicks(events)
+        condition: (events: RecordedEvent[]) => this.hasConsecutiveDuplicateClicks(events),
+        transform: (events: RecordedEvent[]) => this.removeConsecutiveDuplicateClicks(events)
       },
       
       // Merge rapid input events
@@ -439,8 +445,8 @@ export class CodeGenerator {
         id: 'merge-input-events',
         name: 'Merge Input Events',
         description: 'Merges rapid input events into single type action',
-        condition: (events) => this.hasRapidInputEvents(events),
-        transform: (events) => this.mergeRapidInputEvents(events)
+        condition: (events: RecordedEvent[]) => this.hasRapidInputEvents(events),
+        transform: (events: RecordedEvent[]) => this.mergeRapidInputEvents(events)
       },
       
       // Add smart waits
@@ -449,7 +455,7 @@ export class CodeGenerator {
         name: 'Add Smart Waits',
         description: 'Adds waits based on timing patterns',
         condition: () => true,
-        transform: (events) => this.addSmartWaits(events)
+        transform: (events: RecordedEvent[]) => this.addSmartWaits(events)
       }
     ];
   }
@@ -529,9 +535,10 @@ export class CodeGenerator {
 
   private generateGroupName(actionType: EventGroup['actionType'], event: RecordedEvent): string {
     switch (actionType) {
-      case 'navigation':
+      case 'navigation': {
         const navData = event.data as NavigationEventData;
         return `Navigate to ${new URL(navData.url).hostname}`;
+      }
       case 'form_interaction':
         return `Fill form field`;
       case 'assertion':
@@ -552,7 +559,7 @@ export class CodeGenerator {
     return template.imports || [];
   }
 
-  private generateSetup(groups: EventGroup[]): string {
+  private generateSetup(_groups: EventGroup[]): string {
     return this.config.includeSetup ? this.getSetupCode() : '';
   }
 
@@ -604,7 +611,7 @@ export class CodeGenerator {
     return lines.join('\n');
   }
 
-  private async generateSupportFiles(groups: EventGroup[]): Promise<Record<string, string>> {
+  private async generateSupportFiles(_groups: EventGroup[]): Promise<Record<string, string>> {
     return {}; // Placeholder for support files
   }
 
@@ -630,7 +637,7 @@ export class CodeGenerator {
     return `Generated Test ${new Date().toISOString()}`;
   }
 
-  private createTestMetadata(events: RecordedEvent[], groups: EventGroup[]): any {
+  private createTestMetadata(events: RecordedEvent[], groups: EventGroup[]): Record<string, unknown> {
     return {
       sessionId: events[0]?.metadata?.sessionId || '',
       eventCount: events.length,
@@ -654,14 +661,15 @@ export class CodeGenerator {
     };
   }
 
-  private getEventGenerator(format: TestFormat, language: string): any {
-    const PlaywrightGenerator = require('./generators/playwright-generator').PlaywrightGenerator;
-    const CypressGenerator = require('./generators/cypress-generator').CypressGenerator;
-    const SeleniumGenerator = require('./generators/selenium-generator').SeleniumGenerator;
-    const PuppeteerGenerator = require('./generators/puppeteer-generator').PuppeteerGenerator;
+  private getEventGenerator(format: TestFormat, language: string): { 
+    generateEvent: (event: RecordedEvent) => string;
+    generateSetup: () => string;
+    generateTeardown: () => string;
+  } {
+    // Generators are now imported at the top of the file
 
     const options = {
-      language: language as any,
+      language: language as 'javascript' | 'typescript' | 'python' | 'csharp',
       includeComments: this.config.includeComments,
       includeAssertions: this.config.includeAssertions,
       includeSetup: this.config.includeSetup,

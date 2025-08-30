@@ -1,13 +1,13 @@
 import React from 'react';
 import { clsx } from 'clsx';
-import { Eye, Target, Settings } from 'lucide-react';
+import { Target } from 'lucide-react';
 
 import type { TabComponentProps } from '../../types';
 
 /**
  * Selector management and testing tab component
  */
-export default function SelectorsTab({ state, dispatch, compact }: TabComponentProps) {
+export default function SelectorsTab({ state, dispatch, compact: _compact }: TabComponentProps) {
   const { selectorEngine } = state;
 
   return (
@@ -22,7 +22,7 @@ export default function SelectorsTab({ state, dispatch, compact }: TabComponentP
               key={mode}
               onClick={() => dispatch({
                 type: 'selector/mode/set',
-                payload: mode as any,
+                payload: mode as 'auto' | 'css' | 'xpath' | 'text' | 'data-testid',
               })}
               className={clsx('mode-button', {
                 active: selectorEngine.mode === mode,
