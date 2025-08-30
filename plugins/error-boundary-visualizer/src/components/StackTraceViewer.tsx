@@ -40,7 +40,7 @@ export const StackTraceViewer: React.FC<StackTraceViewerProps> = ({
   const handleSourceNavigation = (frame: EnhancedStackFrame) => {
     if (frame.fileName && frame.lineNumber) {
       // In a real implementation, this would open the source file
-      console.log(`Navigate to: ${frame.fileName}:${frame.lineNumber}:${frame.columnNumber}`)
+      // Navigate to source: ${frame.fileName}:${frame.lineNumber}:${frame.columnNumber}
     }
   }
 
@@ -119,7 +119,7 @@ export const StackTraceViewer: React.FC<StackTraceViewerProps> = ({
     textDecoration: 'underline',
   }
 
-  const badgeStyles = (type: string): React.CSSProperties => ({
+  const badgeStyles = (_type: string): React.CSSProperties => ({
     display: 'inline-block',
     padding: '2px 6px',
     borderRadius: '10px',

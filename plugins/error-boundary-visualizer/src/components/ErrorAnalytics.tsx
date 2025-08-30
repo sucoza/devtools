@@ -12,7 +12,6 @@ export const ErrorAnalytics: React.FC = () => {
   const { 
     errors, 
     errorGroups, 
-    metrics, 
     config,
     calculateCoverage 
   } = useErrorBoundaryDevTools()

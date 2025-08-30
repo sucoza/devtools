@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useErrorBoundaryDevTools } from '../core/store'
 import type { ComponentTreeNode } from '../types'
 
@@ -158,7 +158,6 @@ export const ComponentTreeView: React.FC = () => {
   const { 
     componentTree, 
     config, 
-    selectedBoundary, 
     selectBoundary, 
     errorBoundaries,
     calculateCoverage

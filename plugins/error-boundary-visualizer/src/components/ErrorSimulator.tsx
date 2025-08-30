@@ -122,21 +122,7 @@ export const ErrorSimulator: React.FC = () => {
     if (!simulation) return
 
     // In a real implementation, this would actually trigger the error
-    // For now, we'll just log and potentially add it to the error list
-    console.log(`Running simulation: ${simulation.name}`)
-    
-    // Simulate the error by adding it to the error list
-    const mockError = {
-      id: `error-sim-${Date.now()}`,
-      timestamp: Date.now(),
-      message: simulation.errorMessage,
-      category: simulation.errorType,
-      severity: 'medium' as const,
-      componentStack: simulation.targetComponent ? `at ${simulation.targetComponent}` : undefined,
-      occurrences: 1,
-      firstSeen: Date.now(),
-      lastSeen: Date.now(),
-    }
+    // For now, we'll use the simulation system
 
     // This would be handled by the actual simulation system
     runSimulation(simulationId)
@@ -229,7 +215,7 @@ export const ErrorSimulator: React.FC = () => {
     alignItems: 'flex-start',
   }
 
-  const badgeStyles = (type: string): React.CSSProperties => ({
+  const badgeStyles = (_type: string): React.CSSProperties => ({
     display: 'inline-block',
     padding: '2px 8px',
     borderRadius: '12px',

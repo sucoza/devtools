@@ -98,35 +98,45 @@ export const ErrorBoundaryDevTools: React.FC<ErrorBoundaryDevToolsProps> = ({
 
 /**
  * Initialize Error Boundary DevTools with configuration
+ * This should be used inside a React component
  */
-export function initializeErrorBoundaryDevTools(config?: Partial<DevToolsConfig>) {
+export function useInitializeErrorBoundaryDevTools(config?: Partial<DevToolsConfig>) {
   const { updateConfig } = useErrorBoundaryDevTools()
   
-  if (config) {
-    updateConfig(config)
-  }
+  React.useEffect(() => {
+    if (config) {
+      updateConfig(config)
+    }
+  }, [config, updateConfig])
+  
+  return { updateConfig }
 }
 
 /**
- * Manually report an error to the DevTools
+ * Hook to manually report an error to the DevTools
+ * This should be used inside a React component
  */
-export function reportError(error: Error | string, metadata?: Record<string, unknown>) {
+export function useReportError() {
   const { addError } = useErrorBoundaryDevTools()
   
-  const errorInfo = {
-    id: `manual-${Date.now()}-${Math.random()}`,
-    timestamp: Date.now(),
-    message: typeof error === 'string' ? error : error.message,
-    stack: typeof error === 'object' ? error.stack : undefined,
-    category: ErrorCategory.UNKNOWN,
-    severity: ErrorSeverity.MEDIUM,
-    occurrences: 1,
-    firstSeen: Date.now(),
-    lastSeen: Date.now(),
-    metadata,
-  }
+  const reportError = React.useCallback((error: Error | string, metadata?: Record<string, unknown>) => {
+    const errorInfo = {
+      id: `manual-${Date.now()}-${Math.random()}`,
+      timestamp: Date.now(),
+      message: typeof error === 'string' ? error : error.message,
+      stack: typeof error === 'object' ? error.stack : undefined,
+      category: ErrorCategory.UNKNOWN,
+      severity: ErrorSeverity.MEDIUM,
+      occurrences: 1,
+      firstSeen: Date.now(),
+      lastSeen: Date.now(),
+      metadata,
+    }
+    
+    addError(errorInfo)
+  }, [addError])
   
-  addError(errorInfo)
+  return { reportError }
 }
 
 /**

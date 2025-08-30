@@ -6,12 +6,10 @@ import { ErrorCategory, ErrorSeverity } from '../types'
 
 type SortField = 'timestamp' | 'severity' | 'category' | 'message' | 'occurrences'
 type SortOrder = 'asc' | 'desc'
-type GroupBy = 'none' | 'category' | 'severity' | 'component'
 
 export const ErrorList: React.FC = () => {
   const { 
     errors, 
-    errorGroups, 
     selectedError, 
     selectError, 
     clearErrors, 
@@ -25,7 +23,6 @@ export const ErrorList: React.FC = () => {
   const [severityFilter, setSeverityFilter] = useState<ErrorSeverity | 'all'>('all')
   const [sortField, setSortField] = useState<SortField>('timestamp')
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc')
-  const [groupBy, setGroupBy] = useState<GroupBy>('none')
   const [showDetails, setShowDetails] = useState<string | null>(null)
 
   const theme = config.theme === 'auto' 
@@ -52,11 +49,12 @@ export const ErrorList: React.FC = () => {
           aVal = a.timestamp
           bVal = b.timestamp
           break
-        case 'severity':
+        case 'severity': {
           const severityOrder = { critical: 4, high: 3, medium: 2, low: 1 }
           aVal = severityOrder[a.severity]
           bVal = severityOrder[b.severity]
           break
+        }
         case 'category':
           aVal = a.category
           bVal = b.category

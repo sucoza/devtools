@@ -13,7 +13,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
   } = useErrorBoundaryDevTools()
   
   const [isCreating, setIsCreating] = useState(false)
-  const [editingStrategy, setEditingStrategy] = useState<ErrorRecoveryStrategy | null>(null)
+  const [_editingStrategy, setEditingStrategy] = useState<ErrorRecoveryStrategy | null>(null)
   const [newStrategy, setNewStrategy] = useState<Partial<ErrorRecoveryStrategy>>({
     name: '',
     description: '',

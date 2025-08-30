@@ -243,7 +243,7 @@ export const useErrorBoundaryDevTools = create<
         
         if (boundary && strategy) {
           // Apply strategy logic here
-          console.log(`Applying strategy ${strategyId} to boundary ${boundaryId}`)
+          // Strategy ${strategyId} applied to boundary ${boundaryId}
         }
       },
 
@@ -263,7 +263,7 @@ export const useErrorBoundaryDevTools = create<
         
         if (simulation) {
           // Trigger the simulated error
-          console.log(`Running simulation: ${simulation.name}`)
+          // Running simulation: ${simulation.name}
         }
       },
 
@@ -361,8 +361,8 @@ export const useErrorBoundaryDevTools = create<
             config: { ...defaultConfig, ...imported.config },
             recordedSessions: imported.recordedSessions || [],
           })
-        } catch (error) {
-          console.error('Failed to import state:', error)
+        } catch {
+          // Failed to import state
         }
       },
     })),

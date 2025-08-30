@@ -42,14 +42,14 @@ interface ReactDevToolsGlobal {
   }
 }
 
-let globalErrorHandler: ((error: ErrorEvent) => void) | null = null
-let reactErrorHandler: ((error: Error, errorInfo: any) => void) | null = null
+let _globalErrorHandler: ((error: ErrorEvent) => void) | null = null
+let _reactErrorHandler: ((error: Error, errorInfo: any) => void) | null = null
 
 export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOptions = {}) {
   const {
     enabled = true,
     autoDetectBoundaries = true,
-    enhanceStackTraces = true,
+    enhanceStackTraces: _enhanceStackTraces = true,
     trackComponentTree = true,
     throttleMs = 100,
   } = options
@@ -222,14 +222,14 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
       })
     }
 
-    globalErrorHandler = handleGlobalError
+    _globalErrorHandler = handleGlobalError
     window.addEventListener('error', handleGlobalError)
     window.addEventListener('unhandledrejection', handleUnhandledRejection)
 
     return () => {
       window.removeEventListener('error', handleGlobalError)
       window.removeEventListener('unhandledrejection', handleUnhandledRejection)
-      globalErrorHandler = null
+      _globalErrorHandler = null
     }
   }, [enabled, store, throttledUpdate])
 
@@ -292,7 +292,7 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
     // Patch React error boundaries to capture errors
     const originalConsoleError = console.error
 
-    reactErrorHandler = (error: Error, errorInfo: any) => {
+    _reactErrorHandler = (error: Error, errorInfo: any) => {
       const errorData: ErrorInfo = {
         id: `react-error-${Date.now()}-${Math.random()}`,
         timestamp: Date.now(),
@@ -342,7 +342,7 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
 
     return () => {
       console.error = originalConsoleError
-      reactErrorHandler = null
+      _reactErrorHandler = null
     }
   }, [enabled, store, throttledUpdate])
 
@@ -351,7 +351,7 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
     if (!enabled) return undefined
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      const { shortcuts } = store.config
+      const { shortcuts: _shortcuts } = store.config
 
       // Toggle DevTools panel
       if (event.ctrlKey && event.shiftKey && event.key === 'E') {
@@ -368,8 +368,8 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
       // Export state
       if (event.ctrlKey && event.shiftKey && event.key === 'X') {
         event.preventDefault()
-        const data = store.exportState()
-        console.log('Error Boundary DevTools State:', data)
+        const _data = store.exportState()
+        // Export Error Boundary DevTools State
       }
     }
 

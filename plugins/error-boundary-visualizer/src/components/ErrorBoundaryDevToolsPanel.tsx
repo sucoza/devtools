@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { useErrorBoundaryDevTools } from '../core/store'
 import { ComponentTreeView } from './ComponentTreeView'
 import { ErrorList } from './ErrorList'
@@ -47,19 +47,19 @@ export const ErrorBoundaryDevToolsPanel: React.FC = () => {
     }
   }
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = useCallback((e: MouseEvent) => {
     if (isDragging && dragRef.current) {
       setPosition({
         x: e.clientX - dragRef.current.x,
         y: e.clientY - dragRef.current.y,
       })
     }
-  }
+  }, [isDragging])
 
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     setIsDragging(false)
     dragRef.current = null
-  }
+  }, [])
 
   useEffect(() => {
     if (isDragging) {
@@ -72,7 +72,7 @@ export const ErrorBoundaryDevToolsPanel: React.FC = () => {
     }
     // Return undefined explicitly for when isDragging is false
     return undefined
-  }, [isDragging])
+  }, [isDragging, handleMouseMove, handleMouseUp])
 
   const handleResize = (e: React.MouseEvent) => {
     e.preventDefault()
