@@ -113,7 +113,7 @@ export class StorageEngine {
   /**
    * Stringify JSON with compression
    */
-  private stringifyJSON(data: any, compress: boolean = false): string {
+  private stringifyJSON(data: unknown, compress: boolean = false): string {
     try {
       const json = JSON.stringify(data);
       return compress ? compressString(json) : json;
@@ -337,7 +337,7 @@ export class StorageEngine {
     const version = this.getItem(STORAGE_KEYS.VERSION);
     
     if (!version || version !== CURRENT_VERSION) {
-      console.log('Migrating visual regression data...');
+      // Migrating visual regression data
       
       // Add migration logic here if needed for future versions
       // For now, just update the version

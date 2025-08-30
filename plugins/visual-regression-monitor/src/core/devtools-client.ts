@@ -2,7 +2,7 @@ import type { DevToolsState, DevToolsAction, VisualRegressionEvents } from '../t
 import { getVisualRegressionStore } from './devtools-store';
 
 // Basic event client interface (simplified from @tanstack/devtools)
-export interface DevToolsEventClient<TEvents extends Record<string, any>> {
+export interface DevToolsEventClient<TEvents extends Record<string, unknown>> {
   subscribe: (callback: (event: TEvents[keyof TEvents], type: keyof TEvents) => void) => () => void;
 }
 

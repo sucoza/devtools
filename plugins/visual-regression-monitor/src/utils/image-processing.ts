@@ -1,5 +1,5 @@
 import type { DiffRegion } from '../types';
-import { calculateColorDifference, hexToRgb } from './index';
+import { } from './index';
 
 /**
  * Load image from data URL
@@ -279,7 +279,9 @@ export function findConnectedComponents(imageData: ImageData, minSize: number = 
     const points: Array<[number, number]> = [];
     
     while (stack.length > 0) {
-      const [x, y] = stack.pop()!;
+      const coords = stack.pop();
+      if (!coords) break;
+      const [x, y] = coords;
       const idx = y * width + x;
       
       if (x < 0 || x >= width || y < 0 || y >= height || visited[idx]) {
@@ -397,7 +399,8 @@ export function createSideBySideComparison(
   
   // Draw baseline
   const baselineCanvas = document.createElement('canvas');
-  const baselineCtx = baselineCanvas.getContext('2d')!;
+  const baselineCtx = baselineCanvas.getContext('2d');
+  if (!baselineCtx) throw new Error('Failed to get baseline canvas context');
   baselineCanvas.width = baseline.width;
   baselineCanvas.height = baseline.height;
   baselineCtx.putImageData(baseline, 0, 0);
@@ -405,7 +408,8 @@ export function createSideBySideComparison(
   
   // Draw comparison
   const comparisonCanvas = document.createElement('canvas');
-  const comparisonCtx = comparisonCanvas.getContext('2d')!;
+  const comparisonCtx = comparisonCanvas.getContext('2d');
+  if (!comparisonCtx) throw new Error('Failed to get comparison canvas context');
   comparisonCanvas.width = comparison.width;
   comparisonCanvas.height = comparison.height;
   comparisonCtx.putImageData(comparison, 0, 0);
@@ -414,7 +418,8 @@ export function createSideBySideComparison(
   // Draw diff if provided
   if (diff) {
     const diffCanvas = document.createElement('canvas');
-    const diffCtx = diffCanvas.getContext('2d')!;
+    const diffCtx = diffCanvas.getContext('2d');
+    if (!diffCtx) throw new Error('Failed to get diff canvas context');
     diffCanvas.width = diff.width;
     diffCanvas.height = diff.height;
     diffCtx.putImageData(diff, 0, 0);

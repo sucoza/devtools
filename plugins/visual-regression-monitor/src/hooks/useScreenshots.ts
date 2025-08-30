@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
-import type { DevToolsState, Screenshot, CaptureRequest } from '../types';
+import type { Screenshot, CaptureRequest } from '../types';
 import { createVisualRegressionDevToolsClient } from '../core/devtools-client';
 import { getScreenshotEngine } from '../core/screenshot-engine';
 

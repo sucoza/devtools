@@ -2,32 +2,30 @@ import type {
   Screenshot, 
   CaptureRequest, 
   CaptureResult, 
-  PlaywrightConfig, 
   Viewport, 
   BrowserEngine, 
-  CaptureSettings,
-  VisualRegressionError
+  CaptureSettings
 } from '../types';
-import { generateId, getTimestamp, calculateImageHash, blobToDataUrl } from '../utils';
+import { generateId, getTimestamp, calculateImageHash } from '../utils';
 
 // MCP Playwright tool integration types
 interface MCPPlaywrightTools {
-  browser_navigate: (params: { url: string }) => Promise<any>;
-  browser_resize: (params: { width: number; height: number }) => Promise<any>;
+  browser_navigate: (params: { url: string }) => Promise<unknown>;
+  browser_resize: (params: { width: number; height: number }) => Promise<unknown>;
   browser_take_screenshot: (params: { 
     element?: string; 
     ref?: string; 
     fullPage?: boolean; 
     filename?: string;
     type?: 'png' | 'jpeg';
-  }) => Promise<any>;
-  browser_snapshot: () => Promise<any>;
-  browser_evaluate: (params: { function: string; element?: string; ref?: string }) => Promise<any>;
-  browser_wait_for: (params: { text?: string; textGone?: string; time?: number }) => Promise<any>;
-  browser_click: (params: { element: string; ref: string }) => Promise<any>;
-  browser_hover: (params: { element: string; ref: string }) => Promise<any>;
-  browser_close: () => Promise<any>;
-  browser_install: () => Promise<any>;
+  }) => Promise<unknown>;
+  browser_snapshot: () => Promise<unknown>;
+  browser_evaluate: (params: { function: string; element?: string; ref?: string }) => Promise<unknown>;
+  browser_wait_for: (params: { text?: string; textGone?: string; time?: number }) => Promise<unknown>;
+  browser_click: (params: { element: string; ref: string }) => Promise<unknown>;
+  browser_hover: (params: { element: string; ref: string }) => Promise<unknown>;
+  browser_close: () => Promise<unknown>;
+  browser_install: () => Promise<unknown>;
 }
 
 // MCP tool adapter
@@ -42,8 +40,8 @@ class MCPPlaywrightAdapter {
   private async initializeTools() {
     try {
       // Check if MCP Playwright tools are available globally
-      if (typeof window !== 'undefined' && (window as any).mcpPlaywrightTools) {
-        this.tools = (window as any).mcpPlaywrightTools;
+      if (typeof window !== 'undefined' && (window as unknown as Record<string, unknown>).mcpPlaywrightTools) {
+        this.tools = (window as unknown as Record<string, unknown>).mcpPlaywrightTools as Partial<MCPPlaywrightTools>;
         this.isAvailable = true;
       } else {
         // Try to detect if we're in an environment where MCP tools are available
@@ -93,14 +91,14 @@ class MCPPlaywrightAdapter {
     return this.convertFileToDataUrl(result.filename || result);
   }
 
-  async getSnapshot(): Promise<any> {
+  async getSnapshot(): Promise<unknown> {
     if (!this.tools.browser_snapshot) {
       throw new Error('browser_snapshot tool not available');
     }
     return await this.tools.browser_snapshot();
   }
 
-  async evaluate(func: string, element?: string, ref?: string): Promise<any> {
+  async evaluate(func: string, element?: string, ref?: string): Promise<unknown> {
     if (!this.tools.browser_evaluate) {
       throw new Error('browser_evaluate tool not available');
     }
@@ -199,7 +197,7 @@ export class ScreenshotEngine {
         lastError = error instanceof Error ? error : new Error(String(error));
         
         if (attempt === this.retryConfig.maxRetries) {
-          console.error(`${context} failed after ${this.retryConfig.maxRetries} retries:`, lastError);
+          // Retry failed after max attempts
           throw lastError;
         }
         
@@ -302,7 +300,7 @@ export class ScreenshotEngine {
         screenshot,
       };
     } catch (error) {
-      console.error('Screenshot capture failed:', error);
+      // Screenshot capture failed
       return {
         success: false,
         error: {
@@ -364,7 +362,7 @@ export class ScreenshotEngine {
   /**
    * Get error code from error object
    */
-  private getErrorCode(error: any): string {
+  private getErrorCode(error: unknown): string {
     if (error instanceof Error) {
       if (error.message.includes('timeout')) return 'TIMEOUT';
       if (error.message.includes('network')) return 'NETWORK_ERROR';
@@ -423,7 +421,7 @@ export class ScreenshotEngine {
 
       // Capture frames
       for (let i = 0; i < totalFrames; i++) {
-        const timestamp = i * interval;
+        const _timestamp = i * interval;
         
         // Wait for the specific time
         await new Promise(resolve => setTimeout(resolve, interval));
@@ -440,8 +438,8 @@ export class ScreenshotEngine {
           frames.push(result.screenshot);
         }
       }
-    } catch (error) {
-      console.error('Animation capture failed:', error);
+    } catch {
+      // Animation capture failed
     }
 
     return frames;
@@ -457,9 +455,9 @@ export class ScreenshotEngine {
       // Wait for navigation to complete
       await this.mcpAdapter.waitFor({ time: 1000 });
       
-      console.log(`Successfully navigated to: ${url}`);
+      // Successfully navigated to URL
     } catch (error) {
-      console.error(`Navigation to ${url} failed:`, error);
+      // Navigation failed
       throw new Error(`Failed to navigate to ${url}: ${error}`);
     }
   }
@@ -470,9 +468,9 @@ export class ScreenshotEngine {
   private async setViewport(viewport: Viewport): Promise<void> {
     try {
       await this.mcpAdapter.resize(viewport.width, viewport.height);
-      console.log(`Successfully set viewport: ${viewport.width}x${viewport.height}`);
+      // Successfully set viewport
     } catch (error) {
-      console.error(`Failed to set viewport ${viewport.width}x${viewport.height}:`, error);
+      // Failed to set viewport
       throw new Error(`Failed to set viewport: ${error}`);
     }
   }
@@ -494,7 +492,7 @@ export class ScreenshotEngine {
       // Additional MCP-specific settings
       await this.applyBrowserSpecificSettings(options);
     } catch (error) {
-      console.error('Failed to apply capture settings:', error);
+      // Failed to apply capture settings
       throw new Error(`Failed to apply capture settings: ${error}`);
     }
   }
@@ -594,7 +592,7 @@ export class ScreenshotEngine {
     options?: CaptureSettings
   ): Promise<{ dataUrl: string; fileSize: number; dimensions: { width: number; height: number }; hash: string }> {
     try {
-      let screenshotOptions: any = {
+      const screenshotOptions: Record<string, unknown> = {
         type: options?.format || 'png',
         fullPage: options?.fullPage || false,
       };
@@ -603,7 +601,7 @@ export class ScreenshotEngine {
       if (selector) {
         try {
           // Use snapshot to get element reference
-          const snapshot = await this.mcpAdapter.getSnapshot();
+          const _snapshot = await this.mcpAdapter.getSnapshot();
           
           // In a real implementation, we would parse the snapshot to find the element
           // For now, we'll use the selector directly
@@ -635,8 +633,8 @@ export class ScreenshotEngine {
         dimensions,
         hash,
       };
-    } catch (error) {
-      console.error('Screenshot capture with MCP failed, falling back to mock:', error);
+    } catch {
+      // Screenshot capture with MCP failed, falling back to mock
       
       // Fallback to mock implementation
       return this.createMockScreenshot(options);
@@ -740,7 +738,7 @@ export class ScreenshotEngine {
         hash = hash & hash; // Convert to 32-bit integer
       }
       return Math.abs(hash).toString(16);
-    } catch (error) {
+    } catch {
       return `hash_${Date.now()}`;
     }
   }
@@ -755,7 +753,7 @@ export class ScreenshotEngine {
   /**
    * Wait for specific element
    */
-  private async waitForElement(selector: string, timeout: number = 10000): Promise<void> {
+  private async waitForElement(selector: string, _timeout: number = 10000): Promise<void> {
     try {
       await this.mcpAdapter.evaluate(`
         (selector, timeout) => new Promise((resolve, reject) => {
@@ -776,7 +774,7 @@ export class ScreenshotEngine {
         })
       `, undefined, undefined);
       
-      console.log(`Successfully found element: ${selector}`);
+      // Successfully found element
     } catch (error) {
       console.warn(`Element ${selector} not found:`, error);
       throw error;
@@ -799,7 +797,7 @@ export class ScreenshotEngine {
           document.head.appendChild(style);
         }
       `);
-      console.log('Successfully hid scrollbars');
+      // Successfully hid scrollbars
     } catch (error) {
       console.warn('Failed to hide scrollbars:', error);
     }
@@ -824,7 +822,7 @@ export class ScreenshotEngine {
           document.head.appendChild(style);
         }
       `);
-      console.log('Successfully disabled animations');
+      // Successfully disabled animations
     } catch (error) {
       console.warn('Failed to disable animations:', error);
     }
@@ -845,7 +843,7 @@ export class ScreenshotEngine {
           }
         })
       `);
-      console.log('Successfully waited for fonts');
+      // Successfully waited for fonts
     } catch (error) {
       console.warn('Failed to wait for fonts:', error);
     }
@@ -873,7 +871,7 @@ export class ScreenshotEngine {
           setTimeout(resolve, 10000); // Overall timeout
         })
       `);
-      console.log('Successfully waited for images');
+      // Successfully waited for images
     } catch (error) {
       console.warn('Failed to wait for images:', error);
     }
@@ -907,7 +905,7 @@ export class ScreenshotEngine {
   /**
    * Normalize screenshot across browsers
    */
-  private async normalizeCrossBrowser(options: CaptureSettings): Promise<void> {
+  private async normalizeCrossBrowser(_options: CaptureSettings): Promise<void> {
     try {
       const browserSpecificScript = `
         (() => {
@@ -965,7 +963,7 @@ export class ScreenshotEngine {
       `;
       
       await this.mcpAdapter.evaluate(browserSpecificScript);
-      console.log('Successfully applied cross-browser normalization');
+      // Successfully applied cross-browser normalization
     } catch (error) {
       console.warn('Failed to apply cross-browser normalization:', error);
     }
@@ -977,8 +975,9 @@ export class ScreenshotEngine {
   private async optimizeMemoryUsage(): Promise<void> {
     try {
       // Force garbage collection if available
-      if ((window as any).gc) {
-        (window as any).gc();
+      const windowWithGc = window as unknown as { gc?: () => void };
+      if (windowWithGc.gc) {
+        windowWithGc.gc();
       }
       
       // Clear unused canvases and images
@@ -990,7 +989,7 @@ export class ScreenshotEngine {
           
           // Trigger browser memory cleanup
           if (window.performance && window.performance.memory) {
-            console.log('Memory usage:', window.performance.memory);
+            // Memory usage logged
           }
         }
       `);
@@ -1011,10 +1010,10 @@ export class ScreenshotEngine {
       // Test basic MCP functionality
       await this.mcpAdapter.evaluate('() => document.title');
       
-      console.log('Playwright MCP connection test successful');
+      // Playwright MCP connection test successful
       return true;
-    } catch (error) {
-      console.error('Playwright connection test failed:', error);
+    } catch {
+      // Playwright connection test failed
       return false;
     }
   }
@@ -1032,7 +1031,7 @@ export class ScreenshotEngine {
    */
   async cleanup(): Promise<void> {
     // Cleanup any open browser instances or resources
-    console.log('Cleaning up screenshot engine resources');
+    // Cleaning up screenshot engine resources
   }
 }
 

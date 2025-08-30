@@ -83,7 +83,7 @@ export function useResponsiveTesting() {
      */
     testUrlAcrossBreakpoints: async (url: string, options?: {
       customBreakpoints?: ResponsiveBreakpoint[];
-      captureSettings?: any;
+      captureSettings?: unknown;
     }) => {
       const testBreakpoints = options?.customBreakpoints || breakpoints;
       

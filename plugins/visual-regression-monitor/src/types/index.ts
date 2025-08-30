@@ -200,7 +200,7 @@ export interface ActivityItem {
   title: string;
   description?: string;
   timestamp: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 // DevTools Actions
@@ -279,15 +279,15 @@ export interface ExportData {
 export interface VisualRegressionError {
   code: string;
   message: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
   timestamp: number;
 }
 
 // Playwright Integration Types
 export interface PlaywrightConfig {
   browserType: BrowserEngine;
-  launchOptions: Record<string, any>;
-  contextOptions: Record<string, any>;
+  launchOptions: Record<string, unknown>;
+  contextOptions: Record<string, unknown>;
 }
 
 export interface CaptureRequest {

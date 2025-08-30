@@ -3,8 +3,6 @@ import { clsx } from 'clsx';
 import { 
   Camera, 
   Monitor, 
-  Smartphone, 
-  Tablet, 
   Download, 
   Copy, 
   Trash2,
@@ -12,9 +10,7 @@ import {
   Grid,
   List,
   Search,
-  Filter,
-  Plus,
-  RefreshCw
+  Filter
 } from 'lucide-react';
 import { useScreenshots } from '../hooks/useScreenshots';
 import { useResponsiveTesting } from '../hooks/useResponsiveTesting';
@@ -25,7 +21,7 @@ import { formatTimestamp, formatFileSize, getViewportString } from '../utils';
  */
 export function ScreenshotCapture() {
   const { screenshots, selectedScreenshot, isCapturing, actions } = useScreenshots();
-  const { breakpoints, actions: responsiveActions } = useResponsiveTesting();
+  const { breakpoints } = useResponsiveTesting();
   
   const [captureUrl, setCaptureUrl] = useState('');
   const [captureSelector, setCaptureSelector] = useState('');
@@ -215,8 +211,8 @@ export function ScreenshotCapture() {
             <Camera className="w-12 h-12 mb-4 opacity-50" />
             <p className="text-lg font-medium mb-2">No screenshots yet</p>
             <p className="text-sm text-center max-w-md">
-              Enter a URL above and click "Capture" to take your first screenshot, 
-              or use "Responsive" to capture across multiple breakpoints.
+              Enter a URL above and click &quot;Capture&quot; to take your first screenshot, 
+              or use &quot;Responsive&quot; to capture across multiple breakpoints.
             </p>
           </div>
         ) : (
@@ -259,7 +255,7 @@ export function ScreenshotCapture() {
   );
 }
 
-function ScreenshotCard({ screenshot }: { screenshot: any }) {
+function ScreenshotCard({ screenshot }: { screenshot: unknown }) {
   const { actions } = useScreenshots();
   
   return (
@@ -327,7 +323,7 @@ function ScreenshotCard({ screenshot }: { screenshot: any }) {
   );
 }
 
-function ScreenshotListItem({ screenshot }: { screenshot: any }) {
+function ScreenshotListItem({ screenshot }: { screenshot: unknown }) {
   const { actions } = useScreenshots();
   
   return (
@@ -397,7 +393,7 @@ function ScreenshotListItem({ screenshot }: { screenshot: any }) {
   );
 }
 
-function ScreenshotDetails({ screenshot }: { screenshot: any }) {
+function ScreenshotDetails({ screenshot }: { screenshot: unknown }) {
   return (
     <div className="space-y-3">
       <h3 className="text-lg font-medium text-gray-900 dark:text-white">

@@ -260,7 +260,7 @@ class VisualRegressionStore {
           stats: this.updateStatsWithScreenshot(state.stats, action.payload),
         };
 
-      case 'screenshot/update':
+      case 'screenshot/update': {
         const existingScreenshot = state.screenshots[action.payload.id];
         if (!existingScreenshot) return state;
         
@@ -272,9 +272,10 @@ class VisualRegressionStore {
             [action.payload.id]: updatedScreenshot,
           },
         };
+      }
 
-      case 'screenshot/remove':
-        const { [action.payload]: removed, ...remainingScreenshots } = state.screenshots;
+      case 'screenshot/remove': {
+        const { [action.payload]: _removed, ...remainingScreenshots } = state.screenshots;
         return {
           ...state,
           screenshots: remainingScreenshots,
@@ -284,6 +285,7 @@ class VisualRegressionStore {
             selectedScreenshotId: state.ui.selectedScreenshotId === action.payload ? undefined : state.ui.selectedScreenshotId,
           },
         };
+      }
 
       case 'screenshot/clear':
         return {
@@ -299,7 +301,7 @@ class VisualRegressionStore {
           },
         };
 
-      case 'screenshot/set_baseline':
+      case 'screenshot/set_baseline': {
         const suite = state.testSuites[action.payload.suiteId];
         if (!suite) return state;
         
@@ -314,6 +316,7 @@ class VisualRegressionStore {
             },
           },
         };
+      }
 
       // Visual diff actions
       case 'diff/add':
@@ -326,7 +329,7 @@ class VisualRegressionStore {
           stats: this.updateStatsWithDiff(state.stats, action.payload),
         };
 
-      case 'diff/update':
+      case 'diff/update': {
         const existingDiff = state.visualDiffs[action.payload.id];
         if (!existingDiff) return state;
         
@@ -339,9 +342,10 @@ class VisualRegressionStore {
           },
           stats: this.recalculateStats(Object.values(state.screenshots), Object.values({ ...state.visualDiffs, [action.payload.id]: updatedDiff })),
         };
+      }
 
-      case 'diff/remove':
-        const { [action.payload]: removedDiff, ...remainingDiffs } = state.visualDiffs;
+      case 'diff/remove': {
+        const { [action.payload]: _removedDiff, ...remainingDiffs } = state.visualDiffs;
         return {
           ...state,
           visualDiffs: remainingDiffs,
@@ -351,6 +355,7 @@ class VisualRegressionStore {
             selectedDiffId: state.ui.selectedDiffId === action.payload ? undefined : state.ui.selectedDiffId,
           },
         };
+      }
 
       case 'diff/clear':
         return {
@@ -378,7 +383,7 @@ class VisualRegressionStore {
           },
         };
 
-      case 'suite/update':
+      case 'suite/update': {
         const existingSuite = state.testSuites[action.payload.id];
         if (!existingSuite) return state;
         
@@ -393,9 +398,10 @@ class VisualRegressionStore {
             },
           },
         };
+      }
 
-      case 'suite/remove':
-        const { [action.payload]: removedSuite, ...remainingSuites } = state.testSuites;
+      case 'suite/remove': {
+        const { [action.payload]: _removedSuite, ...remainingSuites } = state.testSuites;
         return {
           ...state,
           testSuites: remainingSuites,
@@ -404,6 +410,7 @@ class VisualRegressionStore {
             selectedSuiteId: state.ui.selectedSuiteId === action.payload ? undefined : state.ui.selectedSuiteId,
           },
         };
+      }
 
       // Animation actions
       case 'animation/add':
@@ -415,7 +422,7 @@ class VisualRegressionStore {
           },
         };
 
-      case 'animation/update':
+      case 'animation/update': {
         const existingAnimation = state.animationSequences[action.payload.id];
         if (!existingAnimation) return state;
         
@@ -429,13 +436,15 @@ class VisualRegressionStore {
             },
           },
         };
+      }
 
-      case 'animation/remove':
-        const { [action.payload]: removedAnimation, ...remainingAnimations } = state.animationSequences;
+      case 'animation/remove': {
+        const { [action.payload]: _removedAnimation, ...remainingAnimations } = state.animationSequences;
         return {
           ...state,
           animationSequences: remainingAnimations,
         };
+      }
 
       // Settings actions
       case 'settings/update':
@@ -602,7 +611,7 @@ class VisualRegressionStore {
           },
         };
 
-      case 'activity/add':
+      case 'activity/add': {
         const newActivity = [action.payload, ...state.stats.recentActivity].slice(0, 50); // Keep last 50 activities
         return {
           ...state,
@@ -611,6 +620,7 @@ class VisualRegressionStore {
             recentActivity: newActivity,
           },
         };
+      }
 
       default:
         return state;

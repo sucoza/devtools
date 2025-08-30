@@ -1,5 +1,4 @@
 import React from 'react';
-import { clsx } from 'clsx';
 import { Settings as SettingsIcon, Monitor, Zap, Database, Download, Upload } from 'lucide-react';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { createVisualRegressionDevToolsClient } from '../core/devtools-client';

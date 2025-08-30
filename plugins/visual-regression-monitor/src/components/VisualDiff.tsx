@@ -9,7 +9,6 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCcw,
-  Download,
   AlertCircle,
   CheckCircle,
   Clock,
@@ -25,7 +24,7 @@ import { formatTimestamp } from '../utils';
  */
 export function VisualDiff() {
   const { visualDiffs, selectedDiff, isAnalyzing, actions: diffActions } = useVisualDiff();
-  const { screenshots, actions: screenshotActions } = useScreenshots();
+  const { screenshots } = useScreenshots();
   
   const [selectedBaseline, setSelectedBaseline] = useState('');
   const [selectedComparison, setSelectedComparison] = useState('');
@@ -62,31 +61,6 @@ export function VisualDiff() {
     }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'passed':
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'failed':
-        return <AlertCircle className="w-4 h-4 text-red-500" />;
-      case 'pending':
-        return <Clock className="w-4 h-4 text-yellow-500" />;
-      default:
-        return <Clock className="w-4 h-4 text-gray-400" />;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'passed':
-        return 'text-green-600 bg-green-50 border-green-200 dark:text-green-400 dark:bg-green-900/20 dark:border-green-800';
-      case 'failed':
-        return 'text-red-600 bg-red-50 border-red-200 dark:text-red-400 dark:bg-red-900/20 dark:border-red-800';
-      case 'pending':
-        return 'text-yellow-600 bg-yellow-50 border-yellow-200 dark:text-yellow-400 dark:bg-yellow-900/20 dark:border-yellow-800';
-      default:
-        return 'text-gray-600 bg-gray-50 border-gray-200 dark:text-gray-400 dark:bg-gray-900/20 dark:border-gray-700';
-    }
-  };
 
   return (
     <div className="flex flex-col h-full">
@@ -250,8 +224,8 @@ function DiffListItem({
   isSelected, 
   onSelect 
 }: { 
-  diff: any; 
-  screenshots: any[]; 
+  diff: unknown; 
+  screenshots: unknown[]; 
   isSelected: boolean; 
   onSelect: () => void; 
 }) {
@@ -315,8 +289,8 @@ function DiffViewer({
   onAccept,
   onReject
 }: { 
-  diff: any; 
-  screenshots: any[]; 
+  diff: unknown; 
+  screenshots: unknown[]; 
   showOverlay: boolean; 
   zoomLevel: number; 
   onToggleOverlay: () => void;

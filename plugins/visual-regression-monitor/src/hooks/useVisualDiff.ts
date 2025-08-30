@@ -228,12 +228,13 @@ export function useVisualDiff() {
           case 'date':
             key = new Date(diff.timestamp).toDateString();
             break;
-          case 'severity':
+          case 'severity': {
             const percentage = diff.metrics.percentageChanged;
             if (percentage < 1) key = 'Low';
             else if (percentage < 5) key = 'Medium';
             else key = 'High';
             break;
+          }
           default:
             key = 'Unknown';
         }

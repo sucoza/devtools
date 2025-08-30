@@ -1,6 +1,5 @@
 import React from 'react';
-import { clsx } from 'clsx';
-import { Play, Pause, RotateCcw, Settings, Film } from 'lucide-react';
+import { Play, Film } from 'lucide-react';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { createVisualRegressionDevToolsClient } from '../core/devtools-client';
 

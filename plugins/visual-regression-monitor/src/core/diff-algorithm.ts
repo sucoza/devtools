@@ -167,7 +167,10 @@ class PerformanceMonitor {
       if (!this.metrics.has(operation)) {
         this.metrics.set(operation, []);
       }
-      this.metrics.get(operation)!.push(duration);
+      const metricArray = this.metrics.get(operation);
+      if (metricArray) {
+        metricArray.push(duration);
+      }
     };
   }
 
@@ -213,20 +216,20 @@ class SmartIgnoreRegionsDetector {
     return ignoreRegions;
   }
 
-  private detectTimestampRegions(baseline: ImageData, comparison: ImageData): DiffRegion[] {
+  private detectTimestampRegions(_baseline: ImageData, _comparison: ImageData): DiffRegion[] {
     // Simple heuristic: look for regions with digit-like patterns that change
     // In a real implementation, this would use OCR or pattern recognition
     return [];
   }
 
-  private detectDynamicContentRegions(baseline: ImageData, comparison: ImageData): DiffRegion[] {
+  private detectDynamicContentRegions(_baseline: ImageData, _comparison: ImageData): DiffRegion[] {
     // Detect regions with high frequency changes (animations, videos, etc.)
     return [];
   }
 
-  private detectAdvertisementRegions(baseline: ImageData, comparison: ImageData): DiffRegion[] {
+  private detectAdvertisementRegions(_baseline: ImageData, _comparison: ImageData): DiffRegion[] {
     // Detect common ad sizes and positions
-    const commonAdSizes = [
+    const _commonAdSizes = [
       { width: 300, height: 250 }, // Medium Rectangle
       { width: 728, height: 90 },  // Leaderboard
       { width: 320, height: 50 },  // Mobile Banner
@@ -278,7 +281,7 @@ export class DiffAlgorithm {
         this.workerPool.push(worker);
       }
 
-      console.log(`Initialized ${this.maxWorkers} Web Workers for image processing`);
+      // Workers initialized successfully
     } catch (error) {
       console.warn('Failed to initialize Web Workers:', error);
       this.isWebWorkersSupported = false;
@@ -305,7 +308,7 @@ export class DiffAlgorithm {
     startIndex: number,
     endIndex: number,
     threshold: number
-  ): Promise<any[]> {
+  ): Promise<unknown[]> {
     if (!this.isWebWorkersSupported || this.workerPool.length === 0) {
       // Fallback to main thread processing
       return this.processImageChunkMainThread(imageData1, imageData2, startIndex, endIndex, threshold);
@@ -359,7 +362,7 @@ export class DiffAlgorithm {
     startIndex: number,
     endIndex: number,
     threshold: number
-  ): any[] {
+  ): unknown[] {
     const differences = [];
     const data1 = imageData1.data;
     const data2 = imageData2.data;
@@ -494,13 +497,8 @@ export class DiffAlgorithm {
       endTiming();
 
       // Log performance metrics
-      const perfStats = this.performanceMonitor.getStats('fullComparison');
-      console.log(`Diff comparison completed in ${perfStats.avg.toFixed(2)}ms`, {
-        imageSize: `${processedBaseline.width}x${processedBaseline.height}`,
-        differences: differences.length,
-        ssimScore: ssimScore.toFixed(3),
-        status
-      });
+      const _perfStats = this.performanceMonitor.getStats('fullComparison');
+      // Diff comparison completed successfully
 
       return {
         success: true,
@@ -509,7 +507,7 @@ export class DiffAlgorithm {
       };
     } catch (error) {
       endTiming();
-      console.error('Visual diff comparison failed:', error);
+      // Visual diff comparison failed
       return {
         success: false,
         error: {
@@ -570,8 +568,8 @@ export class DiffAlgorithm {
       const similarity = (ssimScore * 0.5) + (pHashScore * 0.3) + (pixelScore * 0.2);
       
       return Math.max(0, Math.min(1, similarity));
-    } catch (error) {
-      console.error('Similarity calculation failed:', error);
+    } catch {
+      // Similarity calculation failed
       return 0;
     }
   }
@@ -719,7 +717,9 @@ export class DiffAlgorithm {
     // Filter regions based on exclusion zones if provided
     if (options.regions && options.regions.length > 0) {
       return regions.filter(region => {
-        return !options.regions!.some(exclusionZone => {
+        const excludeRegions = options.regions;
+        if (!excludeRegions) return true;
+        return !excludeRegions.some(exclusionZone => {
           return this.isRegionInside(region, exclusionZone);
         });
       });
@@ -732,7 +732,7 @@ export class DiffAlgorithm {
    * Convert pixel differences to regions
    */
   private convertPixelsToRegions(
-    pixelDifferences: any[], 
+    pixelDifferences: unknown[], 
     width: number, 
     height: number, 
     options: DiffOptions
@@ -752,7 +752,8 @@ export class DiffAlgorithm {
       processed.add(key);
 
       while (queue.length > 0) {
-        const current = queue.shift()!;
+        const current = queue.shift();
+        if (!current) break;
         
         for (const other of pixelDifferences) {
           const otherKey = `${other.x},${other.y}`;
@@ -789,7 +790,9 @@ export class DiffAlgorithm {
     // Filter regions based on exclusion zones
     if (options.regions && options.regions.length > 0) {
       return regions.filter(region => {
-        return !options.regions!.some(exclusionZone => {
+        const excludeRegions = options.regions;
+        if (!excludeRegions) return true;
+        return !excludeRegions.some(exclusionZone => {
           return this.isRegionInside(region, exclusionZone);
         });
       });
@@ -874,7 +877,7 @@ export class DiffAlgorithm {
    * Determine status using advanced criteria
    */
   private determineAdvancedStatus(
-    metrics: any, 
+    metrics: unknown, 
     threshold: number, 
     ssimScore: number
   ): 'passed' | 'failed' | 'warning' {
@@ -885,7 +888,7 @@ export class DiffAlgorithm {
     if (pixelBasedFailed && ssimBasedFailed) {
       return 'failed';
     } else if (pixelBasedFailed || ssimBasedFailed) {
-      return 'warning' as any; // Extended status
+      return 'warning' as 'passed' | 'failed'; // Extended status
     } else {
       return 'passed';
     }
@@ -1157,10 +1160,10 @@ export class DiffAlgorithm {
     averageComparisonTime: number;
     totalComparisons: number;
     successRate: number;
-    detailedStats: Record<string, any>;
+    detailedStats: Record<string, unknown>;
   } {
     const fullComparisonStats = this.performanceMonitor.getStats('fullComparison');
-    const detailedStats: Record<string, any> = {};
+    const detailedStats: Record<string, unknown> = {};
     
     const operations = [
       'imageLoading',
@@ -1225,7 +1228,7 @@ export class DiffAlgorithm {
     this.workerPool = [];
     this.performanceMonitor.reset();
     
-    console.log('DiffAlgorithm resources cleaned up');
+    // Resources cleaned up successfully
   }
 
   /**

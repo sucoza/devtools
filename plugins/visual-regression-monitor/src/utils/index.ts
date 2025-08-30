@@ -35,7 +35,7 @@ export function formatFileSize(bytes: number): string {
 /**
  * Debounce function calls
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {
@@ -50,7 +50,7 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * Throttle function calls
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
@@ -74,18 +74,18 @@ export function deepClone<T>(obj: T): T {
   }
   
   if (obj instanceof Date) {
-    return new Date(obj.getTime()) as any;
+    return new Date(obj.getTime()) as T;
   }
   
   if (obj instanceof Array) {
-    return obj.map(item => deepClone(item)) as any;
+    return obj.map(item => deepClone(item)) as T;
   }
   
   if (typeof obj === 'object') {
-    const copy = {} as { [key: string]: any };
+    const copy = {} as Record<string, unknown>;
     for (const key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        copy[key] = deepClone((obj as any)[key]);
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        copy[key] = deepClone((obj as Record<string, unknown>)[key]);
       }
     }
     return copy as T;
@@ -315,5 +315,5 @@ export async function retry<T>(
     }
   }
   
-  throw lastError!;
+  throw lastError || new Error('Retry failed');
 }

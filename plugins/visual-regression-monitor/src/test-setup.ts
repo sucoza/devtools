@@ -80,7 +80,7 @@ global.HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
   createPattern: vi.fn(),
   isContextLost: vi.fn(() => false),
   getContextAttributes: vi.fn()
-})) as any;
+})) as unknown as CanvasRenderingContext2D;
 
 global.HTMLCanvasElement.prototype.toDataURL = vi.fn(() => 'data:image/png;base64,mock');
 
@@ -160,7 +160,7 @@ global.Image = class Image extends EventTarget {
   click = vi.fn();
   blur = vi.fn();
   focus = vi.fn();
-} as any;
+} as unknown as HTMLElement;
 
 // Mock Web Workers
 global.Worker = class Worker extends EventTarget {
@@ -169,12 +169,12 @@ global.Worker = class Worker extends EventTarget {
   onmessageerror: ((event: MessageEvent) => void) | null = null;
   onerror: ((event: ErrorEvent) => void) | null = null;
 
-  constructor(url: string, options?: WorkerOptions) {
+  constructor(url: string, _options?: WorkerOptions) {
     super();
     this.url = url;
   }
 
-  postMessage(data: any, transfer?: Transferable[]) {
+  postMessage(data: unknown, _transfer?: Transferable[]) {
     // Mock worker responses
     setTimeout(() => {
       if (this.onmessage) {
@@ -198,7 +198,7 @@ global.Worker = class Worker extends EventTarget {
   addEventListener = vi.fn();
   removeEventListener = vi.fn();
   dispatchEvent = vi.fn();
-} as any;
+} as unknown as Worker;
 
 // Mock OffscreenCanvas
 global.OffscreenCanvas = class OffscreenCanvas extends EventTarget {
@@ -213,7 +213,7 @@ global.OffscreenCanvas = class OffscreenCanvas extends EventTarget {
     this.height = height;
   }
 
-  getContext(contextType: any, options?: any) {
+  getContext(_contextType: unknown, _options?: unknown) {
     return {
       fillRect: vi.fn(),
       clearRect: vi.fn(),
@@ -227,7 +227,7 @@ global.OffscreenCanvas = class OffscreenCanvas extends EventTarget {
     };
   }
 
-  convertToBlob(options?: ImageEncodeOptions): Promise<Blob> {
+  convertToBlob(_options?: ImageEncodeOptions): Promise<Blob> {
     return Promise.resolve(new Blob(['mock-blob'], { type: 'image/png' }));
   }
 
@@ -238,7 +238,7 @@ global.OffscreenCanvas = class OffscreenCanvas extends EventTarget {
   addEventListener = vi.fn();
   removeEventListener = vi.fn();
   dispatchEvent = vi.fn();
-} as any;
+} as unknown as OffscreenCanvas;
 
 // Mock MCP Playwright tools
 global.mcpPlaywrightTools = {
@@ -284,7 +284,7 @@ global.localStorage = {
 // Mock crypto for hash generation
 Object.defineProperty(window, 'crypto', {
   value: {
-    getRandomValues: vi.fn((arr: any) => {
+    getRandomValues: vi.fn((arr: unknown[]) => {
       for (let i = 0; i < arr.length; i++) {
         arr[i] = Math.floor(Math.random() * 256);
       }
@@ -311,7 +311,7 @@ global.URL = class URL {
   username: string;
   password: string;
 
-  constructor(url: string, base?: string | URL) {
+  constructor(url: string, _base?: string | URL) {
     this.href = url;
     this.protocol = 'https:';
     this.hostname = 'example.com';
@@ -334,15 +334,15 @@ global.URL = class URL {
     return this.href;
   }
 
-  static canParse(url: string | URL, base?: string | URL): boolean {
+  static canParse(_url: string | URL, _base?: string | URL): boolean {
     return true;
   }
 
-  static createObjectURL(obj: Blob | MediaSource): string {
+  static createObjectURL(_obj: Blob | MediaSource): string {
     return 'blob:mock-object-url';
   }
 
-  static parse(url: string | URL, base?: string | URL): URL | null {
+  static parse(url: string | URL, _base?: string | URL): URL | null {
     try {
       return new URL(url as string);
     } catch {
@@ -350,10 +350,10 @@ global.URL = class URL {
     }
   }
 
-  static revokeObjectURL(url: string): void {
+  static revokeObjectURL(_url: string): void {
     // Mock implementation
   }
-} as any;
+} as unknown as typeof URL;
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
@@ -361,7 +361,7 @@ global.IntersectionObserver = class IntersectionObserver {
   rootMargin: string = '0px';
   thresholds: readonly number[] = [0];
 
-  constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
+  constructor(_callback: IntersectionObserverCallback, _options?: IntersectionObserverInit) {
     // Mock implementation
   }
 
@@ -369,7 +369,7 @@ global.IntersectionObserver = class IntersectionObserver {
   disconnect = vi.fn();
   unobserve = vi.fn();
   takeRecords = vi.fn(() => []);
-} as any;
+} as unknown as typeof IntersectionObserver;
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
