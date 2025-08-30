@@ -169,12 +169,14 @@ class DevToolsLogger {
     };
 
     // Override console methods
-    console.log = (...args) => this.interceptConsoleCall('info', args, this.originalConsole!.log);
-    console.debug = (...args) => this.interceptConsoleCall('debug', args, this.originalConsole!.debug);
-    console.info = (...args) => this.interceptConsoleCall('info', args, this.originalConsole!.info);
-    console.warn = (...args) => this.interceptConsoleCall('warn', args, this.originalConsole!.warn);
-    console.error = (...args) => this.interceptConsoleCall('error', args, this.originalConsole!.error);
-    console.trace = (...args) => this.interceptConsoleCall('trace', args, this.originalConsole!.trace);
+    if (this.originalConsole) {
+      console.log = (...args) => this.interceptConsoleCall('info', args, this.originalConsole.log);
+      console.debug = (...args) => this.interceptConsoleCall('debug', args, this.originalConsole.debug);
+      console.info = (...args) => this.interceptConsoleCall('info', args, this.originalConsole.info);
+      console.warn = (...args) => this.interceptConsoleCall('warn', args, this.originalConsole.warn);
+      console.error = (...args) => this.interceptConsoleCall('error', args, this.originalConsole.error);
+      console.trace = (...args) => this.interceptConsoleCall('trace', args, this.originalConsole.trace);
+    }
 
     this.consoleIntercepted = true;
   }
@@ -214,7 +216,7 @@ class DevToolsLogger {
 
       if (this.consoleCallCount > 500) {
         // Disable console interception if we hit too many calls
-        console.error('[Logger] Disabling console interception due to excessive calls');
+        // console.error('[Logger] Disabling console interception due to excessive calls');
         this.disableConsoleIntercept();
         originalMethod(...args);
         return;
@@ -324,7 +326,7 @@ class DevToolsLogger {
           this.logBuffer = this.logBuffer.slice(-this.config.maxLogs);
         }
       }
-    } catch (error) {
+    } catch {
       // If anything goes wrong, silently fail to prevent console spam
     } finally {
       this.interceptingConsole = false;
@@ -520,7 +522,7 @@ class DevToolsLogger {
     if (typeof data === 'object') {
       const cleaned: any = {};
       for (const key in data) {
-        if (data.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(data, key)) {
           cleaned[key] = this.cleanData(data[key]);
         }
       }
@@ -573,17 +575,17 @@ class DevToolsLogger {
       switch (entry.level) {
         case 'trace':
         case 'debug':
-          console.debug(...args);
+          // console.debug(...args);
           break;
         case 'info':
-          console.info(...args);
+          // console.info(...args);
           break;
         case 'warn':
-          console.warn(...args);
+          // console.warn(...args);
           break;
         case 'error':
         case 'fatal':
-          console.error(...args);
+          // console.error(...args);
           break;
       }
     }
@@ -764,7 +766,7 @@ class DevToolsLogger {
       case 'json':
         return JSON.stringify(logs, null, 2);
       
-      case 'csv':
+      case 'csv': {
         const headers = ['timestamp', 'level', 'category', 'message', 'data'];
         const rows = logs.map(log => [
           new Date(log.timestamp).toISOString(),
@@ -774,6 +776,7 @@ class DevToolsLogger {
           JSON.stringify(log.data || ''),
         ]);
         return [headers, ...rows].map(row => row.join(',')).join('\n');
+      }
       
       case 'txt':
         return logs.map(log => {

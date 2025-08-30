@@ -38,7 +38,7 @@ interface LoggerUIState {
 const saveUIState = (state: LoggerUIState) => {
   try {
     localStorage.setItem(LOGGER_UI_STATE_KEY, JSON.stringify(state));
-  } catch (e) {
+  } catch {
     // Ignore localStorage errors
   }
 };
@@ -47,7 +47,7 @@ const loadUIState = (): Partial<LoggerUIState> => {
   try {
     const saved = localStorage.getItem(LOGGER_UI_STATE_KEY);
     return saved ? JSON.parse(saved) : {};
-  } catch (e) {
+  } catch {
     return {};
   }
 };
@@ -360,7 +360,7 @@ export function LoggerDevToolsPanel() {
   }, [logs, levelFilter, categoryFilter, sourceFilter, searchQuery]);
 
   // Get unique categories
-  const categories = useMemo(() => {
+  const _categories = useMemo(() => {
     const cats = new Set<string>();
     logs.forEach(log => {
       if (log.category) cats.add(log.category);
@@ -405,7 +405,7 @@ export function LoggerDevToolsPanel() {
         mimeType = 'application/json';
         extension = 'json';
         break;
-      case 'csv':
+      case 'csv': {
         const headers = ['timestamp', 'level', 'category', 'message', 'data'];
         const rows = filteredLogs.map(log => [
           new Date(log.timestamp).toISOString(),
@@ -418,6 +418,7 @@ export function LoggerDevToolsPanel() {
         mimeType = 'text/csv';
         extension = 'csv';
         break;
+      }
       case 'txt':
         content = filteredLogs.map(log => {
           const time = new Date(log.timestamp).toISOString();
@@ -547,7 +548,7 @@ export function LoggerDevToolsPanel() {
       if (data.startsWith('[') && data.endsWith(']')) {
         return <span style={{ color: '#95a5a6', fontStyle: 'italic' }}>{data}</span>;
       }
-      return <span style={{ color: '#27ae60' }}>"{data}"</span>;
+      return <span style={{ color: '#27ae60' }}>&quot;{data}&quot;</span>;
     }
 
     if (typeof data === 'number') {
