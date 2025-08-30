@@ -2,9 +2,9 @@ import type {
   RenderEvent,
   ComponentInfo,
   OptimizationSuggestion,
-  PropChange,
-  StateChange,
-  SuggestionType,
+  _PropChange,
+  _StateChange,
+  _SuggestionType,
   RenderMetrics,
 } from "../types";
 
@@ -320,7 +320,7 @@ export class OptimizationEngine {
    */
   private identifyStructuralIssues(
     analysis: ComponentAnalysis,
-    component: ComponentInfo,
+    _component: ComponentInfo,
   ): StructuralIssue[] {
     const issues: StructuralIssue[] = [];
 

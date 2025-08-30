@@ -13,7 +13,7 @@ import type {
   RenderTree,
 } from "../types";
 import { useRenderWasteDetectorStore } from "./devtools-store";
-import { getProfilerIntegration, startRenderProfiling, stopRenderProfiling } from "./profiler-integration";
+import { _getProfilerIntegration, startRenderProfiling, stopRenderProfiling } from "./profiler-integration";
 
 /**
  * Event client interface following TanStack DevTools patterns
@@ -83,8 +83,8 @@ export interface RenderWasteDetectorEventClient {
   exportSettings: () => RecordingSettings;
 
   // Session management methods
-  exportSession: (sessionId?: string) => any;
-  importSession: (sessionData: any) => void;
+  exportSession: (sessionId?: string) => unknown;
+  importSession: (sessionData: unknown) => void;
 
   // Statistics methods
   calculateStats: () => void;
@@ -125,7 +125,7 @@ export class RenderWasteDetectorDevToolsEventClient
       baseDuration: number,
       startTime: number,
       commitTime: number,
-      interactions: Set<any>,
+      interactions: Set<unknown>,
     ) => void
   >();
 
@@ -448,7 +448,7 @@ export class RenderWasteDetectorDevToolsEventClient
     return null;
   };
 
-  importSession = (sessionData: any): void => {
+  importSession = (sessionData: unknown): void => {
     if (sessionData && sessionData.components && sessionData.metrics) {
       const session = {
         ...sessionData,
@@ -502,12 +502,12 @@ export class RenderWasteDetectorDevToolsEventClient
   private setupRenderTracking = (): void => {
     if (typeof window === "undefined") return;
 
-    const settings = this.store.getState().settings;
+    const _settings = this.store.getState().settings;
 
     // Start the real React Profiler integration
     startRenderProfiling(this);
 
-    console.log("Render tracking setup complete with settings:", settings);
+    // console.log("Render tracking setup complete with settings:", settings);
   };
 
   /**
@@ -518,11 +518,11 @@ export class RenderWasteDetectorDevToolsEventClient
     // This method is kept for compatibility and monitoring
     if (
       typeof window !== "undefined" &&
-      (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__
+      (window as unknown as { __REACT_DEVTOOLS_GLOBAL_HOOK__?: unknown }).__REACT_DEVTOOLS_GLOBAL_HOOK__
     ) {
-      console.log("React DevTools Global Hook detected - real profiler integration active");
+      // console.log("React DevTools Global Hook detected - real profiler integration active");
     } else {
-      console.warn("React DevTools not detected - profiling functionality may be limited");
+      // console.warn("React DevTools not detected - profiling functionality may be limited");
     }
   }
 
@@ -540,7 +540,7 @@ export class RenderWasteDetectorDevToolsEventClient
     // Clear profiler callbacks
     this.profilerCallbacks.clear();
 
-    console.log("Render tracking cleanup complete");
+    // console.log("Render tracking cleanup complete");
   };
 
   /**

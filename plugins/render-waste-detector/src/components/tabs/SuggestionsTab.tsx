@@ -1,5 +1,5 @@
 import React from "react";
-import { Lightbulb, Filter, AlertTriangle, CheckCircle, X } from "lucide-react";
+import { Lightbulb, Filter, _AlertTriangle, CheckCircle, X } from "lucide-react";
 import { clsx } from "clsx";
 import type {
   RenderWasteDetectorState,
@@ -10,7 +10,7 @@ import type {
 interface SuggestionsTabProps {
   state: RenderWasteDetectorState;
   eventClient: RenderWasteDetectorEventClient;
-  dispatch: (action: any) => void;
+  dispatch: (action: unknown) => void;
   compact: boolean;
   onComponentSelect: (componentId: string | null) => void;
   onSuggestionApply: (suggestionId: string) => void;
@@ -19,12 +19,12 @@ interface SuggestionsTabProps {
 export function SuggestionsTab({
   state,
   eventClient,
-  dispatch,
-  compact,
+  _dispatch,
+  _compact,
   onComponentSelect,
   onSuggestionApply,
 }: SuggestionsTabProps) {
-  const { suggestions, ui } = state;
+  const { suggestions, _ui } = state;
   const filteredSuggestions = eventClient.getFilteredSuggestions();
 
   const getSeverityIcon = (severity: OptimizationSuggestion["severity"]) => {
@@ -42,7 +42,7 @@ export function SuggestionsTab({
     }
   };
 
-  const getSeverityColor = (severity: OptimizationSuggestion["severity"]) => {
+  const _getSeverityColor = (severity: OptimizationSuggestion["severity"]) => {
     switch (severity) {
       case "critical":
         return "#dc3545";

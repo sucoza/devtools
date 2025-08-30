@@ -10,7 +10,7 @@ import type {
   HeatMapData,
   RenderTree,
   ComponentInfo,
-  VDomDiff,
+  _VDomDiff,
   RenderFilters,
   ViewOptions,
   RecordingSettings,
@@ -239,7 +239,7 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
       const state = get();
 
       switch (action.type) {
-        case "recording/start":
+        case "recording/start": {
           const settings = { ...state.settings, ...action.payload };
           const newSession = get().createSession();
 
@@ -254,6 +254,7 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             settings,
           }));
           break;
+        }
 
         case "recording/stop":
           set((state) => ({
@@ -281,8 +282,8 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
           }));
           break;
 
-        case "recording/clear":
-          set((state) => ({
+        case "recording/clear": {
+          set((_state) => ({
             recording: {
               ...initialState.recording,
             },
@@ -295,8 +296,9 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             vdomDiffs: [],
           }));
           break;
+        }
 
-        case "recording/session/create":
+        case "recording/session/create": {
           const sessionToCreate = action.payload;
           set((state) => ({
             recording: {
@@ -305,8 +307,9 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             },
           }));
           break;
+        }
 
-        case "recording/session/select":
+        case "recording/session/select": {
           const sessionId = action.payload;
           const session = state.recording.sessions.find(
             (s) => s.id === sessionId,
@@ -326,8 +329,9 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             }));
           }
           break;
+        }
 
-        case "recording/session/delete":
+        case "recording/session/delete": {
           const sessionIdToDelete = action.payload;
           set((state) => ({
             recording: {
@@ -338,22 +342,25 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             },
           }));
           break;
+        }
 
-        case "component/register":
+        case "component/register": {
           const component = action.payload;
           set((state) => ({
             components: new Map(state.components.set(component.id, component)),
           }));
           break;
+        }
 
-        case "component/unregister":
+        case "component/unregister": {
           const componentIdToRemove = action.payload;
           const newComponents = new Map(state.components);
           newComponents.delete(componentIdToRemove);
           set({ components: newComponents });
           break;
+        }
 
-        case "component/update":
+        case "component/update": {
           const { id, updates } = action.payload;
           const existingComponent = state.components.get(id);
           if (existingComponent) {
@@ -364,31 +371,35 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             }));
           }
           break;
+        }
 
-        case "render/event/add":
+        case "render/event/add": {
           const renderEvent = action.payload;
           set((state) => ({
             renderEvents: [...state.renderEvents, renderEvent],
           }));
           break;
+        }
 
-        case "render/event/batch":
+        case "render/event/batch": {
           const renderEvents = action.payload;
           set((state) => ({
             renderEvents: [...state.renderEvents, ...renderEvents],
           }));
           break;
+        }
 
         case "render/events/clear":
           set({ renderEvents: [] });
           break;
 
-        case "render/metrics/update":
+        case "render/metrics/update": {
           const { componentId, metrics } = action.payload;
           set((state) => ({
             metrics: new Map(state.metrics.set(componentId, metrics)),
           }));
           break;
+        }
 
         case "analysis/start":
           set((state) => ({
@@ -400,7 +411,7 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
           }));
           break;
 
-        case "analysis/complete":
+        case "analysis/complete": {
           const { suggestions, heatMapData } = action.payload;
           set((state) => ({
             suggestions,
@@ -413,8 +424,9 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             },
           }));
           break;
+        }
 
-        case "analysis/progress":
+        case "analysis/progress": {
           const progress = action.payload;
           set((state) => ({
             performance: {
@@ -423,8 +435,9 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             },
           }));
           break;
+        }
 
-        case "suggestions/dismiss":
+        case "suggestions/dismiss": {
           const suggestionIdToDismiss = action.payload;
           set((state) => ({
             suggestions: state.suggestions.filter(
@@ -432,18 +445,20 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             ),
           }));
           break;
+        }
 
         case "suggestions/apply":
           // Implementation would depend on how suggestions are applied
-          console.log("Applying suggestion:", action.payload);
+          // console.log("Applying suggestion:", action.payload);
           break;
 
-        case "heatmap/update":
+        case "heatmap/update": {
           const heatMapDataUpdate = action.payload;
           set({ heatMapData: heatMapDataUpdate });
           break;
+        }
 
-        case "heatmap/mode/set":
+        case "heatmap/mode/set": {
           const heatMapMode = action.payload;
           set((state) => ({
             ui: {
@@ -455,13 +470,15 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             },
           }));
           break;
+        }
 
-        case "tree/update":
+        case "tree/update": {
           const renderTree = action.payload;
           set({ renderTree });
           break;
+        }
 
-        case "tree/expand":
+        case "tree/expand": {
           const componentIdToExpand = action.payload;
           set((state) => ({
             ui: {
@@ -472,8 +489,9 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             },
           }));
           break;
+        }
 
-        case "tree/collapse":
+        case "tree/collapse": {
           const componentIdToCollapse = action.payload;
           const expandedComponents = new Set(state.ui.expandedComponents);
           expandedComponents.delete(componentIdToCollapse);
@@ -484,8 +502,9 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             },
           }));
           break;
+        }
 
-        case "tree/expand-all":
+        case "tree/expand-all": {
           const allComponentIds = new Set(Array.from(state.components.keys()));
           set((state) => ({
             ui: {
@@ -494,6 +513,7 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             },
           }));
           break;
+        }
 
         case "tree/collapse-all":
           set((state) => ({
@@ -504,35 +524,39 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
           }));
           break;
 
-        case "ui/tab/select":
+        case "ui/tab/select": {
           const activeTab = action.payload;
           set((state) => ({
             ui: { ...state.ui, activeTab },
           }));
           break;
+        }
 
-        case "ui/component/select":
+        case "ui/component/select": {
           const selectedComponentId = action.payload;
           set((state) => ({
             ui: { ...state.ui, selectedComponentId },
           }));
           break;
+        }
 
-        case "ui/component/hover":
+        case "ui/component/hover": {
           const hoveredComponentId = action.payload;
           set((state) => ({
             ui: { ...state.ui, hoveredComponentId },
           }));
           break;
+        }
 
-        case "ui/render-event/select":
+        case "ui/render-event/select": {
           const selectedRenderEventId = action.payload;
           set((state) => ({
             ui: { ...state.ui, selectedRenderEventId },
           }));
           break;
+        }
 
-        case "ui/filters/update":
+        case "ui/filters/update": {
           const filterUpdates = action.payload;
           set((state) => ({
             ui: {
@@ -541,8 +565,9 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             },
           }));
           break;
+        }
 
-        case "ui/view-options/update":
+        case "ui/view-options/update": {
           const viewOptionUpdates = action.payload;
           set((state) => ({
             ui: {
@@ -551,27 +576,31 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             },
           }));
           break;
+        }
 
-        case "ui/theme/set":
+        case "ui/theme/set": {
           const theme = action.payload;
           set((state) => ({
             ui: { ...state.ui, theme },
           }));
           break;
+        }
 
-        case "ui/sidebar/resize":
+        case "ui/sidebar/resize": {
           const sidebarWidth = action.payload;
           set((state) => ({
             ui: { ...state.ui, sidebarWidth },
           }));
           break;
+        }
 
-        case "ui/panel/resize":
+        case "ui/panel/resize": {
           const panelHeight = action.payload;
           set((state) => ({
             ui: { ...state.ui, panelHeight },
           }));
           break;
+        }
 
         case "ui/split-view/toggle":
           set((state) => ({
@@ -579,21 +608,23 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
           }));
           break;
 
-        case "settings/update":
+        case "settings/update": {
           const settingUpdates = action.payload;
           set((state) => ({
             settings: { ...state.settings, ...settingUpdates },
           }));
           break;
+        }
 
         case "settings/reset":
           set({ settings: initialState.settings });
           break;
 
-        case "settings/import":
+        case "settings/import": {
           const importedSettings = action.payload;
           set({ settings: importedSettings });
           break;
+        }
 
         case "settings/export":
           // Export will be handled by the exportSettings method
@@ -603,12 +634,13 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
           get().calculateStats();
           break;
 
-        case "stats/update":
+        case "stats/update": {
           const statsUpdate = action.payload;
           set((state) => ({
             stats: { ...state.stats, ...statsUpdate },
           }));
           break;
+        }
 
         case "performance/monitor/start":
           get().startPerformanceMonitoring();
@@ -618,7 +650,7 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
           get().stopPerformanceMonitoring();
           break;
 
-        case "performance/update":
+        case "performance/update": {
           const performanceMetrics = action.payload;
           set((state) => ({
             performance: {
@@ -627,6 +659,7 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
             },
           }));
           break;
+        }
       }
     },
 
@@ -736,7 +769,7 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
         // In a real implementation, this would perform actual analysis
         const state = get();
         const components = Array.from(state.components.values());
-        const renderEvents = state.renderEvents;
+        const _renderEvents = state.renderEvents;
 
         // Mock analysis with progress updates
         for (let i = 0; i <= 100; i += 10) {
@@ -746,7 +779,7 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
 
         // Generate mock suggestions and heat map data
         const suggestions: OptimizationSuggestion[] = components
-          .filter((comp) => Math.random() > 0.7) // Mock filtering
+          .filter((_comp) => Math.random() > 0.7) // Mock filtering
           .map((comp) => ({
           id: `suggestion_${comp.id}_${Date.now()}`,
           componentId: comp.id,
@@ -1013,12 +1046,12 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
      */
     startPerformanceMonitoring: () => {
       // Implementation would start performance monitoring
-      console.log("Starting performance monitoring");
+      // console.log("Starting performance monitoring");
     },
 
     stopPerformanceMonitoring: () => {
       // Implementation would stop performance monitoring
-      console.log("Stopping performance monitoring");
+      // console.log("Stopping performance monitoring");
     },
 
     updatePerformanceMetrics: (metrics: {

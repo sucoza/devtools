@@ -8,7 +8,7 @@ import type {
 interface ComponentsTabProps {
   state: RenderWasteDetectorState;
   eventClient: RenderWasteDetectorEventClient;
-  dispatch: (action: any) => void;
+  dispatch: (action: unknown) => void;
   compact: boolean;
   onComponentSelect: (componentId: string | null) => void;
   onSuggestionApply: (suggestionId: string) => void;
@@ -17,8 +17,8 @@ interface ComponentsTabProps {
 export function ComponentsTab({
   state,
   eventClient,
-  dispatch,
-  compact,
+  _dispatch,
+  _compact,
   onComponentSelect,
 }: ComponentsTabProps) {
   return (

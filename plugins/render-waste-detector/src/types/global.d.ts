@@ -8,7 +8,7 @@ declare module "*.css" {
 
 // Styled-jsx module augmentation
 declare module "react" {
-  interface HTMLAttributes<T> {
+  interface HTMLAttributes<_T> {
     jsx?: boolean;
   }
 }

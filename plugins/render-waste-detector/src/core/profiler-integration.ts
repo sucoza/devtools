@@ -170,7 +170,7 @@ export class ProfilerIntegration {
    */
   private processFiber(fiber: any, parentFiber: any): void {
     const componentId = this.getComponentId(fiber);
-    const componentName = this.getComponentName(fiber);
+    const _componentName = this.getComponentName(fiber);
 
     // Register component if not already registered
     if (!this.componentRegistry.has(componentId)) {
@@ -332,7 +332,7 @@ export class ProfilerIntegration {
   /**
    * Get component location (file, line, column)
    */
-  private getComponentLocation(fiber: any): ComponentInfo["location"] {
+  private getComponentLocation(_fiber: unknown): ComponentInfo["location"] {
     // In a real implementation, this would extract location from fiber._debugSource
     // or use source maps to determine the component's location
     return {
@@ -356,7 +356,7 @@ export class ProfilerIntegration {
   /**
    * Calculate render duration
    */
-  private calculateRenderDuration(fiber: any): number {
+  private calculateRenderDuration(_fiber: unknown): number {
     // In a real implementation, this would use React's profiling data
     // For now, return a mock duration
     return Math.random() * 10;

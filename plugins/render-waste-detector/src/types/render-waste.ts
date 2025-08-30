@@ -29,8 +29,8 @@ export interface RenderEvent {
   duration: number;
   phase: "mount" | "update" | "unmount";
   reason: RenderReason;
-  propsChanges: PropChange[];
-  stateChanges: StateChange[];
+  propsChanges: _PropChange[];
+  stateChanges: _StateChange[];
   contextChanges: ContextChange[];
   renderCount: number;
   actualDuration: number;
@@ -53,7 +53,7 @@ export type RenderReason =
   | "unknown";
 
 // Prop, state, and context changes
-export interface PropChange {
+export interface _PropChange {
   key: string;
   oldValue: any;
   newValue: any;
@@ -63,7 +63,7 @@ export interface PropChange {
   path: string[];
 }
 
-export interface StateChange {
+export interface _StateChange {
   key: string;
   oldValue: any;
   newValue: any;
@@ -115,7 +115,7 @@ export interface OptimizationSuggestion {
   relatedHooks?: string[];
 }
 
-export type SuggestionType =
+export type _SuggestionType =
   | "use-memo"
   | "use-callback"
   | "react-memo"

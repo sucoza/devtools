@@ -8,7 +8,7 @@ import {
   Lightbulb,
   Clock,
   Settings,
-  Play,
+  _Play,
   Square,
   Pause,
   RotateCcw,
@@ -42,7 +42,7 @@ export function PluginPanel({
   style,
   theme = "auto",
   compact = false,
-  defaultTab = "overview",
+  _defaultTab = "overview",
   defaultSettings,
   onTabChange,
   onEvent,
@@ -51,7 +51,7 @@ export function PluginPanel({
   children,
 }: RenderWasteDetectorPanelProps) {
   // Create or get event client
-  const eventClient = (React as any).useMemo(() => {
+  const eventClient = React.useMemo(() => {
     const client =
       getRenderWasteDetectorEventClient() ||
       createRenderWasteDetectorEventClient();
@@ -78,7 +78,7 @@ export function PluginPanel({
   };
 
   // Handle events
-  const handleEvent = (action: any) => {
+  const handleEvent = (action: unknown) => {
     eventClient.dispatch(action);
     onEvent?.(action);
   };
@@ -92,7 +92,7 @@ export function PluginPanel({
   // Handle suggestion application
   const handleSuggestionApply = (suggestionId: string) => {
     const suggestion = state.suggestions.find(
-      (s: any) => s.id === suggestionId,
+      (s: unknown) => s.id === suggestionId,
     );
     if (suggestion) {
       eventClient.applySuggestion(suggestionId);
@@ -104,8 +104,8 @@ export function PluginPanel({
   const tabs: Array<{
     id: DevToolsTab;
     label: string;
-    icon: any;
-    component: any;
+    icon: React.ComponentType<{ size?: number }>;
+    component: React.ComponentType<unknown>;
     badge?: number;
   }> = [
     {

@@ -8,7 +8,7 @@ import type {
 interface HeatMapTabProps {
   state: RenderWasteDetectorState;
   eventClient: RenderWasteDetectorEventClient;
-  dispatch: (action: any) => void;
+  dispatch: (action: unknown) => void;
   compact: boolean;
   onComponentSelect: (componentId: string | null) => void;
   onSuggestionApply: (suggestionId: string) => void;
@@ -17,8 +17,8 @@ interface HeatMapTabProps {
 export function HeatMapTab({
   state,
   eventClient,
-  dispatch,
-  compact,
+  _dispatch,
+  _compact,
   onComponentSelect,
 }: HeatMapTabProps) {
   const { heatMapData, ui } = state;
@@ -31,7 +31,7 @@ export function HeatMapTab({
         <div className="heatmap-controls">
           <select
             value={viewOptions.heatMapMode}
-            onChange={(e) => eventClient.setHeatMapMode(e.target.value as any)}
+            onChange={(e) => eventClient.setHeatMapMode(e.target.value as string)}
           >
             <option value="renders">Render Count</option>
             <option value="waste">Waste Level</option>
