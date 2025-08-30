@@ -191,7 +191,7 @@ export const FlagListItem: React.FC<FlagListItemProps> = ({
               <ul>
                 {flag.dependencies.map((dep, index) => (
                   <li key={index}>
-                    Flag "{dep.flagId}" must be {dep.condition}
+                    Flag &quot;{dep.flagId}&quot; must be {dep.condition}
                     {dep.value !== undefined && ` (value: ${JSON.stringify(dep.value)})`}
                   </li>
                 ))}

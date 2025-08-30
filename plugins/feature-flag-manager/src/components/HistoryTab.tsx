@@ -9,7 +9,7 @@ interface HistoryTabProps {
 
 export const HistoryTab: React.FC<HistoryTabProps> = ({
   state,
-  client
+  client: _client
 }) => {
   const [selectedFlagFilter, setSelectedFlagFilter] = useState<string>('all');
   const [selectedReasonFilter, setSelectedReasonFilter] = useState<string>('all');
@@ -47,7 +47,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
   const handleClearHistory = () => {
     if (confirm('Are you sure you want to clear the evaluation history?')) {
       // In a real implementation, this would call a method to clear history
-      console.log('Clear history requested');
+      // console.log('Clear history requested');
     }
   };
 

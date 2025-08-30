@@ -13,7 +13,7 @@ interface DashboardTabProps {
 
 export const DashboardTab: React.FC<DashboardTabProps> = ({
   state,
-  client,
+  client: _client,
   onToggleFlag,
   onNavigateToTab
 }) => {

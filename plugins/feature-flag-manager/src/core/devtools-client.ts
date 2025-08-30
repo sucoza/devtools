@@ -1,15 +1,13 @@
 import { 
   FeatureFlag, 
   FlagOverride, 
-  UserSegment, 
   Experiment, 
   EvaluationContext, 
   FlagEvaluation,
   FlagEvent,
   FeatureFlagDevToolsState,
   FeatureFlagDevToolsClient,
-  ProviderSettings,
-  FlagValue
+  ProviderSettings
 } from '../types';
 import { FeatureFlagDevToolsStore } from './devtools-store';
 import { FlagEvaluator } from './flag-evaluator';

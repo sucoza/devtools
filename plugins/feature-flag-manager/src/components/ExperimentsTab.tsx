@@ -1,5 +1,5 @@
 import React from 'react';
-import { FeatureFlagDevToolsState, FeatureFlagDevToolsClient, Experiment } from '../types';
+import { FeatureFlagDevToolsState, FeatureFlagDevToolsClient } from '../types';
 
 interface ExperimentsTabProps {
   state: FeatureFlagDevToolsState;
@@ -8,7 +8,7 @@ interface ExperimentsTabProps {
 
 export const ExperimentsTab: React.FC<ExperimentsTabProps> = ({
   state,
-  client
+  client: _client
 }) => {
   const experiments = state.experiments;
 

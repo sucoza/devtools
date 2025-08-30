@@ -2,7 +2,6 @@ import {
   FeatureFlag,
   EvaluationContext,
   FlagEvaluation,
-  EvaluationReason,
   FlagValue,
   FlagVariant,
   TargetingRule,

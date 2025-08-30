@@ -68,7 +68,7 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
     setFilters(prev => ({ ...prev, ...newFilters }));
   };
 
-  const handleSortChange = (field: keyof FeatureFlag) => {
+  const _handleSortChange = (field: keyof FeatureFlag) => {
     setSortOptions(prev => ({
       field: field as SortOptions['field'],
       direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'

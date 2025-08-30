@@ -200,8 +200,8 @@ export class CustomProviderAdapter {
 
     try {
       // In a real implementation, this would make a PUT/PATCH request
-      const payload = this.transformFlagForProvider(flag);
-      console.log('Would update flag:', payload);
+      const _payload = this.transformFlagForProvider(flag);
+      // console.log('Would update flag:', _payload);
       
       // Mock successful response
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -218,8 +218,8 @@ export class CustomProviderAdapter {
 
     try {
       // In a real implementation, this would make a POST request
-      const payload = this.transformFlagForProvider(flag);
-      console.log('Would create flag:', payload);
+      const _payload = this.transformFlagForProvider(flag);
+      // console.log('Would create flag:', _payload);
       
       // Mock successful response
       await new Promise(resolve => setTimeout(resolve, 100));

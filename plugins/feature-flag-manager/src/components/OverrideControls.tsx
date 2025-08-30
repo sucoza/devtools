@@ -155,7 +155,7 @@ export const OverrideControls: React.FC<OverrideControlsProps> = ({
           
           {flag.type === 'json' && (
             <div className="input-help">
-              Enter valid JSON (e.g., {`{"key": "value"}`}, [1,2,3], "string")
+              Enter valid JSON (e.g., {`{"key": "value"}`}, [1,2,3], &quot;string&quot;)
             </div>
           )}
         </div>
