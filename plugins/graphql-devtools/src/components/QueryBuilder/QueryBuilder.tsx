@@ -12,6 +12,7 @@ import {
 import { FieldSelector } from './FieldSelector';
 import { VariableEditor } from './VariableEditor';
 import { QueryPreview } from './QueryPreview';
+import { convertFieldToInfo } from '../../utils/graphql-parser';
 import type { 
   SchemaInfo, 
   QueryBuilderState, 
@@ -286,7 +287,7 @@ export const QueryBuilder: React.FC<QueryBuilderProps> = ({
         {activeTab === 'fields' && (
           <div className="h-full overflow-auto p-4">
             <FieldSelector
-              availableFields={availableFields}
+              availableFields={availableFields.map(field => convertFieldToInfo(field))}
               selectedFields={queryBuilder.selectedFields}
               types={schemaInfo.types}
               onAddField={handleAddField}

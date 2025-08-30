@@ -104,7 +104,7 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
             <ArrowRight size={14} className="text-gray-400" />
             {renderTypeLink(field.type)}
             {field.isDeprecated && (
-              <AlertTriangle size={14} className="text-yellow-500" title="Deprecated" />
+              <span title="Deprecated"><AlertTriangle size={14} className="text-yellow-500" /></span>
             )}
           </div>
           
@@ -212,7 +212,7 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
                       {enumValue.name}
                     </span>
                     {enumValue.isDeprecated && (
-                      <AlertTriangle size={14} className="text-yellow-500" title="Deprecated" />
+                      <span title="Deprecated"><AlertTriangle size={14} className="text-yellow-500" /></span>
                     )}
                   </div>
                   

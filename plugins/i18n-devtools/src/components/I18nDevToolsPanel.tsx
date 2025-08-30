@@ -144,7 +144,7 @@ export function I18nDevToolsPanel() {
 
   // Auto-refresh effect
   useEffect(() => {
-    if (!autoRefresh) return;
+    if (!autoRefresh) return undefined;
 
     const interval = setInterval(() => {
       i18nEventClient.emit('i18n-state-request', undefined);

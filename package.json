@@ -50,5 +50,8 @@
     "url": "https://github.com/sucoza/devtools"
   },
   "author": "tyevco",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "graphql": "^16.9.0"
+  }
 }

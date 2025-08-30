@@ -3,13 +3,32 @@
  * Handles communication between the i18n adapter and DevTools panel
  */
 
-import { EventClient } from '@tanstack/devtools-event-client';
-import { I18nDevToolsEvents, I18nEventType, I18nEventPayload, I18nDevToolsConfig } from '../types/devtools';
+import type { I18nDevToolsEvents, I18nEventType, I18nEventPayload, I18nDevToolsConfig } from '../types/devtools';
 
-export class I18nEventClient {
-  private eventClient: EventClient<I18nDevToolsEvents>;
+/**
+ * Event client interface for i18n devtools
+ */
+export interface I18nEventClientInterface {
+  emit: <T extends I18nEventType>(type: T, payload: I18nEventPayload<T>) => void;
+  on: <T extends I18nEventType>(
+    type: T,
+    callback: (event: { type: T; payload: I18nEventPayload<T>; timestamp: number }) => void
+  ) => () => void;
+  onAll: (
+    callback: (event: { 
+      type: I18nEventType; 
+      payload: I18nEventPayload<I18nEventType>; 
+      timestamp: number 
+    }) => void
+  ) => () => void;
+  destroy: () => void;
+}
+
+export class I18nEventClient implements I18nEventClientInterface {
   private config: I18nDevToolsConfig;
   private isEnabled: boolean = true;
+  private subscribers = new Map<string, Set<Function>>();
+  private allSubscribers = new Set<Function>();
 
   constructor(config: Partial<I18nDevToolsConfig> = {}) {
     this.config = {
@@ -25,7 +44,6 @@ export class I18nEventClient {
       ...config,
     };
 
-    this.eventClient = new EventClient<I18nDevToolsEvents>(this.config.pluginId);
     this.isEnabled = this.config.enabled;
   }
 
@@ -36,20 +54,38 @@ export class I18nEventClient {
     if (!this.isEnabled) return;
 
     try {
-      this.eventClient.emit(type, payload);
+      const event = {
+        type,
+        payload,
+        timestamp: Date.now()
+      };
+
+      // Notify specific subscribers
+      const typeSubscribers = this.subscribers.get(type);
+      if (typeSubscribers) {
+        typeSubscribers.forEach(callback => {
+          try {
+            callback(event);
+          } catch (error) {
+            console.error(`[I18n DevTools] Error in subscriber for ${type}:`, error);
+          }
+        });
+      }
+
+      // Notify all subscribers
+      this.allSubscribers.forEach(callback => {
+        try {
+          callback(event);
+        } catch (error) {
+          console.error('[I18n DevTools] Error in all subscriber:', error);
+        }
+      });
       
       if (this.config.debugMode) {
         console.debug(`[I18n DevTools] Event emitted: ${type}`, payload);
       }
     } catch (error) {
       console.error(`[I18n DevTools] Failed to emit event ${type}:`, error);
-      
-      // Emit error event
-      this.eventClient.emit('i18n-error', {
-        type: 'network',
-        message: `Failed to emit event: ${type}`,
-        details: { originalError: error },
-      });
     }
   }
 
@@ -60,27 +96,20 @@ export class I18nEventClient {
     type: T,
     callback: (event: { type: T; payload: I18nEventPayload<T>; timestamp: number }) => void
   ): () => void {
-    return this.eventClient.on(type, (event) => {
-      if (!this.isEnabled) return;
+    if (!this.subscribers.has(type)) {
+      this.subscribers.set(type, new Set());
+    }
+    
+    const typeSubscribers = this.subscribers.get(type)!;
+    typeSubscribers.add(callback);
 
-      try {
-        callback(event);
-        
-        if (this.config.debugMode) {
-          console.debug(`[I18n DevTools] Event received: ${type}`, event);
-        }
-      } catch (error) {
-        console.error(`[I18n DevTools] Error handling event ${type}:`, error);
-        
-        // Emit error event
-        this.emit('i18n-error', {
-          type: 'translation',
-          message: `Error handling event: ${type}`,
-          details: { originalError: error },
-          stack: error instanceof Error ? error.stack : undefined,
-        });
+    // Return unsubscribe function
+    return () => {
+      typeSubscribers.delete(callback);
+      if (typeSubscribers.size === 0) {
+        this.subscribers.delete(type);
       }
-    });
+    };
   }
 
   /**
@@ -93,15 +122,11 @@ export class I18nEventClient {
       timestamp: number 
     }) => void
   ): () => void {
-    return this.eventClient.onAll((event) => {
-      if (!this.isEnabled) return;
-      
-      try {
-        callback(event);
-      } catch (error) {
-        console.error('[I18n DevTools] Error handling all events:', error);
-      }
-    });
+    this.allSubscribers.add(callback);
+    
+    return () => {
+      this.allSubscribers.delete(callback);
+    };
   }
 
   /**
@@ -138,14 +163,15 @@ export class I18nEventClient {
    * Remove all listeners and cleanup
    */
   destroy(): void {
-    this.eventClient.destroy();
+    this.subscribers.clear();
+    this.allSubscribers.clear();
   }
 
   /**
    * Check if the client is connected to DevTools
    */
   isConnected(): boolean {
-    return this.eventClient && this.isEnabled;
+    return this.isEnabled;
   }
 
   /**

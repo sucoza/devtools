@@ -74,7 +74,7 @@ export class ReactI18nextAdapter {
     const adapter = this;
 
     // Wrap the main translation function
-    this.i18n.t = function(key: string, options: any = {}) {
+    (this.i18n.t as any) = function(key: string, options: any = {}) {
       const startTime = performance.now();
       
       try {

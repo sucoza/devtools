@@ -32,7 +32,8 @@
     "@tanstack/devtools-event-client": "^0.2.3",
     "clsx": "^2.1.1",
     "lucide-react": "^0.542.0",
-    "use-sync-external-store": "^1.5.0"
+    "use-sync-external-store": "^1.5.0",
+    "graphql": "^16.9.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",

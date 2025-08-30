@@ -148,7 +148,7 @@ export function extractSchemaInfo(schema: GraphQLSchema): SchemaInfo {
  */
 function convertTypeToInfo(type: GraphQLType): GraphQLTypeInfo {
   const baseInfo: GraphQLTypeInfo = {
-    name: type.name,
+    name: "name" in type ? type.name : type.toString(),
     kind: type.toString(),
     description: 'description' in type ? type.description || undefined : undefined
   };
@@ -173,7 +173,7 @@ function convertTypeToInfo(type: GraphQLType): GraphQLTypeInfo {
     baseInfo.enumValues = enumValues.map((value: GQLEnumValue): GraphQLEnumValue => ({
       name: value.name,
       description: value.description || undefined,
-      isDeprecated: value.isDeprecated,
+      isDeprecated: "isDeprecated" in value ? (value.isDeprecated as boolean) : false,
       deprecationReason: value.deprecationReason || undefined
     }));
   }
@@ -194,7 +194,7 @@ function convertTypeToInfo(type: GraphQLType): GraphQLTypeInfo {
 /**
  * Convert GraphQL field to FieldInfo for DevTools
  */
-function convertFieldToInfo(field: GraphQLField<any, any>): GraphQLFieldInfo {
+export function convertFieldToInfo(field: GraphQLField<any, any>): GraphQLFieldInfo {
   return {
     name: field.name,
     description: field.description || undefined,
@@ -205,7 +205,7 @@ function convertFieldToInfo(field: GraphQLField<any, any>): GraphQLFieldInfo {
       type: arg.type.toString(),
       defaultValue: arg.defaultValue
     })),
-    isDeprecated: field.isDeprecated,
+    isDeprecated: "isDeprecated" in field ? (field.isDeprecated as boolean) : false,
     deprecationReason: field.deprecationReason || undefined
   };
 }
