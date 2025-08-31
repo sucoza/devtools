@@ -16,6 +16,22 @@ import type { TestGenerationOptions, RecordedEvent } from '../../../../types';
 describe('PlaywrightGenerator', () => {
   let generator: PlaywrightGenerator;
   let mockEvents: RecordedEvent[];
+  
+  // Define defaultOptions at the describe level so it's accessible everywhere
+  const defaultOptions: TestGenerationOptions = {
+    format: 'typescript',
+    framework: 'playwright',
+    includeComments: true,
+    includeAssertions: true,
+    includeSetup: true,
+    testName: 'Generated Login Test',
+    outputPath: './tests/generated/',
+    optimization: {
+        combineSelectors: true,
+        removeRedundantWaits: true,
+        optimizeAssertions: true,
+      },
+    };
 
   beforeEach(() => {
     resetCounters();
@@ -39,21 +55,6 @@ describe('PlaywrightGenerator', () => {
   });
 
   describe('generateTestCode', () => {
-    const defaultOptions: TestGenerationOptions = {
-      format: 'typescript',
-      framework: 'playwright',
-      includeComments: true,
-      includeAssertions: true,
-      includeSetup: true,
-      testName: 'Generated Login Test',
-      outputPath: './tests/generated/',
-      optimization: {
-        combineSelectors: true,
-        removeRedundantWaits: true,
-        optimizeAssertions: true,
-      },
-    };
-
     it('should generate basic test structure', async () => {
       const result = await generator.generateTestCode(mockEvents, defaultOptions);
 

@@ -18,10 +18,254 @@ import type {
 import type { EventGroup, CodeGenerationConfig } from '../code-generator';
 
 export class PlaywrightGenerator extends BaseGenerator {
-  constructor(config: CodeGenerationConfig, options: BaseGeneratorOptions) {
-    super(config, options);
+  public readonly name = 'playwright';
+  public readonly version = '1.40.0';
+  public readonly description = 'Generate Playwright test code from recorded browser events';
+  
+  constructor(config?: CodeGenerationConfig, options?: BaseGeneratorOptions) {
+    const defaultConfig: CodeGenerationConfig = {
+      language: 'typescript',
+      framework: 'playwright',
+      includeImports: true,
+      includeSetup: true,
+      includeTeardown: true,
+      includeComments: true,
+      includeAssertions: true,
+      optimizeSelectors: true,
+      groupRelatedEvents: true,
+      generatePageObjects: false,
+      testName: 'Generated Test',
+      timeout: 30000,
+      baseUrl: '',
+    };
+    
+    const defaultOptions: BaseGeneratorOptions = {
+      language: 'typescript',
+      includeComments: true,
+      includeAssertions: true,
+      includeSetup: true,
+      pageObjectModel: false,
+      timeout: 30000,
+      viewport: { width: 1280, height: 720 },
+      headless: true,
+    };
+    
+    super(config || defaultConfig, options || defaultOptions);
+  }
+  
+  /**
+   * Get current configuration
+   */
+  public getConfiguration() {
+    return {
+      language: this.options.language,
+      testFramework: '@playwright/test',
+      ...this.config,
+      ...this.options,
+    };
   }
 
+  /**
+   * Generate test code from recorded events
+   */
+  async generateTestCode(events: RecordedEvent[], options?: any): Promise<{ code: string; metadata?: any }> {
+    const code: string[] = [];
+    const safeEvents = events || [];
+    
+    // Add imports if requested
+    if (options?.includeImports !== false) {
+      code.push(...this.generateImports());
+      code.push('');
+    }
+    
+    // Add test wrapper
+    const testName = options?.testName || 'Generated Test';
+    code.push(`test('${testName}', async ({ page }) => {`);
+    
+    // Add setup if requested
+    if (options?.includeSetup) {
+      code.push(this.generateSetupCode());
+    }
+    
+    // Generate code for each event
+    for (const event of safeEvents) {
+      const eventCode = this.generateEventCode(event);
+      if (options?.includeComments) {
+        code.push(`  // ${event.type} event`);
+      }
+      code.push(`  ${eventCode}`);
+    }
+    
+    // Add assertions if requested
+    if (options?.includeAssertions && safeEvents.length > 0) {
+      const assertions = this.generateAssertions(safeEvents);
+      code.push(...assertions.map(a => `  ${a}`));
+    }
+    
+    // Close test
+    code.push('});');
+    
+    return {
+      code: code.join('\n'),
+      metadata: {
+        eventCount: safeEvents.length,
+        framework: 'playwright',
+        language: this.options.language,
+      }
+    };
+  }
+  
+  /**
+   * Generate selector command for a single event
+   */
+  public generateSelectorCommand(event: RecordedEvent): string {
+    switch (event.type) {
+      case 'click':
+        return `await page.click('${event.target.selector}')`;
+      case 'input':
+        const inputData = event.data as FormEventData;
+        return `await page.fill('${event.target.selector}', '${inputData?.value || ''}')`;
+      case 'navigation':
+        const navData = event.data as NavigationEventData;
+        return `await page.goto('${navData?.url || ''}')`;
+      case 'keydown':
+      case 'keyup':
+      case 'keypress':
+        const keyData = event.data as _KeyboardEventData;
+        return `await page.press('${event.target.selector}', '${keyData?.key || ''}')`;
+      case 'scroll':
+        return `await page.evaluate(() => window.scrollTo(0, ${(event.data as any)?.scrollY || 0}))`;
+      default:
+        return `// Unhandled event type: ${event.type}`;
+    }
+  }
+  
+  /**
+   * Generate assertion for a single event
+   */
+  public generateAssertion(event: RecordedEvent): string {
+    const assertionData = event.data as AssertionEventData;
+    const selector = event.target.selector;
+    
+    switch (assertionData?.type) {
+      case 'visible':
+        return `await expect(page.locator('${selector}')).toBeVisible()`;
+      case 'text':
+        return `await expect(page.locator('${selector}')).toContainText('${assertionData.expected}')`;
+      case 'value':
+        return `await expect(page.locator('${selector}')).toHaveValue('${assertionData.expected}')`;
+      case 'count':
+        return `await expect(page.locator('${selector}')).toHaveCount(${assertionData.expected})`;
+      case 'url':
+        return `await expect(page).toHaveURL('${assertionData.expected}')`;
+      default:
+        return `await expect(page.locator('${selector}')).toBeVisible()`;
+    }
+  }
+  
+  /**
+   * Generate wait command
+   */
+  public generateWaitCommand(event: RecordedEvent): string {
+    const waitData = event.data as WaitEventData;
+    
+    if (waitData?.type === 'selector') {
+      return `await page.waitForSelector('${waitData.selector}')`;
+    } else if (waitData?.type === 'navigation') {
+      return `await page.waitForNavigation()`;
+    } else if (waitData?.type === 'timeout') {
+      return `await page.waitForTimeout(${waitData.duration || 1000})`;
+    }
+    
+    return `await page.waitForTimeout(1000)`;
+  }
+  
+  /**
+   * Optimize commands by combining or simplifying
+   */
+  public optimizeCommands(commands: string[]): string[] {
+    // Simple optimization: combine consecutive waits
+    const optimized: string[] = [];
+    let i = 0;
+    
+    while (i < commands.length) {
+      if (commands[i].includes('waitForTimeout') && 
+          i + 1 < commands.length && 
+          commands[i + 1].includes('waitForTimeout')) {
+        // Combine waits
+        const wait1 = parseInt(commands[i].match(/\d+/)?.[0] || '0');
+        const wait2 = parseInt(commands[i + 1].match(/\d+/)?.[0] || '0');
+        optimized.push(`await page.waitForTimeout(${wait1 + wait2})`);
+        i += 2;
+      } else {
+        optimized.push(commands[i]);
+        i++;
+      }
+    }
+    
+    return optimized;
+  }
+  
+  /**
+   * Generate configuration file
+   */
+  public generateConfiguration(options?: any): string {
+    const lang = options?.language || this.options.language;
+    
+    if (lang === 'javascript') {
+      return `// playwright.config.js
+module.exports = {
+  use: {
+    headless: ${this.options.headless},
+    viewport: { width: ${this.options.viewport.width}, height: ${this.options.viewport.height} },
+    actionTimeout: ${this.options.timeout},
+  },
+  testDir: './tests',
+  timeout: ${this.options.timeout},
+};`;
+    } else {
+      return `// playwright.config.ts
+import { PlaywrightTestConfig } from '@playwright/test';
+
+const config: PlaywrightTestConfig = {
+  use: {
+    headless: ${this.options.headless},
+    viewport: { width: ${this.options.viewport.width}, height: ${this.options.viewport.height} },
+    actionTimeout: ${this.options.timeout},
+  },
+  testDir: './tests',
+  timeout: ${this.options.timeout},
+};
+
+export default config;`;
+    }
+  }
+  
+  /**
+   * Generate package.json with dependencies
+   */
+  public generatePackageJson(options?: any): string {
+    const isTypeScript = (options?.language || this.options.language) === 'typescript';
+    
+    const packageJson = {
+      name: 'playwright-tests',
+      version: '1.0.0',
+      scripts: {
+        test: 'playwright test',
+        'test:headed': 'playwright test --headed',
+      },
+      devDependencies: {
+        '@playwright/test': '^1.40.0',
+        ...(isTypeScript && {
+          typescript: '^5.0.0',
+          '@types/node': '^20.0.0',
+        }),
+      },
+    };
+    
+    return JSON.stringify(packageJson, null, 2);
+  }
+  
   /**
    * Generate complete Playwright test files
    */
@@ -76,7 +320,7 @@ export class PlaywrightGenerator extends BaseGenerator {
    */
   private async generateTestBody(groups: EventGroup[]): Promise<string> {
     const testName = this.generateTestName(groups);
-    const testCode = await this.generateTestCode(groups);
+    const testCode = await this.generateTestCodeFromGroups(groups);
     
     return `test('${testName}', async ({ page }) => {
 ${this.indent(testCode)}
@@ -86,7 +330,7 @@ ${this.indent(testCode)}
   /**
    * Generate test code from event groups
    */
-  private async generateTestCode(groups: EventGroup[]): Promise<string> {
+  private async generateTestCodeFromGroups(groups: EventGroup[]): Promise<string> {
     const codeBlocks: string[] = [];
     
     for (let i = 0; i < groups.length; i++) {
