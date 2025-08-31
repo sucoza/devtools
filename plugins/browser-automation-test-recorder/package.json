@@ -29,10 +29,9 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
     "lint:fix": "eslint src --ext .ts,.tsx --fix",
-    "format": "prettier --write src/**/*.{ts,tsx}",
+    "format": "prettier --write src/**/*.{ts,tsx}"
     "format:check": "prettier --check src/**/*.{ts,tsx}",
     "analyze:bundle": "rollup -c --bundleConfigAsCjs --environment BUILD:production,ANALYZE:true",
-    "prepare": "npm run build",
     "prepublishOnly": "npm run test:ci && npm run build",
     "postinstall": "playwright install --with-deps"
   },
