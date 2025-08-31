@@ -7,6 +7,10 @@ import { expect, afterEach, beforeEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import * as matchers from '@testing-library/jest-dom/matchers';
 
+// Fix for React 19 and @testing-library/react compatibility
+// React 19 requires globalThis.IS_REACT_ACT_ENVIRONMENT to be set
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
+
 // Extend Vitest's expect with jest-dom matchers
 expect.extend(matchers);
 
