@@ -566,7 +566,12 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
           set(state => ({
             ui: {
               ...state.ui,
-              filters: { ...state.ui.filters, ...filterUpdates },
+              filters: { 
+                ...state.ui.filters, 
+                ...filterUpdates,
+                // Ensure eventTypes is properly updated if provided
+                ...(filterUpdates.eventTypes && { eventTypes: filterUpdates.eventTypes })
+              },
             },
           }));
           break;
