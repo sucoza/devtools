@@ -23,6 +23,11 @@ on:
         required: true
         default: 'all'
         type: string
+      bump_version:
+        description: 'Bump version before publishing'
+        required: false
+        default: true
+        type: boolean
       dry_run:
         description: 'Dry run (do not actually publish)'
         required: false
@@ -187,7 +192,7 @@ jobs:
           fi
 
       - name: Version package
-        if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true'
+        if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.bump_version != 'false'
         working-directory: ${{ matrix.package.path }}
         run: |
           pnpm version ${{ needs.validate.outputs.version }} --no-git-tag-version
@@ -288,7 +293,7 @@ jobs:
           fi
 
       - name: Version plugin
-        if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true'
+        if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true' && github.event.inputs.bump_version != 'false'
         working-directory: plugins/${{ matrix.plugin }}
         run: |
           pnpm version ${{ needs.validate.outputs.version }} --no-git-tag-version

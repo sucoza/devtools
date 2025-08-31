@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/shared-components",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Shared UI components for TanStack DevTools plugins",
   "type": "module",
   "main": "dist/index.js",
