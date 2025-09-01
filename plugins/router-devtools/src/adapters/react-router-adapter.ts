@@ -158,9 +158,9 @@ export class ReactRouterAdapter implements IRouterAdapter {
    */
   navigate(to: string, options: NavigationOptions = {}): void {
     try {
-      if (this.router && this.router.navigate) {
+      if (this.router && (this.router as any).navigate) {
         // Use React Router's navigate if available
-        this.router.navigate(to, options);
+        (this.router as any).navigate(to, options);
       } else {
         // Fallback to browser navigation
         if (options.replace) {
@@ -334,17 +334,18 @@ export class ReactRouterAdapter implements IRouterAdapter {
    * Convert a single React Router route to RouteInfo
    */
   private convertRouteToRouteInfo(route: unknown): RouteInfo {
+    const r = route as any;
     return {
-      id: route.id || this.generateRouteId(route.path),
-      path: route.path || '',
-      element: route.element?.type?.name || route.element?.name || 'Unknown',
-      index: route.index,
-      caseSensitive: route.caseSensitive,
-      children: route.children ? this.convertRoutesToRouteInfo(route.children) : [],
-      loader: !!route.loader,
-      action: !!route.action,
-      errorElement: route.errorElement?.type?.name || route.errorElement?.name,
-      handle: route.handle
+      id: r.id || this.generateRouteId(r.path),
+      path: r.path || '',
+      element: r.element?.type?.name || r.element?.name || 'Unknown',
+      index: r.index,
+      caseSensitive: r.caseSensitive,
+      children: r.children ? this.convertRoutesToRouteInfo(r.children) : [],
+      loader: !!r.loader,
+      action: !!r.action,
+      errorElement: r.errorElement?.type?.name || r.errorElement?.name,
+      handle: r.handle
     };
   }
 

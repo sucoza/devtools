@@ -15,6 +15,7 @@ interface NavigationTimelineProps {
 interface TimelineEntryProps {
   entry: NavigationHistoryEntry;
   index: number;
+  _index: number;
   isLatest: boolean;
   isCurrent: boolean;
   onNavigate: (to: string, options?: { replace?: boolean }) => void;
@@ -460,6 +461,7 @@ export function NavigationTimeline({
               key={entry.id}
               entry={entry}
               index={index}
+              _index={index}
               isLatest={index === 0 && sortOrder === 'desc'}
               isCurrent={currentState ? 
                 entry.location.pathname === currentState.location.pathname &&

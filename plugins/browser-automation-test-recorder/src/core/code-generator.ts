@@ -386,8 +386,8 @@ export class CodeGenerator {
         format: template.framework,
         language: template.language,
         template: template.template,
-        placeholders: (template.placeholders as Array<Record<string, unknown>>).reduce((acc: Record<string, unknown>, p) => {
-          acc[p.key] = p.defaultValue || '';
+        placeholders: template.placeholders.reduce((acc: Record<string, string>, p) => {
+          acc[p.key] = (p.defaultValue as string) || '';
           return acc;
         }, {}),
         imports: template.imports,
@@ -407,7 +407,7 @@ export class CodeGenerator {
     ];
 
     frameworkMappings.forEach(mapping => {
-      const template = builtInTemplates.find((t: Record<string, unknown>) => t.id === mapping.templateId);
+      const template = builtInTemplates.find((t) => t.id === mapping.templateId);
       if (template) {
         this.templates.set(`${mapping.format}-${mapping.language}`, {
           id: template.id,
@@ -416,8 +416,8 @@ export class CodeGenerator {
           format: mapping.format as TestFormat,
           language: mapping.language,
           template: template.template,
-          placeholders: (template.placeholders as Array<Record<string, unknown>>).reduce((acc: Record<string, unknown>, p) => {
-            acc[p.key] = p.defaultValue || '';
+          placeholders: template.placeholders.reduce((acc: Record<string, string>, p) => {
+            acc[p.key] = (p.defaultValue as string) || '';
             return acc;
           }, {}),
           imports: template.imports || [],
@@ -662,11 +662,7 @@ export class CodeGenerator {
     };
   }
 
-  private getEventGenerator(format: TestFormat, language: string): { 
-    generateEvent: (event: RecordedEvent) => string;
-    generateSetup: () => string;
-    generateTeardown: () => string;
-  } {
+  private getEventGenerator(format: TestFormat, language: string): any { 
     // Generators are now imported at the top of the file
 
     const options = {
@@ -692,8 +688,14 @@ export class CodeGenerator {
       default:
         // Fallback generator
         return {
-          generateEventCode: (event: RecordedEvent) => {
+          generateEvent: (event: RecordedEvent) => {
             return `// Generated code for ${event.type} event`;
+          },
+          generateSetup: () => {
+            return '// Setup code';
+          },
+          generateTeardown: () => {
+            return '// Teardown code';
           }
         };
     }

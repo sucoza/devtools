@@ -374,6 +374,10 @@ export function useMemoryProfilerDevTools() {
     importData: memoryProfilerClient.importData.bind(memoryProfilerClient),
     forceGC: memoryProfilerClient.forceGC.bind(memoryProfilerClient),
     
+    // Store methods that should be available
+    dismissAlert: (state as MemoryProfilerStore).dismissAlert,
+    dismissSuggestion: (state as MemoryProfilerStore).dismissSuggestion,
+    
     // Support info
     isSupported: memoryProfilerClient.isSupported(),
     supportInfo: memoryProfilerClient.getSupportInfo()

@@ -18,6 +18,9 @@ import type {
   RecordingMode,
   PlaybackMode,
   EventType,
+  CollaborationUser,
+  CollaborationTeam,
+  CollaborationNotification,
 } from '../types';
 
 /**
@@ -606,7 +609,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
 
         // Collaboration actions
         case 'collaboration/user/set': {
-          const user = action.payload;
+          const user = action.payload as CollaborationUser | null;
           set(state => ({
             collaboration: {
               ...state.collaboration,
@@ -617,7 +620,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
         }
 
         case 'collaboration/team/set': {
-          const team = action.payload;
+          const team = action.payload as CollaborationTeam | null;
           set(state => ({
             collaboration: {
               ...state.collaboration,
@@ -659,7 +662,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
           break;
 
         case 'collaboration/notification/add': {
-          const notification = action.payload;
+          const notification = action.payload as CollaborationNotification;
           set(state => ({
             collaboration: {
               ...state.collaboration,
@@ -697,7 +700,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
         }
 
         case 'collaboration/library/filter': {
-          const libraryFilterUpdates = action.payload;
+          const libraryFilterUpdates = action.payload as Record<string, unknown>;
           set(state => ({
             collaboration: {
               ...state.collaboration,
@@ -830,7 +833,7 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
 
       const generatedTest: GeneratedTest = {
         id: `test_${Date.now()}`,
-        name: options.testName || `Generated Test ${new Date().toLocaleTimeString()}`,
+        name: `Generated Test ${new Date().toLocaleTimeString()}`,
         format: options.format,
         framework: options.framework,
         code: generatedTestFile.code,

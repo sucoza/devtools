@@ -23,7 +23,7 @@ export function MemoryProfilerPanel() {
     isRunning,
     currentMemory,
     components,
-    _hooks,
+    hooks,
     leaks,
     performance,
     suggestions,
@@ -394,7 +394,7 @@ function ComponentsTab({ components }: { components: ComponentMemoryInfo[] }) {
             <span>{formatBytes(component.totalMemory)}</span>
             <span>{formatBytes(component.averageMemoryPerInstance)}</span>
             <span className="trend-cell">
-              {getTrendIcon(component.trend)}
+              {_getTrendIcon(component.trend)}
             </span>
             <span className={`status ${component.suspiciousGrowth ? 'warning' : 'normal'}`}>
               {component.suspiciousGrowth ? (
@@ -443,14 +443,14 @@ function LeaksTab({ leaks }: { leaks: MemoryLeak[] }) {
       {sortedLeaks.length > 0 ? (
         <div className="leaks-list">
           {sortedLeaks.map(leak => (
-            <div key={leak.id} className={`leak-card ${getSeverityColor(leak.severity)}`}>
+            <div key={leak.id} className={`leak-card ${_getSeverityColor(leak.severity)}`}>
               <div className="leak-header">
                 <div className="leak-title">
                   <AlertTriangle />
                   <span>{leak.component || 'Unknown Component'}</span>
                   <span className="leak-type">{leak.type}</span>
                 </div>
-                <span className={`severity-badge ${getSeverityColor(leak.severity)}`}>
+                <span className={`severity-badge ${_getSeverityColor(leak.severity)}`}>
                   {leak.severity}
                 </span>
               </div>

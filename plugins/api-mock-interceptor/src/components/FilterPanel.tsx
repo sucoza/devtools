@@ -66,11 +66,11 @@ export function FilterPanel() {
     const pluginUpdates: unknown = {};
     
     if ('searchText' in updates) {
-      pluginUpdates.url = updates.searchText;
+      (pluginUpdates as any).url = updates.searchText;
     }
     
     if ('timeRange' in updates) {
-      pluginUpdates.timeRange = updates.timeRange;
+      (pluginUpdates as any).timeRange = updates.timeRange;
     }
 
     // Handle other filter updates

@@ -7,7 +7,7 @@ import { EventClient } from '@tanstack/devtools-event-client';
 import { RouterEventType, RouterEventPayload } from '../types/devtools';
 
 export class RouterEventClient {
-  private eventClient: EventClient;
+  private eventClient: InstanceType<typeof EventClient>;
 
   constructor() {
     this.eventClient = new EventClient({ pluginId: 'router-devtools' });
@@ -27,7 +27,13 @@ export class RouterEventClient {
     type: T,
     callback: (event: { type: T; payload: RouterEventPayload<T>; timestamp: number }) => void
   ): () => void {
-    return this.eventClient.on(type, callback);
+    return this.eventClient.on(type, (event) => {
+      callback({
+        type,
+        payload: event.payload,
+        timestamp: Date.now()
+      });
+    });
   }
 
   /**
@@ -40,14 +46,22 @@ export class RouterEventClient {
       timestamp: number 
     }) => void
   ): () => void {
-    return this.eventClient.onAll(callback);
+    return this.eventClient.onAll((event) => {
+      const eventType = event.type.split(':')[1] as RouterEventType;
+      callback({
+        type: eventType,
+        payload: event.payload,
+        timestamp: Date.now()
+      });
+    });
   }
 
   /**
    * Remove all listeners
    */
   destroy(): void {
-    this.eventClient.destroy();
+    // EventClient doesn't have a destroy method, but we can implement cleanup
+    // The unsubscribe functions from on() calls handle cleanup
   }
 }
 

@@ -76,10 +76,10 @@ export function initializeRouterDevTools() {
  * }
  * ```
  */
-export function useRouterDevTools() {
+export function useRouterDevTools(): void {
   React.useEffect(() => {
     if (typeof window === 'undefined') {
-      return; // Skip in SSR
+      return undefined; // Skip in SSR
     }
     
     const cleanup = initializeRouterDevTools();

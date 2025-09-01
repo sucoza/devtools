@@ -554,13 +554,13 @@ ${this.indent(testCode, 2)}
     
     switch (assertData.assertionType) {
       case 'text-equals':
-        return this.generateTextEqualsAssertion(selector, assertData.expected);
+        return this.generateTextEqualsAssertion(selector, String(assertData.expected));
       case 'text-contains':
-        return this.generateTextContainsAssertion(selector, assertData.expected);
+        return this.generateTextContainsAssertion(selector, String(assertData.expected));
       case 'visible':
         return this.generateVisibleAssertion(selector);
       case 'value-equals':
-        return this.generateValueAssertion(selector, assertData.expected);
+        return this.generateValueAssertion(selector, String(assertData.expected));
       default:
         return this.generateCommentForLanguage(`Custom assertion: ${assertData.message}`);
     }

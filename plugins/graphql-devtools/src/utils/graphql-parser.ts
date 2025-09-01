@@ -5,6 +5,8 @@ import {
   getIntrospectionQuery,
   GraphQLSchema,
   GraphQLError,
+  GraphQLType,
+  DocumentNode,
   OperationDefinitionNode,
   FieldNode,
   SelectionNode,

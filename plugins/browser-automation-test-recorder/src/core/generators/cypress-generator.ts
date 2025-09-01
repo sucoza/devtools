@@ -195,7 +195,7 @@ ${this.indent(testCode)}
    */
   private generateClickCode(event: RecordedEvent): string {
     const selector = this.formatSelectorForCypress(event.target.selector);
-    const mouseData = event.data as MouseEventData as _MouseEventData;
+    const mouseData = event.data as _MouseEventData;
     
     let code = `cy.get('${selector}')`;
     
@@ -287,7 +287,7 @@ ${this.indent(testCode)}
    * Keyboard event code generation
    */
   private generateKeyboardCode(event: RecordedEvent): string {
-    const keyData = event.data as KeyboardEventData as _KeyboardEventData;
+    const keyData = event.data as _KeyboardEventData;
     const key = this.mapCypressKey(keyData.key);
     
     // Build modifier string
@@ -331,7 +331,7 @@ ${this.indent(testCode)}
    * Scroll event code generation
    */
   private generateScrollCode(event: RecordedEvent): string {
-    const scrollData = event.data as ScrollEventData as _ScrollEventData;
+    const scrollData = event.data as _ScrollEventData;
     
     if (scrollData.element === 'window') {
       return `cy.scrollTo(${scrollData.scrollX}, ${scrollData.scrollY});`;
@@ -392,9 +392,9 @@ ${this.indent(testCode)}
     
     switch (assertData.assertionType) {
       case 'text-equals':
-        return `cy.get('${this.formatSelectorForCypress(selector)}').should('have.text', '${this.escapeString(assertData.expected)}');`;
+        return `cy.get('${this.formatSelectorForCypress(selector)}').should('have.text', '${this.escapeString(String(assertData.expected))}');`;
       case 'text-contains':
-        return `cy.get('${this.formatSelectorForCypress(selector)}').should('contain.text', '${this.escapeString(assertData.expected)}');`;
+        return `cy.get('${this.formatSelectorForCypress(selector)}').should('contain.text', '${this.escapeString(String(assertData.expected))}');`;
       case 'visible':
         return `cy.get('${this.formatSelectorForCypress(selector)}').should('be.visible');`;
       case 'hidden':
@@ -406,11 +406,11 @@ ${this.indent(testCode)}
       case 'checked':
         return `cy.get('${this.formatSelectorForCypress(selector)}').should('be.checked');`;
       case 'value-equals':
-        return `cy.get('${this.formatSelectorForCypress(selector)}').should('have.value', '${this.escapeString(assertData.expected)}');`;
+        return `cy.get('${this.formatSelectorForCypress(selector)}').should('have.value', '${this.escapeString(String(assertData.expected))}');`;
       case 'url-equals':
-        return `cy.url().should('eq', '${this.escapeString(assertData.expected)}');`;
+        return `cy.url().should('eq', '${this.escapeString(String(assertData.expected))}');`;
       case 'title-equals':
-        return `cy.title().should('eq', '${this.escapeString(assertData.expected)}');`;
+        return `cy.title().should('eq', '${this.escapeString(String(assertData.expected))}');`;
       default:
         return `// Custom assertion: ${assertData.message}`;
     }

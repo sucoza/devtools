@@ -33,7 +33,7 @@ export class PlaywrightGenerator extends BaseGenerator {
   /**
    * Escape string for use in generated code
    */
-  private escapeString(str: string): string {
+  protected escapeString(str: string): string {
     // Escape quotes and special characters
     return str.replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r');
   }
@@ -858,9 +858,9 @@ ${this.indent(testCode)}
         return `await expect(page.locator('${selector}')).toBeHidden();`;
       case 'element-text':
       case 'text-equals':
-        return `await expect(page.locator('${selector}')).toHaveText('${this.escapeString(assertData.expected)}');`;
+        return `await expect(page.locator('${selector}')).toHaveText('${this.escapeString(String(assertData.expected))}');`;
       case 'text-contains':
-        return `await expect(page.locator('${selector}')).toContainText('${this.escapeString(assertData.expected)}');`;
+        return `await expect(page.locator('${selector}')).toContainText('${this.escapeString(String(assertData.expected))}');`;
       case 'element-enabled':
       case 'enabled':
         return `await expect(page.locator('${selector}')).toBeEnabled();`;
@@ -872,13 +872,13 @@ ${this.indent(testCode)}
         return `await expect(page.locator('${selector}')).toBeChecked();`;
       case 'element-value':
       case 'value-equals':
-        return `await expect(page.locator('${selector}')).toHaveValue('${this.escapeString(assertData.expected)}');`;
+        return `await expect(page.locator('${selector}')).toHaveValue('${this.escapeString(String(assertData.expected))}');`;
       case 'page-url':
       case 'url-equals':
-        return `await expect(page).toHaveURL('${this.escapeString(assertData.expected)}');`;
+        return `await expect(page).toHaveURL('${this.escapeString(String(assertData.expected))}');`;
       case 'page-title':
       case 'title-equals':
-        return `await expect(page).toHaveTitle('${this.escapeString(assertData.expected)}');`;
+        return `await expect(page).toHaveTitle('${this.escapeString(String(assertData.expected))}');`;
       default:
         return `// Custom assertion: ${assertData.message}`;
     }

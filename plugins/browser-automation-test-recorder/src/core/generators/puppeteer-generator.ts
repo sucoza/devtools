@@ -367,9 +367,9 @@ ${this.indent(testCode)}
     
     switch (assertData.assertionType) {
       case 'text-equals':
-        return `await expect(page.locator('${selector}')).toHaveText('${this.escapeString(assertData.expected)}');`;
+        return `await expect(page.locator('${selector}')).toHaveText('${this.escapeString(String(assertData.expected))}');`;
       case 'text-contains':
-        return `await expect(page.locator('${selector}')).toContainText('${this.escapeString(assertData.expected)}');`;
+        return `await expect(page.locator('${selector}')).toContainText('${this.escapeString(String(assertData.expected))}');`;
       case 'visible':
         return `await expect(page.locator('${selector}')).toBeVisible();`;
       case 'hidden':
@@ -381,11 +381,11 @@ ${this.indent(testCode)}
       case 'checked':
         return `await expect(page.locator('${selector}')).toBeChecked();`;
       case 'value-equals':
-        return `await expect(page.locator('${selector}')).toHaveValue('${this.escapeString(assertData.expected)}');`;
+        return `await expect(page.locator('${selector}')).toHaveValue('${this.escapeString(String(assertData.expected))}');`;
       case 'url-equals':
-        return `expect(page.url()).toBe('${this.escapeString(assertData.expected)}');`;
+        return `expect(page.url()).toBe('${this.escapeString(String(assertData.expected))}');`;
       case 'title-equals':
-        return `expect(await page.title()).toBe('${this.escapeString(assertData.expected)}');`;
+        return `expect(await page.title()).toBe('${this.escapeString(String(assertData.expected))}');`;
       default:
         return `// Custom assertion: ${assertData.message}`;
     }

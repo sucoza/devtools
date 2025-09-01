@@ -451,10 +451,10 @@ export class SharingManager {
         errors: [],
         warnings: validation.warnings
       };
-    } catch {
+    } catch (err) {
       return {
         success: false,
-        errors: [error instanceof Error ? error.message : 'Unknown import error'],
+        errors: [err instanceof Error ? err.message : 'Unknown import error'],
         warnings: []
       };
     }

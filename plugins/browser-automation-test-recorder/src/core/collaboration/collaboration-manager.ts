@@ -127,9 +127,9 @@ export class CollaborationManager {
       this.connected = true;
 
       // // console.log('Collaboration system initialized successfully');
-    } catch {
-      // // console.error('Failed to initialize collaboration system:', error);
-      throw error;
+    } catch (err) {
+      // // console.error('Failed to initialize collaboration system:', err);
+      throw err;
     }
   }
 
@@ -570,8 +570,8 @@ export class CollaborationManager {
     this.syncInterval = setInterval(async () => {
       try {
         await this.performSync();
-      } catch {
-        // // console.error('Sync error:', error);
+      } catch (err) {
+        // // console.error('Sync error:', err);
       }
     }, this.config.sync.interval);
 
@@ -600,8 +600,8 @@ export class CollaborationManager {
       handlers.forEach(handler => {
         try {
           handler(notification);
-        } catch {
-          // // console.error('Error in notification handler:', error);
+        } catch (err) {
+          // // console.error('Error in notification handler:', err);
         }
       });
     }
