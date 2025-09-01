@@ -66,6 +66,9 @@ export interface DiffMetrics {
   meanColorDelta: number;
   maxColorDelta: number;
   regions: number;
+  ssimScore?: number;
+  perceptualDistance?: number;
+  processingTimeMs?: number;
 }
 
 export interface TestSuite {

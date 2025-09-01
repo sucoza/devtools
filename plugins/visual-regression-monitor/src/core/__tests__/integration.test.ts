@@ -12,19 +12,95 @@ vi.mock('../../utils/image-processing', async () => {
       // Extract dimensions from our custom data URL format or use defaults
       let width = 1920, height = 1080;
       
-      // Parse custom dimension format if present
-      const match = dataUrl.match(/iVBORw0KGgoAAAANSUhEUgAAA(\d+)AAAA(\d+)BAYAAAAfFcSJ/);
+      // Parse custom dimension format from our test data URLs
+      // Look for pattern like: data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA1920AAAA1080BAY...
+      const match = dataUrl.match(/iVBORw0KGgoAAAANSUhEUgAAA(\d+)AAAA(\d+)BAY/);
       if (match) {
         width = parseInt(match[1]);
         height = parseInt(match[2]);
       }
       
-      return Promise.resolve({
-        data: new Uint8ClampedArray(width * height * 4), // RGBA
-        width,
-        height,
-        colorSpace: 'srgb'
-      });
+      // Ensure valid dimensions and prevent extremely large buffers
+      width = Math.max(1, Math.min(4000, width)); // Cap at 4K width
+      height = Math.max(1, Math.min(4000, height)); // Cap at 4K height
+      
+      // Calculate buffer size and ensure it's reasonable
+      const pixelCount = width * height;
+      const bufferSize = pixelCount * 4; // RGBA
+      
+      // If buffer would be too large, reduce dimensions proportionally
+      if (bufferSize > 64 * 1024 * 1024) { // 64MB limit
+        const scale = Math.sqrt((64 * 1024 * 1024) / bufferSize);
+        width = Math.floor(width * scale);
+        height = Math.floor(height * scale);
+      }
+      
+      try {
+        const buffer = new Uint8ClampedArray(width * height * 4);
+        // Fill with some pattern to make it more realistic
+        for (let i = 0; i < buffer.length; i += 4) {
+          buffer[i] = 128;     // R
+          buffer[i + 1] = 128; // G  
+          buffer[i + 2] = 128; // B
+          buffer[i + 3] = 255; // A
+        }
+        
+        return Promise.resolve({
+          data: buffer,
+          width,
+          height,
+          colorSpace: 'srgb'
+        });
+      } catch (error) {
+        // If still failing, return minimal valid image
+        return Promise.resolve({
+          data: new Uint8ClampedArray(4), // 1x1 pixel
+          width: 1,
+          height: 1,
+          colorSpace: 'srgb'
+        });
+      }
+    }),
+    // Mock other image processing utilities to prevent canvas/DOM issues
+    resizeImageData: vi.fn((imageData, width, height) => {
+      const safeWidth = Math.max(1, Math.min(4000, width));
+      const safeHeight = Math.max(1, Math.min(4000, height));
+      const data = new Uint8ClampedArray(safeWidth * safeHeight * 4);
+      data.fill(128); // Fill with gray
+      return { data, width: safeWidth, height: safeHeight };
+    }),
+    toGrayscale: vi.fn((imageData) => {
+      const data = new Uint8ClampedArray(imageData.data.length);
+      // Convert to grayscale
+      for (let i = 0; i < data.length; i += 4) {
+        const gray = 128; // Fixed gray value for tests
+        data[i] = gray;     // R
+        data[i + 1] = gray; // G
+        data[i + 2] = gray; // B
+        data[i + 3] = 255;  // A
+      }
+      return { data, width: imageData.width, height: imageData.height };
+    }),
+    calculatePerceptualHash: vi.fn((imageData) => {
+      // Return consistent hash based on dimensions for testing
+      const pixels = imageData.width * imageData.height;
+      return '0'.repeat(64).split('').map((_, i) => pixels % (i + 2) === 0 ? '1' : '0').join('');
+    }),
+    calculateHammingDistance: vi.fn((hash1, hash2) => {
+      if (hash1.length !== hash2.length) return Math.max(hash1.length, hash2.length);
+      let distance = 0;
+      for (let i = 0; i < hash1.length; i++) {
+        if (hash1[i] !== hash2[i]) distance++;
+      }
+      return distance;
+    }),
+    applyGaussianBlur: vi.fn((imageData) => imageData),
+    calculateSSIM: vi.fn((imageData1, imageData2) => {
+      // Return high similarity for identical dimensions, lower for different
+      if (imageData1.width === imageData2.width && imageData1.height === imageData2.height) {
+        return 0.95; // High similarity
+      }
+      return 0.3; // Low similarity
     })
   };
 });

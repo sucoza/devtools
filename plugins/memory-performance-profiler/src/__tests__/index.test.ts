@@ -11,8 +11,13 @@ describe('Memory Performance Profiler Plugin Exports', () => {
     const keys = Object.keys(MemoryPerformanceProfiler);
     expect(keys.length).toBeGreaterThan(0);
     
-    // Check for common plugin exports
-    expect(MemoryPerformanceProfiler).toHaveProperty('default');
-    expect(typeof MemoryPerformanceProfiler.default).toBe('function');
+    // Check for actual plugin exports
+    expect(MemoryPerformanceProfiler).toHaveProperty('MemoryProfilerPanel');
+    expect(typeof MemoryPerformanceProfiler.MemoryProfilerPanel).toBe('function');
+    
+    expect(MemoryPerformanceProfiler).toHaveProperty('MemoryProfiler');
+    expect(MemoryPerformanceProfiler).toHaveProperty('useMemoryProfilerStore');
+    expect(MemoryPerformanceProfiler).toHaveProperty('memoryProfilerClient');
+    expect(MemoryPerformanceProfiler).toHaveProperty('useMemoryProfilerDevTools');
   });
 });

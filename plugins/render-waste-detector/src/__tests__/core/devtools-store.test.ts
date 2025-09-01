@@ -117,17 +117,16 @@ describe('RenderWasteDetector Store', () => {
     it('should update filters', () => {
       const store = useRenderWasteDetectorStore.getState();
       
-      store.setFilters({
-        minRenderTime: 5,
-        showOnlyWasted: true,
-        componentName: 'TestComponent',
-        severityFilter: 'high'
+      store.updateFilters({
+        minRenderCount: 5,
+        showOnlyWasteful: true,
+        componentNameFilter: 'TestComponent',
       });
       
       const newState = useRenderWasteDetectorStore.getState();
-      expect(newState.filters.minRenderTime).toBe(5);
-      expect(newState.filters.showOnlyWasted).toBe(true);
-      expect(newState.filters.componentName).toBe('TestComponent');
+      expect(newState.ui.filters.minRenderCount).toBe(5);
+      expect(newState.ui.filters.showOnlyWasteful).toBe(true);
+      expect(newState.ui.filters.componentNameFilter).toBe('TestComponent');
     });
   });
 
@@ -135,16 +134,18 @@ describe('RenderWasteDetector Store', () => {
     it('should update view options', () => {
       const store = useRenderWasteDetectorStore.getState();
       
-      store.setViewOptions({
-        showTree: false,
-        showTimeline: true,
-        showHeatMap: true,
-        showStats: false
+      store.updateViewOptions({
+        treeViewExpanded: false,
+        showMetrics: true,
+        showSuggestions: true,
+        showVDomDiff: false
       });
       
       const newState = useRenderWasteDetectorStore.getState();
-      expect(newState.viewOptions.showTree).toBe(false);
-      expect(newState.viewOptions.showTimeline).toBe(true);
+      expect(newState.ui.viewOptions.treeViewExpanded).toBe(false);
+      expect(newState.ui.viewOptions.showMetrics).toBe(true);
+      expect(newState.ui.viewOptions.showSuggestions).toBe(true);
+      expect(newState.ui.viewOptions.showVDomDiff).toBe(false);
     });
   });
 });

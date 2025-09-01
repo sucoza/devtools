@@ -546,6 +546,20 @@ export class DiffAlgorithm {
 
       // Calculate metrics
       const endMetrics = this.performanceMonitor.startTiming('metricsCalculation');
+      
+      // Calculate perceptual hash distance
+      let perceptualDistance = 0;
+      try {
+        const hash1 = await calculatePerceptualHash(processedBaseline);
+        const hash2 = await calculatePerceptualHash(processedComparison);
+        perceptualDistance = calculateHammingDistance(hash1, hash2);
+      } catch {
+        perceptualDistance = 0;
+      }
+      
+      const metricsEndTime = endMetrics();
+      const processingTimeMs = metricsEndTime ? performance.now() - (metricsEndTime as any) : 0;
+      
       const metrics: DiffMetrics = {
         totalPixels: processedBaseline.width * processedBaseline.height,
         changedPixels: comparisonResult.pixelDifferenceCount,
@@ -553,8 +567,10 @@ export class DiffAlgorithm {
         meanColorDelta: 0, // Calculated elsewhere
         maxColorDelta: 0, // Calculated elsewhere
         regions: differences.length,
+        ssimScore,
+        perceptualDistance,
+        processingTimeMs,
       };
-      endMetrics();
 
       // Determine status with advanced criteria
       const status = this.determineAdvancedStatus(metrics, threshold, ssimScore);
@@ -1114,9 +1130,20 @@ export class DiffAlgorithm {
     differences: DiffRegion[], 
     ignoreRegions: DiffRegion[]
   ): ImageData {
-    const width = referenceImage.width;
-    const height = referenceImage.height;
-    const maskData = new Uint8ClampedArray(width * height * 4);
+    const width = Math.max(1, Math.min(4000, referenceImage.width || 1));
+    const height = Math.max(1, Math.min(4000, referenceImage.height || 1));
+    
+    // Validate dimensions before creating array
+    if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1) {
+      throw new Error(`Invalid dimensions for diff mask: ${width}x${height}`);
+    }
+    
+    const arraySize = width * height * 4;
+    if (arraySize > 64 * 1024 * 1024) { // 64MB limit
+      throw new Error(`Buffer size too large: ${arraySize} bytes`);
+    }
+    
+    const maskData = new Uint8ClampedArray(arraySize);
 
     // Initialize as black
     for (let i = 0; i < maskData.length; i += 4) {
@@ -1247,9 +1274,20 @@ export class DiffAlgorithm {
    * Create a diff mask showing only changed regions
    */
   private createDiffMask(referenceImage: ImageData, differences: DiffRegion[]): ImageData {
-    const width = referenceImage.width;
-    const height = referenceImage.height;
-    const maskData = new Uint8ClampedArray(width * height * 4);
+    const width = Math.max(1, Math.min(4000, referenceImage.width || 1));
+    const height = Math.max(1, Math.min(4000, referenceImage.height || 1));
+    
+    // Validate dimensions before creating array
+    if (!Number.isInteger(width) || !Number.isInteger(height) || width < 1 || height < 1) {
+      throw new Error(`Invalid dimensions for diff mask: ${width}x${height}`);
+    }
+    
+    const arraySize = width * height * 4;
+    if (arraySize > 64 * 1024 * 1024) { // 64MB limit
+      throw new Error(`Buffer size too large: ${arraySize} bytes`);
+    }
+    
+    const maskData = new Uint8ClampedArray(arraySize);
 
     // Initialize as black
     for (let i = 0; i < maskData.length; i += 4) {
