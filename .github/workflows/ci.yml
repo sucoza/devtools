@@ -52,31 +52,31 @@ jobs:
       - name: Type check
         run: |
           # Type check shared packages
-          pnpm --filter devtools-common typecheck
-          pnpm --filter plugin-core typecheck  
-          pnpm --filter shared-components typecheck
-          pnpm --filter devtools-importer typecheck
+          pnpm --filter "@sucoza/devtools-common" typecheck
+          pnpm --filter "@sucoza/plugin-core" typecheck  
+          pnpm --filter "@sucoza/shared-components" typecheck
+          pnpm --filter "@sucoza/devtools-importer" typecheck
 
       - name: Lint
         run: |
           # Lint shared packages
-          pnpm --filter devtools-common lint
-          pnpm --filter plugin-core lint
-          pnpm --filter shared-components lint  
-          pnpm --filter devtools-importer lint
+          pnpm --filter "@sucoza/devtools-common" lint
+          pnpm --filter "@sucoza/plugin-core" lint
+          pnpm --filter "@sucoza/shared-components" lint  
+          pnpm --filter "@sucoza/devtools-importer" lint
 
       - name: Build shared packages
         run: |
-          pnpm --filter devtools-common build
-          pnpm --filter plugin-core build
-          pnpm --filter shared-components build
-          pnpm --filter devtools-importer build
+          pnpm --filter "@sucoza/devtools-common" build
+          pnpm --filter "@sucoza/plugin-core" build
+          pnpm --filter "@sucoza/shared-components" build
+          pnpm --filter "@sucoza/devtools-importer" build
 
       - name: Test shared packages
         run: |
-          pnpm --filter devtools-common test || echo "No tests for devtools-common"
-          pnpm --filter plugin-core test || echo "No tests for plugin-core"
-          pnpm --filter shared-components test || echo "No tests for shared-components"
+          pnpm --filter "@sucoza/devtools-common" test || echo "No tests for devtools-common"
+          pnpm --filter "@sucoza/plugin-core" test || echo "No tests for plugin-core"
+          pnpm --filter "@sucoza/shared-components" test || echo "No tests for shared-components"
 
   build-plugins:
     name: Build & Test Plugins
@@ -85,26 +85,26 @@ jobs:
     strategy:
       matrix:
         plugin: [
-          'accessibility-devtools',
-          'api-mock-interceptor', 
-          'auth-permissions-mock',
-          'browser-automation-test-recorder',
-          'bundle-impact-analyzer',
-          'design-system-inspector',
-          'error-boundary-visualizer',
-          'feature-flag-manager',
-          'form-state-inspector',
-          'graphql-devtools',
-          'i18n-devtools',
-          'logger-devtools',
-          'memory-performance-profiler',
-          'render-waste-detector',
-          'router-devtools',
-          'security-audit-panel',
-          'stress-testing-devtools',
-          'visual-regression-monitor',
-          'websocket-signalr-devtools',
-          'zustand-devtools'
+          '@sucoza/accessibility-devtools-plugin',
+          '@sucoza/api-mock-interceptor-devtools-plugin', 
+          '@sucoza/auth-permissions-mock-devtools-plugin',
+          '@sucoza/browser-automation-test-recorder-devtools-plugin',
+          '@sucoza/bundle-impact-analyzer-devtools-plugin',
+          '@sucoza/design-system-inspector-devtools-plugin',
+          '@sucoza/error-boundary-visualizer-devtools-plugin',
+          '@sucoza/feature-flag-manager-devtools-plugin',
+          '@sucoza/form-state-inspector-devtools-plugin',
+          '@sucoza/graphql-devtools-plugin',
+          '@sucoza/i18n-devtools-plugin',
+          '@sucoza/logger-devtools-plugin',
+          '@sucoza/memory-performance-profiler-devtools-plugin',
+          '@sucoza/render-waste-detector-devtools-plugin',
+          '@sucoza/router-devtools-plugin',
+          '@sucoza/security-audit-panel-devtools-plugin',
+          '@sucoza/stress-testing-devtools-plugin',
+          '@sucoza/visual-regression-monitor-devtools-plugin',
+          '@sucoza/websocket-signalr-devtools-plugin',
+          '@sucoza/zustand-devtools-plugin'
         ]
 
     steps:
@@ -140,22 +140,22 @@ jobs:
 
       - name: Build shared packages first
         run: |
-          pnpm --filter devtools-common build
-          pnpm --filter plugin-core build
-          pnpm --filter shared-components build
-          pnpm --filter devtools-importer build
+          pnpm --filter "@sucoza/devtools-common" build
+          pnpm --filter "@sucoza/plugin-core" build
+          pnpm --filter "@sucoza/shared-components" build
+          pnpm --filter "@sucoza/devtools-importer" build
 
       - name: Type check plugin
-        run: pnpm --filter ${{ matrix.plugin }} typecheck
+        run: pnpm --filter "${{ matrix.plugin }}" typecheck
 
       - name: Lint plugin
-        run: pnpm --filter ${{ matrix.plugin }} lint
+        run: pnpm --filter "${{ matrix.plugin }}" lint
 
       - name: Build plugin
-        run: pnpm --filter ${{ matrix.plugin }} build
+        run: pnpm --filter "${{ matrix.plugin }}" build
 
       - name: Test plugin
-        run: pnpm --filter ${{ matrix.plugin }} test || echo "No tests for ${{ matrix.plugin }}"
+        run: pnpm --filter "${{ matrix.plugin }}" test || echo "No tests for ${{ matrix.plugin }}"
 
   build-matrix:
     name: Full Build Matrix
@@ -198,16 +198,16 @@ jobs:
 
       - name: Build all packages
         run: |
-          pnpm --filter devtools-common build
-          pnpm --filter plugin-core build
-          pnpm --filter shared-components build
-          pnpm --filter devtools-importer build
+          pnpm --filter "@sucoza/devtools-common" build
+          pnpm --filter "@sucoza/plugin-core" build
+          pnpm --filter "@sucoza/shared-components" build
+          pnpm --filter "@sucoza/devtools-importer" build
 
       - name: Build sample plugins
         run: |
-          pnpm --filter api-mock-interceptor build
-          pnpm --filter memory-performance-profiler build
-          pnpm --filter browser-automation-test-recorder build
+          pnpm --filter "@sucoza/api-mock-interceptor-devtools-plugin" build
+          pnpm --filter "@sucoza/memory-performance-profiler-devtools-plugin" build
+          pnpm --filter "@sucoza/browser-automation-test-recorder-devtools-plugin" build
 
   security:
     name: Security Audit

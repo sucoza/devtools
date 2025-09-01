@@ -700,6 +700,7 @@ export interface RecordingOptions {
   selectorOptions: SelectorOptions;
   debounceMs: number;
   maxEvents: number;
+  recordInitialNavigation?: boolean;
 }
 
 /**

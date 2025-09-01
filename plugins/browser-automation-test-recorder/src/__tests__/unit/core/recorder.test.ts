@@ -193,7 +193,7 @@ describe('EventRecorder', () => {
 
   describe('Event Handling', () => {
     beforeEach(async () => {
-      await recorder.start();
+      await recorder.start({ recordInitialNavigation: false });
     });
 
     it('should handle click events', async () => {
@@ -312,8 +312,9 @@ describe('EventRecorder', () => {
         },
       };
 
-      const customRecorder = new EventRecorder(mockSelectorEngine, mockDevToolsClient, customOptions);
-      await customRecorder.start();
+      const customRecorder = new EventRecorder(mockSelectorEngine, mockDevToolsClient);
+      customRecorder.updateOptions(customOptions);
+      await customRecorder.start({ recordInitialNavigation: false });
 
       const mouseMoveEvent = new MouseEvent('mousemove', {
         bubbles: true,
@@ -354,8 +355,9 @@ describe('EventRecorder', () => {
         },
       };
 
-      const debouncedRecorder = new EventRecorder(mockSelectorEngine, mockDevToolsClient, customOptions);
-      await debouncedRecorder.start();
+      const debouncedRecorder = new EventRecorder(mockSelectorEngine, mockDevToolsClient);
+      debouncedRecorder.updateOptions(customOptions);
+      await debouncedRecorder.start({ recordInitialNavigation: false });
 
       // Fire multiple rapid events
       for (let i = 0; i < 5; i++) {
@@ -379,7 +381,7 @@ describe('EventRecorder', () => {
 
   describe('Event Processing', () => {
     beforeEach(async () => {
-      await recorder.start();
+      await recorder.start({ recordInitialNavigation: false });
     });
 
     it('should generate selectors for event targets', async () => {
@@ -436,7 +438,7 @@ describe('EventRecorder', () => {
 
   describe('Context Capture', () => {
     beforeEach(async () => {
-      await recorder.start();
+      await recorder.start({ recordInitialNavigation: false });
     });
 
     it('should capture page context', async () => {
@@ -495,10 +497,12 @@ describe('EventRecorder', () => {
           ignoreAttributes: ['style'],
           ariaLabelFallback: true,
         },
+        maxEvents: 1000,
       };
 
-      const perfRecorder = new EventRecorder(mockSelectorEngine, mockDevToolsClient, perfOptions);
-      await perfRecorder.start();
+      const perfRecorder = new EventRecorder(mockSelectorEngine, mockDevToolsClient);
+      perfRecorder.updateOptions(perfOptions);
+      await perfRecorder.start({ recordInitialNavigation: false });
 
       const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
       Object.defineProperty(clickEvent, 'target', { value: mockElement });
@@ -539,8 +543,9 @@ describe('EventRecorder', () => {
         },
       };
 
-      const screenshotRecorder = new EventRecorder(mockSelectorEngine, mockDevToolsClient, screenshotOptions);
-      await screenshotRecorder.start();
+      const screenshotRecorder = new EventRecorder(mockSelectorEngine, mockDevToolsClient);
+      screenshotRecorder.updateOptions(screenshotOptions);
+      await screenshotRecorder.start({ recordInitialNavigation: false });
 
       const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
       Object.defineProperty(clickEvent, 'target', { value: mockElement });
@@ -579,8 +584,9 @@ describe('EventRecorder', () => {
         },
       };
 
-      const noScreenshotRecorder = new EventRecorder(mockSelectorEngine, mockDevToolsClient, noScreenshotOptions);
-      await noScreenshotRecorder.start();
+      const noScreenshotRecorder = new EventRecorder(mockSelectorEngine, mockDevToolsClient);
+      noScreenshotRecorder.updateOptions(noScreenshotOptions);
+      await noScreenshotRecorder.start({ recordInitialNavigation: false });
 
       const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
       Object.defineProperty(clickEvent, 'target', { value: mockElement });
@@ -596,7 +602,7 @@ describe('EventRecorder', () => {
 
   describe('Edge Cases', () => {
     it('should handle events on non-element targets', async () => {
-      await recorder.start();
+      await recorder.start({ recordInitialNavigation: false });
 
       const textNode = document.createTextNode('text content');
       const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
@@ -609,7 +615,7 @@ describe('EventRecorder', () => {
     });
 
     it('should handle events without targets', async () => {
-      await recorder.start();
+      await recorder.start({ recordInitialNavigation: false });
 
       const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
       // Don't set target
@@ -623,7 +629,7 @@ describe('EventRecorder', () => {
     });
 
     it('should handle selector generation failures gracefully', async () => {
-      await recorder.start();
+      await recorder.start({ recordInitialNavigation: false });
 
       // Make selector generation fail
       mockSelectorEngine.generateSelector.mockRejectedValue(new Error('Selector generation failed'));
@@ -653,7 +659,7 @@ describe('EventRecorder', () => {
 
   describe('Event Sequencing', () => {
     beforeEach(async () => {
-      await recorder.start();
+      await recorder.start({ recordInitialNavigation: false });
     });
 
     it('should assign sequence numbers correctly', async () => {
@@ -702,7 +708,7 @@ describe('EventRecorder', () => {
 
       recorder.updateOptions(newOptions);
 
-      await recorder.start();
+      await recorder.start({ recordInitialNavigation: false });
       const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true });
       Object.defineProperty(clickEvent, 'target', { value: mockElement });
       await recorder.handleDOMEvent(clickEvent);
