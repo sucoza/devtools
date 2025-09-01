@@ -22,7 +22,8 @@ afterEach(() => {
 });
 
 beforeEach(() => {
-  vi.useFakeTimers();
+  // Don't use fake timers for async tests that rely on actual timeouts
+  // vi.useFakeTimers();
 });
 
 // Mock window.matchMedia for components that use media queries
@@ -178,6 +179,37 @@ Object.defineProperty(global, 'crypto', {
       return arr;
     }),
   },
+});
+
+// Mock performance API with memory information
+Object.defineProperty(global, 'performance', {
+  value: {
+    ...performance,
+    timing: {
+      navigationStart: 1000,
+      domContentLoadedEventEnd: 2000,
+      loadEventEnd: 3000,
+    },
+    memory: {
+      usedJSHeapSize: 1024000,
+      totalJSHeapSize: 2048000,
+      jsHeapSizeLimit: 4096000,
+    },
+    getEntriesByType: vi.fn((type) => {
+      if (type === 'paint') {
+        return [
+          { name: 'first-paint', startTime: 100 },
+          { name: 'first-contentful-paint', startTime: 200 }
+        ];
+      }
+      return [];
+    }),
+    getEntriesByName: vi.fn(() => []),
+    mark: vi.fn(),
+    measure: vi.fn(),
+    now: vi.fn(() => Date.now()),
+  },
+  writable: true,
 });
 
 // Mock console methods to avoid noise in test output

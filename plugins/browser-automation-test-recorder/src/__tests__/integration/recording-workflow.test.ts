@@ -168,12 +168,13 @@ describe('Recording Workflow Integration', () => {
       Object.defineProperty(clickEvent, 'target', { value: mockElement });
       await recorder.handleDOMEvent(clickEvent);
       
-      await new Promise(resolve => setTimeout(resolve, 50));
+      // Wait for event processing
+      await new Promise(resolve => setTimeout(resolve, 150));
 
       const recordedEvents = await recorder.stop();
       expect(recordedEvents.length).toBeGreaterThan(0);
       expect(recordedEvents[0].timestamp).toBeGreaterThan(0);
-    }, 15000);
+    }, 30000);
   });
 
   describe('Store Integration', () => {

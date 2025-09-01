@@ -208,21 +208,43 @@ global.Worker = class Worker extends EventTarget {
     this.url = url;
   }
 
-  postMessage(data: unknown, _transfer?: Transferable[]) {
-    // Mock worker responses
+  postMessage(data: any, _transfer?: Transferable[]) {
+    // Mock worker responses with proper error handling
     setTimeout(() => {
-      if (this.onmessage) {
-        if (data.type === 'calculateSSIM') {
-          this.onmessage(new MessageEvent('message', {
-            data: { type: 'ssimResult', data: 0.95 }
-          }));
-        } else if (data.type === 'processChunk') {
-          this.onmessage(new MessageEvent('message', {
-            data: { type: 'chunkResult', data: [] }
-          }));
+      try {
+        if (this.onmessage) {
+          if (data && typeof data === 'object') {
+            if (data.type === 'calculateSSIM') {
+              this.onmessage(new MessageEvent('message', {
+                data: { type: 'ssimResult', ssim: 0.95, success: true }
+              }));
+            } else if (data.type === 'processChunk') {
+              this.onmessage(new MessageEvent('message', {
+                data: { 
+                  type: 'chunkResult', 
+                  differences: [], 
+                  pixelDiffs: 0, 
+                  success: true 
+                }
+              }));
+            } else if (data.type === 'hash') {
+              this.onmessage(new MessageEvent('message', {
+                data: { type: 'hashResult', hash: '1', success: true }
+              }));
+            } else {
+              // Default success response
+              this.onmessage(new MessageEvent('message', {
+                data: { type: 'result', success: true }
+              }));
+            }
+          }
+        }
+      } catch (error) {
+        if (this.onerror) {
+          this.onerror(new ErrorEvent('error', { error }));
         }
       }
-    }, 0);
+    }, 10); // Small delay to simulate async processing
   }
 
   terminate() {

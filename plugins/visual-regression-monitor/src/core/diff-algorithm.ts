@@ -676,27 +676,7 @@ export class DiffAlgorithm {
     return this.isWebWorkersSupported && this.workerPool.length > 0 && imageSize > 1000000; // 1M pixels threshold
   }
 
-  /**
-   * Get worker status information
-   */
-  getWorkerStatus() {
-    return {
-      poolSize: this.workerPool.length,
-      isSupported: this.isWebWorkersSupported,
-      maxWorkers: this.maxWorkers
-    };
-  }
-
-  /**
-   * Get performance metrics for testing
-   */
-  getPerformanceMetrics() {
-    return {
-      averageComparison: this.performanceMonitor.getAverageTime('fullComparison'),
-      averageSSIM: this.performanceMonitor.getAverageTime('ssimCalculation'),
-      hasMetrics: this.performanceMonitor.getStats('fullComparison').count > 0
-    };
-  }
+  // Duplicate methods removed - full implementations are at end of class
 
   /**
    * Compare multiple screenshots in batch
