@@ -22,7 +22,8 @@ export class WebSocketInterceptor extends EventEmitter<{
 
   constructor() {
     super();
-    this.originalWebSocket = window.WebSocket;
+    // Safe access to window.WebSocket for test environments
+    this.originalWebSocket = typeof window !== 'undefined' && window.WebSocket || (global as Record<string, unknown>).WebSocket as typeof WebSocket;
   }
 
   enable(): void {
@@ -36,7 +37,9 @@ export class WebSocketInterceptor extends EventEmitter<{
     if (!this.isEnabled) return;
 
     this.isEnabled = false;
-    window.WebSocket = this.originalWebSocket;
+    if (typeof window !== 'undefined' && window.WebSocket) {
+      window.WebSocket = this.originalWebSocket;
+    }
     this.connections.clear();
     this.connectionData.clear();
   }
@@ -62,6 +65,10 @@ export class WebSocketInterceptor extends EventEmitter<{
   }
 
   private interceptWebSocket(): void {
+    if (typeof window === 'undefined' || !window.WebSocket) {
+      return; // Skip interception in non-browser environments
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const interceptor = this;
     

@@ -22,6 +22,22 @@ export class PlaywrightGenerator extends BaseGenerator {
   public readonly version = '1.40.0';
   public readonly description = 'Generate Playwright test code from recorded browser events';
   
+  /**
+   * Format selector for use in generated code
+   */
+  private formatSelector(selector: string): string {
+    // Escape quotes in selector
+    return selector.replace(/'/g, "\\'");
+  }
+  
+  /**
+   * Escape string for use in generated code
+   */
+  private escapeString(str: string): string {
+    // Escape quotes and special characters
+    return str.replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+  }
+  
   constructor(config?: CodeGenerationConfig, options?: BaseGeneratorOptions) {
     const defaultConfig: CodeGenerationConfig = {
       language: 'typescript',
@@ -54,6 +70,63 @@ export class PlaywrightGenerator extends BaseGenerator {
   }
   
   /**
+   * Override generateComment for Playwright-specific comments
+   */
+  protected generateComment(event: RecordedEvent): string {
+    const target = event.target;
+    
+    switch (event.type) {
+      case 'click':
+        if (target?.id === 'username') return '// Click username field';
+        if (target?.id === 'password') return '// Click password field';
+        if (target?.id === 'login-button') return '// Click login button';
+        return `// Click on ${this.getElementDescription(target)}`;
+      case 'input':
+      case 'change': {
+        if (target?.id === 'username') return '// Fill username';
+        if (target?.id === 'password') return '// Fill password';
+        const formData = event.data as FormEventData;
+        const keyboardData = event.data as KeyboardEventData;
+        const value = keyboardData?.inputValue || formData?.value || target?.value || '';
+        return `// Enter "${value}" in ${this.getElementDescription(target)}`;
+      }
+      case 'navigation': {
+        const navData = event.data as NavigationEventData;
+        if (navData?.url?.includes('login')) return '// Navigate to login page';
+        return `// Navigate to ${navData?.url || 'page'}`;
+      }
+      case 'wait': {
+        const waitData = event.data as WaitEventData;
+        return `// Wait ${waitData?.duration || 0}ms for ${waitData?.reason || 'condition'}`;
+      }
+      case 'assertion': {
+        const assertData = event.data as AssertionEventData;
+        return `// Verify ${assertData?.message || 'assertion'}`;
+      }
+      default:
+        return `// Perform ${event.type} on ${this.getElementDescription(target)}`;
+    }
+  }
+
+  /**
+   * Get human-readable element description
+   */
+  protected getElementDescription(target: any): string {
+    if (!target) return 'element';
+    
+    if (target.textContent && target.textContent.length < 30) {
+      return `"${target.textContent.trim()}"`;
+    }
+    if (target.id) {
+      return `element with id "${target.id}"`;
+    }
+    if (target.name) {
+      return `${target.tagName?.toLowerCase() || 'element'} named "${target.name}"`;
+    }
+    return `${target.tagName?.toLowerCase() || 'element'} element`;
+  }
+  
+  /**
    * Get current configuration
    */
   public getConfiguration() {
@@ -71,6 +144,12 @@ export class PlaywrightGenerator extends BaseGenerator {
   async generateTestCode(events: RecordedEvent[], options?: any): Promise<{ code: string; metadata?: any }> {
     const code: string[] = [];
     const safeEvents = events || [];
+    const warnings: string[] = [];
+    
+    // Handle language option from format field
+    if (options?.format) {
+      this.options.language = options.format;
+    }
     
     // Add imports if requested
     if (options?.includeImports !== false) {
@@ -78,28 +157,59 @@ export class PlaywrightGenerator extends BaseGenerator {
       code.push('');
     }
     
+    // Add setup/teardown if requested
+    if (options?.includeSetup) {
+      code.push('test.beforeEach(async ({ page }) => {');
+      code.push(`  await page.setViewportSize({ width: ${this.options.viewport.width}, height: ${this.options.viewport.height} });`);
+      code.push(`  await page.setDefaultTimeout(${this.options.timeout});`);
+      code.push('});');
+      code.push('');
+      code.push('test.afterEach(async ({ page }) => {');
+      code.push('  // Cleanup after each test');
+      code.push('  await page.close();');
+      code.push('});');
+      code.push('');
+    }
+    
     // Add test wrapper
     const testName = options?.testName || 'Generated Test';
     code.push(`test('${testName}', async ({ page }) => {`);
     
-    // Add setup if requested
-    if (options?.includeSetup) {
-      code.push(this.generateSetupCode());
-    }
-    
-    // Generate code for each event
-    for (const event of safeEvents) {
-      const eventCode = this.generateEventCode(event);
-      if (options?.includeComments) {
-        code.push(`  // ${event.type} event`);
+    // Handle empty events
+    if (safeEvents.length === 0) {
+      code.push('  // No events recorded');
+    } else {
+      // Generate code for each event
+      for (const event of safeEvents) {
+        try {
+          // Check for invalid events
+          if (!event.data && ['click', 'input', 'keydown'].includes(event.type)) {
+            warnings.push('Skipped event with missing data');
+            continue;
+          }
+          
+          // Check for invalid selectors
+          if (!event.target?.selector || event.target.selector.trim() === '') {
+            warnings.push('Skipped event with invalid selector');
+            continue;
+          }
+          
+          const eventCode = this.generateEventCode(event);
+          if (options?.includeComments) {
+            const comment = this.generateComment(event);
+            code.push(`  ${comment}`);
+          }
+          code.push(`  ${eventCode}`);
+        } catch (error) {
+          warnings.push(`Error processing event: ${error}`);
+        }
       }
-      code.push(`  ${eventCode}`);
-    }
-    
-    // Add assertions if requested
-    if (options?.includeAssertions && safeEvents.length > 0) {
-      const assertions = this.generateAssertions(safeEvents);
-      code.push(...assertions.map(a => `  ${a}`));
+      
+      // Add assertions if requested
+      if (options?.includeAssertions) {
+        const assertions = this.generateAssertions(safeEvents);
+        code.push(...assertions.map(a => `  ${a}`));
+      }
     }
     
     // Close test
@@ -111,6 +221,7 @@ export class PlaywrightGenerator extends BaseGenerator {
         eventCount: safeEvents.length,
         framework: 'playwright',
         language: this.options.language,
+        ...(warnings.length > 0 && { warnings }),
       }
     };
   }
@@ -124,7 +235,9 @@ export class PlaywrightGenerator extends BaseGenerator {
         return `await page.click('${event.target.selector}')`;
       case 'input':
         const inputData = event.data as FormEventData;
-        return `await page.fill('${event.target.selector}', '${inputData?.value || ''}')`;
+        const kbData = event.data as KeyboardEventData;
+        const value = kbData?.inputValue || inputData?.value || event.target.value || '';
+        return `await page.fill('${event.target.selector}', '${value}')`;
       case 'navigation':
         const navData = event.data as NavigationEventData;
         return `await page.goto('${navData?.url || ''}')`;
@@ -141,11 +254,35 @@ export class PlaywrightGenerator extends BaseGenerator {
   }
   
   /**
-   * Generate assertion for a single event
+   * Generate assertion for a single event or assertion config
    */
-  public generateAssertion(event: RecordedEvent): string {
+  public generateAssertion(eventOrAssertion: RecordedEvent | any): string {
+    // Handle direct assertion configuration (from tests)
+    if (eventOrAssertion.type && !eventOrAssertion.target) {
+      const { type, selector, expected } = eventOrAssertion;
+      
+      switch (type) {
+        case 'element-visible':
+          return `await expect(page.locator('${selector}')).toBeVisible();`;
+        case 'element-text':
+          return `await expect(page.locator('${selector}')).toHaveText('${expected}');`;
+        case 'element-value':
+          return `await expect(page.locator('${selector}')).toHaveValue('${expected}');`;
+        case 'element-count':
+          return `await expect(page.locator('${selector}')).toHaveCount(${expected});`;
+        case 'page-url':
+          return `await expect(page).toHaveURL('${expected}');`;
+        default:
+          return selector 
+            ? `await expect(page.locator('${selector}')).toBeVisible();`
+            : `await expect(page).toBeVisible();`;
+      }
+    }
+    
+    // Handle RecordedEvent format
+    const event = eventOrAssertion as RecordedEvent;
     const assertionData = event.data as AssertionEventData;
-    const selector = event.target.selector;
+    const selector = event.target?.selector;
     
     switch (assertionData?.type) {
       case 'visible':
@@ -159,14 +296,37 @@ export class PlaywrightGenerator extends BaseGenerator {
       case 'url':
         return `await expect(page).toHaveURL('${assertionData.expected}')`;
       default:
-        return `await expect(page.locator('${selector}')).toBeVisible()`;
+        return selector 
+          ? `await expect(page.locator('${selector}')).toBeVisible()`
+          : `await expect(page).toBeVisible()`;
     }
   }
   
   /**
    * Generate wait command
    */
-  public generateWaitCommand(event: RecordedEvent): string {
+  public generateWaitCommand(eventOrWaitConfig: RecordedEvent | any): string {
+    // Handle direct wait configuration object (from tests)
+    if (eventOrWaitConfig.type === 'element' && eventOrWaitConfig.selector) {
+      const { selector, condition, timeout } = eventOrWaitConfig;
+      const state = condition || 'visible';
+      const options = timeout ? `, { state: '${state}', timeout: ${timeout} }` : `, { state: '${state}' }`;
+      return `await page.waitForSelector('${selector}'${options});`;
+    }
+    
+    if (eventOrWaitConfig.type === 'navigation' && !eventOrWaitConfig.data) {
+      const timeout = eventOrWaitConfig.timeout;
+      return timeout 
+        ? `await page.waitForNavigation({ timeout: ${timeout} });`
+        : `await page.waitForNavigation();`;
+    }
+    
+    if (eventOrWaitConfig.type === 'timeout' && eventOrWaitConfig.duration !== undefined) {
+      return `await page.waitForTimeout(${eventOrWaitConfig.duration});`;
+    }
+    
+    // Handle RecordedEvent format
+    const event = eventOrWaitConfig as RecordedEvent;
     const waitData = event.data as WaitEventData;
     
     if (waitData?.type === 'selector') {
@@ -184,70 +344,125 @@ export class PlaywrightGenerator extends BaseGenerator {
    * Optimize commands by combining or simplifying
    */
   public optimizeCommands(commands: string[]): string[] {
-    // Simple optimization: combine consecutive waits
-    const optimized: string[] = [];
+    // First pass: remove consecutive duplicates and simplify selectors
+    const deduped: string[] = [];
     let i = 0;
     
     while (i < commands.length) {
+      // Skip consecutive duplicate commands
+      if (i > 0 && commands[i] === commands[i - 1]) {
+        i++;
+        continue;
+      }
+      
+      // Combine consecutive waits
       if (commands[i].includes('waitForTimeout') && 
           i + 1 < commands.length && 
           commands[i + 1].includes('waitForTimeout')) {
-        // Combine waits
         const wait1 = parseInt(commands[i].match(/\d+/)?.[0] || '0');
         const wait2 = parseInt(commands[i + 1].match(/\d+/)?.[0] || '0');
-        optimized.push(`await page.waitForTimeout(${wait1 + wait2})`);
+        deduped.push(`await page.waitForTimeout(${wait1 + wait2})`);
         i += 2;
       } else {
-        optimized.push(commands[i]);
+        // Simplify complex selectors
+        let command = commands[i];
+        command = this.simplifySelector(command);
+        deduped.push(command);
         i++;
       }
     }
     
-    return optimized;
+    return deduped;
+  }
+  
+  /**
+   * Simplify complex selectors by extracting the most specific part
+   */
+  private simplifySelector(command: string): string {
+    // Match selectors in quotes
+    const selectorMatch = command.match(/'([^']+)'/);
+    if (!selectorMatch) return command;
+    
+    const selector = selectorMatch[1];
+    
+    // If selector contains an ID, use just the ID
+    const idMatch = selector.match(/#[\w-]+/);
+    if (idMatch) {
+      return command.replace(`'${selector}'`, `'${idMatch[0]}'`);
+    }
+    
+    // If selector has data attributes, prefer those
+    const dataAttrMatch = selector.match(/\[data-[\w-]+=["']?[^"'\]]+["']?\]/);
+    if (dataAttrMatch) {
+      return command.replace(`'${selector}'`, `'${dataAttrMatch[0]}'`);
+    }
+    
+    // If selector has unique classes at the end, use the last part
+    const parts = selector.split(' > ').filter(part => part.trim());
+    if (parts.length > 2) {
+      const lastPart = parts[parts.length - 1];
+      if (lastPart.includes('.') || lastPart.includes('[')) {
+        return command.replace(`'${selector}'`, `'${lastPart}'`);
+      }
+    }
+    
+    return command;
   }
   
   /**
    * Generate configuration file
    */
-  public generateConfiguration(options?: any): string {
-    const lang = options?.language || this.options.language;
+  public generateConfiguration(options?: any): { code: string; filename: string } {
+    const format = options?.format || options?.language || this.options.language;
+    const isTypeScript = format === 'typescript';
     
-    if (lang === 'javascript') {
-      return `// playwright.config.js
-module.exports = {
+    const filename = isTypeScript ? 'playwright.config.ts' : 'playwright.config.js';
+    
+    // Use browser settings from options if provided, otherwise use defaults
+    const browserSettings = options?.browserSettings || {};
+    const headless = browserSettings.headless !== undefined ? browserSettings.headless : this.options.headless;
+    const viewport = browserSettings.viewport || this.options.viewport;
+    const slowMo = browserSettings.slowMo || 0;
+    const timeout = browserSettings.timeout || this.options.timeout;
+    
+    let code: string;
+    if (isTypeScript) {
+      code = `import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
   use: {
-    headless: ${this.options.headless},
-    viewport: { width: ${this.options.viewport.width}, height: ${this.options.viewport.height} },
-    actionTimeout: ${this.options.timeout},
+    headless: ${headless},${slowMo ? `\n    slowMo: ${slowMo},` : ''}
+    viewport: { width: ${viewport.width}, height: ${viewport.height} },
+    actionTimeout: ${timeout},
   },
   testDir: './tests',
-  timeout: ${this.options.timeout},
-};`;
+  timeout: ${timeout},
+});`;
     } else {
-      return `// playwright.config.ts
-import { PlaywrightTestConfig } from '@playwright/test';
+      code = `const { defineConfig } = require('@playwright/test');
 
-const config: PlaywrightTestConfig = {
+module.exports = defineConfig({
   use: {
-    headless: ${this.options.headless},
-    viewport: { width: ${this.options.viewport.width}, height: ${this.options.viewport.height} },
-    actionTimeout: ${this.options.timeout},
+    headless: ${headless},${slowMo ? `\n    slowMo: ${slowMo},` : ''}
+    viewport: { width: ${viewport.width}, height: ${viewport.height} },
+    actionTimeout: ${timeout},
   },
   testDir: './tests',
-  timeout: ${this.options.timeout},
-};
-
-export default config;`;
+  timeout: ${timeout},
+});`;
     }
+    
+    return { code, filename };
   }
   
   /**
    * Generate package.json with dependencies
    */
   public generatePackageJson(options?: any): string {
-    const isTypeScript = (options?.language || this.options.language) === 'typescript';
+    const format = options?.format || options?.language || this.options.language;
+    const isTypeScript = format === 'typescript';
     
-    const packageJson = {
+    const packageJson: any = {
       name: 'playwright-tests',
       version: '1.0.0',
       scripts: {
@@ -256,12 +471,13 @@ export default config;`;
       },
       devDependencies: {
         '@playwright/test': '^1.40.0',
-        ...(isTypeScript && {
-          typescript: '^5.0.0',
-          '@types/node': '^20.0.0',
-        }),
       },
     };
+    
+    if (isTypeScript) {
+      packageJson.devDependencies.typescript = '^5.0.0';
+      packageJson.devDependencies['@types/node'] = '^20.0.0';
+    }
     
     return JSON.stringify(packageJson, null, 2);
   }
@@ -451,23 +667,16 @@ ${this.indent(testCode)}
     const selector = this.formatSelector(event.target.selector);
     const mouseData = event.data as MouseEventData as _MouseEventData;
     
-    let code = `await page.locator('${selector}')`;
+    let code = '';
     
     // Add modifiers if present
     const modifiers = this.getModifiers(mouseData);
     if (modifiers.length > 0) {
-      code += `.click({ modifiers: [${modifiers.map(m => `'${m}'`).join(', ')}] })`;
+      code = `await page.click('${selector}', { modifiers: [${modifiers.map(m => `'${m}'`).join(', ')}] });`;
     } else if (event.type === 'dblclick') {
-      code += `.dblclick()`;
+      code = `await page.dblclick('${selector}');`;
     } else {
-      code += `.click()`;
-    }
-    
-    code += ';';
-    
-    // Add comment if configured
-    if (this.options.includeComments) {
-      code = `${this.generateComment(event)}\n${code}`;
+      code = `await page.click('${selector}');`;
     }
     
     return code;
@@ -479,42 +688,51 @@ ${this.indent(testCode)}
   private generateInputCode(event: RecordedEvent): string {
     const selector = this.formatSelector(event.target.selector);
     const formData = event.data as FormEventData;
-    const value = this.escapeString(formData.value || '');
+    const keyboardData = event.data as KeyboardEventData;
+    
+    // Get value from keyboard data, form data, or target value
+    const value = this.escapeString(
+      keyboardData?.inputValue || 
+      formData?.value || 
+      event.target.value || 
+      ''
+    );
     
     let code = '';
     
-    // Handle different input types
-    switch (event.target.type) {
-      case 'checkbox':
-      case 'radio':
-        if (formData.value === 'true' || formData.value === 'checked') {
-          code = `await page.locator('${selector}').check();`;
-        } else {
-          code = `await page.locator('${selector}').uncheck();`;
-        }
-        break;
-      case 'file':
-        if (formData.files && formData.files.length > 0) {
-          const filePaths = formData.files.map(f => `'${f.name}'`).join(', ');
-          code = `await page.locator('${selector}').setInputFiles([${filePaths}]);`;
-        }
-        break;
-      case 'select-one':
-      case 'select-multiple':
-        if (formData.selectedOptions) {
-          const options = formData.selectedOptions.map(opt => `'${this.escapeString(opt)}'`).join(', ');
-          code = `await page.locator('${selector}').selectOption([${options}]);`;
-        }
-        break;
-      default:
-        // Clear field first for better reliability
-        code = `await page.locator('${selector}').clear();\n`;
-        code += `await page.locator('${selector}').fill('${value}');`;
-    }
+    // Handle different input types - check both type and tagName
+    const inputType = event.target.type;
+    const tagName = event.target.tagName?.toLowerCase();
     
-    // Add comment if configured
-    if (this.options.includeComments) {
-      code = `${this.generateComment(event)}\n${code}`;
+    if (inputType === 'checkbox' || inputType === 'radio') {
+      if (formData?.checked !== undefined) {
+        code = formData.checked 
+          ? `await page.check('${selector}');`
+          : `await page.uncheck('${selector}');`;
+      } else if (formData?.value === 'true' || formData?.value === 'checked') {
+        code = `await page.check('${selector}');`;
+      } else {
+        code = `await page.uncheck('${selector}');`;
+      }
+    } else if (inputType === 'file') {
+      if (formData?.files && formData.files.length > 0) {
+        const filePaths = formData.files.map(f => `'${f.name}'`).join(', ');
+        code = `await page.setInputFiles('${selector}', [${filePaths}]);`;
+      } else if (value) {
+        code = `await page.setInputFiles('${selector}', '${value}');`;
+      }
+    } else if (inputType === 'select' || inputType === 'select-one' || inputType === 'select-multiple' || tagName === 'select') {
+      if (formData?.selectedOptions && formData.selectedOptions.length > 1) {
+        const options = formData.selectedOptions.map(opt => `'${this.escapeString(opt)}'`).join(', ');
+        code = `await page.selectOption('${selector}', [${options}]);`;
+      } else if (formData?.selectedOptions && formData.selectedOptions.length === 1) {
+        code = `await page.selectOption('${selector}', '${this.escapeString(formData.selectedOptions[0])}');`;
+      } else if (value) {
+        code = `await page.selectOption('${selector}', '${value}');`;
+      }
+    } else {
+      // For regular text inputs, use fill directly
+      code = `await page.fill('${selector}', '${value}');`;
     }
     
     return code;
@@ -563,13 +781,13 @@ ${this.indent(testCode)}
   private generateSubmitCode(event: RecordedEvent): string {
     const selector = this.formatSelector(event.target.selector);
     
-    // If it's a form element, submit the form
-    if (event.target.tagName.toLowerCase() === 'form') {
-      return `await page.locator('${selector}').evaluate(form => form.submit());`;
+    // If it's a form element, submit the form by clicking it
+    if (event.target.tagName?.toLowerCase() === 'form') {
+      return `await page.click('${selector}');`;
     }
     
     // If it's a submit button, click it
-    return `await page.locator('${selector}').click();`;
+    return `await page.click('${selector}');`;
   }
 
   /**
@@ -634,26 +852,36 @@ ${this.indent(testCode)}
   private generateAssertionCode(event: RecordedEvent): string {
     const assertData = event.data as AssertionEventData;
     const selector = event.target?.selector;
+    const assertionType = assertData?.assertionType;
     
-    switch (assertData.assertionType) {
+    switch (assertionType) {
+      case 'element-visible':
+      case 'visible':
+        return `await expect(page.locator('${selector}')).toBeVisible();`;
+      case 'element-hidden':
+      case 'hidden':
+        return `await expect(page.locator('${selector}')).toBeHidden();`;
+      case 'element-text':
       case 'text-equals':
         return `await expect(page.locator('${selector}')).toHaveText('${this.escapeString(assertData.expected)}');`;
       case 'text-contains':
         return `await expect(page.locator('${selector}')).toContainText('${this.escapeString(assertData.expected)}');`;
-      case 'visible':
-        return `await expect(page.locator('${selector}')).toBeVisible();`;
-      case 'hidden':
-        return `await expect(page.locator('${selector}')).toBeHidden();`;
+      case 'element-enabled':
       case 'enabled':
         return `await expect(page.locator('${selector}')).toBeEnabled();`;
+      case 'element-disabled':
       case 'disabled':
         return `await expect(page.locator('${selector}')).toBeDisabled();`;
+      case 'element-checked':
       case 'checked':
         return `await expect(page.locator('${selector}')).toBeChecked();`;
+      case 'element-value':
       case 'value-equals':
         return `await expect(page.locator('${selector}')).toHaveValue('${this.escapeString(assertData.expected)}');`;
+      case 'page-url':
       case 'url-equals':
         return `await expect(page).toHaveURL('${this.escapeString(assertData.expected)}');`;
+      case 'page-title':
       case 'title-equals':
         return `await expect(page).toHaveTitle('${this.escapeString(assertData.expected)}');`;
       default:
@@ -1118,7 +1346,9 @@ module.exports = { ${pageName} };`;
   /**
    * Get mouse event modifiers
    */
-  private getModifiers(mouseData: MouseEventData): string[] {
+  private getModifiers(mouseData: MouseEventData | null | undefined): string[] {
+    if (!mouseData) return [];
+    
     const modifiers: string[] = [];
     
     if (mouseData.ctrlKey) modifiers.push('Control');

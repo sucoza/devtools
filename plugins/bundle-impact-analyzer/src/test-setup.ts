@@ -47,3 +47,20 @@ global.PerformanceObserver = class PerformanceObserver {
     return [];
   }
 };
+
+// Mock dynamic import function for testing
+if (typeof window !== 'undefined') {
+  (window as any).__original_import__ = (specifier: string) => {
+    return Promise.resolve({ default: {}, [specifier]: 'mocked' });
+  };
+  
+  // Mock window.eval to prevent dynamic import evaluation issues
+  const originalEval = window.eval;
+  window.eval = (code: string) => {
+    // If it's trying to evaluate import statements, return a mock
+    if (code.includes('import') || code.includes('__original_import__')) {
+      return () => Promise.resolve({ default: {} });
+    }
+    return originalEval(code);
+  };
+}

@@ -78,9 +78,15 @@ global.HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
   fontVariantCaps: 'normal',
   getLineDash: vi.fn(() => []),
   setLineDash: vi.fn(),
-  createLinearGradient: vi.fn(),
-  createRadialGradient: vi.fn(),
-  createConicGradient: vi.fn(),
+  createLinearGradient: vi.fn(() => ({
+    addColorStop: vi.fn()
+  })),
+  createRadialGradient: vi.fn(() => ({
+    addColorStop: vi.fn()
+  })),
+  createConicGradient: vi.fn(() => ({
+    addColorStop: vi.fn()
+  })),
   createPattern: vi.fn(),
   isContextLost: vi.fn(() => false),
   getContextAttributes: vi.fn()
@@ -245,12 +251,12 @@ global.OffscreenCanvas = class OffscreenCanvas extends EventTarget {
 } as unknown as OffscreenCanvas;
 
 // Mock MCP Playwright tools
-global.mcpPlaywrightTools = {
+const mockMCPPlaywrightTools = {
   browser_navigate: vi.fn().mockResolvedValue({}),
   browser_resize: vi.fn().mockResolvedValue({}),
   browser_take_screenshot: vi.fn().mockResolvedValue({
     filename: 'mock-screenshot.png',
-    data: 'data:image/png;base64,mock'
+    data: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=='
   }),
   browser_snapshot: vi.fn().mockResolvedValue({
     elements: []
@@ -262,6 +268,12 @@ global.mcpPlaywrightTools = {
   browser_close: vi.fn().mockResolvedValue({}),
   browser_install: vi.fn().mockResolvedValue({})
 };
+
+// Set up global references for different environments
+global.mcpPlaywrightTools = mockMCPPlaywrightTools;
+if (typeof window !== 'undefined') {
+  (window as unknown as Record<string, unknown>).mcpPlaywrightTools = mockMCPPlaywrightTools;
+}
 
 // Mock performance.now for consistent timing
 Object.defineProperty(window, 'performance', {

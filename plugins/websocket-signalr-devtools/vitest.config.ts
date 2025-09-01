@@ -7,13 +7,5 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test-setup.ts'],
     globals: true,
-    server: {
-      deps: {
-        // Inline problematic packages that use ES modules in CommonJS context
-        inline: [
-          /bundle-impact-analyzer/,
-        ],
-      },
-    },
   },
 });

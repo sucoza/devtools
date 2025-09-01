@@ -63,6 +63,10 @@ describe('Integration Tests', () => {
     screenshotEngine = new ScreenshotEngine();
     diffAlgorithm = new DiffAlgorithm();
     vi.clearAllMocks();
+    // Reset global Worker mock if it exists
+    if (vi.isMockFunction(global.Worker)) {
+      vi.mocked(global.Worker).mockRestore();
+    }
   });
 
   afterEach(async () => {
@@ -386,6 +390,7 @@ describe('Integration Tests', () => {
       });
 
       // Force Web Worker failure by creating new instance without workers
+      const originalWorker = global.Worker;
       global.Worker = vi.fn().mockImplementation(() => {
         throw new Error('Workers unavailable');
       });
@@ -396,6 +401,9 @@ describe('Integration Tests', () => {
         baselineResult.screenshot!,
         comparisonResult.screenshot!
       );
+      
+      // Restore original Worker constructor
+      global.Worker = originalWorker;
 
       expect(diffResult.success).toBe(true);
       expect(diffResult.diff).toBeDefined();

@@ -9,11 +9,15 @@ describe('BrowserAutomationStore', () => {
     // Reset store to initial state before each test
     store = useBrowserAutomationStore.getState();
     store.clearRecording();
+    store.resetSettings();
   });
+
+  // Helper to get fresh state
+  const getState = () => useBrowserAutomationStore.getState();
 
   describe('Initial State', () => {
     it('should have correct initial recording state', () => {
-      const state = store;
+      const state = getState();
       
       expect(state.recording.isRecording).toBe(false);
       expect(state.recording.isPaused).toBe(false);
@@ -25,7 +29,7 @@ describe('BrowserAutomationStore', () => {
     });
 
     it('should have correct initial playback state', () => {
-      const state = store;
+      const state = getState();
       
       expect(state.playback.isPlaying).toBe(false);
       expect(state.playback.isPaused).toBe(false);
@@ -35,14 +39,14 @@ describe('BrowserAutomationStore', () => {
     });
 
     it('should have empty events array', () => {
-      const state = store;
+      const state = getState();
       
       expect(state.events).toEqual([]);
       expect(state.testCases).toEqual([]);
     });
 
     it('should have correct initial UI state', () => {
-      const state = store;
+      const state = getState();
       
       expect(state.ui.activeTab).toBe('recorder');
       expect(state.ui.selectedEventId).toBe(null);
@@ -54,7 +58,7 @@ describe('BrowserAutomationStore', () => {
   describe('Recording Actions', () => {
     it('should start recording', () => {
       store.startRecording();
-      const state = store;
+      const state = getState();
       
       expect(state.recording.isRecording).toBe(true);
       expect(state.recording.isPaused).toBe(false);
@@ -65,7 +69,7 @@ describe('BrowserAutomationStore', () => {
     it('should pause recording', () => {
       store.startRecording();
       store.pauseRecording();
-      const state = store;
+      const state = getState();
       
       expect(state.recording.isRecording).toBe(true);
       expect(state.recording.isPaused).toBe(true);
@@ -75,7 +79,7 @@ describe('BrowserAutomationStore', () => {
       store.startRecording();
       store.pauseRecording();
       store.resumeRecording();
-      const state = store;
+      const state = getState();
       
       expect(state.recording.isRecording).toBe(true);
       expect(state.recording.isPaused).toBe(false);
@@ -84,7 +88,7 @@ describe('BrowserAutomationStore', () => {
     it('should stop recording', () => {
       store.startRecording();
       store.stopRecording();
-      const state = store;
+      const state = getState();
       
       expect(state.recording.isRecording).toBe(false);
       expect(state.recording.isPaused).toBe(false);
@@ -155,7 +159,7 @@ describe('BrowserAutomationStore', () => {
       store.addEvent(mockEvent);
       store.clearRecording();
       
-      const state = store;
+      const state = getState();
       expect(state.recording.isRecording).toBe(false);
       expect(state.events).toEqual([]);
     });
@@ -224,7 +228,7 @@ describe('BrowserAutomationStore', () => {
       };
 
       store.addEvent(mockEvent);
-      const state = store;
+      const state = getState();
       
       expect(state.events).toHaveLength(1);
       expect(state.events[0]).toEqual(mockEvent);
@@ -293,7 +297,7 @@ describe('BrowserAutomationStore', () => {
 
       store.addEvent(mockEvent);
       store.removeEvent('test-event-1');
-      const state = store;
+      const state = getState();
       
       expect(state.events).toHaveLength(0);
     });
@@ -302,21 +306,21 @@ describe('BrowserAutomationStore', () => {
   describe('UI Actions', () => {
     it('should select tab', () => {
       store.selectTab('events');
-      const state = store;
+      const state = getState();
       
       expect(state.ui.activeTab).toBe('events');
     });
 
     it('should select event', () => {
       store.selectEvent('test-event-1');
-      const state = store;
+      const state = getState();
       
       expect(state.ui.selectedEventId).toBe('test-event-1');
     });
 
     it('should set theme', () => {
       store.setTheme('dark');
-      const state = store;
+      const state = getState();
       
       expect(state.ui.theme).toBe('dark');
       expect(state.settings.uiOptions.theme).toBe('dark');
@@ -324,7 +328,7 @@ describe('BrowserAutomationStore', () => {
 
     it('should update filters', () => {
       store.updateFilters({ search: 'test query' });
-      const state = store;
+      const state = getState();
       
       expect(state.ui.filters.search).toBe('test query');
     });
@@ -339,7 +343,7 @@ describe('BrowserAutomationStore', () => {
         },
       });
       
-      const state = store;
+      const state = getState();
       expect(state.settings.recordingOptions.captureScreenshots).toBe(false);
     });
 
@@ -355,13 +359,26 @@ describe('BrowserAutomationStore', () => {
       // Then reset
       store.resetSettings();
       
-      const state = store;
+      const state = getState();
       expect(state.settings.recordingOptions.captureScreenshots).toBe(true); // Back to default
     });
   });
 
   describe('Utility Methods', () => {
     it('should get filtered events', () => {
+      // Ensure clean state
+      store.clearRecording();
+      store.resetSettings();
+      
+      // Reset filters to initial state
+      store.updateFilters({
+        eventTypes: new Set(['click', 'input', 'navigation', 'change', 'submit']),
+        search: '',
+        showOnlyErrors: false,
+        hideSystem: false,
+        groupBy: 'none',
+      });
+      
       // Add some test events first
       const mockEvents: RecordedEvent[] = [
         {
@@ -478,6 +495,10 @@ describe('BrowserAutomationStore', () => {
 
       // Add events to store
       mockEvents.forEach(event => store.addEvent(event));
+
+      const currentState = getState();
+      expect(currentState.events).toHaveLength(2); // Verify events were added
+      expect(currentState.ui.filters.eventTypes.has('click')).toBe(true); // Verify filter includes click
 
       const filteredEvents = store.getFilteredEvents();
       

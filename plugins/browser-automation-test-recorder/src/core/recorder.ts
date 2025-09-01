@@ -956,4 +956,143 @@ export class EventRecorder {
       this.mutationObserver = undefined;
     }
   }
+
+  /**
+   * Alias methods for backward compatibility with tests
+   */
+  async start(options?: Partial<RecordingOptions>): Promise<string> {
+    await this.startRecording(options);
+    return this.sessionId;
+  }
+
+  async stop(): Promise<RecordedEvent[]> {
+    return await this.stopRecording();
+  }
+
+  pause(): void {
+    this.pauseRecording();
+  }
+
+  resume(): void {
+    this.resumeRecording();
+  }
+
+  isCurrentlyRecording(): boolean {
+    return this.getStatus().isRecording;
+  }
+
+
+  async handleDOMEvent(event: Event): Promise<void> {
+    if (!this.isRecording || this.isPaused) return;
+    
+    // Use existing event handling logic
+    const recordedEvent = await this.createEventData(event);
+    if (recordedEvent) {
+      this.eventBuffer.push(recordedEvent);
+      this.sequenceNumber++;
+    }
+  }
+
+  // Method to create event data from DOM event
+  private async createEventData(event: Event): Promise<RecordedEvent | null> {
+    try {
+      const target = event.target as Element;
+      if (!target) return null;
+
+      const selector = await this.selectorEngine.generateSelector(target);
+      const boundingRect = target.getBoundingClientRect();
+
+      return {
+        id: `${event.type}_${Date.now()}_${this.sequenceNumber}`,
+        type: event.type as any,
+        timestamp: Date.now(),
+        sequence: this.sequenceNumber,
+        target: {
+          selector,
+          xpath: '',
+          textContent: target.textContent || '',
+          tagName: target.tagName,
+          boundingRect: {
+            x: boundingRect.x,
+            y: boundingRect.y,
+            width: boundingRect.width,
+            height: boundingRect.height,
+            top: boundingRect.top,
+            right: boundingRect.right,
+            bottom: boundingRect.bottom,
+            left: boundingRect.left,
+            toJSON: () => ({}),
+          },
+          path: [],
+          alternativeSelectors: [],
+        },
+        data: this.extractEventData(event),
+        context: this.createEventContext(),
+        metadata: this.createEventMetadata(),
+      };
+    } catch (error) {
+      console.warn('Failed to create event data:', error);
+      return null;
+    }
+  }
+
+
+  handleNavigationChange(url: string): void {
+    if (!this.isRecording || this.isPaused) return;
+    
+    // Create a navigation event
+    const navigationEvent: RecordedEvent = {
+      id: `nav_${Date.now()}_${this.sequenceNumber}`,
+      type: 'navigation',
+      timestamp: Date.now(),
+      sequence: this.sequenceNumber++,
+      target: {
+        selector: 'window',
+        xpath: '',
+        textContent: '',
+        tagName: 'WINDOW',
+        boundingRect: { x: 0, y: 0, width: 0, height: 0, top: 0, right: 0, bottom: 0, left: 0, toJSON: () => ({}) },
+        path: [],
+        alternativeSelectors: [],
+      },
+      data: {
+        type: 'navigation',
+        url,
+        referrer: document.referrer,
+        timestamp: Date.now(),
+      },
+      context: this.createEventContext(),
+      metadata: this.createEventMetadata(),
+    };
+    
+    this.eventBuffer.push(navigationEvent);
+  }
+
+  private createEventContext(): EventContext {
+    return {
+      url: location.href,
+      title: document.title,
+      viewport: this.getViewportInfo(),
+      userAgent: navigator.userAgent,
+    };
+  }
+
+  private createEventMetadata(): any {
+    return {
+      sessionId: this.sessionId,
+      recordingMode: 'standard',
+      reliability: {
+        selectorScore: 1.0,
+        alternativesCount: 0,
+        elementStable: true,
+        positionStable: true,
+        attributesStable: true,
+        timingVariability: 0,
+        networkDependency: false,
+        confidence: 1.0,
+      },
+      annotations: [],
+      custom: {},
+    };
+  }
 }

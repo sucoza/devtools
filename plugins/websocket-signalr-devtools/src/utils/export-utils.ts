@@ -155,7 +155,9 @@ export function exportToCSV(
   }
 
   if (options.includeMessages) {
-    lines.push(''); // Empty line separator
+    if (options.includeConnections) {
+      lines.push(''); // Empty line separator
+    }
     lines.push('Type,MessageID,ConnectionID,Timestamp,MessageType,Direction,Target,Size,Data');
     
     // WebSocket messages

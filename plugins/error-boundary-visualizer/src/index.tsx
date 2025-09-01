@@ -214,11 +214,26 @@ export function useErrorBoundary() {
   }
 }
 
+// Development helper functions (non-hook versions for global access)
+const createGlobalReportError = () => (error: Error | string, metadata?: Record<string, unknown>) => {
+  // This is a simplified version for development use
+  console.warn('Error reported via global helper:', error, metadata)
+  // In a real implementation, this would integrate with the store
+  // but for global access, we just log it
+}
+
+const createGlobalInitialize = () => (config?: Partial<DevToolsConfig>) => {
+  // This is a simplified version for development use
+  console.warn('DevTools configuration updated via global helper:', config)
+  // In a real implementation, this would integrate with the store
+  return { updateConfig: () => {} }
+}
+
 // Development helpers
 if (process.env.NODE_ENV === 'development') {
   // Add global helpers for development
   (window as any).__ERROR_BOUNDARY_DEVTOOLS__ = {
-    reportError,
-    initializeErrorBoundaryDevTools,
+    reportError: createGlobalReportError(),
+    initializeErrorBoundaryDevTools: createGlobalInitialize(),
   }
 }

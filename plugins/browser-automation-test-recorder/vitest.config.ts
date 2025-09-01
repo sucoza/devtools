@@ -7,6 +7,19 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test-setup.ts'],
     globals: true,
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.git/**',
+      '**/cypress/**',
+      '**/.nuxt/**',
+      '**/.output/**',
+      '**/.vercel/**',
+      '**/.netlify/**',
+      '**/e2e/**',
+      '**/*.e2e.{spec,test}.{js,ts}',
+      '**/__tests__/e2e/**'
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],

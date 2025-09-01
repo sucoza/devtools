@@ -277,11 +277,20 @@ export class DiffAlgorithm {
       const workerUrl = URL.createObjectURL(blob);
 
       for (let i = 0; i < this.maxWorkers; i++) {
-        const worker = new Worker(workerUrl);
-        this.workerPool.push(worker);
+        try {
+          const worker = new Worker(workerUrl);
+          this.workerPool.push(worker);
+        } catch (workerError) {
+          // Individual worker creation failed, continue without this worker
+          console.warn(`Failed to create worker ${i}:`, workerError);
+        }
       }
 
-      // Workers initialized successfully
+      // If no workers were created, disable worker support
+      if (this.workerPool.length === 0) {
+        this.isWebWorkersSupported = false;
+        console.warn('No Web Workers could be initialized, falling back to main thread processing');
+      }
     } catch (error) {
       console.warn('Failed to initialize Web Workers:', error);
       this.isWebWorkersSupported = false;
@@ -291,11 +300,15 @@ export class DiffAlgorithm {
   /**
    * Get an available worker from the pool
    */
-  private getAvailableWorker(): Promise<Worker> {
+  private getAvailableWorker(): Promise<Worker | null> {
     return new Promise((resolve) => {
-      // For simplicity, return the first worker
+      // For simplicity, return the first worker if available
       // In a production implementation, this would track worker availability
-      resolve(this.workerPool[0]);
+      if (this.workerPool.length > 0) {
+        resolve(this.workerPool[0]);
+      } else {
+        resolve(null);
+      }
     });
   }
 
@@ -315,6 +328,11 @@ export class DiffAlgorithm {
     }
 
     const worker = await this.getAvailableWorker();
+    
+    if (!worker) {
+      // No worker available, fallback to main thread
+      return this.processImageChunkMainThread(imageData1, imageData2, startIndex, endIndex, threshold);
+    }
     
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
@@ -813,6 +831,11 @@ export class DiffAlgorithm {
     try {
       const worker = await this.getAvailableWorker();
       
+      if (!worker) {
+        // No worker available, fallback to basic SSIM
+        return calculateSSIM(imageData1, imageData2);
+      }
+      
       return new Promise((resolve, reject) => {
         const timeout = setTimeout(() => {
           reject(new Error('SSIM calculation timeout'));
@@ -1219,7 +1242,9 @@ export class DiffAlgorithm {
     // Terminate all Web Workers
     for (const worker of this.workerPool) {
       try {
-        worker.terminate();
+        if (worker && typeof worker.terminate === 'function') {
+          worker.terminate();
+        }
       } catch (error) {
         console.warn('Error terminating worker:', error);
       }

@@ -3,25 +3,30 @@ import { useBundleAnalyzerStore } from './devtools-store';
 import type { BundleModule, BundleChunk } from '../types';
 
 describe('BundleAnalyzerStore', () => {
-  let store: ReturnType<typeof useBundleAnalyzerStore>;
-
   beforeEach(() => {
-    // Get a fresh store instance
-    store = useBundleAnalyzerStore.getState();
+    // Get the store and reset to initial state by updating the store directly
+    const store = useBundleAnalyzerStore.getState();
     
-    // Reset store to initial state
+    // Reset all store state
     store.updateModules([]);
     store.updateChunks([]);
     store.clearFilters();
+    store.selectModule(null);
+    store.selectChunk(null);
+    store.stopAnalysis();
+    
+    // Clear jobs array manually by setting it directly
+    useBundleAnalyzerStore.setState({ jobs: [] });
   });
 
   it('has correct initial state', () => {
-    expect(store.modules).toEqual([]);
-    expect(store.chunks).toEqual([]);
-    expect(store.isAnalyzing).toBe(false);
-    expect(store.selectedModule).toBeNull();
-    expect(store.selectedChunk).toBeNull();
-    expect(store.recommendations).toEqual([]);
+    const state = useBundleAnalyzerStore.getState();
+    expect(state.modules).toEqual([]);
+    expect(state.chunks).toEqual([]);
+    expect(state.isAnalyzing).toBe(false);
+    expect(state.selectedModule).toBeNull();
+    expect(state.selectedChunk).toBeNull();
+    expect(state.recommendations).toEqual([]);
   });
 
   it('can add modules', () => {
@@ -37,11 +42,13 @@ describe('BundleAnalyzerStore', () => {
       timestamp: Date.now(),
     };
 
-    store.addModule(module);
+    const { addModule } = useBundleAnalyzerStore.getState();
+    addModule(module);
     
-    expect(store.modules).toHaveLength(1);
-    expect(store.modules[0]).toEqual(module);
-    expect(store.stats.moduleCount).toBe(1);
+    const state = useBundleAnalyzerStore.getState();
+    expect(state.modules).toHaveLength(1);
+    expect(state.modules[0]).toEqual(module);
+    expect(state.stats.moduleCount).toBe(1);
   });
 
   it('can update modules', () => {
@@ -70,40 +77,52 @@ describe('BundleAnalyzerStore', () => {
       },
     ];
 
-    store.updateModules(modules);
+    const { updateModules } = useBundleAnalyzerStore.getState();
+    updateModules(modules);
     
-    expect(store.modules).toHaveLength(2);
-    expect(store.stats.moduleCount).toBe(2);
-    expect(store.stats.totalSize).toBe(3072); // 1024 + 2048
+    const state = useBundleAnalyzerStore.getState();
+    expect(state.modules).toHaveLength(2);
+    expect(state.stats.moduleCount).toBe(2);
+    expect(state.stats.totalSize).toBe(3072); // 1024 + 2048
   });
 
   it('can select and deselect modules', () => {
-    store.selectModule('test-module');
-    expect(store.selectedModule).toBe('test-module');
+    const { selectModule } = useBundleAnalyzerStore.getState();
+    selectModule('test-module');
     
-    store.selectModule(null);
-    expect(store.selectedModule).toBeNull();
+    let state = useBundleAnalyzerStore.getState();
+    expect(state.selectedModule).toBe('test-module');
+    
+    selectModule(null);
+    state = useBundleAnalyzerStore.getState();
+    expect(state.selectedModule).toBeNull();
   });
 
   it('can update filters', () => {
-    store.updateFilters({
+    const { updateFilters } = useBundleAnalyzerStore.getState();
+    updateFilters({
       showOnlyLargeModules: true,
       searchQuery: 'test',
       minimumSize: 1024,
     });
     
-    expect(store.filters.showOnlyLargeModules).toBe(true);
-    expect(store.filters.searchQuery).toBe('test');
-    expect(store.filters.minimumSize).toBe(1024);
+    const state = useBundleAnalyzerStore.getState();
+    expect(state.filters.showOnlyLargeModules).toBe(true);
+    expect(state.filters.searchQuery).toBe('test');
+    expect(state.filters.minimumSize).toBe(1024);
   });
 
   it('can start and stop analysis', () => {
-    store.startAnalysis();
-    expect(store.isAnalyzing).toBe(true);
-    expect(store.lastAnalysisTime).toBeGreaterThan(0);
+    const { startAnalysis, stopAnalysis } = useBundleAnalyzerStore.getState();
+    startAnalysis();
     
-    store.stopAnalysis();
-    expect(store.isAnalyzing).toBe(false);
+    let state = useBundleAnalyzerStore.getState();
+    expect(state.isAnalyzing).toBe(true);
+    expect(state.lastAnalysisTime).toBeGreaterThan(0);
+    
+    stopAnalysis();
+    state = useBundleAnalyzerStore.getState();
+    expect(state.isAnalyzing).toBe(false);
   });
 
   it('generates recommendations for large modules', () => {
@@ -119,12 +138,14 @@ describe('BundleAnalyzerStore', () => {
       timestamp: Date.now(),
     };
 
-    store.updateModules([largeModule]);
+    const { updateModules } = useBundleAnalyzerStore.getState();
+    updateModules([largeModule]);
     
+    const state = useBundleAnalyzerStore.getState();
     // Should generate recommendations automatically
-    expect(store.recommendations.length).toBeGreaterThan(0);
-    expect(store.recommendations[0].type).toBe('code-split');
-    expect(store.recommendations[0].severity).toBe('critical');
+    expect(state.recommendations.length).toBeGreaterThan(0);
+    expect(state.recommendations[0].type).toBe('code-split');
+    expect(state.recommendations[0].severity).toBe('critical');
   });
 
   it('can analyze import impact', () => {
@@ -142,9 +163,10 @@ describe('BundleAnalyzerStore', () => {
       timestamp: Date.now(),
     };
 
-    store.updateModules([module]);
+    const { updateModules, analyzeImportImpact } = useBundleAnalyzerStore.getState();
+    updateModules([module]);
     
-    const impact = store.analyzeImportImpact('/test.js');
+    const impact = analyzeImportImpact('/test.js');
     
     expect(impact).toBeTruthy();
     expect(impact!.module).toBe('test.js');
@@ -153,27 +175,32 @@ describe('BundleAnalyzerStore', () => {
   });
 
   it('can manage analysis jobs', () => {
-    const jobId = store.startJob({
+    const { startJob, updateJob, completeJob } = useBundleAnalyzerStore.getState();
+    const jobId = startJob({
       type: 'full-analysis',
       status: 'pending',
       progress: 0,
     });
     
-    expect(store.jobs).toHaveLength(1);
-    expect(store.jobs[0].id).toBe(jobId);
-    expect(store.jobs[0].status).toBe('pending');
+    let state = useBundleAnalyzerStore.getState();
+    expect(state.jobs).toHaveLength(1);
+    expect(state.jobs[0].id).toBe(jobId);
+    expect(state.jobs[0].status).toBe('pending');
     
-    store.updateJob(jobId, { status: 'running', progress: 50 });
-    expect(store.jobs[0].status).toBe('running');
-    expect(store.jobs[0].progress).toBe(50);
+    updateJob(jobId, { status: 'running', progress: 50 });
+    state = useBundleAnalyzerStore.getState();
+    expect(state.jobs[0].status).toBe('running');
+    expect(state.jobs[0].progress).toBe(50);
     
-    store.completeJob(jobId, { result: 'success' });
-    expect(store.jobs[0].status).toBe('completed');
-    expect(store.jobs[0].progress).toBe(100);
+    completeJob(jobId, { result: 'success' });
+    state = useBundleAnalyzerStore.getState();
+    expect(state.jobs[0].status).toBe('completed');
+    expect(state.jobs[0].progress).toBe(100);
   });
 
   it('can update configuration', () => {
-    store.updateConfig({
+    const { updateConfig } = useBundleAnalyzerStore.getState();
+    updateConfig({
       enableRealTimeTracking: false,
       thresholds: {
         largeModuleSize: 200 * 1024,
@@ -182,7 +209,8 @@ describe('BundleAnalyzerStore', () => {
       },
     });
     
-    expect(store.config.enableRealTimeTracking).toBe(false);
-    expect(store.config.thresholds.largeModuleSize).toBe(200 * 1024);
+    const state = useBundleAnalyzerStore.getState();
+    expect(state.config.enableRealTimeTracking).toBe(false);
+    expect(state.config.thresholds.largeModuleSize).toBe(200 * 1024);
   });
 });

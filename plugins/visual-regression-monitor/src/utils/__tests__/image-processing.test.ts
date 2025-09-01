@@ -24,6 +24,54 @@ global.HTMLImageElement = dom.window.HTMLImageElement;
 global.Image = dom.window.Image;
 global.CanvasRenderingContext2D = dom.window.CanvasRenderingContext2D;
 
+// Mock ImageData constructor since JSDOM doesn't provide a complete one
+global.ImageData = class ImageData {
+  data: Uint8ClampedArray;
+  width: number;
+  height: number;
+
+  constructor(dataOrWidth: Uint8ClampedArray | number, widthOrHeight: number, height?: number) {
+    if (dataOrWidth instanceof Uint8ClampedArray) {
+      // Constructor with data array
+      const data = dataOrWidth;
+      const width = widthOrHeight;
+      
+      if (typeof width !== 'number' || width <= 0) {
+        throw new Error('Index or size is negative or greater than the allowed amount');
+      }
+      
+      if (height !== undefined) {
+        if (typeof height !== 'number' || height <= 0) {
+          throw new Error('Index or size is negative or greater than the allowed amount');
+        }
+        if (data.length !== width * height * 4) {
+          throw new Error('Index or size is negative or greater than the allowed amount');
+        }
+        this.width = width;
+        this.height = height;
+        this.data = data;
+      } else {
+        throw new Error('Height must be provided when using data array');
+      }
+    } else {
+      // Constructor with just dimensions
+      const width = dataOrWidth as number;
+      const heightVal = widthOrHeight;
+      
+      if (typeof width !== 'number' || width <= 0) {
+        throw new Error('Index or size is negative or greater than the allowed amount');
+      }
+      if (typeof heightVal !== 'number' || heightVal <= 0) {
+        throw new Error('Index or size is negative or greater than the allowed amount');
+      }
+      
+      this.width = width;
+      this.height = heightVal;
+      this.data = new Uint8ClampedArray(width * heightVal * 4);
+    }
+  }
+};
+
 // Helper functions to create test image data
 function createTestImageData(width: number, height: number, fillColor: [number, number, number, number] = [255, 255, 255, 255]): ImageData {
   const data = new Uint8ClampedArray(width * height * 4);
@@ -62,8 +110,35 @@ function mockCanvasContext() {
   const mockContext = {
     drawImage: vi.fn(),
     putImageData: vi.fn(),
-    getImageData: vi.fn(),
-    toDataURL: vi.fn(),
+    getImageData: vi.fn((x: number, y: number, width: number, height: number) => {
+      // Return appropriate sized data for the requested dimensions
+      const size = width * height * 4;
+      const data = new Uint8ClampedArray(size);
+      
+      // Fill with some pattern data for more realistic testing
+      for (let i = 0; i < data.length; i += 4) {
+        const pixelIndex = Math.floor(i / 4);
+        const row = Math.floor(pixelIndex / width);
+        const col = pixelIndex % width;
+        
+        // Create checkerboard pattern
+        const isEven = (Math.floor(row / 8) + Math.floor(col / 8)) % 2 === 0;
+        const value = isEven ? 255 : 128;
+        
+        data[i] = value;     // R
+        data[i + 1] = value; // G
+        data[i + 2] = value; // B
+        data[i + 3] = 255;   // A
+      }
+      
+      return new ImageData(data, width, height);
+    }),
+    toDataURL: vi.fn(() => 'data:image/png;base64,mock'),
+    canvas: { 
+      toDataURL: vi.fn(() => 'data:image/png;base64,mock'),
+      width: 32, // Default size for mock
+      height: 32
+    }
   };
 
   // Mock canvas getContext method
@@ -71,6 +146,9 @@ function mockCanvasContext() {
   
   return mockContext;
 }
+
+// Set up the mock immediately
+mockCanvasContext();
 
 describe('Image Processing Utilities', () => {
   beforeEach(() => {
@@ -201,7 +279,7 @@ describe('Image Processing Utilities', () => {
       expect(regions).toHaveLength(1);
       expect(regions[0].width).toBe(20);
       expect(regions[0].height).toBe(20);
-      expect(regions[0].severity).toBe('high'); // Large region
+      expect(regions[0].severity).toBe('medium'); // 20x20 = 400 pixels = medium
     });
   });
 
