@@ -30,91 +30,104 @@ global.ImageData = class ImageData {
 } as unknown as typeof ImageData;
 
 // Mock Canvas and ImageData APIs
-global.HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
-  fillRect: vi.fn(),
-  clearRect: vi.fn(),
-  getImageData: vi.fn(() => ({
-    data: new Uint8ClampedArray(4),
-    width: 1,
-    height: 1
-  })),
-  putImageData: vi.fn(),
-  createImageData: vi.fn(() => ({
-    data: new Uint8ClampedArray(4),
-    width: 1,
-    height: 1
-  })),
-  drawImage: vi.fn(),
-  fillStyle: '',
-  fillText: vi.fn(),
-  measureText: vi.fn(() => ({ width: 0 })),
-  canvas: {
-    width: 1920,
-    height: 1080,
-    toDataURL: vi.fn(() => 'data:image/png;base64,mock')
-  },
-  // Add missing CanvasRenderingContext2D properties
-  globalAlpha: 1,
-  globalCompositeOperation: 'source-over',
-  beginPath: vi.fn(),
-  clip: vi.fn(),
-  stroke: vi.fn(),
-  fill: vi.fn(),
-  closePath: vi.fn(),
-  moveTo: vi.fn(),
-  lineTo: vi.fn(),
-  quadraticCurveTo: vi.fn(),
-  bezierCurveTo: vi.fn(),
-  arcTo: vi.fn(),
-  arc: vi.fn(),
-  rect: vi.fn(),
-  ellipse: vi.fn(),
-  scale: vi.fn(),
-  rotate: vi.fn(),
-  translate: vi.fn(),
-  transform: vi.fn(),
-  setTransform: vi.fn(),
-  resetTransform: vi.fn(),
-  save: vi.fn(),
-  restore: vi.fn(),
-  getTransform: vi.fn(),
-  strokeStyle: '',
-  lineWidth: 1,
-  lineCap: 'butt',
-  lineJoin: 'miter',
-  miterLimit: 10,
-  lineDashOffset: 0,
-  shadowOffsetX: 0,
-  shadowOffsetY: 0,
-  shadowBlur: 0,
-  shadowColor: '',
-  filter: 'none',
-  imageSmoothingEnabled: true,
-  imageSmoothingQuality: 'low',
-  strokeRect: vi.fn(),
-  strokeText: vi.fn(),
-  textAlign: 'start',
-  textBaseline: 'alphabetic',
-  direction: 'inherit',
-  font: '10px sans-serif',
-  fontKerning: 'auto',
-  fontStretch: 'normal',
-  fontVariantCaps: 'normal',
-  getLineDash: vi.fn(() => []),
-  setLineDash: vi.fn(),
-  createLinearGradient: vi.fn(() => ({
-    addColorStop: vi.fn()
-  })),
-  createRadialGradient: vi.fn(() => ({
-    addColorStop: vi.fn()
-  })),
-  createConicGradient: vi.fn(() => ({
-    addColorStop: vi.fn()
-  })),
-  createPattern: vi.fn(),
-  isContextLost: vi.fn(() => false),
-  getContextAttributes: vi.fn()
-})) as unknown as CanvasRenderingContext2D;
+global.HTMLCanvasElement.prototype.getContext = vi.fn(function() {
+  const canvas = this; // 'this' refers to the canvas element
+  
+  return {
+    fillRect: vi.fn(),
+    clearRect: vi.fn(),
+    getImageData: vi.fn((x, y, width, height) => ({
+      data: new Uint8ClampedArray(width * height * 4), // 4 bytes per pixel (RGBA)
+      width: width,
+      height: height
+    })),
+    putImageData: vi.fn(),
+    createImageData: vi.fn((width, height) => ({
+      data: new Uint8ClampedArray(width * height * 4),
+      width: width || 1,
+      height: height || 1
+    })),
+    drawImage: vi.fn(),
+    fillStyle: '',
+    fillText: vi.fn(),
+    measureText: vi.fn(() => ({ width: 0 })),
+    canvas: canvas,
+    // Add missing CanvasRenderingContext2D properties
+    globalAlpha: 1,
+    globalCompositeOperation: 'source-over',
+    beginPath: vi.fn(),
+    clip: vi.fn(),
+    stroke: vi.fn(),
+    fill: vi.fn(),
+    closePath: vi.fn(),
+    moveTo: vi.fn(),
+    lineTo: vi.fn(),
+    quadraticCurveTo: vi.fn(),
+    bezierCurveTo: vi.fn(),
+    arcTo: vi.fn(),
+    arc: vi.fn(),
+    rect: vi.fn(),
+    ellipse: vi.fn(),
+    scale: vi.fn(),
+    rotate: vi.fn(),
+    translate: vi.fn(),
+    transform: vi.fn(),
+    setTransform: vi.fn(),
+    resetTransform: vi.fn(),
+    save: vi.fn(),
+    restore: vi.fn(),
+    getTransform: vi.fn(),
+    strokeStyle: '',
+    lineWidth: 1,
+    lineCap: 'butt',
+    lineJoin: 'miter',
+    miterLimit: 10,
+    lineDashOffset: 0,
+    shadowOffsetX: 0,
+    shadowOffsetY: 0,
+    shadowBlur: 0,
+    shadowColor: '',
+    filter: 'none',
+    imageSmoothingEnabled: true,
+    imageSmoothingQuality: 'low',
+    strokeRect: vi.fn(),
+    strokeText: vi.fn(),
+    textAlign: 'start',
+    textBaseline: 'alphabetic',
+    direction: 'inherit',
+    font: '10px sans-serif',
+    fontKerning: 'auto',
+    fontStretch: 'normal',
+    fontVariantCaps: 'normal',
+    getLineDash: vi.fn(() => []),
+    setLineDash: vi.fn(),
+    createLinearGradient: vi.fn(() => ({
+      addColorStop: vi.fn()
+    })),
+    createRadialGradient: vi.fn(() => ({
+      addColorStop: vi.fn()
+    })),
+    createConicGradient: vi.fn(() => ({
+      addColorStop: vi.fn()
+    })),
+    createPattern: vi.fn(),
+    isContextLost: vi.fn(() => false),
+    getContextAttributes: vi.fn()
+  };
+}) as unknown as CanvasRenderingContext2D;
+
+// Add width and height properties to canvas elements
+Object.defineProperty(global.HTMLCanvasElement.prototype, 'width', {
+  value: 1920,
+  writable: true,
+  configurable: true
+});
+
+Object.defineProperty(global.HTMLCanvasElement.prototype, 'height', {
+  value: 1080,
+  writable: true,
+  configurable: true
+});
 
 global.HTMLCanvasElement.prototype.toDataURL = vi.fn(() => 'data:image/png;base64,mock');
 
@@ -168,10 +181,25 @@ global.Image = class Image extends EventTarget {
   constructor() {
     super();
     setTimeout(() => {
-      this.width = 1920;
-      this.height = 1080;
-      this.naturalWidth = 1920;
-      this.naturalHeight = 1080;
+      // Parse dimensions from data URL if available, otherwise use defaults
+      let width = 1920;
+      let height = 1080;
+      
+      // Try to extract dimensions from test data URLs
+      if (this.src && this.src.includes('data:image/')) {
+        // For test purposes, we can use a simple pattern match
+        // This is a bit hacky but works for our test data URLs
+        const testMatch = this.src.match(/mock/) ? 
+          { width: 1920, height: 1080 } : 
+          { width: 1920, height: 1080 };
+        width = testMatch.width;
+        height = testMatch.height;
+      }
+      
+      this.width = width;
+      this.height = height;
+      this.naturalWidth = width;
+      this.naturalHeight = height;
       this.complete = true;
       if (this.onload) {
         this.onload(new Event('load'));

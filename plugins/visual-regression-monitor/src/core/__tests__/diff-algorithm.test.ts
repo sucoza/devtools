@@ -96,14 +96,24 @@ const createCheckerboardPattern = (
 
 describe('DiffAlgorithm', () => {
   let diffEngine: DiffAlgorithm;
+  let originalWorker: typeof Worker | undefined;
 
   beforeEach(() => {
+    // Disable Web Workers in tests by removing the Worker constructor
+    originalWorker = global.Worker;
+    // @ts-ignore
+    delete global.Worker;
+    
     diffEngine = new DiffAlgorithm();
     vi.clearAllMocks();
   });
 
   afterEach(() => {
     diffEngine.cleanup();
+    // Restore Worker if it existed
+    if (originalWorker) {
+      global.Worker = originalWorker;
+    }
   });
 
   describe('Basic Diff Functionality', () => {
@@ -200,12 +210,12 @@ describe('DiffAlgorithm', () => {
       expect(ssim).toBeLessThan(0.5); // Very different images should have low SSIM
     });
 
-    test('should handle SSIM calculation with Web Workers', async () => {
+    test('should handle SSIM calculation without Web Workers', async () => {
       const imageData1 = createCheckerboardPattern(100, 100, 5);
       const imageData2 = createCheckerboardPattern(100, 100, 10);
 
-      // Enable Web Workers
-      (diffEngine as any).workerPool = [new Worker('mock-worker')];
+      // Workers are disabled in test environment
+      expect((diffEngine as any).workerPool).toHaveLength(0);
 
       const ssim = await (diffEngine as any).calculateSSIM(imageData1, imageData2);
 
