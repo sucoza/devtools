@@ -23,6 +23,7 @@ import {
 import type {
   BrowserAutomationState,
   LibraryTestStatus,
+  LibraryTest,
 } from '../../types';
 
 export interface LibraryPanelProps {

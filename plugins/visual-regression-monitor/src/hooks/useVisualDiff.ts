@@ -39,7 +39,13 @@ export function useVisualDiff() {
       client.startAnalysis();
 
       try {
-        const result = await diffAlgorithm.compareScreenshots(baseline, comparison, options);
+        const diffRequest: DiffRequest = {
+          baseline,
+          comparison,
+          threshold: options?.threshold,
+          options: options?.options
+        };
+        const result = await diffAlgorithm.compareScreenshots(diffRequest);
 
         if (result.success && result.diff) {
           client.addVisualDiff(result.diff);

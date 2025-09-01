@@ -194,7 +194,7 @@ export class AccessibilityDevToolsEventClient implements AccessibilityEventClien
   /**
    * Import audit data
    */
-  importData = (data: unknown): void => {
+  importData = (data: AccessibilityAuditResult[]): void => {
     this.dispatch({ type: 'history/import', payload: data });
   };
   

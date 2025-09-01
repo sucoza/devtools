@@ -444,7 +444,8 @@ export class DiffAlgorithm {
         width: Math.max(...component.map(p => p.x)) - Math.min(...component.map(p => p.x)) + 1,
         height: Math.max(...component.map(p => p.y)) - Math.min(...component.map(p => p.y)) + 1,
         pixelCount: component.length,
-        severity: component.length > 100 ? 'high' : component.length > 10 ? 'medium' : 'low' as 'high' | 'medium' | 'low'
+        severity: component.length > 100 ? 'high' : component.length > 10 ? 'medium' : 'low' as 'high' | 'medium' | 'low',
+        type: 'modification' as 'addition' | 'deletion' | 'modification'
       }));
     
     return {

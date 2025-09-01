@@ -16,7 +16,7 @@ export function calculateContrastRatio(foreground: string, background: string): 
     const darker = Math.min(fgLuminance, bgLuminance);
     
     return (lighter + 0.05) / (darker + 0.05);
-  } catch {
+  } catch (error) {
     console.warn('Error calculating contrast ratio:', error);
     return 0;
   }
@@ -78,7 +78,7 @@ export function getElementColors(element: Element): {
     }
     
     return { foreground, background };
-  } catch {
+  } catch (error) {
     console.warn('Error extracting colors:', error);
     return null;
   }
@@ -182,7 +182,7 @@ export function suggestAccessibleColors(
         suggestions.backgroundSuggestions.push(lighter.toString({ format: 'hex' }));
       }
     }
-  } catch {
+  } catch (error) {
     console.warn('Error generating color suggestions:', error);
   }
   

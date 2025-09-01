@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom/vitest';
+import { vi } from 'vitest';
 
 // Mock axe-core since it might not be available in test environment
 vi.mock('axe-core', () => ({

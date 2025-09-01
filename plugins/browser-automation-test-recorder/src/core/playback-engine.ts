@@ -196,7 +196,7 @@ export class PlaybackEngine {
           const executionTime = Date.now() - startTime;
           this.context.executionTimes.push(executionTime);
           
-        } catch {
+        } catch (error) {
           const executionTime = Date.now() - startTime;
           this.context.executionTimes.push(executionTime);
           
@@ -219,7 +219,7 @@ export class PlaybackEngine {
                 fullPage: false,
               });
               playbackError.screenshot = screenshot.data;
-            } catch {
+            } catch (error) {
               this.log('warn', 'Failed to capture error screenshot');
             }
           }
@@ -246,7 +246,7 @@ export class PlaybackEngine {
           try {
             const screenshot = await this.captureScreenshot();
             this.context.screenshots.push(screenshot);
-          } catch {
+          } catch (error) {
             this.log('warn', 'Failed to capture periodic screenshot');
           }
         }
@@ -271,7 +271,7 @@ export class PlaybackEngine {
 
       return status;
 
-    } catch {
+    } catch (error) {
       this.log('error', `Playback failed: ${error instanceof Error ? error.message : String(error)}`);
       this.emit('playback:failed', { error });
       throw error;
@@ -315,7 +315,7 @@ export class PlaybackEngine {
           throw new Error(result.error || 'Event execution failed');
         }
 
-      } catch {
+      } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
         this.log('warn', `Attempt ${attempt + 1} failed: ${lastError.message}`);
 
@@ -518,7 +518,7 @@ export class PlaybackEngine {
         duration: Date.now() - startTime,
       };
 
-    } catch {
+    } catch (error) {
       return {
         success: false,
         duration: Date.now() - startTime,
@@ -579,7 +579,7 @@ export class PlaybackEngine {
         duration: Date.now() - startTime,
       };
 
-    } catch {
+    } catch (error) {
       return {
         success: false,
         duration: Date.now() - startTime,
@@ -656,7 +656,7 @@ export class PlaybackEngine {
         duration: Date.now() - startTime,
       };
 
-    } catch {
+    } catch (error) {
       return {
         success: false,
         duration: Date.now() - startTime,
@@ -713,7 +713,7 @@ export class PlaybackEngine {
         duration: Date.now() - startTime,
       };
 
-    } catch {
+    } catch (error) {
       return {
         success: false,
         duration: Date.now() - startTime,
@@ -764,7 +764,7 @@ export class PlaybackEngine {
         duration: Date.now() - startTime,
       };
 
-    } catch {
+    } catch (error) {
       return {
         success: false,
         duration: Date.now() - startTime,
@@ -808,7 +808,7 @@ export class PlaybackEngine {
         duration: Date.now() - startTime,
       };
 
-    } catch {
+    } catch (error) {
       return {
         success: false,
         duration: Date.now() - startTime,
@@ -855,7 +855,7 @@ export class PlaybackEngine {
         duration: Date.now() - startTime,
       };
 
-    } catch {
+    } catch (error) {
       return {
         success: false,
         duration: Date.now() - startTime,
@@ -901,7 +901,7 @@ export class PlaybackEngine {
         duration: Date.now() - startTime,
       };
 
-    } catch {
+    } catch (error) {
       return {
         success: false,
         duration: Date.now() - startTime,
@@ -932,7 +932,7 @@ export class PlaybackEngine {
         duration: Date.now() - startTime,
       };
 
-    } catch {
+    } catch (error) {
       return {
         success: false,
         duration: Date.now() - startTime,
@@ -969,7 +969,7 @@ export class PlaybackEngine {
         }],
       };
 
-    } catch {
+    } catch (error) {
       return {
         success: false,
         duration: Date.now() - startTime,
@@ -994,7 +994,7 @@ export class PlaybackEngine {
         fullPage: true,
       });
 
-      context.screenshots.push(screenshot);
+      this.context.screenshots.push(screenshot);
 
       return {
         success: true,
@@ -1002,7 +1002,7 @@ export class PlaybackEngine {
         screenshot: screenshot.data,
       };
 
-    } catch {
+    } catch (error) {
       return {
         success: false,
         duration: Date.now() - startTime,
@@ -1055,7 +1055,7 @@ export class PlaybackEngine {
   private async captureScreenshot(options: ScreenshotOptions = {}): Promise<ScreenshotInfo> {
     try {
       return await this.cdpClient.takeScreenshot(options);
-    } catch {
+    } catch (error) {
       this.log('warn', 'Screenshot capture failed');
       throw error;
     }
@@ -1192,7 +1192,7 @@ export class PlaybackEngine {
       listeners.forEach(callback => {
         try {
           callback(data);
-        } catch {
+        } catch (error) {
           this.log('error', `Event listener error: ${error instanceof Error ? error.message : String(error)}`);
         }
       });

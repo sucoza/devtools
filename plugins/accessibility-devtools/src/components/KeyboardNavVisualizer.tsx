@@ -29,15 +29,6 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
     description: string;
   }[]>([]);
 
-  useEffect(() => {
-    if (isVisualizing) {
-      analyzeFocusableElements();
-      const interval = setInterval(analyzeFocusableElements, 2000);
-      return () => clearInterval(interval);
-    }
-    return undefined;
-  }, [isVisualizing, analyzeFocusableElements]);
-
   const analyzeFocusableElements = useCallback(() => {
     // Find all focusable elements
     const focusableSelectors = [
@@ -120,6 +111,15 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
 
     setIssues(detectedIssues);
   }, []);
+
+  useEffect(() => {
+    if (isVisualizing) {
+      analyzeFocusableElements();
+      const interval = setInterval(analyzeFocusableElements, 2000);
+      return () => clearInterval(interval);
+    }
+    return undefined;
+  }, [isVisualizing, analyzeFocusableElements]);
 
   const startVisualization = () => {
     setIsVisualizing(true);

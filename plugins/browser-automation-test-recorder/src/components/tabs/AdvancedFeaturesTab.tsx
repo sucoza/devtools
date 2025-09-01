@@ -6,12 +6,9 @@
 import React, { useState, useCallback } from 'react';
 import { Play, Pause, Settings, Camera, Network, Zap, Shield, Database, Users, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 import { useBrowserAutomationStore } from '../../core/devtools-store';
+import type { TabComponentProps } from '../../types/devtools';
 
-interface AdvancedFeaturesTabProps {
-  className?: string;
-}
-
-export const AdvancedFeaturesTab: React.FC<AdvancedFeaturesTabProps> = ({ className }) => {
+export const AdvancedFeaturesTab: React.FC<TabComponentProps> = ({ state, dispatch, compact }) => {
   const [activeFeature, setActiveFeature] = useState<string>('visual-regression');
   const [isRunning, setIsRunning] = useState(false);
   

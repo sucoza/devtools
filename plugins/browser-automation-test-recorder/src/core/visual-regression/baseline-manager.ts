@@ -309,10 +309,10 @@ export class BaselineManager {
       }
       
       case 'cloud':
-        return await this.loadFromCloud(id, environment);
+        return await this.loadFromCloud(id, _environment);
         
       case 'git':
-        return await this.loadFromGit(id, environment);
+        return await this.loadFromGit(id, _environment);
         
       default:
         return null;

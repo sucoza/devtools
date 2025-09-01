@@ -540,6 +540,7 @@ export interface RecordingOptions {
   debounceMs: number;
   maxEvents: number;
   selectorOptions: SelectorOptions;
+  recordInitialNavigation?: boolean;
 }
 
 export type ScreenshotMode = 'none' | 'on-error' | 'all' | 'key-events';
@@ -758,3 +759,130 @@ import type {
   EventType,
   RecordedEvent
 } from './automation';
+
+/**
+ * Team/organization information (defined here to avoid circular imports)
+ */
+export interface CollaborationTeam {
+  id: string;
+  name: string;
+  description?: string;
+  avatar?: string;
+  members: CollaborationUser[];
+  settings: TeamSettings;
+  createdAt: number;
+  updatedAt: number;
+  owner: string; // User ID
+}
+
+export interface TeamSettings {
+  defaultPermissions: UserPermissions;
+  requireReview: boolean;
+  allowPublicSharing: boolean;
+  retentionDays: number;
+  maxTestsPerUser: number;
+  integrations: TeamIntegrations;
+  notifications: NotificationSettings;
+}
+
+export interface UserPermissions {
+  canView: boolean;
+  canEdit: boolean;
+  canShare: boolean;
+  canReview: boolean;
+  canComment: boolean;
+  canDelete: boolean;
+  canManageTeam: boolean;
+  canApproveTests: boolean;
+  canPublishTests: boolean;
+  customPermissions: Record<string, boolean>;
+}
+
+export interface TeamIntegrations {
+  slack?: SlackIntegration;
+  jira?: JiraIntegration;
+  github?: GitHubIntegration;
+  custom: Record<string, unknown>;
+}
+
+export interface SlackIntegration {
+  enabled: boolean;
+  webhookUrl: string;
+  channel: string;
+  notifications: string[];
+}
+
+export interface JiraIntegration {
+  enabled: boolean;
+  serverUrl: string;
+  projectKey: string;
+  apiToken: string;
+  linkTests: boolean;
+}
+
+export interface GitHubIntegration {
+  enabled: boolean;
+  repository: string;
+  branch: string;
+  token: string;
+  syncTests: boolean;
+}
+
+export interface NotificationSettings {
+  email: boolean;
+  inApp: boolean;
+  slack: boolean;
+  events: NotificationEvent[];
+}
+
+export type NotificationEvent = 
+  | 'test_shared'
+  | 'test_commented'
+  | 'review_requested'
+  | 'review_completed'
+  | 'test_approved'
+  | 'test_rejected'
+  | 'team_member_added'
+  | 'library_updated';
+
+/**
+ * Library test entry (defined here to avoid circular imports)
+ */
+export interface LibraryTest {
+  id: string;
+  name: string;
+  description?: string;
+  recording: SharedTestRecording;
+  category: string;
+  tags: string[];
+  author: CollaborationUser;
+  maintainers: CollaborationUser[];
+  usage: TestUsageStats;
+  quality: TestQualityMetrics;
+  status: LibraryTestStatus;
+  visibility: 'public' | 'team' | 'private';
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface TestUsageStats {
+  views: number;
+  downloads: number;
+  forks: number;
+  stars: number;
+  runs: number;
+  successRate: number;
+  lastUsed: number;
+  popularityScore: number;
+}
+
+export interface TestQualityMetrics {
+  reliabilityScore: number;
+  maintainabilityScore: number;
+  complexityScore: number;
+  documentationScore: number;
+  testCoverage: number;
+  browserCompatibility: number;
+  performanceScore: number;
+  overallScore: number;
+}

@@ -193,7 +193,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
       this.setupEventProcessingPipeline();
       
       this.emit('recorder:state', this.storeApi.getState());
-    } catch {
+    } catch (error) {
       // // console.error('Failed to start recording:', error);
       this.emit('recorder:error', {
         message: `Failed to start recording: ${error instanceof Error ? error.message : String(error)}`,
@@ -230,7 +230,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
         processedCount: processingResult.processedCount,
         optimizations: processingResult.optimizations,
       });
-    } catch {
+    } catch (error) {
       // // console.error('Failed to stop recording:', error);
       this.emit('recorder:error', {
         message: `Failed to stop recording: ${error instanceof Error ? error.message : String(error)}`,
@@ -321,7 +321,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
       const generatedTest = await this.store().generateTest(options);
       this.emit('recorder:test-generated', generatedTest);
       this.emit('recorder:state', this.storeApi.getState());
-    } catch {
+    } catch (error) {
       this.emit('recorder:error', {
         message: `Failed to generate test: ${error instanceof Error ? error.message : String(error)}`,
         stack: error instanceof Error ? error.stack : undefined,
@@ -333,7 +333,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
     try {
       await this.store().exportData(options);
       this.emit('recorder:state', this.storeApi.getState());
-    } catch {
+    } catch (error) {
       this.emit('recorder:error', {
         message: `Failed to export data: ${error instanceof Error ? error.message : String(error)}`,
         stack: error instanceof Error ? error.stack : undefined,
@@ -449,7 +449,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
       
       this.emit('recorder:cdp-connected', { connected: true });
       return true;
-    } catch {
+    } catch (error) {
       // // console.warn('CDP connection failed');
       this.emit('recorder:cdp-connected', { connected: false });
       return false;
@@ -476,7 +476,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
         // // console.warn('CDP not available, screenshot functionality limited');
         return null;
       }
-    } catch {
+    } catch (error) {
       // // console.error('Screenshot failed');
       return null;
     }

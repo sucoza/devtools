@@ -37,8 +37,6 @@ export function VisualDiff() {
 
     try {
       await diffActions.compareScreenshots(selectedBaseline, selectedComparison, {
-        baselineId: selectedBaseline,
-        comparisonId: selectedComparison,
         threshold,
       });
     } catch (error) {

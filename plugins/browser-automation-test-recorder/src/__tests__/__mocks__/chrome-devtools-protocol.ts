@@ -210,7 +210,7 @@ export const createMockCDPClient = () => ({
 export const createMockCDPSession = () => {
   const client = createMockCDPClient();
   
-  const clientWithIndex = client as Record<string, Record<string, (...args: unknown[]) => Promise<unknown>>>;
+  const clientWithIndex = client as unknown as Record<string, Record<string, (...args: unknown[]) => Promise<unknown>>>;
   
   return {
     ...client,

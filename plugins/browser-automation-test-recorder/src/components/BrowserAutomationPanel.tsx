@@ -17,7 +17,9 @@ import {
 
 import type {
   BrowserAutomationDevToolsPanelProps,
+  BrowserAutomationAction,
   DevToolsTab,
+  TabComponentProps,
 } from '../types';
 import {
   createBrowserAutomationEventClient,
@@ -66,7 +68,7 @@ export function BrowserAutomationPanel({
   };
 
   // Handle events
-  const handleEvent = (action: unknown) => {
+  const handleEvent = (action: BrowserAutomationAction) => {
     eventClient.dispatch(action);
     onEvent?.(action);
   };
@@ -76,7 +78,7 @@ export function BrowserAutomationPanel({
     id: DevToolsTab;
     label: string;
     icon: React.ComponentType<{ size?: number }>;
-    component: React.ComponentType<{ state: unknown; dispatch: (action: unknown) => void; compact?: boolean }>;
+    component: React.ComponentType<TabComponentProps>;
   }> = [
     {
       id: 'recorder',

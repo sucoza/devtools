@@ -594,7 +594,7 @@ export class SelectorEngine {
       customAttributes: strategy.priority.filter(p => p.startsWith('data-')),
       ignoreAttributes: ['style'],
       ariaLabelFallback: strategy.priority.includes('aria-label'),
-      priority: strategy.priority,
+      priority: strategy.priority as ("css" | "xpath" | "text" | "data-testid" | "id" | "aria-label")[],
     };
 
     const candidates = await this.generateAllCandidates(element, options);

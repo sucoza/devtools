@@ -1135,6 +1135,7 @@ export class EventRecorder {
       data: {
         type: 'navigation',
         url,
+        title: document.title,
         referrer: document.referrer,
         timestamp: Date.now(),
       },

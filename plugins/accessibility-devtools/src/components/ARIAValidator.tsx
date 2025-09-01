@@ -23,10 +23,6 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [filterBy, setFilterBy] = useState<'all' | 'critical' | 'serious' | 'moderate' | 'minor'>('all');
 
-  useEffect(() => {
-    runAnalysis();
-  }, [runAnalysis]);
-
   const runAnalysis = useCallback(async () => {
     setIsAnalyzing(true);
     try {
@@ -38,6 +34,10 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
       setIsAnalyzing(false);
     }
   }, []);
+
+  useEffect(() => {
+    runAnalysis();
+  }, [runAnalysis]);
 
   const validateARIA = async (): Promise<ARIAValidationIssue[]> => {
     const issues: ARIAValidationIssue[] = [];

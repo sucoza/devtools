@@ -53,7 +53,10 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
 }))
 
 // Mock requestAnimationFrame
-global.requestAnimationFrame = vi.fn(cb => setTimeout(cb, 16))
+global.requestAnimationFrame = vi.fn((cb) => {
+  setTimeout(cb, 16);
+  return 1; // Return a number as expected by requestAnimationFrame
+}) as any;
 global.cancelAnimationFrame = vi.fn()
 
 // Suppress specific console warnings during tests

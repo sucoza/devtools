@@ -30,7 +30,7 @@ global.ImageData = class ImageData {
 } as unknown as typeof ImageData;
 
 // Mock Canvas and ImageData APIs
-global.HTMLCanvasElement.prototype.getContext = vi.fn(function() {
+(global.HTMLCanvasElement.prototype.getContext as any) = vi.fn(function() {
   const canvas = this; // 'this' refers to the canvas element
   
   return {
@@ -132,6 +132,7 @@ Object.defineProperty(global.HTMLCanvasElement.prototype, 'height', {
 global.HTMLCanvasElement.prototype.toDataURL = vi.fn(() => 'data:image/png;base64,mock');
 
 // Mock Image constructor
+// @ts-ignore
 global.Image = class Image extends EventTarget {
   width = 0;
   height = 0;
@@ -225,6 +226,7 @@ global.Image = class Image extends EventTarget {
 } as unknown as HTMLElement;
 
 // Mock Web Workers
+// @ts-ignore
 global.Worker = class Worker extends EventTarget {
   url: string;
   onmessage: ((event: MessageEvent) => void) | null = null;
@@ -285,6 +287,7 @@ global.Worker = class Worker extends EventTarget {
 } as unknown as Worker;
 
 // Mock OffscreenCanvas
+// @ts-ignore
 global.OffscreenCanvas = class OffscreenCanvas extends EventTarget {
   width: number;
   height: number;
