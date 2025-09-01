@@ -19,7 +19,7 @@ export default function SettingsTab({ state, dispatch, compact: _compact }: TabC
     
     if (sectionKey) {
       if (fieldKey === 'theme') {
-        dispatch({ type: 'ui/theme/set', payload: value });
+        dispatch({ type: 'ui/theme/set', payload: value as 'light' | 'dark' | 'auto' });
       } else {
         dispatch({
           type: 'settings/update',

@@ -31,7 +31,7 @@ global.ImageData = class ImageData {
 
 // Mock Canvas and ImageData APIs
 (global.HTMLCanvasElement.prototype.getContext as any) = vi.fn(function() {
-  const canvas = this; // 'this' refers to the canvas element
+  const canvas = this as HTMLCanvasElement; // 'this' refers to the canvas element
   
   return {
     fillRect: vi.fn(),
@@ -132,7 +132,7 @@ Object.defineProperty(global.HTMLCanvasElement.prototype, 'height', {
 global.HTMLCanvasElement.prototype.toDataURL = vi.fn(() => 'data:image/png;base64,mock');
 
 // Mock Image constructor
-// @ts-ignore
+// @ts-expect-error - Image may not exist in test environment
 global.Image = class Image extends EventTarget {
   width = 0;
   height = 0;
@@ -226,7 +226,7 @@ global.Image = class Image extends EventTarget {
 } as unknown as HTMLElement;
 
 // Mock Web Workers
-// @ts-ignore
+// @ts-expect-error - Worker may not exist in test environment
 global.Worker = class Worker extends EventTarget {
   url: string;
   onmessage: ((event: MessageEvent) => void) | null = null;
@@ -287,7 +287,7 @@ global.Worker = class Worker extends EventTarget {
 } as unknown as Worker;
 
 // Mock OffscreenCanvas
-// @ts-ignore
+// @ts-expect-error - OffscreenCanvas may not exist in test environment
 global.OffscreenCanvas = class OffscreenCanvas extends EventTarget {
   width: number;
   height: number;

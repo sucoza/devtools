@@ -411,7 +411,7 @@ ${this.indent(testCode, 2)}
    * Keyboard event code generation
    */
   private generateKeyboardCode(event: RecordedEvent): string {
-    const keyData = event.data as KeyboardEventData as _KeyboardEventData;
+    const keyData = event.data as _KeyboardEventData;
     const key = this.mapSeleniumKey(keyData.key);
     
     switch (this.options.language) {
@@ -451,7 +451,7 @@ ${this.indent(testCode, 2)}
    * Scroll event code generation
    */
   private generateScrollCode(event: RecordedEvent): string {
-    const scrollData = event.data as ScrollEventData as _ScrollEventData;
+    const scrollData = event.data as _ScrollEventData;
     
     switch (this.options.language) {
       case 'python':

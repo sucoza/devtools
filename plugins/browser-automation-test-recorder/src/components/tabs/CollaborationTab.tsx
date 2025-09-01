@@ -110,7 +110,7 @@ export const CollaborationTab: React.FC<CollaborationTabProps> = ({
     const panels: Array<{
       id: string;
       label: string;
-      icon: React.ComponentType<unknown>;
+      icon: React.ComponentType<{ size?: number }>;
       badge?: number;
     }> = [
       {

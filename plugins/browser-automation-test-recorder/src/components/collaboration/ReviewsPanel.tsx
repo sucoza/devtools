@@ -16,7 +16,7 @@ export interface ReviewsPanelProps {
   onTestSelect?: (testId: string) => void;
 }
 
-export const ReviewsPanel: React.FC<ReviewsPanelProps> = ({ _state, _dispatch }) => {
+export const ReviewsPanel: React.FC<ReviewsPanelProps> = ({ state: _state, dispatch: _dispatch }) => {
   return (
     <div className="flex-1 flex items-center justify-center p-8 text-center">
       <div>

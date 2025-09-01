@@ -25,7 +25,7 @@ export class PlaywrightGenerator extends BaseGenerator {
   /**
    * Format selector for use in generated code
    */
-  private formatSelector(selector: string): string {
+  protected formatSelector(selector: string): string {
     // Escape quotes in selector
     return selector.replace(/'/g, "\\'");
   }
@@ -40,19 +40,15 @@ export class PlaywrightGenerator extends BaseGenerator {
   
   constructor(config?: CodeGenerationConfig, options?: BaseGeneratorOptions) {
     const defaultConfig: CodeGenerationConfig = {
-      language: 'typescript',
-      framework: 'playwright',
-      includeImports: true,
+      language: 'typescript' as const,
+      framework: 'playwright' as const,
+      format: 'playwright' as const,
       includeSetup: true,
-      includeTeardown: true,
       includeComments: true,
       includeAssertions: true,
       optimizeSelectors: true,
-      groupRelatedEvents: true,
-      generatePageObjects: false,
-      testName: 'Generated Test',
-      timeout: 30000,
-      baseUrl: '',
+      groupActions: true,
+      pageObjectModel: false,
     };
     
     const defaultOptions: BaseGeneratorOptions = {
@@ -86,7 +82,7 @@ export class PlaywrightGenerator extends BaseGenerator {
         if (target?.id === 'username') return '// Fill username';
         if (target?.id === 'password') return '// Fill password';
         const formData = event.data as FormEventData;
-        const keyboardData = event.data as KeyboardEventData;
+        const keyboardData = event.data as _KeyboardEventData;
         const value = keyboardData?.inputValue || formData?.value || target?.value || '';
         return `// Enter "${value}" in ${this.getElementDescription(target)}`;
       }
@@ -238,7 +234,7 @@ export class PlaywrightGenerator extends BaseGenerator {
         return `await page.click('${event.target.selector}')`;
       case 'input':
         const inputData = event.data as FormEventData;
-        const kbData = event.data as KeyboardEventData;
+        const kbData = event.data as _KeyboardEventData;
         const value = kbData?.inputValue || inputData?.value || event.target.value || '';
         return `await page.fill('${event.target.selector}', '${value}')`;
       case 'navigation':
@@ -287,7 +283,7 @@ export class PlaywrightGenerator extends BaseGenerator {
     const assertionData = event.data as AssertionEventData;
     const selector = event.target?.selector;
     
-    switch (assertionData?.type) {
+    switch (assertionData?.assertionType) {
       case 'visible':
         return `await expect(page.locator('${selector}')).toBeVisible()`;
       case 'text':
@@ -332,11 +328,11 @@ export class PlaywrightGenerator extends BaseGenerator {
     const event = eventOrWaitConfig as RecordedEvent;
     const waitData = event.data as WaitEventData;
     
-    if (waitData?.type === 'selector') {
-      return `await page.waitForSelector('${waitData.selector}')`;
-    } else if (waitData?.type === 'navigation') {
+    if (waitData?.reason === 'element') {
+      return `await page.waitForSelector('${waitData.condition}')`;
+    } else if (waitData?.reason === 'navigation') {
       return `await page.waitForNavigation()`;
-    } else if (waitData?.type === 'timeout') {
+    } else if (waitData?.reason === 'timeout') {
       return `await page.waitForTimeout(${waitData.duration || 1000})`;
     }
     
@@ -668,7 +664,7 @@ ${this.indent(testCode)}
    */
   private generateClickCode(event: RecordedEvent): string {
     const selector = this.formatSelector(event.target.selector);
-    const mouseData = event.data as MouseEventData as _MouseEventData;
+    const mouseData = event.data as _MouseEventData;
     
     let code = '';
     
@@ -691,7 +687,7 @@ ${this.indent(testCode)}
   private generateInputCode(event: RecordedEvent): string {
     const selector = this.formatSelector(event.target.selector);
     const formData = event.data as FormEventData;
-    const keyboardData = event.data as KeyboardEventData;
+    const keyboardData = event.data as _KeyboardEventData;
     
     // Get value from keyboard data, form data, or target value
     const value = this.escapeString(
@@ -708,11 +704,7 @@ ${this.indent(testCode)}
     const tagName = event.target.tagName?.toLowerCase();
     
     if (inputType === 'checkbox' || inputType === 'radio') {
-      if (formData?.checked !== undefined) {
-        code = formData.checked 
-          ? `await page.check('${selector}');`
-          : `await page.uncheck('${selector}');`;
-      } else if (formData?.value === 'true' || formData?.value === 'checked') {
+      if (formData?.value === 'true' || formData?.value === 'checked') {
         code = `await page.check('${selector}');`;
       } else {
         code = `await page.uncheck('${selector}');`;
@@ -745,7 +737,7 @@ ${this.indent(testCode)}
    * Keyboard event code generation
    */
   private generateKeyboardCode(event: RecordedEvent): string {
-    const keyData = event.data as KeyboardEventData as _KeyboardEventData;
+    const keyData = event.data as _KeyboardEventData;
     const key = keyData.key;
     
     // Handle special keys
@@ -797,7 +789,7 @@ ${this.indent(testCode)}
    * Scroll event code generation
    */
   private generateScrollCode(event: RecordedEvent): string {
-    const scrollData = event.data as ScrollEventData as _ScrollEventData;
+    const scrollData = event.data as _ScrollEventData;
     
     if (scrollData.element === 'window') {
       return `await page.evaluate(() => window.scrollTo(${scrollData.scrollX}, ${scrollData.scrollY}));`;
@@ -944,7 +936,7 @@ ${this.indent(testCode)}
    * Wheel event code generation
    */
   private generateWheelCode(event: RecordedEvent): string {
-    const mouseData = event.data as MouseEventData as _MouseEventData;
+    const mouseData = event.data as _MouseEventData;
     return `await page.mouse.wheel(${mouseData.clientX}, ${mouseData.clientY});`;
   }
 
@@ -1349,7 +1341,7 @@ module.exports = { ${pageName} };`;
   /**
    * Get mouse event modifiers
    */
-  private getModifiers(mouseData: MouseEventData | null | undefined): string[] {
+  private getModifiers(mouseData: _MouseEventData | null | undefined): string[] {
     if (!mouseData) return [];
     
     const modifiers: string[] = [];
@@ -1365,7 +1357,7 @@ module.exports = { ${pageName} };`;
   /**
    * Get keyboard event modifiers
    */
-  private getKeyboardModifiers(keyData: KeyboardEventData): string[] {
+  private getKeyboardModifiers(keyData: _KeyboardEventData): string[] {
     const modifiers: string[] = [];
     
     if (keyData.ctrlKey) modifiers.push('Control');

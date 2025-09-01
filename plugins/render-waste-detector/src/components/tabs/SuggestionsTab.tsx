@@ -1,5 +1,5 @@
 import React from "react";
-import { Lightbulb, Filter, _AlertTriangle, CheckCircle, X } from "lucide-react";
+import { Lightbulb, Filter, AlertTriangle, CheckCircle, X } from "lucide-react";
 import { clsx } from "clsx";
 import type {
   RenderWasteDetectorState,
@@ -19,12 +19,12 @@ interface SuggestionsTabProps {
 export function SuggestionsTab({
   state,
   eventClient,
-  _dispatch,
-  _compact,
+  dispatch,
+  compact,
   onComponentSelect,
   onSuggestionApply,
 }: SuggestionsTabProps) {
-  const { suggestions, _ui } = state;
+  const { suggestions, ui } = state;
   const filteredSuggestions = eventClient.getFilteredSuggestions();
 
   const getSeverityIcon = (severity: OptimizationSuggestion["severity"]) => {

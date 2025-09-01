@@ -88,7 +88,7 @@ export class SelectorResolver {
    */
   async resolveSelector(
     originalSelector: string,
-    targetInfo: RecordedEventTarget,
+    targetInfo: _RecordedEventTarget,
     options: SelectorOptions = {} as SelectorOptions,
     maxRetries: number = 3
   ): Promise<SelectorResolutionResult> {
@@ -227,7 +227,7 @@ export class SelectorResolver {
    */
   private async attemptHealing(
     originalSelector: string,
-    targetInfo: RecordedEventTarget,
+    targetInfo: _RecordedEventTarget,
     options: SelectorOptions
   ): Promise<SelectorResolutionResult | null> {
     const criteria = this.buildMatchingCriteria(targetInfo);
@@ -715,7 +715,7 @@ export class SelectorResolver {
   /**
    * Build matching criteria from event target info
    */
-  private buildMatchingCriteria(targetInfo: RecordedEventTarget): ElementMatchingCriteria {
+  private buildMatchingCriteria(targetInfo: _RecordedEventTarget): ElementMatchingCriteria {
     return {
       textContent: targetInfo.textContent,
       attributes: {

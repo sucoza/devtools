@@ -93,7 +93,7 @@ type EventExecutionHandler = (
 export class PlaybackEngine {
   private cdpClient: CDPClient;
   private selectorEngine: SelectorEngine;
-  private executionHandlers: Map<EventType, EventExecutionHandler>;
+  private executionHandlers: Map<_EventType, EventExecutionHandler>;
   private context: PlaybackContext | null = null;
   private abortController: AbortController | null = null;
   
@@ -114,7 +114,7 @@ export class PlaybackEngine {
   async playEvents(
     events: RecordedEvent[],
     options: Partial<PlaybackEngineOptions> = {}
-  ): Promise<PlaybackStatus> {
+  ): Promise<_PlaybackStatus> {
     const defaultOptions: PlaybackEngineOptions = {
       speed: 1.0,
       timeout: 5000,
@@ -258,7 +258,7 @@ export class PlaybackEngine {
       }
 
       // Calculate final status
-      const status: PlaybackStatus = {
+      const status: _PlaybackStatus = {
         currentStep: this.context.currentEventIndex + 1,
         totalSteps: this.context.totalEvents,
         elapsed: Date.now() - this.context.startTime,
@@ -398,7 +398,7 @@ export class PlaybackEngine {
   /**
    * Get current playback status
    */
-  getStatus(): PlaybackStatus | null {
+  getStatus(): _PlaybackStatus | null {
     if (!this.context) return null;
 
     return {
@@ -457,7 +457,7 @@ export class PlaybackEngine {
     options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
-    const mouseData = event.data as MouseEventData as _MouseEventData;
+    const mouseData = event.data as _MouseEventData;
 
     try {
       // Find and wait for element
@@ -536,7 +536,7 @@ export class PlaybackEngine {
     options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
-    const mouseData = event.data as MouseEventData as _MouseEventData;
+    const mouseData = event.data as _MouseEventData;
 
     try {
       const element = await this.findAndWaitForElement(event.target.selector, options);
@@ -597,7 +597,7 @@ export class PlaybackEngine {
     options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
-    const keyboardData = event.data as KeyboardEventData as _KeyboardEventData;
+    const keyboardData = event.data as _KeyboardEventData;
 
     try {
       const element = await this.findAndWaitForElement(event.target.selector, options);
@@ -674,7 +674,7 @@ export class PlaybackEngine {
     options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
-    const keyboardData = event.data as KeyboardEventData as _KeyboardEventData;
+    const keyboardData = event.data as _KeyboardEventData;
 
     try {
       const _element = await this.findAndWaitForElement(event.target.selector, options);
@@ -873,7 +873,7 @@ export class PlaybackEngine {
     _options: PlaybackEngineOptions
   ): Promise<EventExecutionResult> {
     const startTime = Date.now();
-    const scrollData = event.data as ScrollEventData as _ScrollEventData;
+    const scrollData = event.data as _ScrollEventData;
 
     try {
       const scrollScript = `

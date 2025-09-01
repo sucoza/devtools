@@ -10,10 +10,11 @@ import {
   Zap
 } from 'lucide-react';
 import type { BundleAnalyzerState, BundleModule } from '../../types';
+import type { BundleAnalyzerEventClient } from '../../core/devtools-client';
 
 interface ModulesTabProps {
   state: BundleAnalyzerState;
-  eventClient: unknown;
+  eventClient: BundleAnalyzerEventClient;
 }
 
 export function ModulesTab({ state, eventClient }: ModulesTabProps) {

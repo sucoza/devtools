@@ -8,6 +8,7 @@ import type {
   TestGenerationOptions,
   GeneratedTest,
   TestCase as _TestCase,
+  TestCaseMetadata,
   TestFormat,
   TestFramework,
   EventType as _EventType,
@@ -18,7 +19,7 @@ import type {
   AssertionEventData,
 } from '../types';
 
-import { TemplateEngine } from './templates/template-engine';
+import { TemplateEngine, type CodeTemplate as EngineCodeTemplate } from './templates/template-engine';
 import { builtInTemplates } from './templates/builtin-templates';
 import { PlaywrightGenerator } from './generators/playwright-generator';
 import { CypressGenerator } from './generators/cypress-generator';
@@ -123,7 +124,7 @@ export class CodeGenerator {
       format: this.config.format,
       framework: this.config.framework,
       code: finalCode.mainFile,
-      metadata,
+      metadata: metadata as unknown as TestCaseMetadata,
       createdAt: Date.now(),
     };
   }
@@ -343,7 +344,7 @@ export class CodeGenerator {
     const { format, language } = this.config;
     const generator = this.getEventGenerator(format, language);
     
-    return generator.generateEventCode(event, this.config);
+    return generator.generateEvent(event);
   }
 
   /**
@@ -376,8 +377,8 @@ export class CodeGenerator {
     const templateEngine = new TemplateEngine();
     
     // Register all built-in templates
-    builtInTemplates.forEach((template: Record<string, unknown>) => {
-      templateEngine.registerTemplate(template);
+    builtInTemplates.forEach((template) => {
+      templateEngine.registerTemplate(template as EngineCodeTemplate);
       this.templates.set(`${template.framework}-${template.language}`, {
         id: template.id,
         name: template.name,

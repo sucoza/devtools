@@ -17,8 +17,8 @@ interface HeatMapTabProps {
 export function HeatMapTab({
   state,
   eventClient,
-  _dispatch,
-  _compact,
+  dispatch,
+  compact,
   onComponentSelect,
 }: HeatMapTabProps) {
   const { heatMapData, ui } = state;
@@ -31,7 +31,7 @@ export function HeatMapTab({
         <div className="heatmap-controls">
           <select
             value={viewOptions.heatMapMode}
-            onChange={(e) => eventClient.setHeatMapMode(e.target.value as string)}
+            onChange={(e) => eventClient.setHeatMapMode(e.target.value as "renders" | "waste" | "time" | "impact")}
           >
             <option value="renders">Render Count</option>
             <option value="waste">Waste Level</option>

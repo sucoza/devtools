@@ -25,7 +25,7 @@ import {
 import type {
   BrowserAutomationState,
   SharedTestRecording,
-  SharingSettings as _SharingSettings
+  SharingSettings
 } from '../../types';
 
 export interface SharedTestsPanelProps {
@@ -43,7 +43,7 @@ export interface SharedTestsPanelProps {
 export const SharedTestsPanel: React.FC<SharedTestsPanelProps> = ({
   state,
   dispatch,
-  _compact = false,
+  compact: _compact = false,
   searchQuery = '',
   selectedTestId,
   onTestSelect

@@ -20,7 +20,7 @@ vi.mock('colorjs.io', () => ({
     get(prop: string) {
       return prop === 'lch' ? { l: 50 } : 0.5;
     }
-    contrast(other: any) {
+    contrast(_other: any) {
       return 4.5; // Mock good contrast ratio
     }
   }

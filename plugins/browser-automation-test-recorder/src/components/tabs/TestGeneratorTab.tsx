@@ -140,7 +140,7 @@ export default function TestGeneratorTab({ state, dispatch, compact: _compact }:
         },
       });
 
-    } catch {
+    } catch (error) {
       setPreviewState(prev => ({
         ...prev,
         isGenerating: false,

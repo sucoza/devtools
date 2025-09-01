@@ -9,10 +9,11 @@ import {
   Zap
 } from 'lucide-react';
 import type { BundleAnalyzerState } from '../../types';
+import type { BundleAnalyzerEventClient } from '../../core/devtools-client';
 
 interface OverviewTabProps {
   state: BundleAnalyzerState;
-  eventClient: unknown;
+  eventClient: BundleAnalyzerEventClient;
 }
 
 export function OverviewTab({ state, eventClient }: OverviewTabProps) {

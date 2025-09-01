@@ -55,8 +55,8 @@ export class SignalRInterceptor extends EventEmitter<{
     const hubConnection = Array.from(this.connections.entries())
       .find(([_, connId]) => connId === id)?.[0];
     
-    if (hubConnection?.stop) {
-      hubConnection.stop();
+    if (hubConnection && typeof hubConnection === 'object' && 'stop' in hubConnection) {
+      (hubConnection as { stop: () => void }).stop();
     }
   }
 
@@ -71,13 +71,13 @@ export class SignalRInterceptor extends EventEmitter<{
   private interceptSignalRModule(): void {
     try {
       // Dynamic import to avoid breaking if SignalR is not available
-      const signalR = (window as Record<string, unknown>).signalR || 
-                     (global as Record<string, unknown>).signalR ||
+      const signalR = (window as unknown as Record<string, unknown>).signalR || 
+                     (global as unknown as Record<string, unknown>).signalR ||
                      // eslint-disable-next-line @typescript-eslint/no-require-imports
                      require?.('@microsoft/signalr');
       
       if (signalR?.HubConnectionBuilder) {
-        this.interceptHubConnectionBuilder(signalR.HubConnectionBuilder);
+        this.interceptHubConnectionBuilder((signalR as { HubConnectionBuilder: unknown }).HubConnectionBuilder);
       }
     } catch {
       // SignalR not available, skip interception
@@ -86,19 +86,19 @@ export class SignalRInterceptor extends EventEmitter<{
 
   private interceptGlobalSignalR(): void {
     // Check for global signalR object (older versions)
-    const globalSignalR = (window as Record<string, unknown>).signalR;
-    if (globalSignalR?.HubConnectionBuilder) {
-      this.interceptHubConnectionBuilder(globalSignalR.HubConnectionBuilder);
+    const globalSignalR = (window as unknown as Record<string, unknown>).signalR;
+    if (globalSignalR && typeof globalSignalR === 'object' && 'HubConnectionBuilder' in globalSignalR) {
+      this.interceptHubConnectionBuilder((globalSignalR as { HubConnectionBuilder: unknown }).HubConnectionBuilder);
     }
   }
 
   private interceptHubConnectionBuilder(HubConnectionBuilder: unknown): void {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const interceptor = this;
-    const originalBuild = HubConnectionBuilder.prototype.build;
+    const originalBuild = (HubConnectionBuilder as { prototype: { build: unknown } }).prototype.build;
 
-    HubConnectionBuilder.prototype.build = function() {
-      const hubConnection = originalBuild.call(this);
+    (HubConnectionBuilder as { prototype: { build: (...args: unknown[]) => unknown } }).prototype.build = function() {
+      const hubConnection = (originalBuild as Function).call(this);
       interceptor.wrapHubConnection(hubConnection);
       return hubConnection;
     };
@@ -109,7 +109,7 @@ export class SignalRInterceptor extends EventEmitter<{
     const startTime = Date.now();
     
     // Extract URL from hub connection
-    const baseUrl = hubConnection.baseUrl || hubConnection._baseUrl || 'Unknown';
+    const baseUrl = (hubConnection as { baseUrl?: string; _baseUrl?: string }).baseUrl || (hubConnection as { baseUrl?: string; _baseUrl?: string })._baseUrl || 'Unknown';
     
     const connection: SignalRConnection = {
       id: connectionId,
@@ -123,9 +123,9 @@ export class SignalRInterceptor extends EventEmitter<{
       reconnectAttempts: 0,
       lastActivity: startTime,
       features: {
-        automaticReconnect: hubConnection._reconnectPolicy ? true : false,
-        serverTimeout: hubConnection._serverTimeoutInMilliseconds,
-        keepAliveInterval: hubConnection._keepAliveIntervalInMilliseconds,
+        automaticReconnect: (hubConnection as { _reconnectPolicy?: unknown })._reconnectPolicy ? true : false,
+        serverTimeout: (hubConnection as { _serverTimeoutInMilliseconds?: number })._serverTimeoutInMilliseconds,
+        keepAliveInterval: (hubConnection as { _keepAliveIntervalInMilliseconds?: number })._keepAliveIntervalInMilliseconds,
       }
     };
 
@@ -144,8 +144,8 @@ export class SignalRInterceptor extends EventEmitter<{
     const connection = this.connectionData.get(connectionId);
 
     // Wrap start method
-    const originalStart = hubConnection.start.bind(hubConnection);
-    hubConnection.start = async function() {
+    const originalStart = (hubConnection as { start: () => Promise<void> }).start.bind(hubConnection);
+    (hubConnection as { start: () => Promise<void> }).start = async function() {
       const startTime = Date.now();
       
       interceptor.updateConnection(connectionId, { 
@@ -159,7 +159,7 @@ export class SignalRInterceptor extends EventEmitter<{
         interceptor.updateConnection(connectionId, { 
           state: 'Connected',
           connectedAt: Date.now(),
-          connectionId: hubConnection.connectionId,
+          connectionId: (hubConnection as { connectionId?: string }).connectionId,
           transport: interceptor.getTransportName(hubConnection),
           lastActivity: Date.now()
         });
@@ -194,8 +194,8 @@ export class SignalRInterceptor extends EventEmitter<{
     };
 
     // Wrap stop method
-    const originalStop = hubConnection.stop.bind(hubConnection);
-    hubConnection.stop = async function() {
+    const originalStop = (hubConnection as { stop: () => Promise<void> }).stop.bind(hubConnection);
+    (hubConnection as { stop: () => Promise<void> }).stop = async function() {
       interceptor.updateConnection(connectionId, { 
         state: 'Disconnecting',
         lastActivity: Date.now()
@@ -233,8 +233,8 @@ export class SignalRInterceptor extends EventEmitter<{
     };
 
     // Wrap invoke method
-    const originalInvoke = hubConnection.invoke.bind(hubConnection);
-    hubConnection.invoke = async function(methodName: string, ...args: unknown[]) {
+    const originalInvoke = (hubConnection as { invoke: (...args: unknown[]) => Promise<unknown> }).invoke.bind(hubConnection);
+    (hubConnection as { invoke: (methodName: string, ...args: unknown[]) => Promise<unknown> }).invoke = async function(methodName: string, ...args: unknown[]) {
       const invocationId = generateId();
       const startTime = Date.now();
 
@@ -292,8 +292,8 @@ export class SignalRInterceptor extends EventEmitter<{
     };
 
     // Wrap send method
-    const originalSend = hubConnection.send.bind(hubConnection);
-    hubConnection.send = function(methodName: string, ...args: unknown[]) {
+    const originalSend = (hubConnection as { send: (...args: unknown[]) => unknown }).send.bind(hubConnection);
+    (hubConnection as { send: (methodName: string, ...args: unknown[]) => unknown }).send = function(methodName: string, ...args: unknown[]) {
       interceptor.addMessage(connectionId, {
         type: 'Invocation',
         direction: 'send',
@@ -307,8 +307,8 @@ export class SignalRInterceptor extends EventEmitter<{
     };
 
     // Wrap on method for incoming messages
-    const originalOn = hubConnection.on.bind(hubConnection);
-    hubConnection.on = function(methodName: string, newMethod: (...args: unknown[]) => void) {
+    const originalOn = (hubConnection as { on: (methodName: string, newMethod: (...args: unknown[]) => void) => void }).on.bind(hubConnection);
+    (hubConnection as { on: (methodName: string, newMethod: (...args: unknown[]) => void) => void }).on = function(methodName: string, newMethod: (...args: unknown[]) => void) {
       const wrappedMethod = (...args: unknown[]) => {
         interceptor.addMessage(connectionId, {
           type: 'Invocation',
@@ -329,7 +329,7 @@ export class SignalRInterceptor extends EventEmitter<{
     const connection = this.connectionData.get(connectionId);
 
     // Handle reconnecting event
-    hubConnection.onreconnecting = (error?: Error) => {
+    (hubConnection as { onreconnecting?: (error?: Error) => void }).onreconnecting = (error?: Error) => {
       connection.reconnectAttempts++;
       
       this.updateConnection(connectionId, { 
@@ -353,10 +353,10 @@ export class SignalRInterceptor extends EventEmitter<{
     };
 
     // Handle reconnected event
-    hubConnection.onreconnected = (connectionIdString?: string) => {
+    (hubConnection as { onreconnected?: (connectionIdString?: string) => void }).onreconnected = (connectionIdString?: string) => {
       this.updateConnection(connectionId, { 
         state: 'Connected',
-        connectionId: connectionIdString || hubConnection.connectionId,
+        connectionId: connectionIdString || (hubConnection as { connectionId?: string }).connectionId,
         lastActivity: Date.now()
       });
 
@@ -368,7 +368,7 @@ export class SignalRInterceptor extends EventEmitter<{
     };
 
     // Handle close event
-    hubConnection.onclose = (error?: Error) => {
+    (hubConnection as { onclose?: (error?: Error) => void }).onclose = (error?: Error) => {
       this.updateConnection(connectionId, { 
         state: 'Disconnected',
         disconnectedAt: Date.now(),
@@ -467,11 +467,11 @@ export class SignalRInterceptor extends EventEmitter<{
   }
 
   private getTransportName(hubConnection: unknown): SignalRTransport | undefined {
-    const transport = hubConnection._transport || hubConnection.transport;
+    const transport = (hubConnection as { _transport?: unknown; transport?: unknown })._transport || (hubConnection as { _transport?: unknown; transport?: unknown }).transport;
     if (!transport) return undefined;
 
     // Extract transport name from the transport object
-    if (transport.name) return transport.name;
+    if ((transport as { name?: string }).name) return (transport as { name: string }).name as SignalRTransport;
     if (transport.constructor?.name) {
       const name = transport.constructor.name;
       if (name.includes('WebSocket')) return 'WebSockets';

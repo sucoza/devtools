@@ -74,7 +74,7 @@ export const AdvancedFeaturesTab: React.FC<TabComponentProps> = ({ state, dispat
   }, [isRunning]);
 
   return (
-    <div className={`advanced-features-tab ${className || ''}`}>
+    <div className="advanced-features-tab">
       <div className="advanced-features-layout">
         {/* Feature Sidebar */}
         <div className="feature-sidebar">
@@ -159,9 +159,14 @@ export const AdvancedFeaturesTab: React.FC<TabComponentProps> = ({ state, dispat
   );
 };
 
+interface Baseline {
+  id: string;
+  name: string;
+}
+
 // Visual Regression Panel
 const VisualRegressionPanel: React.FC = () => {
-  const [baselines, _setBaselines] = useState<unknown[]>([]);
+  const [baselines, _setBaselines] = useState<Baseline[]>([]);
   const [selectedBaseline, setSelectedBaseline] = useState<string>('');
   const [thresholdValue, setThresholdValue] = useState(0.1);
 

@@ -56,16 +56,16 @@ export async function safeExecuteAsync<T>(
 
 export function validateConnection(connection: unknown): boolean {
   if (!connection) return false;
-  if (typeof connection.id !== 'string') return false;
-  if (typeof connection.createdAt !== 'number') return false;
+  if (typeof (connection as { id?: unknown }).id !== 'string') return false;
+  if (typeof (connection as { createdAt?: unknown }).createdAt !== 'number') return false;
   return true;
 }
 
 export function validateMessage(message: unknown): boolean {
   if (!message) return false;
-  if (typeof message.id !== 'string') return false;
-  if (typeof message.connectionId !== 'string') return false;
-  if (typeof message.timestamp !== 'number') return false;
+  if (typeof (message as { id?: unknown }).id !== 'string') return false;
+  if (typeof (message as { connectionId?: unknown }).connectionId !== 'string') return false;
+  if (typeof (message as { timestamp?: unknown }).timestamp !== 'number') return false;
   return true;
 }
 

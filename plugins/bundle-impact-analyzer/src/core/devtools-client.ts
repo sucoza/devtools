@@ -12,6 +12,9 @@ import type {
 } from '../types';
 import { useBundleAnalyzerStore } from './devtools-store';
 
+// Type alias for visualization settings
+type VisualizationSettings = BundleAnalyzerState['visualization'];
+
 /**
  * Bundle analyzer event types for TanStack DevTools integration
  */
@@ -52,6 +55,15 @@ export interface BundleAnalyzerEventClient {
   getState: () => BundleAnalyzerState;
   startAnalysis: () => void;
   stopAnalysis: () => void;
+  startCDNAnalysis: () => void;
+  getFilteredModules: () => BundleModule[];
+  selectModule: (moduleId: string | null) => void;
+  analyzeImport: (modulePath: string) => void;
+  selectTab: (tabId: string) => void;
+  generateRecommendations: () => void;
+  updateConfig: (config: Partial<BundleAnalyzerConfig>) => void;
+  generateSampleData: () => void;
+  updateVisualization: (settings: Partial<VisualizationSettings>) => void;
 }
 
 /**
@@ -612,6 +624,23 @@ export class BundleAnalyzerDevToolsEventClient implements BundleAnalyzerEventCli
     // Trigger analysis
     this.getStore().generateRecommendations();
     
+    this.emit('bundle:state', this.store.getState());
+  };
+
+  /**
+   * Select a tab in the UI - handled by UI components
+   */
+  selectTab = (_tabId: string): void => {
+    // Tab selection is handled by the UI components
+    // This method is here for interface compatibility
+    this.emit('bundle:state', this.store.getState());
+  };
+
+  /**
+   * Generate recommendations for optimization
+   */
+  generateRecommendations = (): void => {
+    this.getStore().generateRecommendations();
     this.emit('bundle:state', this.store.getState());
   };
 

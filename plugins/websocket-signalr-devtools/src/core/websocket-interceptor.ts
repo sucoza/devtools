@@ -367,8 +367,8 @@ export class WebSocketInterceptor extends EventEmitter<{
       return data.byteLength;
     } else if (data instanceof Blob) {
       return data.size;
-    } else if (data?.buffer instanceof ArrayBuffer) {
-      return data.buffer.byteLength;
+    } else if ((data as { buffer?: ArrayBuffer })?.buffer instanceof ArrayBuffer) {
+      return (data as { buffer: ArrayBuffer }).buffer.byteLength;
     }
     return 0;
   }

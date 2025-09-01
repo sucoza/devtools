@@ -6,7 +6,7 @@ export interface DevToolsEventClient<TEvents extends Record<string, unknown>> {
   subscribe: (callback: (event: TEvents[keyof TEvents], type: keyof TEvents) => void) => () => void;
 }
 
-export class VisualRegressionDevToolsClient implements DevToolsEventClient<VisualRegressionEvents> {
+export class VisualRegressionDevToolsClient implements DevToolsEventClient<any> {
   private unsubscribe?: () => void;
   private store = getVisualRegressionStore();
 

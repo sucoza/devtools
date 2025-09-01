@@ -81,6 +81,7 @@ export class CDPClient {
     this.targetId = pageTarget.id;
     
     // Connect to WebSocket
+    const protocol = this.connectionOptions.secure ? 'wss' : 'ws';
     const wsUrl = `${protocol}://${this.connectionOptions.host}:${this.connectionOptions.port}/devtools/page/${pageTarget.id}`;
     
     return new Promise((resolve, reject) => {

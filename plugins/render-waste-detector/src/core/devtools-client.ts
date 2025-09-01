@@ -11,9 +11,10 @@ import type {
   DevToolsTab,
   HeatMapData,
   RenderTree,
+  RecordingSession,
 } from "../types";
 import { useRenderWasteDetectorStore } from "./devtools-store";
-import { _getProfilerIntegration, startRenderProfiling, stopRenderProfiling } from "./profiler-integration";
+import { getProfilerIntegration, startRenderProfiling, stopRenderProfiling } from "./profiler-integration";
 
 /**
  * Event client interface following TanStack DevTools patterns
@@ -449,13 +450,13 @@ export class RenderWasteDetectorDevToolsEventClient
   };
 
   importSession = (sessionData: unknown): void => {
-    if (sessionData && sessionData.components && sessionData.metrics) {
+    if (sessionData && (sessionData as { components?: unknown; metrics?: unknown }).components && (sessionData as { components?: unknown; metrics?: unknown }).metrics) {
       const session = {
-        ...sessionData,
-        components: new Map(sessionData.components),
-        metrics: new Map(sessionData.metrics),
+        ...(sessionData as Record<string, any>),
+        components: new Map((sessionData as { components: [string, any][] }).components),
+        metrics: new Map((sessionData as { metrics: [string, any][] }).metrics),
       };
-      this.store.getState().importSession(session);
+      this.store.getState().importSession(session as RecordingSession);
       this.emit("render-waste:state", this.store.getState());
     }
   };

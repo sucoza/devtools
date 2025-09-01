@@ -36,9 +36,7 @@ export function VisualDiff() {
     if (!selectedBaseline || !selectedComparison) return;
 
     try {
-      await diffActions.compareScreenshots(selectedBaseline, selectedComparison, {
-        threshold,
-      });
+      await diffActions.compareScreenshots(selectedBaseline, selectedComparison);
     } catch (error) {
       console.error('Comparison failed:', error);
     }
@@ -48,8 +46,8 @@ export function VisualDiff() {
     if (!selectedBaseline) return;
 
     const comparisonIds = screenshots
-      .filter(s => s.id !== selectedBaseline)
-      .map(s => s.id)
+      .filter(s => (s as any).id !== selectedBaseline)
+      .map(s => (s as any).id)
       .slice(0, 5); // Limit to 5 for demo
 
     try {
@@ -174,11 +172,11 @@ export function VisualDiff() {
               <div className="space-y-2">
                 {visualDiffs.map(diff => (
                   <DiffListItem 
-                    key={diff.id} 
+                    key={(diff as any).id} 
                     diff={diff} 
                     screenshots={screenshots}
-                    isSelected={selectedDiff?.id === diff.id}
-                    onSelect={() => diffActions.selectDiff(diff.id)}
+                    isSelected={selectedDiff?.id === (diff as any).id}
+                    onSelect={() => diffActions.selectDiff((diff as any).id)}
                   />
                 ))}
               </div>
@@ -227,8 +225,8 @@ function DiffListItem({
   isSelected: boolean; 
   onSelect: () => void; 
 }) {
-  const baseline = screenshots.find(s => s.id === diff.baselineId);
-  const comparison = screenshots.find(s => s.id === diff.comparisonId);
+  const baseline = screenshots.find(s => (s as any).id === (diff as any).baselineId);
+  const comparison = screenshots.find(s => (s as any).id === (diff as any).comparisonId);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -254,21 +252,21 @@ function DiffListItem({
       onClick={onSelect}
     >
       <div className="flex items-start justify-between mb-2">
-        {getStatusIcon(diff.status)}
+        {getStatusIcon((diff as any).status)}
         <div className="text-xs text-gray-500 dark:text-gray-400">
-          {formatTimestamp(diff.timestamp)}
+          {formatTimestamp((diff as any).timestamp)}
         </div>
       </div>
       
       <div className="space-y-1 text-xs">
         <div className="text-gray-900 dark:text-white font-medium">
-          {baseline?.name || 'Unknown'} vs {comparison?.name || 'Unknown'}
+          {((baseline as any)?.name || 'Unknown') + ' vs ' + ((comparison as any)?.name || 'Unknown')}
         </div>
         <div className="text-gray-500 dark:text-gray-400">
-          {diff.metrics.percentageChanged.toFixed(2)}% changed
+          {(diff as any).metrics.percentageChanged.toFixed(2)}% changed
         </div>
         <div className="text-gray-400 dark:text-gray-500">
-          {diff.differences.length} regions
+          {(diff as any).differences.length} regions
         </div>
       </div>
     </div>
@@ -298,8 +296,8 @@ function DiffViewer({
   onAccept: () => void;
   onReject: () => void;
 }) {
-  const baseline = screenshots.find(s => s.id === diff.baselineId);
-  const comparison = screenshots.find(s => s.id === diff.comparisonId);
+  const baseline = screenshots.find(s => (s as any).id === (diff as any).baselineId);
+  const comparison = screenshots.find(s => (s as any).id === (diff as any).comparisonId);
 
   if (!baseline || !comparison) {
     return (
@@ -330,15 +328,15 @@ function DiffViewer({
           <div className="flex items-center gap-3">
             <span className={clsx(
               'px-2 py-1 text-xs font-medium rounded border capitalize',
-              getStatusColor(diff.status)
+              getStatusColor((diff as any).status)
             )}>
-              {diff.status}
+              {(diff as any).status}
             </span>
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              {diff.metrics.percentageChanged.toFixed(2)}% changed
+              {(diff as any).metrics.percentageChanged.toFixed(2)}% changed
             </span>
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              {diff.differences.length} regions
+              {(diff as any).differences.length} regions
             </span>
           </div>
 
@@ -372,7 +370,7 @@ function DiffViewer({
             </div>
 
             <div className="flex gap-1">
-              {diff.status !== 'passed' && (
+              {(diff as any).status !== 'passed' && (
                 <button
                   onClick={onAccept}
                   className="flex items-center gap-1 px-2 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
@@ -381,7 +379,7 @@ function DiffViewer({
                   Accept
                 </button>
               )}
-              {diff.status !== 'failed' && (
+              {(diff as any).status !== 'failed' && (
                 <button
                   onClick={onReject}
                   className="flex items-center gap-1 px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
@@ -402,15 +400,15 @@ function DiffViewer({
           <div className="border-r border-gray-200 dark:border-gray-700">
             <div className="p-2 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
               <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                Baseline: {baseline.name}
+                Baseline: {(baseline as any).name}
               </h4>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                {baseline.viewport.width}×{baseline.viewport.height} • {formatTimestamp(baseline.timestamp)}
+                {(baseline as any).viewport.width}×{(baseline as any).viewport.height} • {formatTimestamp((baseline as any).timestamp)}
               </p>
             </div>
             <div className="p-4 overflow-auto">
               <img
-                src={baseline.dataUrl}
+                src={(baseline as any).dataUrl}
                 alt="Baseline"
                 className="border border-gray-300 dark:border-gray-600 rounded"
                 style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: 'top left' }}
@@ -422,15 +420,15 @@ function DiffViewer({
           <div>
             <div className="p-2 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
               <h4 className="text-sm font-medium text-gray-900 dark:text-white">
-                Comparison: {comparison.name}
+                Comparison: {(comparison as any).name}
               </h4>
               <p className="text-xs text-gray-500 dark:text-gray-400">
-                {comparison.viewport.width}×{comparison.viewport.height} • {formatTimestamp(comparison.timestamp)}
+                {(comparison as any).viewport.width}×{(comparison as any).viewport.height} • {formatTimestamp((comparison as any).timestamp)}
               </p>
             </div>
             <div className="p-4 overflow-auto">
               <img
-                src={comparison.dataUrl}
+                src={(comparison as any).dataUrl}
                 alt="Comparison"
                 className="border border-gray-300 dark:border-gray-600 rounded"
                 style={{ transform: `scale(${zoomLevel / 100})`, transformOrigin: 'top left' }}
@@ -445,19 +443,19 @@ function DiffViewer({
         <div className="grid grid-cols-4 gap-4 text-sm">
           <div>
             <span className="text-gray-500 dark:text-gray-400">Total Pixels:</span>
-            <p className="text-gray-900 dark:text-white">{diff.metrics.totalPixels.toLocaleString()}</p>
+            <p className="text-gray-900 dark:text-white">{(diff as any).metrics.totalPixels.toLocaleString()}</p>
           </div>
           <div>
             <span className="text-gray-500 dark:text-gray-400">Changed Pixels:</span>
-            <p className="text-gray-900 dark:text-white">{diff.metrics.changedPixels.toLocaleString()}</p>
+            <p className="text-gray-900 dark:text-white">{(diff as any).metrics.changedPixels.toLocaleString()}</p>
           </div>
           <div>
             <span className="text-gray-500 dark:text-gray-400">Mean Color Delta:</span>
-            <p className="text-gray-900 dark:text-white">{diff.metrics.meanColorDelta.toFixed(2)}</p>
+            <p className="text-gray-900 dark:text-white">{(diff as any).metrics.meanColorDelta.toFixed(2)}</p>
           </div>
           <div>
             <span className="text-gray-500 dark:text-gray-400">Threshold:</span>
-            <p className="text-gray-900 dark:text-white">{(diff.threshold * 100).toFixed(1)}%</p>
+            <p className="text-gray-900 dark:text-white">{((diff as any).threshold * 100).toFixed(1)}%</p>
           </div>
         </div>
       </div>

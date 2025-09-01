@@ -92,19 +92,19 @@ export function Timeline() {
                       
                       {activity.metadata && (
                         <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                          {activity.metadata.url && (
-                            <div>URL: {activity.metadata.url}</div>
+                          {String(activity.metadata.url) && (
+                            <div>URL: {String(activity.metadata.url)}</div>
                           )}
-                          {activity.metadata.status && (
+                          {String(activity.metadata.status) && (
                             <div className={clsx(
                               'inline-block px-2 py-1 rounded mt-1',
-                              activity.metadata.status === 'passed' 
+                              String(activity.metadata.status) === 'passed' 
                                 ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
-                                : activity.metadata.status === 'failed'
+                                : String(activity.metadata.status) === 'failed'
                                 ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
                                 : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
                             )}>
-                              {activity.metadata.status}
+                              {String(activity.metadata.status)}
                             </div>
                           )}
                         </div>

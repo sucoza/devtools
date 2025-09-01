@@ -10,7 +10,7 @@ import type {
   HeatMapData,
   RenderTree,
   ComponentInfo,
-  _VDomDiff,
+  VDomDiff,
   RenderFilters,
   ViewOptions,
   RecordingSettings,

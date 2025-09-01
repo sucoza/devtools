@@ -691,10 +691,10 @@ export class APIInterceptor {
         // if (!validationResult.valid) {
         //   errors.push(...validationResult.errors);
         // }
-      } catch {
+      } catch (err) {
         errors.push({
           type: 'schema',
-          message: `Schema validation failed: ${error}`,
+          message: `Schema validation failed: ${err}`,
           severity: 'error',
         });
       }
@@ -757,10 +757,10 @@ export class APIInterceptor {
             severity: 'error',
           });
         }
-      } catch {
+      } catch (err) {
         warnings.push({
           type: 'assertion',
-          message: `Assertion '${assertion.name}' failed to execute: ${error}`,
+          message: `Assertion '${assertion.name}' failed to execute: ${err}`,
         });
       }
     }

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Globe, TrendingUp, ExternalLink } from 'lucide-react';
 import type { BundleAnalyzerState } from '../../types';
+import type { BundleAnalyzerEventClient } from '../../core/devtools-client';
 
 interface CDNAnalysisTabProps {
   state: BundleAnalyzerState;
-  eventClient: unknown;
+  eventClient: BundleAnalyzerEventClient;
 }
 
 export function CDNAnalysisTab({ state, eventClient }: CDNAnalysisTabProps) {

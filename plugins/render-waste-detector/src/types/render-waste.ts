@@ -100,7 +100,7 @@ export interface OptimizationSuggestion {
   id: string;
   componentId: string;
   componentName: string;
-  type: SuggestionType;
+  type: _SuggestionType;
   severity: "low" | "medium" | "high" | "critical";
   title: string;
   description: string;
@@ -200,7 +200,7 @@ export interface RenderFilters {
     end: number;
   };
   severityFilter: Set<"low" | "medium" | "high" | "critical">;
-  suggestionTypeFilter: Set<SuggestionType>;
+  suggestionTypeFilter: Set<_SuggestionType>;
 }
 
 export interface ViewOptions {

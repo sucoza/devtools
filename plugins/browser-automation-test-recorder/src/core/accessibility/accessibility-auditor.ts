@@ -3,6 +3,20 @@
  * Integrates with axe-core for comprehensive accessibility testing during automation
  */
 
+// Axe-core interface types
+interface AxeCoreApi {
+  run: (context: unknown, options: Record<string, unknown>) => Promise<unknown>;
+  configure: (config: Record<string, unknown>) => void;
+  getRules: () => AccessibilityRule[];
+}
+
+interface AxeResult {
+  violations: Record<string, unknown>[];
+  passes: Record<string, unknown>[];
+  inapplicable: Record<string, unknown>[];
+  incomplete: Record<string, unknown>[];
+}
+
 export interface AccessibilityRule {
   id: string;
   impact: 'minor' | 'moderate' | 'serious' | 'critical';
@@ -246,7 +260,7 @@ export class AccessibilityAuditor {
         run: this.mockAxeRun.bind(this),
         configure: this.mockAxeConfigure.bind(this),
         getRules: this.mockAxeGetRules.bind(this),
-      };
+      } as AxeCoreApi;
     } catch {
       // // console.warn('Failed to initialize axe-core');
     }
@@ -271,7 +285,7 @@ export class AccessibilityAuditor {
 
     const axeResult = await this.axeCore.run(context || document, auditOptions);
     
-    const result = this.processAxeResult(axeResult);
+    const result = this.processAxeResult(axeResult as AxeResult);
     this.lastAuditResult = result;
     
     return result;
@@ -582,49 +596,49 @@ export class AccessibilityAuditor {
   /**
    * Process axe result and create standardized format
    */
-  private processAxeResult(axeResult: { violations: unknown[]; passes: unknown[]; inapplicable: unknown[]; incomplete: unknown[] }): AccessibilityAuditResult {
+  private processAxeResult(axeResult: AxeResult): AccessibilityAuditResult {
     const violations = axeResult.violations.map((violation: Record<string, unknown>) => ({
       id: `violation_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      ruleId: violation.id,
-      impact: violation.impact,
-      description: violation.description,
-      help: violation.help,
-      helpUrl: violation.helpUrl,
+      ruleId: violation.id as string,
+      impact: violation.impact as 'minor' | 'moderate' | 'serious' | 'critical',
+      description: violation.description as string,
+      help: violation.help as string,
+      helpUrl: violation.helpUrl as string,
       nodes: (violation.nodes as Array<Record<string, unknown>>).map((node) => ({
-        target: node.target,
-        html: node.html,
-        impact: node.impact,
-        message: node.message,
+        target: node.target as string[],
+        html: node.html as string,
+        impact: node.impact as 'minor' | 'moderate' | 'serious' | 'critical',
+        message: node.message as string,
         data: node.data,
-        xpath: this.generateXPath(node.target[0]),
+        xpath: this.generateXPath((node.target as string[])[0]),
       })),
-      tags: violation.tags,
+      tags: violation.tags as string[],
       timestamp: Date.now(),
       url: window.location.href,
     }));
 
     const passes = axeResult.passes.map((pass: Record<string, unknown>) => ({
       id: `pass_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      ruleId: pass.id,
-      description: pass.description,
-      help: pass.help,
-      helpUrl: pass.helpUrl,
-      impact: pass.impact,
-      tags: pass.tags,
+      ruleId: pass.id as string,
+      description: pass.description as string,
+      help: pass.help as string,
+      helpUrl: pass.helpUrl as string,
+      impact: null,
+      tags: pass.tags as string[],
       nodes: (pass.nodes as Array<Record<string, unknown>>).map((node) => ({
-        target: node.target,
-        html: node.html,
+        target: node.target as string[],
+        html: node.html as string,
       })),
     }));
 
-    const summary = this.createAuditSummary(violations, passes, axeResult.inapplicable);
+    const summary = this.createAuditSummary(violations, passes, ((axeResult.inapplicable || []) as unknown[]).map(rule => rule as AccessibilityRule));
 
     return {
       passed: violations.length === 0,
       violations,
-      incomplete: axeResult.incomplete || [],
+      incomplete: ((axeResult.incomplete || []) as unknown[]).map(item => item as AccessibilityViolation),
       passes,
-      inapplicable: axeResult.inapplicable || [],
+      inapplicable: ((axeResult.inapplicable || []) as unknown[]).map(rule => rule as AccessibilityRule),
       summary,
       timestamp: Date.now(),
       url: window.location.href,

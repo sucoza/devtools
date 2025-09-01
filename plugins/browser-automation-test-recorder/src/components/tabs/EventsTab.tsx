@@ -2,7 +2,7 @@ import React from 'react';
 import { clsx } from 'clsx';
 import { MousePointer, Keyboard, Navigation, Search, Filter } from 'lucide-react';
 
-import type { TabComponentProps } from '../../types';
+import type { TabComponentProps, EventType } from '../../types';
 
 /**
  * Events list and management tab component
@@ -46,17 +46,17 @@ export default function EventsTab({ state, dispatch, compact: _compact }: TabCom
         <div className="event-type-filters">
           <h4>Event Types</h4>
           <div className="filter-grid">
-            {['click', 'input', 'navigation', 'keydown', 'scroll'].map(eventType => (
+            {(['click', 'input', 'navigation', 'keydown', 'scroll'] as EventType[]).map(eventType => (
               <label key={eventType} className="filter-checkbox">
                 <input
                   type="checkbox"
-                  checked={ui.filters.eventTypes.has(eventType as string)}
+                  checked={ui.filters.eventTypes.has(eventType)}
                   onChange={(e) => {
                     const newTypes = new Set(ui.filters.eventTypes);
                     if (e.target.checked) {
-                      newTypes.add(eventType as string);
+                      newTypes.add(eventType);
                     } else {
-                      newTypes.delete(eventType as string);
+                      newTypes.delete(eventType);
                     }
                     dispatch({
                       type: 'ui/filter/update',

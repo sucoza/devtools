@@ -2,6 +2,7 @@ import type {
   AccessibilityDevToolsState,
   AccessibilityDevToolsAction,
   AccessibilityDevToolsEvents,
+  AccessibilityAuditResult,
 } from '../types';
 import { useAccessibilityDevToolsStore } from './devtools-store';
 

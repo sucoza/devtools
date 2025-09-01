@@ -31,7 +31,7 @@ export class AccessibilityScanner {
    */
   private setupAxe(): void {
     // Configure axe-core
-    const axeConfig: unknown = {
+    const axeConfig: Record<string, any> = {
       branding: {
         brand: 'TanStack DevTools',
         application: 'accessibility-scanner',
@@ -81,7 +81,7 @@ export class AccessibilityScanner {
     
     try {
       // Prepare axe options
-      const axeOptions: unknown = {
+      const axeOptions: Record<string, any> = {
         elementRef: this.config.elementRef,
         ancestry: this.config.ancestry || false,
         xpath: this.config.xpath || false,
@@ -135,16 +135,17 @@ export class AccessibilityScanner {
    * Transform axe result to our accessibility issue format
    */
   private transformAxeResult = (axeResult: unknown): AccessibilityIssue => {
+    const result = axeResult as Record<string, any>;
     return {
-      id: `${axeResult.id}-${Date.now()}`,
-      rule: axeResult.id,
-      impact: mapImpactToSeverity(axeResult.impact || 'moderate'),
-      description: axeResult.description,
-      help: axeResult.help,
-      helpUrl: axeResult.helpUrl,
-      tags: axeResult.tags,
-      nodes: axeResult.nodes.map(this.transformAxeNode),
-      type: this.determineViolationType(axeResult),
+      id: `${result.id}-${Date.now()}`,
+      rule: result.id as string,
+      impact: mapImpactToSeverity(result.impact || 'moderate'),
+      description: result.description as string,
+      help: result.help as string,
+      helpUrl: result.helpUrl as string,
+      tags: result.tags as string[],
+      nodes: (result.nodes as any[]).map(this.transformAxeNode),
+      type: this.determineViolationType(result),
       timestamp: Date.now(),
     };
   };
@@ -153,26 +154,27 @@ export class AccessibilityScanner {
    * Transform axe node to our accessibility node format
    */
   private transformAxeNode = (axeNode: unknown): AccessibilityNode => {
+    const nodeData = axeNode as Record<string, any>;
     const node: AccessibilityNode = {
-      html: axeNode.html,
-      target: axeNode.target,
+      html: nodeData.html as string,
+      target: nodeData.target as string[],
     };
     
-    if (axeNode.failureSummary) {
-      node.failureSummary = axeNode.failureSummary;
+    if (nodeData.failureSummary) {
+      node.failureSummary = nodeData.failureSummary as string;
     }
     
-    if (this.config.xpath && axeNode.xpath) {
-      node.xpath = axeNode.xpath;
+    if (this.config.xpath && nodeData.xpath) {
+      node.xpath = nodeData.xpath as string;
     }
     
-    if (this.config.ancestry && axeNode.ancestry) {
-      node.ancestry = axeNode.ancestry;
+    if (this.config.ancestry && nodeData.ancestry) {
+      node.ancestry = nodeData.ancestry as string[];
     }
     
     // Get element bounding rect if possible
     try {
-      const element = document.querySelector(axeNode.target[0]);
+      const element = document.querySelector((nodeData.target as string[])[0]);
       if (element) {
         node.boundingRect = element.getBoundingClientRect();
       }

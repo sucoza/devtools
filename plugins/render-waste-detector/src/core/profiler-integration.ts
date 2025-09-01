@@ -1,8 +1,8 @@
 import type {
   RenderEvent,
   ComponentInfo,
-  PropChange,
-  StateChange,
+  _PropChange,
+  _StateChange,
   ContextChange,
   RenderReason,
 } from "../types";
@@ -240,7 +240,7 @@ export class ProfilerIntegration {
       componentId,
       fiber.memoizedProps,
     );
-    const stateChanges = this.analyzeStateChanges(
+    const stateChanges = this.analyze_StateChanges(
       componentId,
       fiber.memoizedState,
     );
@@ -414,9 +414,9 @@ export class ProfilerIntegration {
   private analyzePropsChanges(
     componentId: string,
     currentProps: any,
-  ): PropChange[] {
+  ): _PropChange[] {
     const prevProps = this.previousProps.get(componentId) || {};
-    const changes: PropChange[] = [];
+    const changes: _PropChange[] = [];
 
     // Find added/modified props
     Object.keys(currentProps || {}).forEach((key) => {
@@ -457,12 +457,12 @@ export class ProfilerIntegration {
   /**
    * Analyze state changes
    */
-  private analyzeStateChanges(
+  private analyze_StateChanges(
     componentId: string,
     currentState: any,
-  ): StateChange[] {
+  ): _StateChange[] {
     const prevState = this.previousState.get(componentId);
-    const changes: StateChange[] = [];
+    const changes: _StateChange[] = [];
 
     // For hooks, state structure is more complex
     // This is a simplified implementation

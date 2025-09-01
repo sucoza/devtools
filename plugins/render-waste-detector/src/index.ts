@@ -32,8 +32,8 @@ export type {
   RenderTreeNode,
 
   // Analysis types
-  PropChange,
-  StateChange,
+  _PropChange,
+  _StateChange,
   ContextChange,
   VDomDiff,
   VDomChange,
@@ -52,7 +52,7 @@ export type {
 
   // Utility types
   RenderReason,
-  SuggestionType,
+  _SuggestionType,
 } from "./types";
 
 // Export hooks

@@ -674,7 +674,7 @@ export class PlaybackMonitor {
       listeners.forEach(callback => {
         try {
           callback(data);
-        } catch {
+        } catch (error) {
           this.log('error', `Event listener error: ${error}`);
         }
       });

@@ -201,7 +201,7 @@ ${this.indent(testCode)}
    */
   private generateClickCode(event: RecordedEvent): string {
     const selector = this.formatSelector(event.target.selector);
-    const mouseData = event.data as MouseEventData as _MouseEventData;
+    const mouseData = event.data as _MouseEventData;
     
     let code = `await page.click('${selector}'`;
     
@@ -288,7 +288,7 @@ ${this.indent(testCode)}
    * Keyboard event code generation
    */
   private generateKeyboardCode(event: RecordedEvent): string {
-    const keyData = event.data as KeyboardEventData as _KeyboardEventData;
+    const keyData = event.data as _KeyboardEventData;
     const key = this.mapPuppeteerKey(keyData.key);
     
     // Handle modifiers
@@ -324,7 +324,7 @@ ${this.indent(testCode)}
    * Scroll event code generation
    */
   private generateScrollCode(event: RecordedEvent): string {
-    const scrollData = event.data as ScrollEventData as _ScrollEventData;
+    const scrollData = event.data as _ScrollEventData;
     
     if (scrollData.element === 'window') {
       return `await page.evaluate(() => window.scrollTo(${scrollData.scrollX}, ${scrollData.scrollY}));`;
@@ -427,7 +427,7 @@ ${this.indent(testCode)}
    * Wheel event code generation
    */
   private generateWheelCode(event: RecordedEvent): string {
-    const mouseData = event.data as MouseEventData as _MouseEventData;
+    const mouseData = event.data as _MouseEventData;
     return `await page.mouse.wheel(${mouseData.clientX}, ${mouseData.clientY});`;
   }
 
@@ -939,7 +939,7 @@ module.exports = { ${pageName} };`;
   /**
    * Get mouse event modifiers
    */
-  private getModifiers(mouseData: MouseEventData): string[] {
+  private getModifiers(mouseData: _MouseEventData): string[] {
     const modifiers: string[] = [];
     
     if (mouseData.ctrlKey) modifiers.push('Control');
@@ -953,7 +953,7 @@ module.exports = { ${pageName} };`;
   /**
    * Get keyboard event modifiers for Puppeteer
    */
-  private getKeyboardModifiers(keyData: KeyboardEventData): string[] {
+  private getKeyboardModifiers(keyData: _KeyboardEventData): string[] {
     const modifiers: string[] = [];
     
     if (keyData.ctrlKey) modifiers.push('Control');

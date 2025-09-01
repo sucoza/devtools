@@ -3,8 +3,8 @@ import { formStateEventClient } from './formEventClient';
 import type { 
   FormState, 
   FieldState, 
-  _FieldHistoryEntry, 
-  _AccessibilityIssue,
+  FieldHistoryEntry, 
+  AccessibilityIssue,
   FormSubmission,
   ValidationState 
 } from './formEventClient';
@@ -183,9 +183,9 @@ export function FormStateDevToolsPanel() {
 
   const _toggleFormExpanded = (_formId: string) => {
     setExpandedForms(prev => 
-      prev.includes(formId) 
-        ? prev.filter(id => id !== formId)
-        : [...prev, formId]
+      prev.includes(_formId) 
+        ? prev.filter(id => id !== _formId)
+        : [...prev, _formId]
     );
   };
 

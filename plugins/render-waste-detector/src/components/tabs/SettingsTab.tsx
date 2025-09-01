@@ -1,9 +1,10 @@
 import React from "react";
-import { _Settings, Download, Upload, RotateCcw } from "lucide-react";
+import { Settings, Download, Upload, RotateCcw } from "lucide-react";
 import "../styles.css";
 import type {
   RenderWasteDetectorState,
   RenderWasteDetectorEventClient,
+  DevToolsTab,
 } from "../../types";
 
 interface SettingsTabProps {
@@ -18,8 +19,8 @@ interface SettingsTabProps {
 export function SettingsTab({
   state,
   eventClient,
-  _dispatch,
-  _compact,
+  dispatch,
+  compact,
 }: SettingsTabProps) {
   const { settings, ui } = state;
 
@@ -320,7 +321,7 @@ export function SettingsTab({
                 Theme
                 <select
                   value={ui.theme}
-                  onChange={(e) => eventClient.setTheme(e.target.value as string)}
+                  onChange={(e) => eventClient.setTheme(e.target.value as "light" | "dark" | "auto")}
                 >
                   <option value="light">Light</option>
                   <option value="dark">Dark</option>
@@ -335,7 +336,7 @@ export function SettingsTab({
                 Default Tab
                 <select
                   value={ui.activeTab}
-                  onChange={(e) => eventClient.selectTab(e.target.value as string)}
+                  onChange={(e) => eventClient.selectTab(e.target.value as DevToolsTab)}
                 >
                   <option value="overview">Overview</option>
                   <option value="components">Components</option>

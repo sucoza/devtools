@@ -666,7 +666,7 @@ export class ExecutionManager {
 
       this.emit('jobCompleted', { job, result });
 
-    } catch {
+    } catch (error) {
       job.status = 'failed';
       job.endTime = Date.now();
       job.result = {

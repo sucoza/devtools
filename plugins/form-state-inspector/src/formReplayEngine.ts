@@ -1,6 +1,6 @@
 import { formStateEventClient } from './formEventClient';
 import { formStateRegistry, updateField } from './formStateTracker';
-import type { FieldHistoryEntry, _FormState, FieldState } from './formEventClient';
+import type { FieldHistoryEntry, FormState, FieldState } from './formEventClient';
 
 export interface ReplayOptions {
   speed?: number; // Replay speed multiplier (1 = normal, 2 = 2x faster, 0.5 = half speed)

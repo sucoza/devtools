@@ -1,5 +1,6 @@
-import * as React from "react";
+import React from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
+
 import { clsx } from "clsx";
 import {
   Activity,
@@ -8,7 +9,7 @@ import {
   Lightbulb,
   Clock,
   Settings,
-  _Play,
+  Play,
   Square,
   Pause,
   RotateCcw,
@@ -20,6 +21,8 @@ import type {
   RenderWasteDetectorPanelProps,
   DevToolsTab,
   RenderWasteDetectorState,
+  RenderWasteDetectorAction,
+  OptimizationSuggestion,
 } from "../types";
 import {
   createRenderWasteDetectorEventClient,
@@ -42,7 +45,7 @@ export function PluginPanel({
   style,
   theme = "auto",
   compact = false,
-  _defaultTab = "overview",
+  defaultTab = "overview",
   defaultSettings,
   onTabChange,
   onEvent,
@@ -51,7 +54,8 @@ export function PluginPanel({
   children,
 }: RenderWasteDetectorPanelProps) {
   // Create or get event client
-  const eventClient = React.useMemo(() => {
+  // @ts-ignore
+  const eventClient = (() => {
     const client =
       getRenderWasteDetectorEventClient() ||
       createRenderWasteDetectorEventClient();
@@ -62,7 +66,7 @@ export function PluginPanel({
     }
 
     return client;
-  }, [defaultSettings]);
+  })();
 
   // Subscribe to state changes
   const state = useSyncExternalStore<RenderWasteDetectorState>(
@@ -78,7 +82,7 @@ export function PluginPanel({
   };
 
   // Handle events
-  const handleEvent = (action: unknown) => {
+  const handleEvent = (action: RenderWasteDetectorAction) => {
     eventClient.dispatch(action);
     onEvent?.(action);
   };
@@ -92,7 +96,7 @@ export function PluginPanel({
   // Handle suggestion application
   const handleSuggestionApply = (suggestionId: string) => {
     const suggestion = state.suggestions.find(
-      (s: unknown) => s.id === suggestionId,
+      (s: OptimizationSuggestion) => s.id === suggestionId,
     );
     if (suggestion) {
       eventClient.applySuggestion(suggestionId);
@@ -104,8 +108,8 @@ export function PluginPanel({
   const tabs: Array<{
     id: DevToolsTab;
     label: string;
-    icon: React.ComponentType<{ size?: number }>;
-    component: React.ComponentType<unknown>;
+    icon: any;
+    component: any;
     badge?: number;
   }> = [
     {

@@ -637,9 +637,9 @@ export interface CollaborationState {
   
   // Library state
   library: {
-    tests: unknown[];
-    categories: unknown[];
-    templates: unknown[];
+    tests: LibraryTest[];
+    categories: TestCategory[];
+    templates: TestTemplate[];
     searchQuery: string;
     filters: {
       category: string | null;
@@ -757,7 +757,9 @@ import type {
   LibraryTestStatus,
   CollaborationNotification,
   EventType,
-  RecordedEvent
+  RecordedEvent,
+  TestCategory,
+  TestTemplate
 } from './automation';
 
 /**

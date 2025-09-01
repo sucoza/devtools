@@ -16,7 +16,7 @@ export interface TeamPanelProps {
   onTestSelect?: (testId: string) => void;
 }
 
-export const TeamPanel: React.FC<TeamPanelProps> = ({ _state, _dispatch }) => {
+export const TeamPanel: React.FC<TeamPanelProps> = ({ state: _state, dispatch: _dispatch }) => {
   return (
     <div className="flex-1 flex items-center justify-center p-8 text-center">
       <div>

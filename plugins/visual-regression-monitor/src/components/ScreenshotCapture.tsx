@@ -229,13 +229,13 @@ export function ScreenshotCapture() {
                 {viewMode === 'grid' ? (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                     {groupScreenshots.map(screenshot => (
-                      <ScreenshotCard key={screenshot.id} screenshot={screenshot} />
+                      <ScreenshotCard key={(screenshot as any).id} screenshot={screenshot} />
                     ))}
                   </div>
                 ) : (
                   <div className="space-y-2">
                     {groupScreenshots.map(screenshot => (
-                      <ScreenshotListItem key={screenshot.id} screenshot={screenshot} />
+                      <ScreenshotListItem key={(screenshot as any).id} screenshot={screenshot} />
                     ))}
                   </div>
                 )}
@@ -261,12 +261,12 @@ function ScreenshotCard({ screenshot }: { screenshot: unknown }) {
   return (
     <div 
       className="group relative bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-      onClick={() => actions.selectScreenshot(screenshot.id)}
+      onClick={() => actions.selectScreenshot((screenshot as any).id)}
     >
       <div className="aspect-video bg-gray-100 dark:bg-gray-700">
         <img 
-          src={screenshot.dataUrl} 
-          alt={screenshot.name}
+          src={(screenshot as any).dataUrl} 
+          alt={(screenshot as any).name}
           className="w-full h-full object-cover"
         />
       </div>
@@ -276,7 +276,7 @@ function ScreenshotCard({ screenshot }: { screenshot: unknown }) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            actions.downloadScreenshot(screenshot);
+            actions.downloadScreenshot(screenshot as any);
           }}
           className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
           title="Download"
@@ -286,7 +286,7 @@ function ScreenshotCard({ screenshot }: { screenshot: unknown }) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            actions.copyToClipboard(screenshot);
+            actions.copyToClipboard(screenshot as any);
           }}
           className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
           title="Copy to clipboard"
@@ -296,7 +296,7 @@ function ScreenshotCard({ screenshot }: { screenshot: unknown }) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            window.open(screenshot.url, '_blank');
+            window.open((screenshot as any).url, '_blank');
           }}
           className="p-2 bg-white/20 hover:bg-white/30 rounded-full transition-colors"
           title="Open URL"
@@ -308,15 +308,15 @@ function ScreenshotCard({ screenshot }: { screenshot: unknown }) {
       {/* Info */}
       <div className="p-3">
         <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate mb-1">
-          {screenshot.name}
+          {(screenshot as any).name}
         </h4>
         <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-          <span>{getViewportString(screenshot.viewport.width, screenshot.viewport.height)}</span>
+          <span>{getViewportString((screenshot as any).viewport.width, (screenshot as any).viewport.height)}</span>
           <span>•</span>
-          <span>{screenshot.browserEngine}</span>
+          <span>{(screenshot as any).browserEngine}</span>
         </div>
         <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-          {formatTimestamp(screenshot.timestamp)}
+          {formatTimestamp((screenshot as any).timestamp)}
         </div>
       </div>
     </div>
@@ -329,31 +329,31 @@ function ScreenshotListItem({ screenshot }: { screenshot: unknown }) {
   return (
     <div 
       className="flex items-center gap-4 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-sm transition-shadow cursor-pointer"
-      onClick={() => actions.selectScreenshot(screenshot.id)}
+      onClick={() => actions.selectScreenshot((screenshot as any).id)}
     >
       <div className="w-16 h-10 bg-gray-100 dark:bg-gray-700 rounded overflow-hidden flex-shrink-0">
         <img 
-          src={screenshot.dataUrl} 
-          alt={screenshot.name}
+          src={(screenshot as any).dataUrl} 
+          alt={(screenshot as any).name}
           className="w-full h-full object-cover"
         />
       </div>
       
       <div className="flex-1 min-w-0">
         <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">
-          {screenshot.name}
+          {(screenshot as any).name}
         </h4>
         <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-          {screenshot.url}
+          {(screenshot as any).url}
         </p>
         <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500 mt-1">
-          <span>{getViewportString(screenshot.viewport.width, screenshot.viewport.height)}</span>
+          <span>{getViewportString((screenshot as any).viewport.width, (screenshot as any).viewport.height)}</span>
           <span>•</span>
-          <span>{screenshot.browserEngine}</span>
+          <span>{(screenshot as any).browserEngine}</span>
           <span>•</span>
-          <span>{formatFileSize(screenshot.metadata.fileSize)}</span>
+          <span>{formatFileSize((screenshot as any).metadata.fileSize)}</span>
           <span>•</span>
-          <span>{formatTimestamp(screenshot.timestamp)}</span>
+          <span>{formatTimestamp((screenshot as any).timestamp)}</span>
         </div>
       </div>
 
@@ -361,7 +361,7 @@ function ScreenshotListItem({ screenshot }: { screenshot: unknown }) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            actions.downloadScreenshot(screenshot);
+            actions.downloadScreenshot(screenshot as any);
           }}
           className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           title="Download"
@@ -371,7 +371,7 @@ function ScreenshotListItem({ screenshot }: { screenshot: unknown }) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            actions.copyToClipboard(screenshot);
+            actions.copyToClipboard(screenshot as any);
           }}
           className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           title="Copy to clipboard"
@@ -381,7 +381,7 @@ function ScreenshotListItem({ screenshot }: { screenshot: unknown }) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            actions.removeScreenshot(screenshot.id);
+            actions.removeScreenshot((screenshot as any).id);
           }}
           className="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
           title="Delete"
@@ -397,38 +397,38 @@ function ScreenshotDetails({ screenshot }: { screenshot: unknown }) {
   return (
     <div className="space-y-3">
       <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-        {screenshot.name}
+        {(screenshot as any).name}
       </h3>
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
         <div>
           <span className="text-gray-500 dark:text-gray-400">URL:</span>
-          <p className="text-gray-900 dark:text-white truncate">{screenshot.url}</p>
+          <p className="text-gray-900 dark:text-white truncate">{(screenshot as any).url}</p>
         </div>
         <div>
           <span className="text-gray-500 dark:text-gray-400">Viewport:</span>
           <p className="text-gray-900 dark:text-white">
-            {getViewportString(screenshot.viewport.width, screenshot.viewport.height)}
+            {getViewportString((screenshot as any).viewport.width, (screenshot as any).viewport.height)}
           </p>
         </div>
         <div>
           <span className="text-gray-500 dark:text-gray-400">Browser:</span>
-          <p className="text-gray-900 dark:text-white capitalize">{screenshot.browserEngine}</p>
+          <p className="text-gray-900 dark:text-white capitalize">{(screenshot as any).browserEngine}</p>
         </div>
         <div>
           <span className="text-gray-500 dark:text-gray-400">Size:</span>
           <p className="text-gray-900 dark:text-white">
-            {formatFileSize(screenshot.metadata.fileSize)}
+            {formatFileSize((screenshot as any).metadata.fileSize)}
           </p>
         </div>
       </div>
       
       <div className="text-xs text-gray-500 dark:text-gray-400">
-        Captured: {formatTimestamp(screenshot.timestamp)}
-        {screenshot.selector && (
+        Captured: {formatTimestamp((screenshot as any).timestamp)}
+        {(screenshot as any).selector && (
           <>
             {' • '}
-            Selector: <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">{screenshot.selector}</code>
+            Selector: <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">{(screenshot as any).selector}</code>
           </>
         )}
       </div>

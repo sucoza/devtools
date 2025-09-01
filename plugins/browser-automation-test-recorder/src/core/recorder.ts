@@ -7,6 +7,7 @@ import type {
   RecordedEvent,
   EventType as _EventType,
   EventData as _EventData,
+  EventData,
   EventContext,
   RecordedEventTarget as _RecordedEventTarget,
   RecordingOptions,
@@ -20,6 +21,8 @@ import type {
   ConsoleInfo,
   ReliabilityMetrics,
   ElementPathNode,
+  EventMetadata,
+  ScreenshotInfo,
 } from '../types';
 import { SelectorEngine } from './selector-engine';
 import type { BrowserAutomationEventClient } from './devtools-client';
@@ -240,11 +243,11 @@ export class EventRecorder {
     // Add event listeners
     for (const { type, useCapture = false, element = document } of eventTypes) {
       // Skip ignored events
-      if (this.options.ignoredEvents.includes(type as EventType as _EventType)) {
+      if (this.options.ignoredEvents.includes(type as _EventType)) {
         continue;
       }
 
-      const listener = this.createEventListener(type as EventType as _EventType);
+      const listener = this.createEventListener(type as _EventType);
       element.addEventListener(type, listener, useCapture);
       
       // Store for cleanup
@@ -296,7 +299,7 @@ export class EventRecorder {
   /**
    * Create event listener for specific event type
    */
-  private createEventListener(eventType: EventType): EventListenerOrEventListenerObject {
+  private createEventListener(eventType: _EventType): EventListenerOrEventListenerObject {
     return (event: Event) => {
       if (!this._isRecording || this._isPaused) return;
 
@@ -313,15 +316,15 @@ export class EventRecorder {
   /**
    * Check if event should be debounced
    */
-  private shouldDebounceEvent(eventType: EventType, _event: Event): boolean {
-    const debounceTypes: EventType[] = ['mousemove', 'scroll', 'resize', 'input'];
+  private shouldDebounceEvent(eventType: _EventType, _event: Event): boolean {
+    const debounceTypes: _EventType[] = ['mousemove', 'scroll', 'resize', 'input'];
     return debounceTypes.includes(eventType);
   }
 
   /**
    * Debounce rapid events to avoid overwhelming the system
    */
-  private debounceEvent(eventType: EventType, event: Event): void {
+  private debounceEvent(eventType: _EventType, event: Event): void {
     const key = `${eventType}_${(event.target as Element)?.tagName || 'window'}`;
     
     // Clear existing timer
@@ -353,7 +356,7 @@ export class EventRecorder {
   /**
    * Process and record DOM event
    */
-  private async processEvent(eventType: EventType, event: Event): Promise<void> {
+  private async processEvent(eventType: _EventType, event: Event): Promise<void> {
     try {
       // Generate unique event ID
       const eventId = `evt_${Date.now()}_${this.sequenceNumber++}`;
@@ -410,7 +413,7 @@ export class EventRecorder {
   /**
    * Extract comprehensive target information from event
    */
-  private async extractEventTarget(event: Event): Promise<RecordedEventTarget> {
+  private async extractEventTarget(event: Event): Promise<_RecordedEventTarget> {
     const element = event.target as Element;
     if (!element || !element.tagName) {
       throw new Error('Invalid event target');
@@ -502,7 +505,7 @@ export class EventRecorder {
   /**
    * Extract event-specific data based on event type
    */
-  private extractEventData(eventType: EventType, event: Event): EventData {
+  private extractEventData(eventType: _EventType, event: Event): _EventData {
     switch (eventType) {
       case 'click':
       case 'dblclick':
@@ -544,7 +547,7 @@ export class EventRecorder {
   /**
    * Extract mouse event data
    */
-  private extractMouseEventData(event: MouseEvent): MouseEventData {
+  private extractMouseEventData(event: MouseEvent): _MouseEventData {
     return {
       type: 'mouse',
       button: event.button,
@@ -566,7 +569,7 @@ export class EventRecorder {
   /**
    * Extract keyboard event data
    */
-  private extractKeyboardEventData(event: KeyboardEvent): KeyboardEventData {
+  private extractKeyboardEventData(event: KeyboardEvent): _KeyboardEventData {
     const target = event.target as HTMLInputElement;
     
     return {
@@ -625,7 +628,7 @@ export class EventRecorder {
   /**
    * Extract scroll event data
    */
-  private extractScrollEventData(event: Event): ScrollEventData {
+  private extractScrollEventData(event: Event): _ScrollEventData {
     const target = event.target;
     const isWindow = target === window || target === document;
     
@@ -793,7 +796,7 @@ export class EventRecorder {
   /**
    * Calculate reliability metrics for recorded event
    */
-  private async calculateReliabilityMetrics(target: RecordedEventTarget, event: Event): Promise<ReliabilityMetrics> {
+  private async calculateReliabilityMetrics(target: _RecordedEventTarget, event: Event): Promise<ReliabilityMetrics> {
     const element = event.target as Element;
     
     // Calculate selector reliability score
@@ -865,7 +868,7 @@ export class EventRecorder {
   /**
    * Capture screenshot of current page or element
    */
-  private async captureScreenshot(target: RecordedEventTarget): Promise<unknown> {
+  private async captureScreenshot(target: _RecordedEventTarget): Promise<ScreenshotInfo> {
     try {
       // This would integrate with Chrome DevTools Protocol
       // For now, return placeholder
@@ -1037,12 +1040,12 @@ export class EventRecorder {
     if (!this._isRecording || this._isPaused) return;
     
     // Check if event type should be ignored
-    if (this.options.ignoredEvents.includes(event.type as EventType)) {
+    if (this.options.ignoredEvents.includes(event.type as _EventType)) {
       return;
     }
     
     // Apply debouncing for rapid events
-    const eventType = event.type as EventType;
+    const eventType = event.type as _EventType;
     if (this.shouldDebounceEvent(eventType, event)) {
       this.debounceEvent(eventType, event);
       return;
@@ -1060,7 +1063,7 @@ export class EventRecorder {
    * Extract event data from Event (overload for Event parameter)
    */
   private extractEventDataFromEvent(event: Event): EventData {
-    return this.extractEventData(event.type as EventType, event);
+    return this.extractEventData(event.type as _EventType, event);
   }
 
   // Method to create event data from DOM event
@@ -1105,7 +1108,7 @@ export class EventRecorder {
         },
         data: this.extractEventDataFromEvent(event),
         context: this.createEventContext(),
-        metadata: await this.createEventMetadata({ selector: selector }),
+        metadata: await this.createEventMetadata(),
       };
     } catch (error) {
       console.warn('Failed to create event data:', error);
@@ -1167,8 +1170,8 @@ export class EventRecorder {
     return context;
   }
 
-  private async createEventMetadata(target?: any): Promise<any> {
-    const metadata = {
+  private async createEventMetadata(target?: _RecordedEventTarget): Promise<EventMetadata> {
+    const metadata: EventMetadata = {
       sessionId: this.sessionId,
       recordingMode: 'standard',
       reliability: {
@@ -1187,7 +1190,11 @@ export class EventRecorder {
 
     // Add screenshot if enabled and target provided
     if (this.options.captureScreenshots && target) {
-      metadata.screenshot = await this.captureScreenshot(target);
+      try {
+        metadata.screenshot = await this.captureScreenshot(target);
+      } catch (error) {
+        console.warn('Failed to capture screenshot:', error);
+      }
     }
 
     return metadata;
