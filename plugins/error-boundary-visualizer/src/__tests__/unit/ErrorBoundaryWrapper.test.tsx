@@ -475,7 +475,8 @@ describe('ErrorBoundaryWrapper', () => {
       const originalConsoleError = console.error;
       console.error = vi.fn();
 
-      const { rerender } = render(
+      // Render first boundary
+      const { unmount } = render(
         <ErrorBoundaryWrapper boundaryId="boundary-1">
           <ThrowError shouldThrow={true} />
         </ErrorBoundaryWrapper>
@@ -487,10 +488,14 @@ describe('ErrorBoundaryWrapper', () => {
         })
       );
 
-      // Clear mocks and render a different boundary
-      vi.clearAllMocks();
+      // Unmount first boundary
+      unmount();
 
-      rerender(
+      // Clear the registerErrorBoundary calls to test new boundary registration
+      mockStore.registerErrorBoundary.mockClear();
+
+      // Render second boundary
+      render(
         <ErrorBoundaryWrapper boundaryId="boundary-2">
           <div>No error</div>
         </ErrorBoundaryWrapper>

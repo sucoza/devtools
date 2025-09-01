@@ -348,24 +348,14 @@ describe('ScreenshotEngine', () => {
     });
 
     it('should handle connection test failure', async () => {
-      // Mock MCP tools unavailable
-      const originalWindow = global.window;
-      Object.defineProperty(global, 'window', {
-        writable: true,
-        value: {},
-      });
-
-      const newEngine = new ScreenshotEngine();
-      const connected = await newEngine.testConnection();
+      // Mock evaluate to throw an error to simulate connection failure
+      mockMCPTools.browser_evaluate.mockRejectedValueOnce(new Error('Connection failed'));
+      
+      const connected = await screenshotEngine.testConnection();
       expect(connected).toBe(false);
       
-      await newEngine.cleanup();
-      
-      // Restore original window
-      Object.defineProperty(global, 'window', {
-        writable: true,
-        value: originalWindow,
-      });
+      // Restore mock for other tests
+      mockMCPTools.browser_evaluate.mockResolvedValue(undefined);
     });
   });
 
@@ -490,6 +480,9 @@ describe('ScreenshotEngine', () => {
 
   describe('Retry Logic', () => {
     it('should retry failed operations', async () => {
+      // Ensure retry is configured properly
+      screenshotEngine.configureRetry({ maxRetries: 2, retryDelay: 10 });
+      
       let attemptCount = 0;
       mockMCPTools.browser_navigate.mockImplementation(() => {
         attemptCount++;
@@ -507,13 +500,17 @@ describe('ScreenshotEngine', () => {
       const result = await screenshotEngine.captureScreenshot(request);
       
       expect(result.success).toBe(true);
-      expect(attemptCount).toBe(3); // Should have retried twice
+      expect(attemptCount).toBe(3); // Should have retried twice (3 total attempts)
       
-      // Reset mock for other tests
+      // Reset mock and retry config for other tests
       mockMCPTools.browser_navigate.mockResolvedValue(undefined);
+      screenshotEngine.configureRetry({ maxRetries: 3, retryDelay: 1000 });
     });
 
     it('should eventually fail after max retries', async () => {
+      // Ensure retry is configured properly
+      screenshotEngine.configureRetry({ maxRetries: 3, retryDelay: 10 });
+      
       // Mock persistent failure
       let callCount = 0;
       mockMCPTools.browser_navigate.mockImplementation(() => {
@@ -531,8 +528,9 @@ describe('ScreenshotEngine', () => {
       expect(result.success).toBe(false);
       expect(callCount).toBe(4); // Initial + 3 retries
       
-      // Reset mock for other tests
+      // Reset mock and retry config for other tests
       mockMCPTools.browser_navigate.mockResolvedValue(undefined);
+      screenshotEngine.configureRetry({ maxRetries: 3, retryDelay: 1000 });
     });
   });
 });

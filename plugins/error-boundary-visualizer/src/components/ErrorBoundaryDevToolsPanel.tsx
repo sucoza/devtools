@@ -32,7 +32,7 @@ export const ErrorBoundaryDevToolsPanel: React.FC = () => {
   const dragRef = useRef<{ x: number; y: number } | null>(null)
 
   const theme = config.theme === 'auto' 
-    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    ? (window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ? 'dark' : 'light')
     : config.theme
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -216,6 +216,7 @@ export const ErrorBoundaryDevToolsPanel: React.FC = () => {
           </div>
           <div style={{ display: 'flex', gap: '4px' }}>
             <button
+              type="button"
               style={buttonStyle}
               onClick={() => setIsMinimized(!isMinimized)}
               title={isMinimized ? 'Restore' : 'Minimize'}
@@ -223,8 +224,16 @@ export const ErrorBoundaryDevToolsPanel: React.FC = () => {
               {isMinimized ? '□' : '_'}
             </button>
             <button
+              type="button"
               style={buttonStyle}
-              onClick={() => updateConfig({ enabled: false })}
+              onClick={() => {
+                try {
+                  updateConfig({ enabled: false });
+                } catch (error) {
+                  // Handle store errors gracefully
+                  console.error('Error closing DevTools panel:', error);
+                }
+              }}
               title="Close"
             >
               ×

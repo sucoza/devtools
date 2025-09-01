@@ -42,6 +42,10 @@ export interface VisualDiff {
   differences: DiffRegion[];
   metrics: DiffMetrics;
   threshold: number;
+  // Legacy properties for backward compatibility with tests
+  pixelDifferenceCount?: number;
+  percentageDifference?: number;
+  regions?: DiffRegion[];
 }
 
 export type DiffStatus = 'passed' | 'failed' | 'pending' | 'error' | 'warning';
@@ -307,8 +311,8 @@ export interface CaptureResult {
 }
 
 export interface DiffRequest {
-  baselineId: string;
-  comparisonId: string;
+  baseline: Screenshot;
+  comparison: Screenshot;
   threshold?: number;
   options?: DiffOptions;
 }

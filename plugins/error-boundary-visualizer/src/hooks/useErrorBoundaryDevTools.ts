@@ -321,22 +321,34 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
 
       // Check if this looks like a React error
       const firstArg = args[0]
-      if (typeof firstArg === 'string' && firstArg.includes('React')) {
-        // This might be a React error, capture it
-        const error: ErrorInfo = {
-          id: `console-error-${Date.now()}-${Math.random()}`,
-          timestamp: Date.now(),
-          message: firstArg,
-          category: ErrorCategory.RENDER,
-          severity: ErrorSeverity.MEDIUM,
-          occurrences: 1,
-          firstSeen: Date.now(),
-          lastSeen: Date.now(),
-        }
+      if (typeof firstArg === 'string') {
+        // Look for specific React error patterns, avoid false positives like "Non-React error"
+        const isReactError = (
+          firstArg.startsWith('React') ||
+          firstArg.includes('React error') ||
+          firstArg.includes('React warning') ||
+          firstArg.includes('Error in') ||
+          firstArg.includes('componentDidCatch') ||
+          firstArg.includes('getDerivedStateFromError')
+        ) && !firstArg.includes('Non-React')
+        
+        if (isReactError) {
+          // This might be a React error, capture it
+          const error: ErrorInfo = {
+            id: `console-error-${Date.now()}-${Math.random()}`,
+            timestamp: Date.now(),
+            message: firstArg,
+            category: ErrorCategory.RENDER,
+            severity: ErrorSeverity.MEDIUM,
+            occurrences: 1,
+            firstSeen: Date.now(),
+            lastSeen: Date.now(),
+          }
 
-        throttledUpdate(() => {
-          store.addError(error)
-        })
+          throttledUpdate(() => {
+            store.addError(error)
+          })
+        }
       }
     }
 

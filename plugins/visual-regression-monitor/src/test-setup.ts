@@ -5,6 +5,30 @@ import { vi } from 'vitest';
 // React 19 requires globalThis.IS_REACT_ACT_ENVIRONMENT to be set
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
+// Mock ImageData constructor
+global.ImageData = class ImageData {
+  data: Uint8ClampedArray;
+  width: number;
+  height: number;
+  colorSpace: PredefinedColorSpace = 'srgb';
+
+  constructor(sw: number, sh: number);
+  constructor(data: Uint8ClampedArray, sw: number, sh?: number);
+  constructor(dataOrWidth: Uint8ClampedArray | number, swOrHeight: number, sh?: number) {
+    if (typeof dataOrWidth === 'number') {
+      // constructor(sw: number, sh: number)
+      this.width = dataOrWidth;
+      this.height = swOrHeight;
+      this.data = new Uint8ClampedArray(dataOrWidth * swOrHeight * 4);
+    } else {
+      // constructor(data: Uint8ClampedArray, sw: number, sh?: number)
+      this.data = dataOrWidth;
+      this.width = swOrHeight;
+      this.height = sh || (dataOrWidth.length / 4 / swOrHeight);
+    }
+  }
+} as unknown as typeof ImageData;
+
 // Mock Canvas and ImageData APIs
 global.HTMLCanvasElement.prototype.getContext = vi.fn(() => ({
   fillRect: vi.fn(),

@@ -4,14 +4,14 @@ import { useScreenshots } from '../useScreenshots';
 
 // Mock the devtools client
 const mockDevToolsClient = {
-  subscribe: vi.fn(),
+  subscribe: vi.fn().mockReturnValue(() => {}), // Return unsubscribe function
   getState: vi.fn(),
   addScreenshot: vi.fn(),
   selectScreenshot: vi.fn(),
   removeScreenshot: vi.fn(),
 };
 
-vi.mock('../core/devtools-client', () => ({
+vi.mock('../../core/devtools-client', () => ({
   createVisualRegressionDevToolsClient: () => mockDevToolsClient,
 }));
 
@@ -21,13 +21,19 @@ const mockScreenshotEngine = {
   captureResponsiveScreenshots: vi.fn(),
 };
 
-vi.mock('../core/screenshot-engine', () => ({
+vi.mock('../../core/screenshot-engine', () => ({
   getScreenshotEngine: () => mockScreenshotEngine,
 }));
 
 // Mock useSyncExternalStore
 vi.mock('use-sync-external-store/shim', () => ({
-  useSyncExternalStore: (subscribe: any, getState: any) => getState(),
+  useSyncExternalStore: (subscribe: any, getState: any, getServerSnapshot?: any) => {
+    // Call subscribe to ensure it's tested
+    const unsubscribe = subscribe(() => {});
+    // Cleanup immediately in test environment
+    unsubscribe();
+    return getState();
+  },
 }));
 
 describe('useScreenshots', () => {

@@ -106,6 +106,11 @@ describe('VisualRegressionStore', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // Reset storage engine mocks to return empty state
+    mockStorageEngine.loadScreenshots.mockReturnValue({});
+    mockStorageEngine.loadVisualDiffs.mockReturnValue({});
+    mockStorageEngine.loadTestSuites.mockReturnValue({});
+    mockStorageEngine.loadSettings.mockReturnValue({});
     store = new VisualRegressionStore();
     mockListener = vi.fn();
   });

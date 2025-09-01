@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
+import { PlaywrightGenerator } from './generators/playwright-generator';
 import type {
   BrowserAutomationState,
   BrowserAutomationAction,
@@ -815,19 +816,29 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
       const state = get();
       const events = state.events;
 
-      // This would integrate with actual test generation logic
+      // Use the appropriate generator based on framework
+      let generator;
+      if (options.framework === 'playwright') {
+        generator = new PlaywrightGenerator();
+      } else {
+        // Default to Playwright for now
+        generator = new PlaywrightGenerator();
+      }
+
+      // Generate the actual test code
+      const generatedTestFile = await generator.generateTestCode(events, options);
+
       const generatedTest: GeneratedTest = {
         id: `test_${Date.now()}`,
-        name: `Generated Test ${new Date().toLocaleTimeString()}`,
+        name: options.testName || `Generated Test ${new Date().toLocaleTimeString()}`,
         format: options.format,
         framework: options.framework,
-        code: `// Generated test code would go here
-// Based on ${events.length} recorded events`,
+        code: generatedTestFile.code,
         metadata: {
           sessionId: state.recording.activeSession?.id || 'unknown',
-          eventCount: events.length,
+          eventCount: generatedTestFile.metadata.eventCount,
           duration: state.recording.duration,
-          url: window.location.href,
+          url: generatedTestFile.metadata.url || window.location.href,
           viewport: {
             width: window.innerWidth,
             height: window.innerHeight,
@@ -835,8 +846,8 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
             isLandscape: window.innerWidth > window.innerHeight,
             isMobile: window.innerWidth < 768,
           },
-          assertions: 0,
-          selectors: events.length,
+          assertions: generatedTestFile.metadata.assertions || 0,
+          selectors: generatedTestFile.metadata.selectors,
         },
         createdAt: Date.now(),
       };

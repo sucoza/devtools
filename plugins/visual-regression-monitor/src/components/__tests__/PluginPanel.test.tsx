@@ -6,13 +6,13 @@ import type { DevToolsState } from '../../types';
 
 // Mock the devtools client
 const mockDevToolsClient = {
-  subscribe: vi.fn(),
+  subscribe: vi.fn().mockReturnValue(() => {}), // Return unsubscribe function
   getState: vi.fn(),
   connectPlaywright: vi.fn(),
   selectTab: vi.fn(),
 };
 
-vi.mock('../core/devtools-client', () => ({
+vi.mock('../../core/devtools-client', () => ({
   createVisualRegressionDevToolsClient: () => mockDevToolsClient,
 }));
 // Mock child components
@@ -38,7 +38,13 @@ vi.mock('../Settings', () => ({
 
 // Mock useSyncExternalStore
 vi.mock('use-sync-external-store/shim', () => ({
-  useSyncExternalStore: (subscribe: any, getState: any) => getState(),
+  useSyncExternalStore: (subscribe: any, getState: any, getServerSnapshot?: any) => {
+    // Call subscribe to ensure it's tested
+    const unsubscribe = subscribe(() => {});
+    // Cleanup immediately in test environment
+    unsubscribe();
+    return getState();
+  },
 }));
 
 // Helper function to create mock state

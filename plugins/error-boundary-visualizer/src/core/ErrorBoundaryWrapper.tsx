@@ -45,12 +45,17 @@ function categorizeError(error: Error): ErrorCategory {
 }
 
 function assessSeverity(error: Error, errorInfo: ErrorInfo): ErrorSeverity {
+  const message = error.message.toLowerCase()
+  
+  // Check for critical/fatal keywords first - these should always be CRITICAL
+  if (message.includes('critical') || message.includes('fatal')) {
+    return ErrorSeverity.CRITICAL
+  }
+  
+  // Then check component stack depth for other errors
   const componentStack = errorInfo.componentStack || ''
   const depth = componentStack.split('\n').length
   
-  if (error.message.includes('critical') || error.message.includes('fatal')) {
-    return ErrorSeverity.CRITICAL
-  }
   if (depth < 3) {
     return ErrorSeverity.HIGH
   }

@@ -452,7 +452,7 @@ describe('DevTools Store', () => {
       expect(generatedTest).toBeDefined();
       expect(generatedTest.format).toBe('typescript');
       expect(generatedTest.framework).toBe('playwright');
-      expect(generatedTest.code).toContain('// Generated test code would go here');
+      expect(generatedTest.code).toContain("import { test, expect } from '@playwright/test'");
       expect(generatedTest.metadata.eventCount).toBe(2);
       expect(result.current.stats.generatedTests).toBe(1);
     });

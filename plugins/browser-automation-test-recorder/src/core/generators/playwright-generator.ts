@@ -221,6 +221,9 @@ export class PlaywrightGenerator extends BaseGenerator {
         eventCount: safeEvents.length,
         framework: 'playwright',
         language: this.options.language,
+        selectors: safeEvents.length, // Count of selectors used (one per event)
+        assertions: 0, // Would need to count actual assertions generated
+        url: '', // Would be populated from navigation events if present
         ...(warnings.length > 0 && { warnings }),
       }
     };

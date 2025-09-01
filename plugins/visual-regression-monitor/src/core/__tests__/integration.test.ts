@@ -338,6 +338,9 @@ describe('Integration Tests', () => {
 
   describe('Error Recovery and Resilience', () => {
     it('should handle mixed success/failure scenarios', async () => {
+      // Disable retries to ensure predictable failure pattern
+      screenshotEngine.configureRetry({ maxRetries: 0, retryDelay: 10 });
+      
       // Mock alternating success/failure pattern
       let callCount = 0;
       mockMCPTools.browser_take_screenshot.mockImplementation(() => {
@@ -368,6 +371,9 @@ describe('Integration Tests', () => {
       expect((results[2] as any).value.success).toBe(true);
       expect(results[3].status).toBe('fulfilled');
       expect((results[3] as any).value.success).toBe(false);
+      
+      // Reset retry configuration
+      screenshotEngine.configureRetry({ maxRetries: 3, retryDelay: 1000 });
     });
 
     it('should handle diff algorithm fallbacks', async () => {
@@ -391,9 +397,8 @@ describe('Integration Tests', () => {
 
       // Force Web Worker failure by creating new instance without workers
       const originalWorker = global.Worker;
-      global.Worker = vi.fn().mockImplementation(() => {
-        throw new Error('Workers unavailable');
-      });
+      // @ts-expect-error Mock Worker constructor
+      global.Worker = undefined;
 
       const fallbackDiffAlgorithm = new DiffAlgorithm();
       

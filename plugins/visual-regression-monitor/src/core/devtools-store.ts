@@ -56,7 +56,8 @@ class VisualRegressionStore {
    */
   addScreenshot(screenshot: Screenshot): void {
     this.dispatch({ type: 'screenshot/add', payload: screenshot });
-    this.addActivity({
+    // Add activity without triggering another stats update
+    this.addActivityWithoutDispatch({
       id: generateId(),
       type: 'screenshot',
       title: `Screenshot captured: ${screenshot.name}`,
@@ -92,7 +93,7 @@ class VisualRegressionStore {
    */
   setBaseline(screenshotId: string, suiteId: string): void {
     this.dispatch({ type: 'screenshot/set_baseline', payload: { screenshotId, suiteId } });
-    this.addActivity({
+    this.addActivityWithoutDispatch({
       id: generateId(),
       type: 'baseline_updated',
       title: 'Baseline updated',
@@ -107,7 +108,7 @@ class VisualRegressionStore {
    */
   addVisualDiff(diff: VisualDiff): void {
     this.dispatch({ type: 'diff/add', payload: diff });
-    this.addActivity({
+    this.addActivityWithoutDispatch({
       id: generateId(),
       type: 'diff',
       title: `Visual comparison ${diff.status}`,
@@ -143,7 +144,7 @@ class VisualRegressionStore {
    */
   addTestSuite(suite: TestSuite): void {
     this.dispatch({ type: 'suite/add', payload: suite });
-    this.addActivity({
+    this.addActivityWithoutDispatch({
       id: generateId(),
       type: 'suite_created',
       title: `Test suite created: ${suite.name}`,
@@ -632,6 +633,22 @@ class VisualRegressionStore {
    */
   private addActivity(activity: ActivityItem): void {
     this.dispatch({ type: 'activity/add', payload: activity });
+  }
+
+  /**
+   * Add activity item without triggering dispatch (to avoid double state updates)
+   */
+  private addActivityWithoutDispatch(activity: ActivityItem): void {
+    const newActivity = [activity, ...this.state.stats.recentActivity].slice(0, 50);
+    this.state = {
+      ...this.state,
+      stats: {
+        ...this.state.stats,
+        recentActivity: newActivity,
+      },
+    };
+    this.notifyListeners();
+    this.persistState();
   }
 
   /**
