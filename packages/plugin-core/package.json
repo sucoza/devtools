@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/plugin-core",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Core infrastructure for TanStack DevTools plugins",
   "type": "module",
   "main": "dist/index.js",
