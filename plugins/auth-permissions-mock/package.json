@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/auth-permissions-mock-devtools-plugin",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "DevTools plugin for mocking authentication states and permissions testing",
   "type": "module",
   "main": "dist/index.js",

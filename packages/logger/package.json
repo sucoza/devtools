@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/logger",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "Powerful logging library with console interception, metrics, and export capabilities",
   "type": "module",
   "main": "dist/index.js",

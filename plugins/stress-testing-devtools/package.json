@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/stress-testing-devtools-plugin",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "TanStack DevTools plugin for API stress testing and performance monitoring",
   "type": "module",
   "main": "dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/devtools-common",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "Common types and utilities for TanStack DevTools ecosystem",
   "type": "module",
   "main": "dist/index.js",

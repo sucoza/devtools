@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/feature-flag-manager-devtools-plugin",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "description": "DevTools plugin for feature flag management and A/B testing with multiple provider support",
   "type": "module",
   "main": "dist/index.js",
