@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/security-audit-panel-devtools-plugin",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "DevTools plugin for security auditing, vulnerability scanning, and best practice validation",
   "type": "module",
   "main": "dist/index.js",

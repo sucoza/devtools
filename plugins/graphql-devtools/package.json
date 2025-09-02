@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/graphql-devtools-plugin",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "DevTools plugin for GraphQL query analysis, debugging, and schema introspection",
   "type": "module",
   "main": "dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/bundle-impact-analyzer-devtools-plugin",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "DevTools plugin for analyzing bundle size impact and performance implications",
   "type": "module",
   "main": "dist/index.js",

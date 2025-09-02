@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/browser-automation-test-recorder-devtools-plugin",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "DevTools plugin for recording browser interactions and generating test cases with smart selector generation and playback capabilities",
   "type": "module",
   "main": "dist/index.js",
