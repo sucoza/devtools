@@ -169,15 +169,27 @@ jobs:
         ]
 
     steps:
+      - name: Check if package should be published
+        id: check
+        run: |
+          if [[ "${{ needs.validate.outputs.packages }}" == *"${{ matrix.package.name }}"* ]]; then
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Checkout code
+        if: steps.check.outputs.should_publish == 'true' 
         uses: actions/checkout@v5
 
       - name: Install pnpm
+        if: steps.check.outputs.should_publish == 'true' 
         uses: pnpm/action-setup@v4
         with:
           run_install: false
 
       - name: Setup Node.js
+        if: steps.check.outputs.should_publish == 'true' 
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -185,11 +197,13 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
 
       - name: Get pnpm store directory
+        if: steps.check.outputs.should_publish == 'true' 
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
       - name: Setup pnpm cache
+        if: steps.check.outputs.should_publish == 'true' 
         uses: actions/cache@v4
         with:
           path: ${{ env.STORE_PATH }}
@@ -201,6 +215,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build dependencies
+        if: steps.check.outputs.should_publish == 'true' 
         run: |
           # Build in dependency order
           if [ "${{ matrix.package.name }}" != "devtools-common" ]; then
@@ -215,15 +230,6 @@ jobs:
 
       - name: Build package
         run: pnpm --filter @sucoza/${{ matrix.package.name }} build
-
-      - name: Check if package should be published
-        id: check
-        run: |
-          if [[ "${{ needs.validate.outputs.packages }}" == *"${{ matrix.package.name }}"* ]]; then
-            echo "should_publish=true" >> $GITHUB_OUTPUT
-          else
-            echo "should_publish=false" >> $GITHUB_OUTPUT
-          fi
 
       - name: Version package
         if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true' && needs.validate.outputs.should_bump == 'true'
@@ -278,47 +284,6 @@ jobs:
         ]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build shared packages
-        run: |
-          pnpm --filter @sucoza/devtools-common build
-          pnpm --filter @sucoza/plugin-core build
-          pnpm --filter @sucoza/shared-components build
-          pnpm --filter @sucoza/devtools-importer build
-
-      - name: Build plugin
-        run: pnpm --filter "@sucoza/${{ matrix.plugin }}-plugin" build
-
       - name: Check if plugin should be published
         id: check
         run: |
@@ -327,6 +292,55 @@ jobs:
           else
             echo "should_publish=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: Checkout code
+        if: steps.check.outputs.should_publish == 'true' 
+        uses: actions/checkout@v5
+
+      - name: Install pnpm
+        if: steps.check.outputs.should_publish == 'true' 
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        if: steps.check.outputs.should_publish == 'true' 
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Get pnpm store directory
+        if: steps.check.outputs.should_publish == 'true' 
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        if: steps.check.outputs.should_publish == 'true' 
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        if: steps.check.outputs.should_publish == 'true' 
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shared packages
+        if: steps.check.outputs.should_publish == 'true' 
+        run: |
+          pnpm --filter @sucoza/devtools-common build
+          pnpm --filter @sucoza/plugin-core build
+          pnpm --filter @sucoza/shared-components build
+          pnpm --filter @sucoza/devtools-importer build
+
+      - name: Build plugin
+        if: steps.check.outputs.should_publish == 'true' 
+        run: pnpm --filter "@sucoza/${{ matrix.plugin }}-plugin" build
 
       - name: Version plugin
         if: steps.check.outputs.should_publish == 'true' && github.event.inputs.dry_run != 'true' && needs.validate.outputs.should_bump == 'true'
