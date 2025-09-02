@@ -34,6 +34,11 @@ on:
         default: false
         type: boolean
 
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
 concurrency:
   group: publish-${{ github.ref }}
   cancel-in-progress: false
@@ -84,7 +89,7 @@ jobs:
         id: packages
         run: |
           if [ "${{ github.event.inputs.packages }}" = "all" ] || [ -z "${{ github.event.inputs.packages }}" ]; then
-            PACKAGES="devtools-common,plugin-core,shared-components,devtools-importer,accessibility-devtools,api-mock-interceptor,auth-permissions-mock,browser-automation-test-recorder,bundle-impact-analyzer,design-system-inspector,error-boundary-visualizer,feature-flag-manager,form-state-inspector,graphql-devtools,i18n-devtools,logger-devtools,memory-performance-profiler,render-waste-detector,router-devtools,security-audit-panel,stress-testing-devtools,visual-regression-monitor,websocket-signalr-devtools,zustand-devtools"
+            PACKAGES="devtools-common,plugin-core,shared-components,devtools-importer,feature-flags,logger,accessibility-devtools,api-mock-interceptor,auth-permissions-mock,browser-automation-test-recorder,bundle-impact-analyzer,design-system-inspector,error-boundary-visualizer,feature-flag-manager,form-state-inspector,graphql-devtools,i18n-devtools,logger-devtools,memory-performance-profiler,render-waste-detector,router-devtools,security-audit-panel,stress-testing-devtools,visual-regression-monitor,websocket-signalr-devtools,zustand-devtools"
           else
             PACKAGES="${{ github.event.inputs.packages }}"
           fi
@@ -125,7 +130,7 @@ jobs:
     name: Publish Shared Packages
     runs-on: ubuntu-latest
     needs: validate
-    if: contains(needs.validate.outputs.packages, 'devtools-common') || contains(needs.validate.outputs.packages, 'plugin-core') || contains(needs.validate.outputs.packages, 'shared-components') || contains(needs.validate.outputs.packages, 'devtools-importer')
+    if: contains(needs.validate.outputs.packages, 'devtools-common') || contains(needs.validate.outputs.packages, 'plugin-core') || contains(needs.validate.outputs.packages, 'shared-components') || contains(needs.validate.outputs.packages, 'devtools-importer') || contains(needs.validate.outputs.packages, 'feature-flags') || contains(needs.validate.outputs.packages, 'logger')
     strategy:
       fail-fast: false
       matrix:
@@ -133,7 +138,9 @@ jobs:
           { name: 'devtools-common', path: 'packages/devtools-common' },
           { name: 'plugin-core', path: 'packages/plugin-core' },
           { name: 'shared-components', path: 'packages/shared-components' },
-          { name: 'devtools-importer', path: 'packages/devtools-importer' }
+          { name: 'devtools-importer', path: 'packages/devtools-importer' },
+          { name: 'feature-flags', path: 'packages/feature-flags' },
+          { name: 'logger', path: 'packages/logger' }
         ]
 
     steps:
