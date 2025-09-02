@@ -9,7 +9,7 @@ export interface MemoryTimelineProps {
   className?: string;
 }
 
-export function MemoryTimeline({ timeline, warnings, className }: MemoryTimelineProps) {
+export function MemoryTimeline({ timeline, warnings: _warnings, className }: MemoryTimelineProps) {
   const { chartData, maxMemory, minMemory, memoryRange } = useMemo(() => {
     if (timeline.length === 0) {
       return { chartData: [], maxMemory: 0, minMemory: 0, memoryRange: 0 };

@@ -175,8 +175,9 @@ export class ApiInterceptor {
     this.isInterceptingXHR = true;
     // Store reference to interceptor for closure
 
-    const interceptor = this;
     const OriginalXHR = this.originalXMLHttpRequest;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const self = this;
     (window as any).XMLHttpRequest = function(this: XMLHttpRequest) {
       const xhr = new OriginalXHR();
       const requestId = generateId();
@@ -285,7 +286,7 @@ export class ApiInterceptor {
               timestamp: startTime,
             };
 
-            interceptor.notifyListeners(apiCall);
+            self.notifyListeners(apiCall);
           }
 
           if (originalOnReadyStateChange) {

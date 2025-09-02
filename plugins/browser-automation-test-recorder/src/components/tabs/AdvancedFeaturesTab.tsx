@@ -8,7 +8,7 @@ import { Play, Pause, Settings, Camera, Network, Zap, Shield, Database, Users, A
 import { useBrowserAutomationStore } from '../../core/devtools-store';
 import type { TabComponentProps } from '../../types/devtools';
 
-export const AdvancedFeaturesTab: React.FC<TabComponentProps> = ({ state, dispatch, compact }) => {
+export const AdvancedFeaturesTab: React.FC<TabComponentProps> = ({ state: _state, dispatch: _dispatch, compact: _compact }) => {
   const [activeFeature, setActiveFeature] = useState<string>('visual-regression');
   const [isRunning, setIsRunning] = useState(false);
   

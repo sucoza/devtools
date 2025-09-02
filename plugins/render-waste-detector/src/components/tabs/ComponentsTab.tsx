@@ -17,8 +17,8 @@ interface ComponentsTabProps {
 export function ComponentsTab({
   state,
   eventClient,
-  dispatch,
-  compact,
+  dispatch: _dispatch,
+  compact: _compact,
   onComponentSelect,
 }: ComponentsTabProps) {
   return (

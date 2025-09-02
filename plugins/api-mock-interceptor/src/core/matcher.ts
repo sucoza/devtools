@@ -138,7 +138,10 @@ export class RequestMatcherEngine {
       options.includeHeaders.forEach(headerName => {
         const value = request.headers[headerName.toLowerCase()] || request.headers[headerName];
         if (value) {
-          matcher.headers![headerName] = value;
+          if (!matcher.headers) {
+            matcher.headers = {};
+          }
+          matcher.headers[headerName] = value;
         }
       });
     }

@@ -3,8 +3,8 @@ import { formStateEventClient } from './formEventClient';
 import type { 
   FormState, 
   FieldState, 
-  FieldHistoryEntry, 
-  AccessibilityIssue,
+  FieldHistoryEntry as _FieldHistoryEntry, 
+  AccessibilityIssue as _AccessibilityIssue,
   FormSubmission,
   ValidationState 
 } from './formEventClient';

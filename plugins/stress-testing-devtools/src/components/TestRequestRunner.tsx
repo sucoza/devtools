@@ -23,7 +23,7 @@ interface TestResult {
 export const TestRequestRunner: React.FC<TestRequestRunnerProps> = ({
   config,
   onValidationRulesGenerated,
-  onConfigUpdate
+  onConfigUpdate: _onConfigUpdate
 }) => {
   const [testResult, setTestResult] = useState<TestResult | null>(null)
   const [isLoading, setIsLoading] = useState(false)

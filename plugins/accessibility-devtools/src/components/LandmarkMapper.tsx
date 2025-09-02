@@ -23,23 +23,7 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
   const [showOverlay, setShowOverlay] = useState(false);
 
-  const runAnalysis = useCallback(async () => {
-    setIsAnalyzing(true);
-    try {
-      const landmarkStructure = analyzeLandmarks();
-      setLandmarks(landmarkStructure);
-    } catch (error) {
-      console.error('Landmark analysis failed:', error);
-    } finally {
-      setIsAnalyzing(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    runAnalysis();
-  }, [runAnalysis]);
-
-  const analyzeLandmarks = (): LandmarkInfo[] => {
+  const analyzeLandmarks = useCallback((): LandmarkInfo[] => {
     const landmarks: LandmarkInfo[] = [];
     
     // Landmark selectors and their roles
@@ -80,7 +64,24 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
 
     // Build hierarchy
     return buildLandmarkHierarchy(landmarks);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const runAnalysis = useCallback(async () => {
+    setIsAnalyzing(true);
+    try {
+      const landmarkStructure = analyzeLandmarks();
+      setLandmarks(landmarkStructure);
+    } catch (error) {
+      console.error('Landmark analysis failed:', error);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }, [analyzeLandmarks]);
+
+  useEffect(() => {
+    runAnalysis();
+  }, [runAnalysis]);
 
   const createLandmarkInfo = (element: Element, role: string, level: number): LandmarkInfo | null => {
     const selector = generateSelector(element);

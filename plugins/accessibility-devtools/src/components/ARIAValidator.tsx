@@ -23,23 +23,7 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [filterBy, setFilterBy] = useState<'all' | 'critical' | 'serious' | 'moderate' | 'minor'>('all');
 
-  const runAnalysis = useCallback(async () => {
-    setIsAnalyzing(true);
-    try {
-      const detectedIssues = await validateARIA();
-      setIssues(detectedIssues);
-    } catch (error) {
-      console.error('ARIA validation failed:', error);
-    } finally {
-      setIsAnalyzing(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    runAnalysis();
-  }, [runAnalysis]);
-
-  const validateARIA = async (): Promise<ARIAValidationIssue[]> => {
+  const validateARIA = useCallback(async (): Promise<ARIAValidationIssue[]> => {
     const issues: ARIAValidationIssue[] = [];
     
     // Get all elements with ARIA attributes or roles
@@ -263,7 +247,23 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
     }
 
     return issues;
-  };
+  }, []);
+
+  const runAnalysis = useCallback(async () => {
+    setIsAnalyzing(true);
+    try {
+      const detectedIssues = await validateARIA();
+      setIssues(detectedIssues);
+    } catch (error) {
+      console.error('ARIA validation failed:', error);
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }, [validateARIA]);
+
+  useEffect(() => {
+    runAnalysis();
+  }, [runAnalysis]);
 
   const isRedundantRole = (element: Element, role: string): boolean => {
     const tagName = element.tagName.toLowerCase();

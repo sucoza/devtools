@@ -17,8 +17,8 @@ interface HeatMapTabProps {
 export function HeatMapTab({
   state,
   eventClient,
-  dispatch,
-  compact,
+  dispatch: _dispatch,
+  compact: _compact,
   onComponentSelect,
 }: HeatMapTabProps) {
   const { heatMapData, ui } = state;

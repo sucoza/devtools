@@ -430,7 +430,7 @@ export class SelectorEngine {
     const parts = optimized.split(/\s*>\s*|\s+/);
     if (parts.length > 2) {
       // Find the most specific part (with ID, class, or meaningful tag)
-      let significantParts = [];
+      const significantParts = [];
       for (let i = parts.length - 1; i >= 0 && significantParts.length < 2; i--) {
         const part = parts[i];
         if (part.includes('#') || part.includes('.') || part.includes('[') || 
@@ -600,7 +600,7 @@ export class SelectorEngine {
     const candidates = await this.generateAllCandidates(element, options);
     
     // Filter by strategy priority
-    let prioritizedCandidates = candidates.filter(candidate => {
+    const prioritizedCandidates = candidates.filter(candidate => {
       if (!strategy.fallback && !strategy.priority.includes(candidate.type)) {
         return false;
       }

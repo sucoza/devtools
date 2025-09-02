@@ -9,7 +9,7 @@ import {
   Lightbulb,
   Clock,
   Settings,
-  Play,
+  Play as _Play,
   Square,
   Pause,
   RotateCcw,
@@ -45,7 +45,7 @@ export function PluginPanel({
   style,
   theme = "auto",
   compact = false,
-  defaultTab = "overview",
+  defaultTab: _defaultTab = "overview",
   defaultSettings,
   onTabChange,
   onEvent,
@@ -54,7 +54,7 @@ export function PluginPanel({
   children,
 }: RenderWasteDetectorPanelProps) {
   // Create or get event client
-  // @ts-ignore
+  // @ts-expect-error
   const eventClient = (() => {
     const client =
       getRenderWasteDetectorEventClient() ||

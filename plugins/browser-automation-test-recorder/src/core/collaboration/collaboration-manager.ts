@@ -102,35 +102,30 @@ export class CollaborationManager {
       return;
     }
 
-    try {
-      this.currentUser = options.user;
+    this.currentUser = options.user;
 
-      // Load or create team
-      if (options.teamId) {
-        this.currentTeam = await this.teamManager.getTeam(options.teamId);
-        if (!this.currentTeam) {
-          throw new Error(`Team not found: ${options.teamId}`);
-        }
+    // Load or create team
+    if (options.teamId) {
+      this.currentTeam = await this.teamManager.getTeam(options.teamId);
+      if (!this.currentTeam) {
+        throw new Error(`Team not found: ${options.teamId}`);
       }
-
-      // Start sync if enabled
-      if (this.config.sync.enabled) {
-        await this.startSync();
-      }
-
-      // Connect to real-time notifications if enabled
-      if (options.enableNotifications && this.config.notifications.realtime) {
-        await this.connectNotifications();
-      }
-
-      this.initialized = true;
-      this.connected = true;
-
-      // // console.log('Collaboration system initialized successfully');
-    } catch (err) {
-      // // console.error('Failed to initialize collaboration system:', err);
-      throw err;
     }
+
+    // Start sync if enabled
+    if (this.config.sync.enabled) {
+      await this.startSync();
+    }
+
+    // Connect to real-time notifications if enabled
+    if (options.enableNotifications && this.config.notifications.realtime) {
+      await this.connectNotifications();
+    }
+
+    this.initialized = true;
+    this.connected = true;
+
+    // // console.log('Collaboration system initialized successfully');
   }
 
   /**

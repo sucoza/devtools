@@ -98,7 +98,7 @@ export class SignalRInterceptor extends EventEmitter<{
     const originalBuild = (HubConnectionBuilder as { prototype: { build: unknown } }).prototype.build;
 
     (HubConnectionBuilder as { prototype: { build: (...args: unknown[]) => unknown } }).prototype.build = function() {
-      const hubConnection = (originalBuild as Function).call(this);
+      const hubConnection = (originalBuild as (...args: unknown[]) => unknown).call(this);
       interceptor.wrapHubConnection(hubConnection);
       return hubConnection;
     };

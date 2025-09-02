@@ -38,6 +38,7 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
     if (settings.highlightFocusRings) {
       injectFocusStyles();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.highlightFocusRings]);
 
   const stopFocusDebugging = useCallback(() => {
@@ -46,6 +47,7 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
     setCurrentFocusChain([]);
     setFocusHistory([]);
     removeHighlights();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

@@ -23,7 +23,7 @@ export function MemoryProfilerPanel() {
     isRunning,
     currentMemory,
     components,
-    hooks,
+    hooks: _hooks,
     leaks,
     performance,
     suggestions,

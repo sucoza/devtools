@@ -29,7 +29,9 @@ export function createStressTestPlugin(config: StressTestPluginConfig = {}) {
       if (config.initialConfigs) {
         // Load initial configurations
         import('./store').then(({ stressTestStore }) => {
-          stressTestStore.updateConfigs(config.initialConfigs!)
+          if (config.initialConfigs) {
+            stressTestStore.updateConfigs(config.initialConfigs)
+          }
         })
       }
     },
