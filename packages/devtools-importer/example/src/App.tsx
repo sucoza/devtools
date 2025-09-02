@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { DevToolsManager } from '@sucoza/devtools-importer/react';
 
 function App() {
@@ -87,8 +87,8 @@ function App() {
 
       {/* DevTools Manager - position configured in vite.config.ts */}
       <DevToolsManager 
-        onError={(error) => console.error('DevTools Error:', error)}
-        onPluginLoad={(pluginId) => console.log('Loaded plugin:', pluginId)}
+        onError={(error: Error) => console.error('DevTools Error:', error)}
+        onPluginLoad={(pluginId: string) => console.log('Loaded plugin:', pluginId)}
       />
     </div>
   );

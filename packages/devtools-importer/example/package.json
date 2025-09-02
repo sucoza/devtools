@@ -10,18 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "@sucoza/devtools-importer": "workspace:*",
     "@sucoza/api-mock-interceptor-devtools-plugin": "workspace:*",
-    "@sucoza/websocket-signalr-devtools-plugin": "workspace:*"
+    "@sucoza/devtools-importer": "workspace:*",
+    "@sucoza/websocket-signalr-devtools-plugin": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
-    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react": "^4.7.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
