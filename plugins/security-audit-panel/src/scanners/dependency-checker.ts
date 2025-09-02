@@ -100,33 +100,36 @@ export class DependencyChecker implements SecurityScanner {
     ];
 
     librariesToCheck.forEach(({ name, prop }) => {
-      const lib = (window as Record<string, unknown>)[prop];
-      if (lib && lib.fn && lib.fn.jquery) {
-        // jQuery version check
-        const version = lib.fn.jquery;
-        const vulnerability = this.checkForVulnerability({ name, version });
-        if (vulnerability) {
-          vulnerabilities.push({
-            id: generateId(),
-            category: 'dependency',
-            title: `Vulnerable Library: ${name}`,
-            description: `${name} version ${version} loaded with known vulnerabilities`,
-            severity: vulnerability.severity,
-            impact: vulnerability.description,
-            recommendation: `Update ${name} to secure version`,
-            remediation: `Upgrade ${name} library`,
-            cweId: 'CWE-1104',
-            owaspCategory: 'A06:2021 – Vulnerable and Outdated Components',
-            location: { url: window.location.href },
-            evidence: `Window.${prop} version: ${version}`,
-            detectedAt: getTimestamp(),
-            scannerName: this.name,
-            confidence: 90,
-            references: [
-              `https://cve.mitre.org/cgi-bin/cvename.cgi?name=${vulnerability.cve}`,
-            ],
-            tags: ['vulnerable-dependency', 'runtime-library'],
-          });
+      const lib = (window as unknown as Record<string, unknown>)[prop];
+      if (lib && typeof lib === 'object' && lib !== null) {
+        const libObj = lib as { fn?: { jquery?: string } };
+        if (libObj.fn && libObj.fn.jquery) {
+          // jQuery version check
+          const version = libObj.fn.jquery;
+          const vulnerability = this.checkForVulnerability({ name, version });
+          if (vulnerability) {
+            vulnerabilities.push({
+              id: generateId(),
+              category: 'dependency',
+              title: `Vulnerable Library: ${name}`,
+              description: `${name} version ${version} loaded with known vulnerabilities`,
+              severity: vulnerability.severity,
+              impact: vulnerability.description,
+              recommendation: `Update ${name} to secure version`,
+              remediation: `Upgrade ${name} library`,
+              cweId: 'CWE-1104',
+              owaspCategory: 'A06:2021 – Vulnerable and Outdated Components',
+              location: { url: window.location.href },
+              evidence: `Window.${prop} version: ${version}`,
+              detectedAt: getTimestamp(),
+              scannerName: this.name,
+              confidence: 90,
+              references: [
+                `https://cve.mitre.org/cgi-bin/cvename.cgi?name=${vulnerability.cve}`,
+              ],
+              tags: ['vulnerable-dependency', 'runtime-library'],
+            });
+          }
         }
       }
     });

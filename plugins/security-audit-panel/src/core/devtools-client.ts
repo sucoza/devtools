@@ -7,7 +7,7 @@ export interface DevToolsEventClient<TEvents extends Record<string, unknown>> {
   subscribe: (callback: (event: TEvents[keyof TEvents], type: keyof TEvents) => void) => () => void;
 }
 
-export interface SecurityAuditEvents {
+export interface SecurityAuditEvents extends Record<string, unknown> {
   'security-audit:state': DevToolsState;
   'security-audit:action': DevToolsAction;
   'security-audit:scan-complete': SecurityScanResult[];

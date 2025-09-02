@@ -51,7 +51,7 @@ export interface SecurityScanResult {
   metadata?: Record<string, unknown>;
 }
 
-export interface SecurityScannerConfig {
+export interface SecurityScannerConfig extends Record<string, unknown> {
   enabled: boolean;
   autoScan: boolean;
   scanInterval?: number; // ms
