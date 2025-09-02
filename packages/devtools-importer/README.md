@@ -18,6 +18,11 @@ npm install @sucoza/devtools-importer
 
 ## Usage
 
+### ⚠️ Important Setup Requirements
+
+1. **The Vite plugin MUST be placed FIRST in the plugins array** - This ensures proper initialization before other plugins
+2. **The DevToolsManager component should be placed as HIGH as possible in your React tree** - Ideally in your root App component or index file
+
 ### Vite Configuration
 
 ```javascript
@@ -28,7 +33,7 @@ import { tanstackDevtoolsImporter } from '@sucoza/devtools-importer';
 
 export default defineConfig({
   plugins: [
-    react(),
+    // ⚠️ IMPORTANT: tanstackDevtoolsImporter MUST be first!
     tanstackDevtoolsImporter({
       plugins: [
         '@sucoza/api-mock-interceptor-devtools-plugin',
