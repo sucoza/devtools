@@ -135,10 +135,10 @@ jobs:
       - name: Build all packages
         run: |
           # Build shared packages first
-          pnpm --filter devtools-common build
-          pnpm --filter plugin-core build
-          pnpm --filter shared-components build
-          pnpm --filter devtools-importer build
+          pnpm --filter @sucoza/devtools-common build
+          pnpm --filter @sucoza/plugin-core build
+          pnpm --filter @sucoza/shared-components build
+          pnpm --filter @sucoza/devtools-importer build
           
           # Build all plugins
           pnpm --filter "./plugins/*" build
@@ -147,9 +147,9 @@ jobs:
         continue-on-error: true
         run: |
           # Test shared packages
-          pnpm --filter devtools-common test || echo "No tests for devtools-common"
-          pnpm --filter plugin-core test || echo "No tests for plugin-core"  
-          pnpm --filter shared-components test || echo "No tests for shared-components"
+          pnpm --filter @sucoza/devtools-common test || echo "No tests for devtools-common"
+          pnpm --filter @sucoza/plugin-core test || echo "No tests for plugin-core"  
+          pnpm --filter @sucoza/shared-components test || echo "No tests for shared-components"
 
   publish-shared:
     name: Publish Shared Packages
@@ -204,17 +204,17 @@ jobs:
         run: |
           # Build in dependency order
           if [ "${{ matrix.package.name }}" != "devtools-common" ]; then
-            pnpm --filter devtools-common build
+            pnpm --filter @sucoza/devtools-common build
           fi
           if [ "${{ matrix.package.name }}" != "devtools-common" ] && [ "${{ matrix.package.name }}" != "plugin-core" ]; then
-            pnpm --filter plugin-core build
+            pnpm --filter @sucoza/plugin-core build
           fi
           if [ "${{ matrix.package.name }}" = "shared-components" ] || [ "${{ matrix.package.name }}" = "devtools-importer" ]; then
-            pnpm --filter shared-components build
+            pnpm --filter @sucoza/shared-components build
           fi
 
       - name: Build package
-        run: pnpm --filter ${{ matrix.package.name }} build
+        run: pnpm --filter @sucoza/${{ matrix.package.name }} build
 
       - name: Check if package should be published
         id: check
@@ -311,13 +311,13 @@ jobs:
 
       - name: Build shared packages
         run: |
-          pnpm --filter devtools-common build
-          pnpm --filter plugin-core build
-          pnpm --filter shared-components build
-          pnpm --filter devtools-importer build
+          pnpm --filter @sucoza/devtools-common build
+          pnpm --filter @sucoza/plugin-core build
+          pnpm --filter @sucoza/shared-components build
+          pnpm --filter @sucoza/devtools-importer build
 
       - name: Build plugin
-        run: pnpm --filter ${{ matrix.plugin }} build
+        run: pnpm --filter "@sucoza/${{ matrix.plugin }}-plugin" build
 
       - name: Check if plugin should be published
         id: check

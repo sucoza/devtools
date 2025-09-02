@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/feature-flags",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Standalone feature flag management library with evaluation engine, targeting, and rollouts",
   "type": "module",
   "main": "dist/index.js",

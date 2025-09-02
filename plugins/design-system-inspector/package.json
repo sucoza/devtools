@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/design-system-inspector-devtools-plugin",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "DevTools plugin for design system analysis, token extraction, and consistency validation",
   "type": "module",
   "main": "dist/index.js",
