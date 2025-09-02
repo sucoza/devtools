@@ -14,7 +14,7 @@ import type {
   RecordingSession,
 } from "../types";
 import { useRenderWasteDetectorStore } from "./devtools-store";
-import { getProfilerIntegration, startRenderProfiling, stopRenderProfiling } from "./profiler-integration";
+import { startRenderProfiling, stopRenderProfiling } from "./profiler-integration";
 
 /**
  * Event client interface following TanStack DevTools patterns

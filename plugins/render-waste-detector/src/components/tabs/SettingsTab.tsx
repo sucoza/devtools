@@ -1,5 +1,5 @@
 import React from "react";
-import { Settings, Download, Upload, RotateCcw } from "lucide-react";
+import { Download, Upload, RotateCcw } from "lucide-react";
 import "../styles.css";
 import type {
   RenderWasteDetectorState,
@@ -19,8 +19,8 @@ interface SettingsTabProps {
 export function SettingsTab({
   state,
   eventClient,
-  dispatch,
-  compact,
+  dispatch: _dispatch,
+  compact: _compact,
 }: SettingsTabProps) {
   const { settings, ui } = state;
 

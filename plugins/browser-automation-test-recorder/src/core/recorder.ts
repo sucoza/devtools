@@ -1117,7 +1117,7 @@ export class EventRecorder {
   }
 
 
-  async handleNavigationChange(url: string, title?: string): Promise<void> {
+  async handleNavigationChange(url: string, _title?: string): Promise<void> {
     if (!this._isRecording || this._isPaused) return;
     
     // Create a navigation event

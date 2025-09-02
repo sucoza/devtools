@@ -219,7 +219,7 @@ export class PlaybackEngine {
                 fullPage: false,
               });
               playbackError.screenshot = screenshot.data;
-            } catch (error) {
+            } catch {
               this.log('warn', 'Failed to capture error screenshot');
             }
           }
@@ -246,7 +246,7 @@ export class PlaybackEngine {
           try {
             const screenshot = await this.captureScreenshot();
             this.context.screenshots.push(screenshot);
-          } catch (error) {
+          } catch {
             this.log('warn', 'Failed to capture periodic screenshot');
           }
         }

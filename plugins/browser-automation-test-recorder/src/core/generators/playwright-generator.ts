@@ -232,19 +232,22 @@ export class PlaywrightGenerator extends BaseGenerator {
     switch (event.type) {
       case 'click':
         return `await page.click('${event.target.selector}')`;
-      case 'input':
+      case 'input': {
         const inputData = event.data as FormEventData;
         const kbData = event.data as _KeyboardEventData;
         const value = kbData?.inputValue || inputData?.value || event.target.value || '';
         return `await page.fill('${event.target.selector}', '${value}')`;
-      case 'navigation':
+      }
+      case 'navigation': {
         const navData = event.data as NavigationEventData;
         return `await page.goto('${navData?.url || ''}')`;
+      }
       case 'keydown':
       case 'keyup':
-      case 'keypress':
+      case 'keypress': {
         const keyData = event.data as _KeyboardEventData;
         return `await page.press('${event.target.selector}', '${keyData?.key || ''}')`;
+      }
       case 'scroll':
         return `await page.evaluate(() => window.scrollTo(0, ${(event.data as any)?.scrollY || 0}))`;
       default:

@@ -449,7 +449,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
       
       this.emit('recorder:cdp-connected', { connected: true });
       return true;
-    } catch (error) {
+    } catch {
       // // console.warn('CDP connection failed');
       this.emit('recorder:cdp-connected', { connected: false });
       return false;
@@ -476,7 +476,7 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
         // // console.warn('CDP not available, screenshot functionality limited');
         return null;
       }
-    } catch (error) {
+    } catch {
       // // console.error('Screenshot failed');
       return null;
     }

@@ -54,7 +54,7 @@ export function PluginPanel({
   children,
 }: RenderWasteDetectorPanelProps) {
   // Create or get event client
-  // @ts-expect-error
+  // @ts-expect-error TanStack devtools client type compatibility issue
   const eventClient = (() => {
     const client =
       getRenderWasteDetectorEventClient() ||

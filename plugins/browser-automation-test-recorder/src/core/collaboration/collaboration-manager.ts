@@ -565,7 +565,7 @@ export class CollaborationManager {
     this.syncInterval = setInterval(async () => {
       try {
         await this.performSync();
-      } catch (err) {
+      } catch {
         // // console.error('Sync error:', err);
       }
     }, this.config.sync.interval);
@@ -595,7 +595,7 @@ export class CollaborationManager {
       handlers.forEach(handler => {
         try {
           handler(notification);
-        } catch (err) {
+        } catch {
           // // console.error('Error in notification handler:', err);
         }
       });

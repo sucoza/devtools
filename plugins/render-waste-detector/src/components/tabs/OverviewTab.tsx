@@ -26,8 +26,8 @@ interface OverviewTabProps {
 export function OverviewTab({
   state,
   eventClient,
-  dispatch,
-  compact,
+  dispatch: _dispatch,
+  compact: _compact,
   onComponentSelect,
   onSuggestionApply,
 }: OverviewTabProps) {

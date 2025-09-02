@@ -16,9 +16,9 @@ interface TimelineTabProps {
 
 export function TimelineTab({
   state,
-  eventClient,
-  dispatch,
-  compact,
+  eventClient: _eventClient,
+  dispatch: _dispatch,
+  compact: _compact,
   onComponentSelect,
 }: TimelineTabProps) {
   const { renderEvents, ui } = state;

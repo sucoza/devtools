@@ -464,7 +464,7 @@ export class SelectorEngine {
   /**
    * Get a score for selector quality (0-10 scale)
    */
-  getSelectorScore(selector: string, element: Element): number {
+  getSelectorScore(selector: string, _element: Element): number {
     let score = 0;
 
     // Base score for different selector types
