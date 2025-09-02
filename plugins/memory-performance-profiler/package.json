@@ -2,7 +2,6 @@
   "name": "@sucoza/memory-performance-profiler-devtools-plugin",
   "version": "0.1.9",
   "description": "DevTools plugin for memory profiling, performance monitoring, and optimization recommendations",
-  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",

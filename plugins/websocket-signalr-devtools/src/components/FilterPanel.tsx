@@ -7,10 +7,13 @@ export function FilterPanel() {
   const selectedTab = useDevToolsSelector(state => state.ui.selectedTab);
   const websocketFilter = useDevToolsSelector(state => state.websocket.filter);
   const signalrFilter = useDevToolsSelector(state => state.signalr.filter);
-  const _websocketConnections = useDevToolsSelector(state => Array.from(state.websocket.connections.values()));
-  const signalrConnections = useDevToolsSelector(state => Array.from(state.signalr.connections.values()));
+  const websocketConnectionsMap = useDevToolsSelector(state => state.websocket.connections);
+  const signalrConnectionsMap = useDevToolsSelector(state => state.signalr.connections);
   
-  const client = createWebSocketSignalRDevToolsClient();
+  const _websocketConnections = React.useMemo(() => Array.from(websocketConnectionsMap.values()), [websocketConnectionsMap]);
+  const signalrConnections = React.useMemo(() => Array.from(signalrConnectionsMap.values()), [signalrConnectionsMap]);
+  
+  const client = React.useMemo(() => createWebSocketSignalRDevToolsClient(), []);
   const filter = selectedTab === 'websocket' ? websocketFilter : signalrFilter;
 
   const getAvailableStates = () => {

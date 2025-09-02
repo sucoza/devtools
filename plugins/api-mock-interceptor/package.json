@@ -2,7 +2,6 @@
   "name": "@sucoza/api-mock-interceptor-devtools-plugin",
   "version": "0.1.9",
   "description": "DevTools plugin for intercepting, mocking, and modifying API responses",
-  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",

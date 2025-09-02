@@ -17,7 +17,7 @@ export function ConnectionDetails({ connectionId, type }: ConnectionDetailsProps
     }
   }) as WebSocketConnection | SignalRConnection | undefined;
 
-  const client = createWebSocketSignalRDevToolsClient();
+  const client = React.useMemo(() => createWebSocketSignalRDevToolsClient(), []);
 
   if (!connection) {
     return (

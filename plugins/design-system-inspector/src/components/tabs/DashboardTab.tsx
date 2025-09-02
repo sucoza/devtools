@@ -1,5 +1,4 @@
 import React from 'react';
-import { clsx } from 'clsx';
 import { 
   TrendingUp, 
   AlertCircle, 
@@ -9,6 +8,7 @@ import {
   Ruler,
   Zap
 } from 'lucide-react';
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles } from '@sucoza/shared-components';
 import { useDesignSystemInspector } from '../../hooks';
 
 export function DashboardTab() {
@@ -20,15 +20,15 @@ export function DashboardTab() {
   const tokensUtilization = Math.round(stats.tokensUtilization);
   
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600 dark:text-green-400';
-    if (score >= 60) return 'text-yellow-600 dark:text-yellow-400';
-    return 'text-red-600 dark:text-red-400';
+    if (score >= 80) return COLORS.status.success;
+    if (score >= 60) return COLORS.status.warning;
+    return COLORS.status.error;
   };
   
-  const getScoreBg = (score: number) => {
-    if (score >= 80) return 'bg-green-100 dark:bg-green-900';
-    if (score >= 60) return 'bg-yellow-100 dark:bg-yellow-900';
-    return 'bg-red-100 dark:bg-red-900';
+  const getScoreBgColor = (score: number) => {
+    if (score >= 80) return 'rgba(78, 201, 176, 0.1)';
+    if (score >= 60) return 'rgba(243, 156, 18, 0.1)';
+    return 'rgba(231, 76, 60, 0.1)';
   };
 
   const overviewCards = [
@@ -37,7 +37,7 @@ export function DashboardTab() {
       value: `${consistencyScore}%`,
       icon: TrendingUp,
       color: getScoreColor(consistencyScore),
-      bg: getScoreBg(consistencyScore),
+      bgColor: getScoreBgColor(consistencyScore),
       description: 'Overall design system consistency',
     },
     {
@@ -45,7 +45,7 @@ export function DashboardTab() {
       value: `${accessibilityScore}%`,
       icon: CheckCircle,
       color: getScoreColor(accessibilityScore),
-      bg: getScoreBg(accessibilityScore),
+      bgColor: getScoreBgColor(accessibilityScore),
       description: 'WCAG compliance rating',
     },
     {
@@ -53,15 +53,15 @@ export function DashboardTab() {
       value: `${tokensUtilization}%`,
       icon: Zap,
       color: getScoreColor(tokensUtilization),
-      bg: getScoreBg(tokensUtilization),
+      bgColor: getScoreBgColor(tokensUtilization),
       description: 'Design tokens being used',
     },
     {
       title: 'Issues Found',
       value: stats.totalIssues,
       icon: AlertCircle,
-      color: stats.totalIssues > 0 ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400',
-      bg: stats.totalIssues > 0 ? 'bg-red-100 dark:bg-red-900' : 'bg-green-100 dark:bg-green-900',
+      color: stats.totalIssues > 0 ? COLORS.status.error : COLORS.status.success,
+      bgColor: stats.totalIssues > 0 ? 'rgba(231, 76, 60, 0.1)' : 'rgba(78, 201, 176, 0.1)',
       description: 'Design inconsistencies detected',
     },
   ];
@@ -94,64 +94,133 @@ export function DashboardTab() {
   ];
 
   return (
-    <div className="p-6 space-y-6">
+    <div style={{
+      padding: SPACING['5xl'],
+      display: 'flex',
+      flexDirection: 'column',
+      gap: SPACING['5xl']
+    }}>
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+        <h2 style={{
+          fontSize: TYPOGRAPHY.fontSize.xl,
+          fontWeight: TYPOGRAPHY.fontWeight.bold,
+          color: COLORS.text.heading,
+          margin: `0 0 ${SPACING.lg} 0`
+        }}>
           Design System Overview
         </h2>
-        <p className="text-gray-600 dark:text-gray-400">
-          Monitor your design system&apos;s health and consistency across your application.
+        <p style={{
+          color: COLORS.text.secondary,
+          margin: 0
+        }}>
+          Monitor your design system's health and consistency across your application.
         </p>
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+        gap: SPACING.xl
+      }}>
         {overviewCards.map((card) => (
           <div
             key={card.title}
-            className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6"
+            style={mergeStyles(
+              COMPONENT_STYLES.container.panel,
+              {
+                padding: SPACING['5xl']
+              }
+            )}
           >
-            <div className="flex items-center">
-              <div className={clsx('p-2 rounded-lg', card.bg)}>
-                <card.icon className={clsx('w-5 h-5', card.color)} />
+            <div style={{
+              display: 'flex',
+              alignItems: 'center'
+            }}>
+              <div style={{
+                padding: SPACING.lg,
+                borderRadius: RADIUS.lg,
+                backgroundColor: card.bgColor
+              }}>
+                <card.icon style={{
+                  width: '20px',
+                  height: '20px',
+                  color: card.color
+                }} />
               </div>
-              <div className="ml-4 flex-1">
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              <div style={{
+                marginLeft: SPACING.xl,
+                flex: 1
+              }}>
+                <p style={{
+                  fontSize: TYPOGRAPHY.fontSize.sm,
+                  fontWeight: TYPOGRAPHY.fontWeight.medium,
+                  color: COLORS.text.secondary,
+                  margin: 0
+                }}>
                   {card.title}
                 </p>
-                <p className={clsx('text-2xl font-bold', card.color)}>
+                <p style={{
+                  fontSize: TYPOGRAPHY.fontSize.xl,
+                  fontWeight: TYPOGRAPHY.fontWeight.bold,
+                  color: card.color,
+                  margin: 0
+                }}>
                   {card.value}
                 </p>
               </div>
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+            <p style={{
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: COLORS.text.muted,
+              marginTop: SPACING.lg,
+              margin: `${SPACING.lg} 0 0 0`
+            }}>
               {card.description}
             </p>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+        gap: SPACING['5xl']
+      }}>
         {/* Consistency Breakdown */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <div style={mergeStyles(
+          COMPONENT_STYLES.container.panel,
+          {
+            padding: SPACING['5xl']
+          }
+        )}>
+          <h3 style={{
+            fontSize: TYPOGRAPHY.fontSize.lg,
+            fontWeight: TYPOGRAPHY.fontWeight.semibold,
+            color: COLORS.text.heading,
+            margin: `0 0 ${SPACING.xl} 0`
+          }}>
             Consistency Breakdown
           </h3>
-          <div className="space-y-3">
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: SPACING['2xl']
+          }}>
             <ConsistencyItem
-              icon={<Palette className="w-4 h-4" />}
+              icon={<Palette style={{ width: '16px', height: '16px' }} />}
               label="Colors"
               score={85}
               description="Color token usage and accessibility"
             />
             <ConsistencyItem
-              icon={<Type className="w-4 h-4" />}
+              icon={<Type style={{ width: '16px', height: '16px' }} />}
               label="Typography"
               score={92}
               description="Font scale and text consistency"
             />
             <ConsistencyItem
-              icon={<Ruler className="w-4 h-4" />}
+              icon={<Ruler style={{ width: '16px', height: '16px' }} />}
               label="Spacing"
               score={78}
               description="Margin, padding, and layout spacing"
@@ -160,24 +229,60 @@ export function DashboardTab() {
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <div style={mergeStyles(
+          COMPONENT_STYLES.container.panel,
+          {
+            padding: SPACING['5xl']
+          }
+        )}>
+          <h3 style={{
+            fontSize: TYPOGRAPHY.fontSize.lg,
+            fontWeight: TYPOGRAPHY.fontWeight.semibold,
+            color: COLORS.text.heading,
+            margin: `0 0 ${SPACING.xl} 0`
+          }}>
             System Details
           </h3>
-          <div className="space-y-3">
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: SPACING['2xl']
+          }}>
             {detailCards.map((card) => (
-              <div key={card.title} className="flex items-center">
-                <span className="text-lg mr-3">{card.icon}</span>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">
+              <div key={card.title} style={{
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <span style={{
+                  fontSize: TYPOGRAPHY.fontSize.lg,
+                  marginRight: SPACING['2xl']
+                }}>{card.icon}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}>
+                    <span style={{
+                      fontSize: TYPOGRAPHY.fontSize.sm,
+                      fontWeight: TYPOGRAPHY.fontWeight.medium,
+                      color: COLORS.text.primary
+                    }}>
                       {card.title}
                     </span>
-                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    <span style={{
+                      fontSize: TYPOGRAPHY.fontSize.sm,
+                      fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                      color: COLORS.text.heading
+                    }}>
                       {card.value}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                  <p style={{
+                    fontSize: TYPOGRAPHY.fontSize.xs,
+                    color: COLORS.text.muted,
+                    margin: 0
+                  }}>
                     {card.description}
                   </p>
                 </div>
@@ -188,11 +293,25 @@ export function DashboardTab() {
       </div>
 
       {/* Recommendations */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+      <div style={mergeStyles(
+        COMPONENT_STYLES.container.panel,
+        {
+          padding: SPACING['5xl']
+        }
+      )}>
+        <h3 style={{
+          fontSize: TYPOGRAPHY.fontSize.lg,
+          fontWeight: TYPOGRAPHY.fontWeight.semibold,
+          color: COLORS.text.heading,
+          margin: `0 0 ${SPACING.xl} 0`
+        }}>
           Recommendations
         </h3>
-        <div className="space-y-3">
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: SPACING['2xl']
+        }}>
           {stats.totalIssues > 0 && (
             <RecommendationItem
               type="warning"
@@ -233,25 +352,53 @@ function ConsistencyItem({
   score: number; 
   description: string; 
 }) {
-  const scoreColor = score >= 80 ? 'text-green-600' : score >= 60 ? 'text-yellow-600' : 'text-red-600';
+  const scoreColor = score >= 80 ? COLORS.status.success : score >= 60 ? COLORS.status.warning : COLORS.status.error;
+  const barColor = score >= 80 ? COLORS.status.success : score >= 60 ? COLORS.status.warning : COLORS.status.error;
   
   return (
-    <div className="flex items-center">
-      <div className="flex items-center text-gray-600 dark:text-gray-400">
+    <div style={{
+      display: 'flex',
+      alignItems: 'center'
+    }}>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        color: COLORS.text.secondary
+      }}>
         {icon}
-        <span className="ml-2 text-sm font-medium">{label}</span>
+        <span style={{
+          marginLeft: SPACING.lg,
+          fontSize: TYPOGRAPHY.fontSize.sm,
+          fontWeight: TYPOGRAPHY.fontWeight.medium
+        }}>{label}</span>
       </div>
-      <div className="ml-auto flex items-center">
-        <div className="w-20 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-3">
+      <div style={{
+        marginLeft: 'auto',
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        <div style={{
+          width: '80px',
+          backgroundColor: COLORS.background.tertiary,
+          borderRadius: RADIUS.full,
+          height: '8px',
+          marginRight: SPACING['2xl']
+        }}>
           <div
-            className={clsx(
-              'h-2 rounded-full transition-all duration-300',
-              score >= 80 ? 'bg-green-500' : score >= 60 ? 'bg-yellow-500' : 'bg-red-500'
-            )}
-            style={{ width: `${score}%` }}
+            style={{
+              height: '8px',
+              borderRadius: RADIUS.full,
+              backgroundColor: barColor,
+              width: `${score}%`,
+              transition: 'width 0.3s ease'
+            }}
           />
         </div>
-        <span className={clsx('text-sm font-semibold', scoreColor)}>
+        <span style={{
+          fontSize: TYPOGRAPHY.fontSize.sm,
+          fontWeight: TYPOGRAPHY.fontWeight.semibold,
+          color: scoreColor
+        }}>
           {score}%
         </span>
       </div>
@@ -271,20 +418,54 @@ function RecommendationItem({
   action: string;
 }) {
   const typeStyles = {
-    info: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800',
-    warning: 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800',
-    error: 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800',
+    info: {
+      backgroundColor: 'rgba(52, 152, 219, 0.1)',
+      borderColor: COLORS.status.info
+    },
+    warning: {
+      backgroundColor: 'rgba(243, 156, 18, 0.1)',
+      borderColor: COLORS.status.warning
+    },
+    error: {
+      backgroundColor: 'rgba(231, 76, 60, 0.1)',
+      borderColor: COLORS.status.error
+    },
   };
 
   return (
-    <div className={clsx('p-4 rounded-lg border', typeStyles[type])}>
-      <h4 className="text-sm font-medium text-gray-900 dark:text-white">
+    <div style={mergeStyles(
+      {
+        padding: SPACING.xl,
+        borderRadius: RADIUS.lg,
+        border: `1px solid ${typeStyles[type].borderColor}`,
+        backgroundColor: typeStyles[type].backgroundColor
+      }
+    )}>
+      <h4 style={{
+        fontSize: TYPOGRAPHY.fontSize.sm,
+        fontWeight: TYPOGRAPHY.fontWeight.medium,
+        color: COLORS.text.primary,
+        margin: 0
+      }}>
         {title}
       </h4>
-      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+      <p style={{
+        fontSize: TYPOGRAPHY.fontSize.sm,
+        color: COLORS.text.secondary,
+        margin: `${SPACING.sm} 0 0 0`
+      }}>
         {description}
       </p>
-      <button className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500 mt-2 font-medium">
+      <button style={{
+        fontSize: TYPOGRAPHY.fontSize.sm,
+        color: COLORS.text.link,
+        fontWeight: TYPOGRAPHY.fontWeight.medium,
+        marginTop: SPACING.lg,
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        padding: 0
+      }}>
         {action} →
       </button>
     </div>

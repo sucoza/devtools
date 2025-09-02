@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDevToolsStore } from '../core/devtools-store';
+import { useDevToolsSelector } from '../core/devtools-store';
 import { createWebSocketSignalRDevToolsClient } from '../core/devtools-client';
 import { TabNavigation } from './TabNavigation';
 import { WebSocketPanel } from './WebSocketPanel';
@@ -21,7 +21,15 @@ export function WebSocketSignalRDevToolsPanel({
   height = 600,
   theme = 'auto'
 }: WebSocketSignalRDevToolsPanelProps) {
-  const state = useDevToolsStore();
+  // Use selective subscriptions to avoid re-renders
+  const selectedTab = useDevToolsSelector(state => state.ui.selectedTab);
+  const showFilters = useDevToolsSelector(state => state.ui.showFilters);
+  const uiTheme = useDevToolsSelector(state => state.ui.theme);
+  const selectedConnectionId = useDevToolsSelector(state => state.ui.selectedConnectionId);
+  const selectedMessageId = useDevToolsSelector(state => state.ui.selectedMessageId);
+  const wsRecording = useDevToolsSelector(state => state.websocket.isRecording);
+  const srRecording = useDevToolsSelector(state => state.signalr.isRecording);
+  
   const client = React.useMemo(() => createWebSocketSignalRDevToolsClient(), []);
 
   React.useEffect(() => {
@@ -31,7 +39,7 @@ export function WebSocketSignalRDevToolsPanel({
   }, [client, theme]);
 
   const renderActivePanel = () => {
-    switch (state.ui.selectedTab) {
+    switch (selectedTab) {
       case 'websocket':
         return <WebSocketPanel />;
       case 'signalr':
@@ -47,7 +55,7 @@ export function WebSocketSignalRDevToolsPanel({
     <div 
       className={clsx(
         'websocket-signalr-devtools',
-        `theme-${state.ui.theme}`,
+        `theme-${uiTheme}`,
         className
       )}
       style={{ height }}
@@ -58,7 +66,7 @@ export function WebSocketSignalRDevToolsPanel({
           <button
             onClick={client.toggleFilters}
             className={clsx('btn btn-sm', {
-              'active': state.ui.showFilters
+              'active': showFilters
             })}
             title="Toggle Filters"
           >
@@ -66,9 +74,9 @@ export function WebSocketSignalRDevToolsPanel({
           </button>
           <button
             onClick={() => {
-              if (state.ui.selectedTab === 'websocket') {
+              if (selectedTab === 'websocket') {
                 client.clearWebSocketData();
-              } else if (state.ui.selectedTab === 'signalr') {
+              } else if (selectedTab === 'signalr') {
                 client.clearSignalRData();
               }
             }}
@@ -79,29 +87,29 @@ export function WebSocketSignalRDevToolsPanel({
           </button>
           <button
             onClick={() => {
-              if (state.ui.selectedTab === 'websocket') {
+              if (selectedTab === 'websocket') {
                 client.toggleWebSocketRecording();
-              } else if (state.ui.selectedTab === 'signalr') {
+              } else if (selectedTab === 'signalr') {
                 client.toggleSignalRRecording();
               }
             }}
             className={clsx('btn btn-sm', {
-              'recording': state.ui.selectedTab === 'websocket' 
-                ? state.websocket.isRecording 
-                : state.signalr.isRecording
+              'recording': selectedTab === 'websocket' 
+                ? wsRecording 
+                : srRecording
             })}
             title="Toggle Recording"
           >
-            {state.ui.selectedTab === 'websocket' 
-              ? (state.websocket.isRecording ? '⏸️' : '▶️')
-              : (state.signalr.isRecording ? '⏸️' : '▶️')
+            {selectedTab === 'websocket' 
+              ? (wsRecording ? '⏸️' : '▶️')
+              : (srRecording ? '⏸️' : '▶️')
             }
           </button>
         </div>
       </div>
 
       <div className="devtools-body">
-        {state.ui.showFilters && (
+        {showFilters && (
           <div className="devtools-filters">
             <FilterPanel />
           </div>
@@ -112,20 +120,20 @@ export function WebSocketSignalRDevToolsPanel({
             {renderActivePanel()}
           </div>
           
-          {state.ui.selectedConnectionId && (
+          {selectedConnectionId && (
             <div className="devtools-sidebar">
               <ConnectionDetails 
-                connectionId={state.ui.selectedConnectionId}
-                type={state.ui.selectedTab as 'websocket' | 'signalr'}
+                connectionId={selectedConnectionId}
+                type={selectedTab as 'websocket' | 'signalr'}
               />
             </div>
           )}
           
-          {state.ui.selectedMessageId && (
+          {selectedMessageId && (
             <div className="devtools-message-details">
               <MessageDetails 
-                messageId={state.ui.selectedMessageId}
-                type={state.ui.selectedTab as 'websocket' | 'signalr'}
+                messageId={selectedMessageId}
+                type={selectedTab as 'websocket' | 'signalr'}
               />
             </div>
           )}

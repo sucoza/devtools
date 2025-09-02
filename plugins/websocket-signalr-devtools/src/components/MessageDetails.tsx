@@ -17,7 +17,7 @@ export function MessageDetails({ messageId, type }: MessageDetailsProps) {
     }
   }) as WebSocketMessage | SignalRMessage | undefined;
 
-  const client = createWebSocketSignalRDevToolsClient();
+  const client = React.useMemo(() => createWebSocketSignalRDevToolsClient(), []);
 
   const [viewMode, setViewMode] = React.useState<'formatted' | 'raw'>('formatted');
 

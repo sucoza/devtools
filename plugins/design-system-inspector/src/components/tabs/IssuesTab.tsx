@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { clsx } from 'clsx';
 import { 
   AlertTriangle, 
   AlertCircle, 
@@ -8,6 +7,7 @@ import {
   X, 
   ExternalLink
 } from 'lucide-react';
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles } from '@sucoza/shared-components';
 import { useDesignSystemInspector, useFilteredData, useIssueStats } from '../../hooks';
 
 export function IssuesTab() {
@@ -42,54 +42,142 @@ export function IssuesTab() {
   });
 
   return (
-    <div className="flex h-full">
+    <div style={COMPONENT_STYLES.content.split}>
       {/* Issues List */}
-      <div className="flex-none w-80 border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div style={mergeStyles(
+        COMPONENT_STYLES.sidebar.base,
+        {
+          width: '320px',
+          flexShrink: 0,
+          display: 'flex',
+          flexDirection: 'column'
+        }
+      )}>
+        <div style={{
+          padding: SPACING.xl,
+          borderBottom: `1px solid ${COLORS.border.primary}`
+        }}>
+          <h3 style={{
+            fontSize: TYPOGRAPHY.fontSize.lg,
+            fontWeight: TYPOGRAPHY.fontWeight.semibold,
+            color: COLORS.text.heading,
+            margin: 0
+          }}>
             Issues ({filteredData.issues.length})
           </h3>
           
           {/* Stats */}
-          <div className="mt-3 grid grid-cols-3 gap-2 text-sm">
-            <div className="bg-red-100 dark:bg-red-900 rounded-lg p-2 text-center">
-              <div className="font-bold text-red-800 dark:text-red-200">
+          <div style={{
+            marginTop: SPACING['2xl'],
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr 1fr',
+            gap: SPACING.lg
+          }}>
+            <div style={{
+              backgroundColor: 'rgba(231, 76, 60, 0.1)',
+              borderRadius: RADIUS.lg,
+              padding: SPACING.lg,
+              textAlign: 'center'
+            }}>
+              <div style={{
+                fontWeight: TYPOGRAPHY.fontWeight.bold,
+                color: COLORS.status.error,
+                margin: 0
+              }}>
                 {issueStats.bySeverity.error || 0}
               </div>
-              <div className="text-red-600 dark:text-red-400 text-xs">Errors</div>
+              <div style={{
+                color: COLORS.status.error,
+                fontSize: TYPOGRAPHY.fontSize.xs
+              }}>Errors</div>
             </div>
-            <div className="bg-yellow-100 dark:bg-yellow-900 rounded-lg p-2 text-center">
-              <div className="font-bold text-yellow-800 dark:text-yellow-200">
+            <div style={{
+              backgroundColor: 'rgba(243, 156, 18, 0.1)',
+              borderRadius: RADIUS.lg,
+              padding: SPACING.lg,
+              textAlign: 'center'
+            }}>
+              <div style={{
+                fontWeight: TYPOGRAPHY.fontWeight.bold,
+                color: COLORS.status.warning,
+                margin: 0
+              }}>
                 {issueStats.bySeverity.warning || 0}
               </div>
-              <div className="text-yellow-600 dark:text-yellow-400 text-xs">Warnings</div>
+              <div style={{
+                color: COLORS.status.warning,
+                fontSize: TYPOGRAPHY.fontSize.xs
+              }}>Warnings</div>
             </div>
-            <div className="bg-blue-100 dark:bg-blue-900 rounded-lg p-2 text-center">
-              <div className="font-bold text-blue-800 dark:text-blue-200">
+            <div style={{
+              backgroundColor: 'rgba(52, 152, 219, 0.1)',
+              borderRadius: RADIUS.lg,
+              padding: SPACING.lg,
+              textAlign: 'center'
+            }}>
+              <div style={{
+                fontWeight: TYPOGRAPHY.fontWeight.bold,
+                color: COLORS.status.info,
+                margin: 0
+              }}>
                 {issueStats.bySeverity.info || 0}
               </div>
-              <div className="text-blue-600 dark:text-blue-400 text-xs">Info</div>
+              <div style={{
+                color: COLORS.status.info,
+                fontSize: TYPOGRAPHY.fontSize.xs
+              }}>Info</div>
             </div>
           </div>
 
           {issueStats.fixableIssues > 0 && (
-            <div className="mt-3 p-2 bg-green-100 dark:bg-green-900 rounded-lg">
-              <div className="text-xs text-green-800 dark:text-green-200">
+            <div style={{
+              marginTop: SPACING['2xl'],
+              padding: SPACING.lg,
+              backgroundColor: 'rgba(78, 201, 176, 0.1)',
+              borderRadius: RADIUS.lg
+            }}>
+              <div style={{
+                fontSize: TYPOGRAPHY.fontSize.xs,
+                color: COLORS.status.success
+              }}>
                 {issueStats.fixableIssues} issues can be auto-fixed
               </div>
             </div>
           )}
         </div>
         
-        <div className="overflow-y-auto flex-1">
+        <div style={{
+          overflowY: 'auto',
+          flex: 1
+        }}>
           {sortedIssues.length === 0 ? (
-            <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-              <CheckCircle className="w-12 h-12 mx-auto mb-4 opacity-50 text-green-500" />
-              <p className="font-medium">No issues found!</p>
-              <p className="text-sm">Your design system looks consistent.</p>
+            <div style={{
+              padding: SPACING['6xl'],
+              textAlign: 'center',
+              color: COLORS.text.muted
+            }}>
+              <CheckCircle style={{
+                width: '48px',
+                height: '48px',
+                margin: '0 auto',
+                marginBottom: SPACING.xl,
+                opacity: 0.5,
+                color: COLORS.status.success
+              }} />
+              <p style={{
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                margin: 0,
+                marginBottom: SPACING.sm
+              }}>No issues found!</p>
+              <p style={{
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                margin: 0
+              }}>Your design system looks consistent.</p>
             </div>
           ) : (
-            <div className="p-2">
+            <div style={{
+              padding: SPACING.lg
+            }}>
               {sortedIssues.map((issue) => (
                 <IssueListItem
                   key={issue.id}
@@ -105,7 +193,10 @@ export function IssuesTab() {
       </div>
 
       {/* Issue Details */}
-      <div className="flex-1 overflow-y-auto">
+      <div style={{
+        flex: 1,
+        overflowY: 'auto'
+      }}>
         {selectedIssueData ? (
           <IssueDetails 
             issue={selectedIssueData} 
@@ -139,21 +230,18 @@ function IssueListItem({
   const severityConfig = {
     error: { 
       icon: AlertCircle, 
-      color: 'text-red-600 dark:text-red-400',
-      bg: 'bg-red-50 dark:bg-red-900/20',
-      border: 'border-red-200 dark:border-red-800'
+      color: COLORS.status.error,
+      bgColor: 'rgba(231, 76, 60, 0.1)'
     },
     warning: { 
       icon: AlertTriangle, 
-      color: 'text-yellow-600 dark:text-yellow-400',
-      bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-      border: 'border-yellow-200 dark:border-yellow-800'
+      color: COLORS.status.warning,
+      bgColor: 'rgba(243, 156, 18, 0.1)'
     },
     info: { 
       icon: Info, 
-      color: 'text-blue-600 dark:text-blue-400',
-      bg: 'bg-blue-50 dark:bg-blue-900/20',
-      border: 'border-blue-200 dark:border-blue-800'
+      color: COLORS.status.info,
+      bgColor: 'rgba(52, 152, 219, 0.1)'
     }
   };
 
@@ -161,50 +249,126 @@ function IssueListItem({
   const Icon = config.icon;
 
   return (
-    <div className="mb-2">
+    <div style={{
+      marginBottom: SPACING.lg
+    }}>
       <div
-        className={clsx(
-          'p-3 rounded-lg cursor-pointer transition-colors border',
-          isSelected
-            ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
-            : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
+        style={mergeStyles(
+          COMPONENT_STYLES.list.item.base,
+          {
+            padding: SPACING['2xl'],
+            borderRadius: RADIUS.lg,
+            cursor: 'pointer',
+            border: `1px solid ${COLORS.border.primary}`,
+            backgroundColor: isSelected ? COLORS.background.selected : COLORS.background.secondary,
+            borderColor: isSelected ? COLORS.border.focus : COLORS.border.primary
+          }
         )}
         onClick={() => onSelect(issue.id)}
+        onMouseEnter={(e) => {
+          if (!isSelected) {
+            e.currentTarget.style.backgroundColor = COLORS.background.hover;
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isSelected) {
+            e.currentTarget.style.backgroundColor = COLORS.background.secondary;
+          }
+        }}
       >
-        <div className="flex items-start justify-between">
-          <div className="flex items-start flex-1 min-w-0">
-            <Icon className={clsx(
-              'w-4 h-4 mr-2 flex-none mt-0.5',
-              isSelected ? 'text-blue-600 dark:text-blue-400' : config.color
-            )} />
-            <div className="min-w-0 flex-1">
-              <div className="font-medium text-gray-900 dark:text-white text-sm">
+        <div style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            flex: 1,
+            minWidth: 0
+          }}>
+            <Icon style={{
+              width: '16px',
+              height: '16px',
+              marginRight: SPACING.lg,
+              flexShrink: 0,
+              marginTop: '2px',
+              color: isSelected ? COLORS.text.accent : config.color
+            }} />
+            <div style={{
+              minWidth: 0,
+              flex: 1
+            }}>
+              <div style={{
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                color: COLORS.text.primary,
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                margin: 0
+              }}>
                 {issue.title}
               </div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+              <div style={{
+                fontSize: TYPOGRAPHY.fontSize.xs,
+                color: COLORS.text.secondary,
+                marginTop: SPACING.sm,
+                lineHeight: TYPOGRAPHY.lineHeight.tight,
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical' as const,
+                overflow: 'hidden'
+              }}>
                 {issue.description}
               </div>
-              <div className="flex items-center mt-2 space-x-2">
-                <span className={clsx(
-                  'text-xs px-2 py-1 rounded capitalize',
-                  config.bg, config.color
-                )}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginTop: SPACING.lg,
+                gap: SPACING.lg
+              }}>
+                <span style={{
+                  fontSize: TYPOGRAPHY.fontSize.xs,
+                  padding: `${SPACING.xs} ${SPACING.lg}`,
+                  borderRadius: RADIUS.md,
+                  textTransform: 'capitalize',
+                  backgroundColor: config.bgColor,
+                  color: config.color
+                }}>
                   {issue.severity}
                 </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
+                <span style={{
+                  fontSize: TYPOGRAPHY.fontSize.xs,
+                  color: COLORS.text.secondary
+                }}>
                   {issue.type.replace('-', ' ')}
                 </span>
                 {issue.fixable && (
-                  <span className="text-xs bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-2 py-1 rounded">
+                  <span style={{
+                    fontSize: TYPOGRAPHY.fontSize.xs,
+                    backgroundColor: 'rgba(78, 201, 176, 0.1)',
+                    color: COLORS.status.success,
+                    padding: `${SPACING.xs} ${SPACING.lg}`,
+                    borderRadius: RADIUS.md
+                  }}>
                     Fixable
                   </span>
                 )}
               </div>
             </div>
           </div>
-          <div className="flex items-center space-x-1 ml-2">
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: SPACING.sm,
+            marginLeft: SPACING.lg
+          }}>
             {issue.occurrences.length > 1 && (
-              <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">
+              <span style={{
+                fontSize: TYPOGRAPHY.fontSize.xs,
+                backgroundColor: COLORS.background.tertiary,
+                color: COLORS.text.secondary,
+                padding: `${SPACING.xs} ${SPACING.lg}`,
+                borderRadius: RADIUS.md
+              }}>
                 {issue.occurrences.length}
               </span>
             )}
@@ -213,10 +377,22 @@ function IssueListItem({
                 e.stopPropagation();
                 onResolve(issue.id);
               }}
-              className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              style={{
+                padding: SPACING.sm,
+                color: COLORS.text.muted,
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = COLORS.text.secondary;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = COLORS.text.muted;
+              }}
               title="Mark as resolved"
             >
-              <X className="w-3 h-3" />
+              <X style={{ width: '12px', height: '12px' }} />
             </button>
           </div>
         </div>
@@ -235,21 +411,18 @@ function IssueDetails({
   const severityConfig = {
     error: { 
       icon: AlertCircle, 
-      color: 'text-red-600 dark:text-red-400',
-      bg: 'bg-red-50 dark:bg-red-900/20',
-      border: 'border-red-200 dark:border-red-800'
+      color: COLORS.status.error,
+      bgColor: 'rgba(231, 76, 60, 0.1)'
     },
     warning: { 
       icon: AlertTriangle, 
-      color: 'text-yellow-600 dark:text-yellow-400',
-      bg: 'bg-yellow-50 dark:bg-yellow-900/20',
-      border: 'border-yellow-200 dark:border-yellow-800'
+      color: COLORS.status.warning,
+      bgColor: 'rgba(243, 156, 18, 0.1)'
     },
     info: { 
       icon: Info, 
-      color: 'text-blue-600 dark:text-blue-400',
-      bg: 'bg-blue-50 dark:bg-blue-900/20',
-      border: 'border-blue-200 dark:border-blue-800'
+      color: COLORS.status.info,
+      bgColor: 'rgba(52, 152, 219, 0.1)'
     }
   };
 
@@ -257,28 +430,75 @@ function IssueDetails({
   const Icon = config.icon;
 
   return (
-    <div className="h-full flex flex-col">
+    <div style={{
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
       {/* Header */}
-      <div className="flex-none border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
-        <div className="flex items-start justify-between">
-          <div className="flex items-start">
-            <Icon className={clsx('w-6 h-6 mr-3 mt-1 flex-none', config.color)} />
+      <div style={{
+        flexShrink: 0,
+        borderBottom: `1px solid ${COLORS.border.primary}`,
+        backgroundColor: COLORS.background.secondary,
+        padding: SPACING['5xl']
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'flex-start'
+          }}>
+            <Icon style={{
+              width: '24px',
+              height: '24px',
+              marginRight: SPACING['2xl'],
+              marginTop: SPACING.sm,
+              flexShrink: 0,
+              color: config.color
+            }} />
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              <h2 style={{
+                fontSize: TYPOGRAPHY.fontSize.xl,
+                fontWeight: TYPOGRAPHY.fontWeight.bold,
+                color: COLORS.text.heading,
+                margin: 0
+              }}>
                 {issue.title}
               </h2>
-              <div className="flex items-center mt-2 space-x-3">
-                <span className={clsx(
-                  'px-3 py-1 rounded-full text-sm font-medium capitalize',
-                  config.bg, config.color
-                )}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginTop: SPACING.lg,
+                gap: SPACING['2xl']
+              }}>
+                <span style={{
+                  padding: `${SPACING.sm} ${SPACING['2xl']}`,
+                  borderRadius: RADIUS.full,
+                  fontSize: TYPOGRAPHY.fontSize.sm,
+                  fontWeight: TYPOGRAPHY.fontWeight.medium,
+                  textTransform: 'capitalize',
+                  backgroundColor: config.bgColor,
+                  color: config.color
+                }}>
                   {issue.severity}
                 </span>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
+                <span style={{
+                  fontSize: TYPOGRAPHY.fontSize.sm,
+                  color: COLORS.text.secondary
+                }}>
                   {issue.type.replace('-', ' ')}
                 </span>
                 {issue.fixable && (
-                  <span className="text-sm bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-3 py-1 rounded-full">
+                  <span style={{
+                    fontSize: TYPOGRAPHY.fontSize.sm,
+                    backgroundColor: 'rgba(78, 201, 176, 0.1)',
+                    color: COLORS.status.success,
+                    padding: `${SPACING.sm} ${SPACING['2xl']}`,
+                    borderRadius: RADIUS.full
+                  }}>
                     Auto-fixable
                   </span>
                 )}
@@ -286,15 +506,32 @@ function IssueDetails({
             </div>
           </div>
           
-          <div className="flex items-center space-x-2">
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: SPACING.lg
+          }}>
             {issue.fixable && (
-              <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+              <button style={mergeStyles(
+                COMPONENT_STYLES.button.base,
+                COMPONENT_STYLES.button.success,
+                {
+                  fontSize: TYPOGRAPHY.fontSize.sm
+                }
+              )}>
                 Auto Fix
               </button>
             )}
             <button
               onClick={() => onResolve(issue.id)}
-              className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+              style={mergeStyles(
+                COMPONENT_STYLES.button.base,
+                {
+                  fontSize: TYPOGRAPHY.fontSize.sm,
+                  backgroundColor: COLORS.background.tertiary,
+                  color: COLORS.text.primary
+                }
+              )}
             >
               Mark Resolved
             </button>

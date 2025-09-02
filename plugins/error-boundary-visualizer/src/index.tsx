@@ -237,3 +237,6 @@ if (process.env.NODE_ENV === 'development') {
     initializeErrorBoundaryDevTools: createGlobalInitialize(),
   }
 }
+
+// Default export for DevTools integration
+export default ErrorBoundaryDevToolsPanel

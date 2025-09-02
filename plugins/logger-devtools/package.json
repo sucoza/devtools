@@ -2,7 +2,6 @@
   "name": "@sucoza/logger-devtools-plugin",
   "version": "0.1.9",
   "description": "Enhanced logging DevTools plugin with filtering, formatting, and TanStack integration",
-  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",

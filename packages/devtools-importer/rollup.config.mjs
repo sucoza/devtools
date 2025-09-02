@@ -10,6 +10,10 @@ export default {
     react: 'src/react.tsx'
   },
   external: [
+    // Virtual modules provided by Vite plugin
+    'virtual:tdi/plugins',
+    'virtual:tdi/config',
+    
     // React ecosystem
     'react',
     'react-dom',

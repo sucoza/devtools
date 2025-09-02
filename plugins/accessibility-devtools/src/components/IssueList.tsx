@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { clsx } from 'clsx';
 import { 
   AlertTriangle, 
   AlertCircle, 
@@ -11,6 +10,7 @@ import {
   ChevronDown,
   ChevronRight
 } from 'lucide-react';
+import { COLORS, COMPONENT_STYLES, mergeStyles } from '@sucoza/shared-components';
 import { useAccessibilityAudit } from '../hooks/useAccessibilityAudit';
 import type { AccessibilityIssue, SeverityLevel } from '../types';
 
@@ -67,113 +67,216 @@ export function IssueList({ showOverview = false, className }: IssueListProps) {
   };
 
   const getSeverityIcon = (severity: SeverityLevel) => {
+    const iconStyle = { width: '16px', height: '16px' };
     switch (severity) {
       case 'critical':
-        return <AlertTriangle className="w-4 h-4 text-red-500" />;
+        return <AlertTriangle style={{ ...iconStyle, color: COLORS.severity.critical }} />;
       case 'serious':
-        return <AlertCircle className="w-4 h-4 text-orange-500" />;
+        return <AlertCircle style={{ ...iconStyle, color: COLORS.severity.serious }} />;
       case 'moderate':
-        return <AlertCircle className="w-4 h-4 text-yellow-500" />;
+        return <AlertCircle style={{ ...iconStyle, color: COLORS.severity.moderate }} />;
       case 'minor':
-        return <Info className="w-4 h-4 text-blue-500" />;
+        return <Info style={{ ...iconStyle, color: COLORS.severity.minor }} />;
       default:
-        return <Info className="w-4 h-4 text-gray-500" />;
+        return <Info style={{ ...iconStyle, color: COLORS.text.muted }} />;
     }
   };
 
-  const getSeverityColor = (severity: SeverityLevel) => {
+  const getSeverityStyles = (severity: SeverityLevel): React.CSSProperties => {
+    const baseStyles = {
+      padding: '2px 8px',
+      borderRadius: '9999px',
+      fontSize: '10px',
+      fontWeight: '500',
+      display: 'inline-block'
+    };
+    
     switch (severity) {
       case 'critical':
-        return 'text-red-700 bg-red-50 border-red-200 dark:text-red-400 dark:bg-red-900/20 dark:border-red-800';
+        return { ...baseStyles, backgroundColor: 'rgba(231, 76, 60, 0.2)', color: COLORS.severity.critical };
       case 'serious':
-        return 'text-orange-700 bg-orange-50 border-orange-200 dark:text-orange-400 dark:bg-orange-900/20 dark:border-orange-800';
+        return { ...baseStyles, backgroundColor: 'rgba(243, 156, 18, 0.2)', color: COLORS.severity.serious };
       case 'moderate':
-        return 'text-yellow-700 bg-yellow-50 border-yellow-200 dark:text-yellow-400 dark:bg-yellow-900/20 dark:border-yellow-800';
+        return { ...baseStyles, backgroundColor: 'rgba(241, 196, 15, 0.2)', color: COLORS.severity.moderate };
       case 'minor':
-        return 'text-blue-700 bg-blue-50 border-blue-200 dark:text-blue-400 dark:bg-blue-900/20 dark:border-blue-800';
+        return { ...baseStyles, backgroundColor: 'rgba(52, 152, 219, 0.2)', color: COLORS.severity.minor };
       default:
-        return 'text-gray-700 bg-gray-50 border-gray-200 dark:text-gray-400 dark:bg-gray-900/20 dark:border-gray-800';
+        return { ...baseStyles, backgroundColor: COLORS.background.tertiary, color: COLORS.text.secondary };
     }
   };
 
   if (!currentAudit) {
     return (
-      <div className={clsx('flex-1 flex items-center justify-center text-gray-500 dark:text-gray-400', className)}>
-        <div className="text-center">
-          <AlertTriangle className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
-          <p className="text-lg font-medium mb-2">No Audit Results</p>
-          <p className="text-sm">Start a scan to analyze accessibility issues</p>
+      <div style={mergeStyles(COMPONENT_STYLES.empty.container, className ? {} : {})}>
+        <div style={{ textAlign: 'center' }}>
+          <AlertTriangle style={{ width: '48px', height: '48px', margin: '0 auto 16px auto', color: COLORS.text.muted }} />
+          <p style={{ fontSize: '18px', fontWeight: '500', marginBottom: '8px', color: COLORS.text.primary }}>No Audit Results</p>
+          <p style={{ fontSize: '14px', color: COLORS.text.secondary }}>Start a scan to analyze accessibility issues</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={clsx('flex flex-col h-full', className)}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* Overview Section */}
       {showOverview && (
-        <div className="p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+        <div style={{
+          padding: '16px',
+          background: COLORS.background.secondary,
+          borderBottom: `1px solid ${COLORS.border.primary}`
+        }}>
+          <h2 style={{
+            fontSize: '18px',
+            fontWeight: '600',
+            color: COLORS.text.heading,
+            marginBottom: '12px',
+            margin: 0
+          }}>
             Accessibility Overview
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-              <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+            gap: '16px'
+          }}>
+            <div style={{
+              textAlign: 'center',
+              padding: '12px',
+              backgroundColor: 'rgba(231, 76, 60, 0.2)',
+              borderRadius: '8px'
+            }}>
+              <div style={{
+                fontSize: '24px',
+                fontWeight: '700',
+                color: COLORS.severity.critical
+              }}>
                 {stats.critical}
               </div>
-              <div className="text-sm text-red-700 dark:text-red-300">Critical</div>
+              <div style={{
+                fontSize: '12px',
+                color: COLORS.severity.critical,
+                marginTop: '4px'
+              }}>Critical</div>
             </div>
-            <div className="text-center p-3 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-              <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+            <div style={{
+              textAlign: 'center',
+              padding: '12px',
+              backgroundColor: 'rgba(243, 156, 18, 0.2)',
+              borderRadius: '8px'
+            }}>
+              <div style={{
+                fontSize: '24px',
+                fontWeight: '700',
+                color: COLORS.severity.serious
+              }}>
                 {stats.serious}
               </div>
-              <div className="text-sm text-orange-700 dark:text-orange-300">Serious</div>
+              <div style={{
+                fontSize: '12px',
+                color: COLORS.severity.serious,
+                marginTop: '4px'
+              }}>Serious</div>
             </div>
-            <div className="text-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-              <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+            <div style={{
+              textAlign: 'center',
+              padding: '12px',
+              backgroundColor: 'rgba(241, 196, 15, 0.2)',
+              borderRadius: '8px'
+            }}>
+              <div style={{
+                fontSize: '24px',
+                fontWeight: '700',
+                color: COLORS.severity.moderate
+              }}>
                 {stats.moderate}
               </div>
-              <div className="text-sm text-yellow-700 dark:text-yellow-300">Moderate</div>
+              <div style={{
+                fontSize: '12px',
+                color: COLORS.severity.moderate,
+                marginTop: '4px'
+              }}>Moderate</div>
             </div>
-            <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+            <div style={{
+              textAlign: 'center',
+              padding: '12px',
+              backgroundColor: 'rgba(52, 152, 219, 0.2)',
+              borderRadius: '8px'
+            }}>
+              <div style={{
+                fontSize: '24px',
+                fontWeight: '700',
+                color: COLORS.severity.minor
+              }}>
                 {stats.minor}
               </div>
-              <div className="text-sm text-blue-700 dark:text-blue-300">Minor</div>
+              <div style={{
+                fontSize: '12px',
+                color: COLORS.severity.minor,
+                marginTop: '4px'
+              }}>Minor</div>
             </div>
           </div>
         </div>
       )}
 
       {/* Filters and Search */}
-      <div className="p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center gap-2 mb-2">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+      <div style={{
+        padding: '12px',
+        background: COLORS.background.secondary,
+        borderBottom: `1px solid ${COLORS.border.primary}`
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          marginBottom: '8px'
+        }}>
+          <div style={{ flex: 1, position: 'relative' }}>
+            <Search style={{
+              position: 'absolute',
+              left: '12px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: '16px',
+              height: '16px',
+              color: COLORS.text.secondary
+            }} />
             <input
               type="text"
               placeholder="Search issues..."
               value={filters.searchQuery}
               onChange={(e) => updateSearchFilter(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              style={mergeStyles(
+                COMPONENT_STYLES.input.base,
+                { paddingLeft: '40px', width: '100%' }
+              )}
             />
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={clsx(
-              'flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors',
-              showFilters
-                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+            style={mergeStyles(
+              COMPONENT_STYLES.button.base,
+              COMPONENT_STYLES.button.small,
+              showFilters ? COMPONENT_STYLES.button.active : {}
             )}
           >
-            <Filter className="w-4 h-4" />
+            <Filter style={{ width: '16px', height: '16px' }} />
             Filters
           </button>
           {(filters.searchQuery || filters.severity.size < 4 || filters.ruleIds.size > 0) && (
             <button
               onClick={resetFilters}
-              className="px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+              style={{
+                padding: '8px 12px',
+                fontSize: '12px',
+                color: COLORS.text.secondary,
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                borderRadius: '3px',
+                transition: 'color 0.15s ease'
+              }}
             >
               Clear
             </button>
@@ -182,22 +285,39 @@ export function IssueList({ showOverview = false, className }: IssueListProps) {
 
         {/* Filter Options */}
         {showFilters && (
-          <div className="space-y-3">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {/* Severity Filters */}
             <div>
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+              <label style={{
+                fontSize: '12px',
+                fontWeight: '500',
+                color: COLORS.text.heading,
+                marginBottom: '8px',
+                display: 'block'
+              }}>
                 Severity
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                 {(['critical', 'serious', 'moderate', 'minor'] as const).map(severity => (
                   <button
                     key={severity}
                     onClick={() => toggleSeverityFilter(severity)}
-                    className={clsx(
-                      'px-3 py-1 text-xs rounded-full border transition-colors',
+                    style={mergeStyles(
+                      {
+                        padding: '4px 12px',
+                        fontSize: '10px',
+                        borderRadius: '9999px',
+                        border: `1px solid ${COLORS.border.primary}`,
+                        transition: 'all 0.15s ease',
+                        cursor: 'pointer',
+                        textTransform: 'capitalize'
+                      },
                       filters.severity.has(severity)
-                        ? getSeverityColor(severity)
-                        : 'text-gray-600 bg-gray-100 border-gray-300 hover:bg-gray-200 dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600'
+                        ? getSeverityStyles(severity)
+                        : {
+                            color: COLORS.text.secondary,
+                            backgroundColor: COLORS.background.tertiary
+                          }
                     )}
                   >
                     {severity}
@@ -209,19 +329,39 @@ export function IssueList({ showOverview = false, className }: IssueListProps) {
             {/* Rule Filters */}
             {uniqueRuleIds.length > 0 && (
               <div>
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
+                <label style={{
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: COLORS.text.heading,
+                  marginBottom: '8px',
+                  display: 'block'
+                }}>
                   Rules (showing top 10)
                 </label>
-                <div className="flex flex-wrap gap-2">
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                   {uniqueRuleIds.slice(0, 10).map(ruleId => (
                     <button
                       key={ruleId}
                       onClick={() => toggleRuleFilter(ruleId)}
-                      className={clsx(
-                        'px-2 py-1 text-xs rounded border transition-colors',
+                      style={mergeStyles(
+                        {
+                          padding: '4px 8px',
+                          fontSize: '10px',
+                          borderRadius: '3px',
+                          border: `1px solid ${COLORS.border.primary}`,
+                          transition: 'all 0.15s ease',
+                          cursor: 'pointer'
+                        },
                         filters.ruleIds.has(ruleId)
-                          ? 'text-blue-700 bg-blue-100 border-blue-300 dark:text-blue-400 dark:bg-blue-900/30 dark:border-blue-600'
-                          : 'text-gray-600 bg-gray-100 border-gray-300 hover:bg-gray-200 dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600'
+                          ? {
+                              color: COLORS.text.accent,
+                              backgroundColor: 'rgba(0, 122, 204, 0.2)',
+                              borderColor: COLORS.border.focus
+                            }
+                          : {
+                              color: COLORS.text.secondary,
+                              backgroundColor: COLORS.background.tertiary
+                            }
                       )}
                     >
                       {ruleId}
@@ -236,19 +376,35 @@ export function IssueList({ showOverview = false, className }: IssueListProps) {
 
       {/* Results Summary */}
       {filteredStats.total !== stats.total && (
-        <div className="px-3 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-sm">
+        <div style={{
+          padding: '8px 12px',
+          backgroundColor: 'rgba(52, 152, 219, 0.2)',
+          color: COLORS.status.info,
+          fontSize: '12px'
+        }}>
           Showing {filteredStats.total} of {stats.total} issues
         </div>
       )}
 
       {/* Issues List */}
-      <div className="flex-1 overflow-auto">
+      <div style={COMPONENT_STYLES.content.scrollable}>
         {filteredIssues.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-            <div className="text-center">
-              <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-gray-300 dark:text-gray-600" />
-              <p className="font-medium">No issues found</p>
-              <p className="text-sm">
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            color: COLORS.text.secondary
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <AlertTriangle style={{
+                width: '32px',
+                height: '32px',
+                margin: '0 auto 8px auto',
+                color: COLORS.text.muted
+              }} />
+              <p style={{ fontWeight: '500', marginBottom: '4px', color: COLORS.text.primary }}>No issues found</p>
+              <p style={{ fontSize: '12px', color: COLORS.text.secondary }}>
                 {filters.searchQuery || filters.severity.size < 4 
                   ? 'Try adjusting your filters'
                   : 'Great job! No accessibility issues detected'
@@ -257,7 +413,7 @@ export function IssueList({ showOverview = false, className }: IssueListProps) {
             </div>
           </div>
         ) : (
-          <div className="divide-y divide-gray-200 dark:divide-gray-700">
+          <div>
             {filteredIssues.map((issue) => (
               <IssueItem
                 key={issue.id}
@@ -267,7 +423,7 @@ export function IssueList({ showOverview = false, className }: IssueListProps) {
                 onSelect={() => handleIssueSelect(issue)}
                 onToggleExpansion={() => toggleIssueExpansion(issue.id)}
                 getSeverityIcon={getSeverityIcon}
-                getSeverityColor={getSeverityColor}
+                getSeverityStyles={getSeverityStyles}
               />
             ))}
           </div>
@@ -284,7 +440,7 @@ interface IssueItemProps {
   onSelect: () => void;
   onToggleExpansion: () => void;
   getSeverityIcon: (severity: SeverityLevel) => React.ReactNode;
-  getSeverityColor: (severity: SeverityLevel) => string;
+  getSeverityStyles: (severity: SeverityLevel) => React.CSSProperties;
 }
 
 function IssueItem({
@@ -294,70 +450,93 @@ function IssueItem({
   onSelect,
   onToggleExpansion,
   getSeverityIcon,
-  getSeverityColor,
+  getSeverityStyles,
 }: IssueItemProps) {
   return (
     <div
-      className={clsx(
-        'border-l-4 transition-all duration-200',
-        isSelected 
-          ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
-          : 'border-transparent hover:bg-gray-50 dark:hover:bg-gray-800/50'
-      )}
+      style={{
+        borderLeft: `4px solid ${isSelected ? COLORS.border.focus : 'transparent'}`,
+        transition: 'all 0.2s ease',
+        backgroundColor: isSelected 
+          ? COLORS.background.selected 
+          : 'transparent'
+      }}
     >
       <div
-        className="flex items-start gap-3 p-4 cursor-pointer"
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          gap: '12px',
+          padding: '16px',
+          cursor: 'pointer',
+          borderBottom: `1px solid ${COLORS.border.secondary}`
+        }}
         onClick={onSelect}
       >
-        <div className="flex-shrink-0 mt-0.5">
+        <div style={{ flexShrink: 0, marginTop: '2px' }}>
           {getSeverityIcon(issue.impact)}
         </div>
         
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <h3 className="font-medium text-gray-900 dark:text-white text-sm leading-tight">
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
+            <div style={{ flex: 1 }}>
+              <h3 style={{
+                fontWeight: '500',
+                color: COLORS.text.primary,
+                fontSize: '12px',
+                lineHeight: '1.4',
+                margin: 0,
+                marginBottom: '4px'
+              }}>
                 {issue.description}
               </h3>
-              <div className="flex items-center gap-2 mt-1">
-                <span className={clsx(
-                  'inline-block px-2 py-0.5 text-xs font-medium rounded-full',
-                  getSeverityColor(issue.impact)
-                )}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                <span style={getSeverityStyles(issue.impact)}>
                   {issue.impact}
                 </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
+                <span style={{ fontSize: '10px', color: COLORS.text.secondary }}>
                   {issue.rule}
                 </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
+                <span style={{ fontSize: '10px', color: COLORS.text.secondary }}>
                   {issue.nodes.length} element{issue.nodes.length !== 1 ? 's' : ''}
                 </span>
               </div>
             </div>
             
-            <div className="flex items-center gap-1">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <a
                 href={issue.helpUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                style={{
+                  color: COLORS.text.muted,
+                  textDecoration: 'none',
+                  transition: 'color 0.15s ease'
+                }}
                 onClick={(e) => e.stopPropagation()}
                 title="View help documentation"
               >
-                <ExternalLink className="w-4 h-4" />
+                <ExternalLink style={{ width: '16px', height: '16px' }} />
               </a>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onToggleExpansion();
                 }}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: COLORS.text.muted,
+                  transition: 'color 0.15s ease',
+                  padding: '2px'
+                }}
                 title={isExpanded ? 'Collapse details' : 'Expand details'}
               >
                 {isExpanded ? (
-                  <ChevronDown className="w-4 h-4" />
+                  <ChevronDown style={{ width: '16px', height: '16px' }} />
                 ) : (
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight style={{ width: '16px', height: '16px' }} />
                 )}
               </button>
             </div>
@@ -367,52 +546,100 @@ function IssueItem({
 
       {/* Expanded Details */}
       {isExpanded && (
-        <div className="px-4 pb-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
-          <div className="mt-3 space-y-3">
+        <div style={{
+          padding: '0 16px 16px 16px',
+          borderTop: `1px solid ${COLORS.border.primary}`,
+          backgroundColor: COLORS.background.tertiary
+        }}>
+          <div style={{ marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div>
-              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <h4 style={{
+                fontSize: '12px',
+                fontWeight: '500',
+                color: COLORS.text.heading,
+                marginBottom: '4px',
+                margin: 0
+              }}>
                 Help
               </h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p style={{
+                fontSize: '12px',
+                color: COLORS.text.secondary,
+                margin: 0,
+                lineHeight: '1.4'
+              }}>
                 {issue.help}
               </p>
             </div>
 
             {issue.nodes.length > 0 && (
               <div>
-                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <h4 style={{
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: COLORS.text.heading,
+                  marginBottom: '8px',
+                  margin: 0
+                }}>
                   Affected Elements
                 </h4>
-                <div className="space-y-2">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {issue.nodes.slice(0, 5).map((node, index) => (
                     <div
                       key={index}
-                      className="p-2 bg-white dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600"
+                      style={{
+                        padding: '8px',
+                        backgroundColor: COLORS.background.primary,
+                        borderRadius: '3px',
+                        border: `1px solid ${COLORS.border.primary}`
+                      }}
                     >
-                      <div className="flex items-start justify-between gap-2">
-                        <code className="text-xs text-gray-800 dark:text-gray-200 break-all">
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
+                        <code style={{
+                          fontSize: '10px',
+                          color: COLORS.text.primary,
+                          wordBreak: 'break-all',
+                          fontFamily: 'monospace'
+                        }}>
                           {node.target[0]}
                         </code>
                         <button
-                          className="flex-shrink-0 text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
+                          style={{
+                            flexShrink: 0,
+                            color: COLORS.text.accent,
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            transition: 'color 0.15s ease',
+                            padding: '2px'
+                          }}
                           title="Highlight element"
                           onClick={() => {
                             // Would implement element highlighting
                             // TODO: Implement element highlighting
                           }}
                         >
-                          <Eye className="w-3 h-3" />
+                          <Eye style={{ width: '12px', height: '12px' }} />
                         </button>
                       </div>
                       {node.failureSummary && (
-                        <p className="text-xs text-red-600 dark:text-red-400 mt-1">
+                        <p style={{
+                          fontSize: '10px',
+                          color: COLORS.status.error,
+                          marginTop: '4px',
+                          margin: '4px 0 0 0'
+                        }}>
                           {node.failureSummary}
                         </p>
                       )}
                     </div>
                   ))}
                   {issue.nodes.length > 5 && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p style={{
+                      fontSize: '10px',
+                      color: COLORS.text.muted,
+                      margin: 0
+                    }}>
                       ... and {issue.nodes.length - 5} more elements
                     </p>
                   )}
@@ -422,14 +649,26 @@ function IssueItem({
 
             {issue.tags.length > 0 && (
               <div>
-                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <h4 style={{
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: COLORS.text.heading,
+                  marginBottom: '4px',
+                  margin: 0
+                }}>
                   Tags
                 </h4>
-                <div className="flex flex-wrap gap-1">
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
                   {issue.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-0.5 text-xs bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded"
+                      style={{
+                        padding: '2px 8px',
+                        fontSize: '10px',
+                        backgroundColor: COLORS.background.tertiary,
+                        color: COLORS.text.secondary,
+                        borderRadius: '3px'
+                      }}
                     >
                       {tag}
                     </span>

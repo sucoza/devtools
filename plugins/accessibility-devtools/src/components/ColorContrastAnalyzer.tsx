@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { clsx } from 'clsx';
+import { COLORS, COMPONENT_STYLES, mergeStyles } from '@sucoza/shared-components';
+
+// Simple clsx replacement
+const clsx = (...classes: (string | undefined | boolean)[]): string => {
+  return classes.filter(Boolean).join(' ');
+};
 import { 
   Palette, 
   Eye, 
@@ -105,7 +110,7 @@ export function ColorContrastAnalyzer({ className }: ColorContrastAnalyzerProps)
   };
 
   return (
-    <div className={clsx('flex flex-col h-full', className)}>
+    <div style={mergeStyles({ display: 'flex', flexDirection: 'column', height: '100%' }, className ? {} : {})}>
       {/* Header */}
       <div className="p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between mb-4">

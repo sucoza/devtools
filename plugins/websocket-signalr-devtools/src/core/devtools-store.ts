@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
+import { useRef, useCallback } from 'react';
 import type { 
   DevToolsState, 
   DevToolsAction, 
@@ -508,10 +509,30 @@ export function useDevToolsStore(): DevToolsState {
 
 // Hook with selector for performance
 export function useDevToolsSelector<T>(selector: (state: DevToolsState) => T): T {
+  // Memoize the selector result to prevent infinite loops
+  const selectorRef = useRef(selector);
+  const resultRef = useRef<T | undefined>(undefined);
+  
+  // Update selector ref on each render
+  selectorRef.current = selector;
+  
+  // Create stable getSnapshot that caches result
+  const getSnapshot = useCallback(() => {
+    const state = devToolsStore.getSnapshot();
+    const newResult = selectorRef.current(state);
+    
+    // Only update if result actually changed (using Object.is for comparison)
+    if (!Object.is(resultRef.current, newResult)) {
+      resultRef.current = newResult;
+    }
+    
+    return resultRef.current as T;
+  }, []);
+  
   return useSyncExternalStore(
     devToolsStore.subscribe,
-    () => selector(devToolsStore.getSnapshot()),
-    () => selector(devToolsStore.getSnapshot())
+    getSnapshot,
+    getSnapshot
   );
 }
 

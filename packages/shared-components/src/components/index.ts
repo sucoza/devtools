@@ -10,3 +10,14 @@ export type {
   ChartSeries, 
   PerformanceChartProps 
 } from './PerformanceChart';
+
+export { PluginPanel } from './PluginPanel';
+export type { 
+  PluginPanelProps,
+  PluginTab,
+  PluginAction,
+  PluginMetric,
+  FilterSection
+} from './PluginPanel';
+
+export { PluginErrorBoundary, withPluginErrorBoundary } from './PluginErrorBoundary';

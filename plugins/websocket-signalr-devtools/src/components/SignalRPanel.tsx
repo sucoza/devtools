@@ -8,13 +8,14 @@ import { HubMethodsList } from './HubMethodsList';
 import type { SignalRConnection, SignalRMessage } from '../types';
 
 export function SignalRPanel() {
-  const connections = useDevToolsSelector(state => Array.from(state.signalr.connections.values()));
+  const connectionsMap = useDevToolsSelector(state => state.signalr.connections);
   const messages = useDevToolsSelector(state => state.signalr.messages);
   const metrics = useDevToolsSelector(state => state.signalr.metrics);
   const filter = useDevToolsSelector(state => state.signalr.filter);
   const selectedConnectionId = useDevToolsSelector(state => state.ui.selectedConnectionId);
   
-  const client = createWebSocketSignalRDevToolsClient();
+  const connections = React.useMemo(() => Array.from(connectionsMap.values()), [connectionsMap]);
+  const client = React.useMemo(() => createWebSocketSignalRDevToolsClient(), []);
 
   // Filter connections and messages based on current filter
   const filteredConnections = React.useMemo(() => {

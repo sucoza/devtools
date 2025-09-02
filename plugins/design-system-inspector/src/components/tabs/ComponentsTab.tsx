@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { clsx } from 'clsx';
 import { 
   Component, 
   FileText, 
@@ -11,6 +10,7 @@ import {
   Hash,
   Code
 } from 'lucide-react';
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles } from '@sucoza/shared-components';
 import { useDesignSystemInspector, useFilteredData, useComponentStats } from '../../hooks';
 
 export function ComponentsTab() {
@@ -42,40 +42,111 @@ export function ComponentsTab() {
     : null;
 
   return (
-    <div className="flex h-full">
+    <div style={COMPONENT_STYLES.content.split}>
       {/* Component List */}
-      <div className="flex-none w-80 border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div style={mergeStyles(
+        COMPONENT_STYLES.sidebar.base,
+        {
+          width: '320px',
+          flexShrink: 0,
+          display: 'flex',
+          flexDirection: 'column'
+        }
+      )}>
+        <div style={{
+          padding: SPACING.xl,
+          borderBottom: `1px solid ${COLORS.border.primary}`
+        }}>
+          <h3 style={{
+            fontSize: TYPOGRAPHY.fontSize.lg,
+            fontWeight: TYPOGRAPHY.fontWeight.semibold,
+            color: COLORS.text.heading,
+            margin: 0
+          }}>
             Components ({filteredData.components.length})
           </h3>
           
           {/* Stats */}
-          <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
-            <div className="bg-white dark:bg-gray-900 rounded-lg p-3">
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+          <div style={{
+            marginTop: SPACING['2xl'],
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: SPACING['2xl']
+          }}>
+            <div style={mergeStyles(
+              COMPONENT_STYLES.container.panel,
+              {
+                padding: SPACING['2xl']
+              }
+            )}>
+              <div style={{
+                fontSize: TYPOGRAPHY.fontSize.xl,
+                fontWeight: TYPOGRAPHY.fontWeight.bold,
+                color: COLORS.text.heading,
+                margin: 0
+              }}>
                 {componentStats.totalUsage}
               </div>
-              <div className="text-gray-500 dark:text-gray-400">Total Usage</div>
+              <div style={{
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                color: COLORS.text.secondary
+              }}>Total Usage</div>
             </div>
-            <div className="bg-white dark:bg-gray-900 rounded-lg p-3">
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div style={mergeStyles(
+              COMPONENT_STYLES.container.panel,
+              {
+                padding: SPACING['2xl']
+              }
+            )}>
+              <div style={{
+                fontSize: TYPOGRAPHY.fontSize.xl,
+                fontWeight: TYPOGRAPHY.fontWeight.bold,
+                color: COLORS.text.heading,
+                margin: 0
+              }}>
                 {Math.round(componentStats.averageUsage)}
               </div>
-              <div className="text-gray-500 dark:text-gray-400">Avg Usage</div>
+              <div style={{
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                color: COLORS.text.secondary
+              }}>Avg Usage</div>
             </div>
           </div>
         </div>
         
-        <div className="overflow-y-auto flex-1">
+        <div style={{
+          overflowY: 'auto',
+          flex: 1
+        }}>
           {filteredData.components.length === 0 ? (
-            <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-              <Component className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No components found</p>
-              <p className="text-sm">Try adjusting your search or filters</p>
+            <div style={mergeStyles(
+              COMPONENT_STYLES.empty.container,
+              {
+                padding: SPACING['6xl'],
+                textAlign: 'center',
+                color: COLORS.text.muted
+              }
+            )}>
+              <Component style={{
+                width: '48px',
+                height: '48px',
+                margin: '0 auto',
+                marginBottom: SPACING.xl,
+                opacity: 0.5
+              }} />
+              <p style={{
+                margin: 0,
+                marginBottom: SPACING.sm
+              }}>No components found</p>
+              <p style={{
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                margin: 0
+              }}>Try adjusting your search or filters</p>
             </div>
           ) : (
-            <div className="p-2">
+            <div style={{
+              padding: SPACING.lg
+            }}>
               {filteredData.components.map((component) => (
                 <ComponentListItem
                   key={component.id}
@@ -92,15 +163,39 @@ export function ComponentsTab() {
       </div>
 
       {/* Component Details */}
-      <div className="flex-1 overflow-y-auto">
+      <div style={{
+        flex: 1,
+        overflowY: 'auto'
+      }}>
         {selectedComponentData ? (
           <ComponentDetails component={selectedComponentData} />
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-            <div className="text-center">
-              <Component className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <p className="text-lg font-medium">Select a component</p>
-              <p>Choose a component from the list to view its details</p>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            color: COLORS.text.muted
+          }}>
+            <div style={{
+              textAlign: 'center'
+            }}>
+              <Component style={{
+                width: '64px',
+                height: '64px',
+                margin: '0 auto',
+                marginBottom: SPACING.xl,
+                opacity: 0.5
+              }} />
+              <p style={{
+                fontSize: TYPOGRAPHY.fontSize.lg,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                margin: 0,
+                marginBottom: SPACING.sm
+              }}>Select a component</p>
+              <p style={{
+                margin: 0
+              }}>Choose a component from the list to view its details</p>
             </div>
           </div>
         )}
@@ -123,33 +218,89 @@ function ComponentListItem({
   onToggleExpanded: (id: string) => void;
 }) {
   return (
-    <div className="mb-2">
+    <div style={{
+      marginBottom: SPACING.lg
+    }}>
       <div
-        className={clsx(
-          'p-3 rounded-lg cursor-pointer transition-colors border',
-          isSelected
-            ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
-            : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
+        style={mergeStyles(
+          COMPONENT_STYLES.list.item.base,
+          {
+            padding: SPACING['2xl'],
+            borderRadius: RADIUS.lg,
+            cursor: 'pointer',
+            border: `1px solid ${COLORS.border.primary}`,
+            backgroundColor: isSelected ? COLORS.background.selected : COLORS.background.secondary,
+            borderColor: isSelected ? COLORS.border.focus : COLORS.border.primary
+          },
+          isSelected ? {} : COMPONENT_STYLES.list.item.hover
         )}
         onClick={() => onSelect(component.id)}
+        onMouseEnter={(e) => {
+          if (!isSelected) {
+            e.currentTarget.style.backgroundColor = COLORS.background.hover;
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (!isSelected) {
+            e.currentTarget.style.backgroundColor = COLORS.background.secondary;
+          }
+        }}
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center flex-1 min-w-0">
-            <Component className={clsx(
-              'w-4 h-4 mr-2 flex-none',
-              isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'
-            )} />
-            <div className="min-w-0 flex-1">
-              <div className="font-medium text-gray-900 dark:text-white truncate">
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            flex: 1,
+            minWidth: 0
+          }}>
+            <Component style={{
+              width: '16px',
+              height: '16px',
+              marginRight: SPACING.lg,
+              flexShrink: 0,
+              color: isSelected ? COLORS.text.accent : COLORS.text.muted
+            }} />
+            <div style={{
+              minWidth: 0,
+              flex: 1
+            }}>
+              <div style={{
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                color: COLORS.text.primary,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}>
                 {component.displayName}
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
+              <div style={{
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                color: COLORS.text.secondary,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}>
                 {component.name}
               </div>
             </div>
           </div>
-          <div className="flex items-center space-x-2 ml-2">
-            <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: SPACING.lg,
+            marginLeft: SPACING.lg
+          }}>
+            <span style={{
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              backgroundColor: COLORS.background.tertiary,
+              color: COLORS.text.secondary,
+              padding: `${SPACING.xs} ${SPACING.lg}`,
+              borderRadius: RADIUS.md
+            }}>
               {component.usageCount}x
             </span>
             <button
@@ -157,28 +308,57 @@ function ComponentListItem({
                 e.stopPropagation();
                 onToggleExpanded(component.id);
               }}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+              style={{
+                background: 'none',
+                border: 'none',
+                color: COLORS.text.muted,
+                cursor: 'pointer',
+                padding: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = COLORS.text.secondary;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = COLORS.text.muted;
+              }}
             >
               {isExpanded ? (
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown style={{ width: '16px', height: '16px' }} />
               ) : (
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight style={{ width: '16px', height: '16px' }} />
               )}
             </button>
           </div>
         </div>
         
         {isExpanded && (
-          <div className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-700 text-xs">
-            <div className="flex items-center text-gray-500 dark:text-gray-400 mb-1">
-              <FileText className="w-3 h-3 mr-1" />
+          <div style={{
+            marginTop: SPACING.lg,
+            paddingTop: SPACING.lg,
+            borderTop: `1px solid ${COLORS.border.secondary}`,
+            fontSize: TYPOGRAPHY.fontSize.xs
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              color: COLORS.text.secondary,
+              marginBottom: SPACING.sm
+            }}>
+              <FileText style={{ width: '12px', height: '12px', marginRight: SPACING.sm }} />
               {component.filePath}
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-500 dark:text-gray-400">
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              <span style={{ color: COLORS.text.secondary }}>
                 {component.props.length} props
               </span>
-              <span className="text-gray-500 dark:text-gray-400">
+              <span style={{ color: COLORS.text.secondary }}>
                 {component.variants.length} variants
               </span>
             </div>
@@ -204,25 +384,59 @@ function ComponentDetails({
   ] as const;
 
   return (
-    <div className="h-full flex flex-col">
+    <div style={{
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
       {/* Header */}
-      <div className="flex-none border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
-        <div className="flex items-center justify-between">
+      <div style={{
+        flexShrink: 0,
+        borderBottom: `1px solid ${COLORS.border.primary}`,
+        backgroundColor: COLORS.background.secondary,
+        padding: SPACING['5xl']
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
           <div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h2 style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.text.heading,
+              margin: 0
+            }}>
               {component.displayName}
             </h2>
-            <div className="flex items-center mt-2 space-x-4 text-sm text-gray-500 dark:text-gray-400">
-              <span className="flex items-center">
-                <FileText className="w-4 h-4 mr-1" />
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              marginTop: SPACING.lg,
+              gap: SPACING.xl,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.secondary
+            }}>
+              <span style={{
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <FileText style={{ width: '16px', height: '16px', marginRight: SPACING.sm }} />
                 {component.filePath}
               </span>
-              <span className="flex items-center">
-                <Hash className="w-4 h-4 mr-1" />
+              <span style={{
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <Hash style={{ width: '16px', height: '16px', marginRight: SPACING.sm }} />
                 {component.usageCount} uses
               </span>
-              <span className="flex items-center">
-                <Clock className="w-4 h-4 mr-1" />
+              <span style={{
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <Clock style={{ width: '16px', height: '16px', marginRight: SPACING.sm }} />
                 Last seen {formatRelativeTime(component.lastSeen)}
               </span>
             </div>
@@ -230,19 +444,45 @@ function ComponentDetails({
         </div>
         
         {/* Section Navigation */}
-        <div className="flex space-x-1 mt-4">
+        <div style={{
+          display: 'flex',
+          gap: SPACING.sm,
+          marginTop: SPACING.xl
+        }}>
           {sections.map((section) => (
             <button
               key={section.id}
               onClick={() => setActiveSection(section.id as any)}
-              className={clsx(
-                'flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+              style={mergeStyles(
+                COMPONENT_STYLES.button.base,
+                COMPONENT_STYLES.button.small,
+                {
+                  borderRadius: RADIUS.lg
+                },
                 activeSection === section.id
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+                  ? {
+                      backgroundColor: 'rgba(0, 122, 204, 0.1)',
+                      color: COLORS.text.accent,
+                      borderColor: COLORS.border.focus
+                    }
+                  : {
+                      color: COLORS.text.secondary
+                    }
               )}
+              onMouseEnter={(e) => {
+                if (activeSection !== section.id) {
+                  e.currentTarget.style.color = COLORS.text.primary;
+                  e.currentTarget.style.backgroundColor = COLORS.background.hover;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeSection !== section.id) {
+                  e.currentTarget.style.color = COLORS.text.secondary;
+                  e.currentTarget.style.backgroundColor = COLORS.background.tertiary;
+                }
+              }}
             >
-              <section.icon className="w-4 h-4 mr-2" />
+              <section.icon style={{ width: '16px', height: '16px', marginRight: SPACING.lg }} />
               {section.label}
             </button>
           ))}
@@ -250,7 +490,11 @@ function ComponentDetails({
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div style={{
+        flex: 1,
+        overflowY: 'auto',
+        padding: SPACING['5xl']
+      }}>
         {activeSection === 'overview' && (
           <ComponentOverview component={component} />
         )}
@@ -274,50 +518,147 @@ function ComponentOverview({
   component: import('../../types').ComponentUsage 
 }) {
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: SPACING['5xl']
+    }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: SPACING.xl
+      }}>
+        <div style={mergeStyles(
+          COMPONENT_STYLES.container.panel,
+          {
+            padding: SPACING.xl
+          }
+        )}>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.xl,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            color: COLORS.text.heading,
+            margin: 0
+          }}>
             {component.usageCount}
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">Times Used</div>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.secondary
+          }}>Times Used</div>
         </div>
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div style={mergeStyles(
+          COMPONENT_STYLES.container.panel,
+          {
+            padding: SPACING.xl
+          }
+        )}>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.xl,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            color: COLORS.text.heading,
+            margin: 0
+          }}>
             {component.props.length}
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">Props</div>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.secondary
+          }}>Props</div>
         </div>
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div style={mergeStyles(
+          COMPONENT_STYLES.container.panel,
+          {
+            padding: SPACING.xl
+          }
+        )}>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.xl,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            color: COLORS.text.heading,
+            margin: 0
+          }}>
             {component.variants.length}
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">Variants</div>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.secondary
+          }}>Variants</div>
         </div>
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <h3 style={{
+          fontSize: TYPOGRAPHY.fontSize.lg,
+          fontWeight: TYPOGRAPHY.fontWeight.semibold,
+          color: COLORS.text.heading,
+          margin: `0 0 ${SPACING.xl} 0`
+        }}>
           Component Information
         </h3>
-        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <dl style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gap: SPACING.xl
+        }}>
           <div>
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Name</dt>
-            <dd className="mt-1 text-sm text-gray-900 dark:text-white">{component.name}</dd>
+            <dt style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary,
+              margin: 0
+            }}>Name</dt>
+            <dd style={{
+              marginTop: SPACING.sm,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.primary,
+              margin: `${SPACING.sm} 0 0 0`
+            }}>{component.name}</dd>
           </div>
           <div>
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Display Name</dt>
-            <dd className="mt-1 text-sm text-gray-900 dark:text-white">{component.displayName}</dd>
+            <dt style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary,
+              margin: 0
+            }}>Display Name</dt>
+            <dd style={{
+              marginTop: SPACING.sm,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.primary,
+              margin: `${SPACING.sm} 0 0 0`
+            }}>{component.displayName}</dd>
           </div>
           <div>
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">File Path</dt>
-            <dd className="mt-1 text-sm text-gray-900 dark:text-white font-mono text-xs">
+            <dt style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary,
+              margin: 0
+            }}>File Path</dt>
+            <dd style={{
+              marginTop: SPACING.sm,
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: COLORS.text.primary,
+              fontFamily: TYPOGRAPHY.fontFamily.mono,
+              margin: `${SPACING.sm} 0 0 0`
+            }}>
               {component.filePath}
             </dd>
           </div>
           <div>
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">First Seen</dt>
-            <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+            <dt style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary,
+              margin: 0
+            }}>First Seen</dt>
+            <dd style={{
+              marginTop: SPACING.sm,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.primary,
+              margin: `${SPACING.sm} 0 0 0`
+            }}>
               {formatRelativeTime(component.firstSeen)}
             </dd>
           </div>

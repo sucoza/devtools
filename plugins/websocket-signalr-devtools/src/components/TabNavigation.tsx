@@ -8,7 +8,7 @@ export function TabNavigation() {
   const websocketMetrics = useDevToolsSelector(state => state.websocket.metrics);
   const signalrMetrics = useDevToolsSelector(state => state.signalr.metrics);
   
-  const client = createWebSocketSignalRDevToolsClient();
+  const client = React.useMemo(() => createWebSocketSignalRDevToolsClient(), []);
 
   const tabs = [
     {

@@ -7,13 +7,14 @@ import { MetricsBar } from './MetricsBar';
 import type { WebSocketConnection, WebSocketMessage } from '../types';
 
 export function WebSocketPanel() {
-  const connections = useDevToolsSelector(state => Array.from(state.websocket.connections.values()));
+  const connectionsMap = useDevToolsSelector(state => state.websocket.connections);
   const messages = useDevToolsSelector(state => state.websocket.messages);
   const metrics = useDevToolsSelector(state => state.websocket.metrics);
   const filter = useDevToolsSelector(state => state.websocket.filter);
   const selectedConnectionId = useDevToolsSelector(state => state.ui.selectedConnectionId);
   
-  const client = createWebSocketSignalRDevToolsClient();
+  const connections = React.useMemo(() => Array.from(connectionsMap.values()), [connectionsMap]);
+  const client = React.useMemo(() => createWebSocketSignalRDevToolsClient(), []);
 
   // Filter connections and messages based on current filter
   const filteredConnections = React.useMemo(() => {

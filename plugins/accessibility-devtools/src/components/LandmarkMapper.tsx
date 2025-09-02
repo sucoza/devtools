@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { clsx } from 'clsx';
+import { COLORS, COMPONENT_STYLES, mergeStyles } from '@sucoza/shared-components';
+
+// Simple clsx replacement
+const clsx = (...classes: (string | undefined | boolean)[]): string => {
+  return classes.filter(Boolean).join(' ');
+};
+
 import { 
   MapPin, 
   Eye, 
