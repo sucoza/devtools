@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Camera, Monitor, GitCompare, Settings, Play } from 'lucide-react';
-import { PluginPanel } from '../src/index';
+import { PluginPanel } from './index';
 
 function App() {
   const [activeDemo, setActiveDemo] = useState<'plugin' | 'layouts'>('plugin');
