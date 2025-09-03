@@ -1,7 +1,10 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
@@ -21,18 +24,33 @@
   "targetDefaults": {
     "build": {
       "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"],
-      "outputs": ["{projectRoot}/dist"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "production",
+        "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
     },
     "dev": {
       "cache": false,
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "test": {
       "cache": true,
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"]
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/jest.preset.js"
+      ],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ]
     },
     "lint": {
       "cache": true,
@@ -42,11 +60,16 @@
         "{workspaceRoot}/.eslintignore",
         "{workspaceRoot}/eslint.config.js"
       ],
-      "outputs": ["{workspaceRoot}/dist/.eslintcache"]
+      "outputs": [
+        "{workspaceRoot}/dist/.eslintcache"
+      ]
     },
     "typecheck": {
       "cache": true,
-      "inputs": ["production", "^production"],
+      "inputs": [
+        "production",
+        "^production"
+      ],
       "outputs": []
     },
     "format": {
@@ -100,11 +123,17 @@
     "default": {
       "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "typecheck"],
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "typecheck"
+        ],
         "parallel": 3,
         "useDaemonProcess": true
       }
     }
   },
-  "nxCloudAccessToken": null
+  "nxCloudAccessToken": null,
+  "nxCloudId": "68b8d31d31ff1dab0058ece5"
 }
