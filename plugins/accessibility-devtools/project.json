@@ -1,0 +1,82 @@
+{
+  "name": "accessibility-devtools",
+  "sourceRoot": "plugins/accessibility-devtools/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/dist"
+      ],
+      "options": {
+        "command": "rollup -c",
+        "cwd": "plugins/accessibility-devtools"
+      },
+      "dependsOn": [
+        "devtools-common:build",
+        "plugin-core:build",
+        "shared-components:build"
+      ]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "rollup -c -w",
+        "cwd": "plugins/accessibility-devtools"
+      },
+      "dependsOn": [
+        "devtools-common:build",
+        "plugin-core:build",
+        "shared-components:build"
+      ]
+    },
+    "example": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd ../../examples/plugins/accessibility-devtools && npm run dev",
+        "cwd": "plugins/accessibility-devtools"
+      },
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/plugins/accessibility-devtools"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "plugins/accessibility-devtools/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "typecheck": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "tsConfig": "plugins/accessibility-devtools/tsconfig.json",
+        "noEmit": true
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prettier --write plugins/accessibility-devtools/src/**/*.{ts,tsx}"
+      }
+    }
+  },
+  "tags": [
+    "type:plugin",
+    "scope:devtools"
+  ]
+}

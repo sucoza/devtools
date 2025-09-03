@@ -1,0 +1,64 @@
+{
+  "name": "logger",
+  "sourceRoot": "packages/logger/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/dist"
+      ],
+      "options": {
+        "command": "rollup -c",
+        "cwd": "packages/logger"
+      },
+      "dependsOn": []
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "rollup -c -w",
+        "cwd": "packages/logger"
+      },
+      "dependsOn": []
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/packages/logger"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "packages/logger/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "typecheck": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "tsConfig": "packages/logger/tsconfig.json",
+        "noEmit": true
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prettier --write packages/logger/src/**/*.{ts,tsx}"
+      }
+    }
+  },
+  "tags": [
+    "type:util",
+    "scope:shared"
+  ]
+}

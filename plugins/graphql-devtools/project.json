@@ -1,0 +1,82 @@
+{
+  "name": "graphql-devtools",
+  "sourceRoot": "plugins/graphql-devtools/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/dist"
+      ],
+      "options": {
+        "command": "rollup -c",
+        "cwd": "plugins/graphql-devtools"
+      },
+      "dependsOn": [
+        "devtools-common:build",
+        "plugin-core:build",
+        "shared-components:build"
+      ]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "rollup -c -w",
+        "cwd": "plugins/graphql-devtools"
+      },
+      "dependsOn": [
+        "devtools-common:build",
+        "plugin-core:build",
+        "shared-components:build"
+      ]
+    },
+    "example": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd ../../examples/plugins/graphql-devtools && npm run dev",
+        "cwd": "plugins/graphql-devtools"
+      },
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/plugins/graphql-devtools"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "plugins/graphql-devtools/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "typecheck": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "tsConfig": "plugins/graphql-devtools/tsconfig.json",
+        "noEmit": true
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prettier --write plugins/graphql-devtools/src/**/*.{ts,tsx}"
+      }
+    }
+  },
+  "tags": [
+    "type:plugin",
+    "scope:devtools"
+  ]
+}

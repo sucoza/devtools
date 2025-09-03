@@ -1,0 +1,28 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@sucoza/devtools-common": ["packages/devtools-common/src"],
+      "@sucoza/devtools-importer": ["packages/devtools-importer/src"],
+      "@sucoza/feature-flags": ["packages/feature-flags/src"],
+      "@sucoza/i18n": ["packages/i18n/src"],
+      "@sucoza/logger": ["packages/logger/src"],
+      "@sucoza/plugin-core": ["packages/plugin-core/src"],
+      "@sucoza/shared-components": ["packages/shared-components/src"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

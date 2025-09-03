@@ -1,0 +1,64 @@
+{
+  "name": "feature-flags",
+  "sourceRoot": "packages/feature-flags/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": [
+        "{projectRoot}/dist"
+      ],
+      "options": {
+        "command": "rollup -c",
+        "cwd": "packages/feature-flags"
+      },
+      "dependsOn": []
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "rollup -c -w",
+        "cwd": "packages/feature-flags"
+      },
+      "dependsOn": []
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/packages/feature-flags"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "packages/feature-flags/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "typecheck": {
+      "executor": "@nx/js:tsc",
+      "options": {
+        "tsConfig": "packages/feature-flags/tsconfig.json",
+        "noEmit": true
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prettier --write packages/feature-flags/src/**/*.{ts,tsx}"
+      }
+    }
+  },
+  "tags": [
+    "type:util",
+    "scope:shared"
+  ]
+}
