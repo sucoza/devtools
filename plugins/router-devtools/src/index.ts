@@ -47,11 +47,6 @@ export { createReactRouterAdapter } from './adapters/react-router-adapter';
  * ```
  */
 export function initializeRouterDevTools() {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { createReactRouterAdapter } = require('./adapters/react-router-adapter');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { routerStateManager } = require('./core/router-state-manager');
-  
   const adapter = createReactRouterAdapter();
   routerStateManager.registerAdapter(adapter);
   
