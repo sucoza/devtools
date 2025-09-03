@@ -52,7 +52,7 @@
     "eslint": "catalog:",
     "eslint-plugin-react": "catalog:",
     "eslint-plugin-react-hooks": "catalog:",
-    "nx": "catalog:",
+    "nx": "21.4.1",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
