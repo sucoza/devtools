@@ -9,19 +9,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "lodash": "^4.17.21",
-    "moment": "^2.29.4",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "lodash": "catalog:",
+    "moment": "catalog:",
     "chart.js": "^4.4.0"
   },
   "devDependencies": {
-    "@sucoza/bundle-impact-analyzer-devtools-plugin": "^0.1.9",
-    "@types/react": "^18.2.21",
-    "@types/react-dom": "^18.2.7",
-    "@types/lodash": "^4.14.195",
-    "@vitejs/plugin-react": "^4.0.4",
-    "typescript": "^5.2.2",
-    "vite": "^4.4.9"
+    "@sucoza/bundle-impact-analyzer-devtools-plugin": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@types/lodash": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
   }
 }
