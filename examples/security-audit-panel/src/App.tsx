@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SecurityAuditPanel } from '../../src/components/SecurityAuditPanel';
+import { SecurityAuditPanel } from '@sucoza/security-audit-panel-devtools-plugin';
 
 export function App() {
   const [userInput, setUserInput] = useState('');

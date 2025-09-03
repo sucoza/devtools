@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useRef } from 'react';
-import { RenderWasteDetectorPanel, useRenderWasteDetector } from '../../dist/index.esm.js';
+import { RenderWasteDetectorPanel, useRenderWasteDetector } from '@sucoza/render-waste-detector-devtools-plugin';
 
 // Example components that demonstrate different render waste patterns
 

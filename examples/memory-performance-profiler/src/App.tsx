@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { MemoryProfilerPanel, useMemoryProfiler, useMemoryStats } from '../../src';
+import { MemoryProfilerPanel, useMemoryProfiler, useMemoryStats } from '@sucoza/memory-performance-profiler-devtools-plugin';
 
-// Demo components to showcase different memory patterns
-import { MemoryLeakDemo } from './components/MemoryLeakDemo';
-import { PerformanceDemo } from './components/PerformanceDemo';
-import { OptimizationDemo } from './components/OptimizationDemo';
-import { MetricsDisplay } from './components/MetricsDisplay';
+// // Demo components to showcase different memory patterns
+// import { MemoryLeakDemo } from './components/MemoryLeakDemo';
+// import { PerformanceDemo } from './components/PerformanceDemo';
+// import { OptimizationDemo } from './components/OptimizationDemo';
+// import { MetricsDisplay } from './components/MetricsDisplay';
 
 export default function App() {
   const [showDevTools, setShowDevTools] = useState(false);
@@ -40,16 +40,16 @@ export default function App() {
   }, []);
 
   const renderActiveDemo = () => {
-    switch (activeDemo) {
-      case 'memory-leak':
-        return <MemoryLeakDemo onStop={stopDemo} />;
-      case 'performance':
-        return <PerformanceDemo onStop={stopDemo} />;
-      case 'optimization':
-        return <OptimizationDemo onStop={stopDemo} />;
-      default:
+    // switch (activeDemo) {
+    //   case 'memory-leak':
+    //     return <MemoryLeakDemo onStop={stopDemo} />;
+    //   case 'performance':
+    //     return <PerformanceDemo onStop={stopDemo} />;
+    //   case 'optimization':
+    //     return <OptimizationDemo onStop={stopDemo} />;
+    //   default:
         return null;
-    }
+    // }
   };
 
   return (
