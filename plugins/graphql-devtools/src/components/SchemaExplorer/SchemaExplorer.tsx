@@ -1,5 +1,6 @@
 import React from 'react';
 import { RefreshCw, AlertCircle, Loader, Database, TrendingUp } from 'lucide-react';
+import { COLORS, TYPOGRAPHY, SPACING, RADIUS, COMPONENT_STYLES } from '@sucoza/shared-components';
 import { TypeList } from './TypeList';
 import { TypeDetails } from './TypeDetails';
 import type { SchemaInfo } from '../../types';
@@ -50,20 +51,49 @@ export const SchemaExplorer: React.FC<SchemaExplorerProps> = ({
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-        <AlertCircle size={48} className="text-red-500 mb-4" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        padding: SPACING['4xl'],
+        textAlign: 'center'
+      }}>
+        <AlertCircle size={48} style={{ color: COLORS.status.error, marginBottom: SPACING['2xl'] }} />
+        <h3 style={{
+          fontSize: TYPOGRAPHY.fontSize.lg,
+          fontWeight: TYPOGRAPHY.fontWeight.semibold,
+          color: COLORS.text.primary,
+          marginBottom: SPACING.md
+        }}>
           Schema Error
         </h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-4 max-w-md">
+        <p style={{
+          color: COLORS.text.secondary,
+          marginBottom: SPACING['2xl'],
+          maxWidth: '20rem'
+        }}>
           {error}
         </p>
         <button
           onClick={onIntrospectSchema}
           disabled={isLoading}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-md transition-colors"
+          style={{
+            ...COMPONENT_STYLES.button.primary,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: SPACING.md,
+            opacity: isLoading ? 0.6 : 1,
+            cursor: isLoading ? 'not-allowed' : 'pointer'
+          }}
         >
-          <RefreshCw size={16} className={isLoading ? 'animate-spin' : ''} />
+          <RefreshCw 
+            size={16} 
+            style={{
+              animation: isLoading ? 'spin 1s linear infinite' : 'none'
+            }}
+          />
           Retry Introspection
         </button>
       </div>
@@ -72,12 +102,32 @@ export const SchemaExplorer: React.FC<SchemaExplorerProps> = ({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-        <Loader size={48} className="text-blue-500 mb-4 animate-spin" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        padding: SPACING['4xl'],
+        textAlign: 'center'
+      }}>
+        <Loader 
+          size={48} 
+          style={{ 
+            color: COLORS.accent.blue, 
+            marginBottom: SPACING['2xl'],
+            animation: 'spin 1s linear infinite'
+          }} 
+        />
+        <h3 style={{
+          fontSize: TYPOGRAPHY.fontSize.lg,
+          fontWeight: TYPOGRAPHY.fontWeight.semibold,
+          color: COLORS.text.primary,
+          marginBottom: SPACING.md
+        }}>
           Loading Schema...
         </h3>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p style={{ color: COLORS.text.secondary }}>
           Performing GraphQL introspection
         </p>
       </div>
@@ -86,17 +136,39 @@ export const SchemaExplorer: React.FC<SchemaExplorerProps> = ({
 
   if (!hasSchema) {
     return (
-      <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-        <Database size={48} className="text-gray-400 mb-4" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        padding: SPACING['4xl'],
+        textAlign: 'center'
+      }}>
+        <Database size={48} style={{ color: COLORS.text.muted, marginBottom: SPACING['2xl'] }} />
+        <h3 style={{
+          fontSize: TYPOGRAPHY.fontSize.lg,
+          fontWeight: TYPOGRAPHY.fontWeight.semibold,
+          color: COLORS.text.primary,
+          marginBottom: SPACING.md
+        }}>
           No Schema Loaded
         </h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-4 max-w-md">
+        <p style={{
+          color: COLORS.text.secondary,
+          marginBottom: SPACING['2xl'],
+          maxWidth: '20rem'
+        }}>
           Load a GraphQL schema to explore types, queries, mutations, and subscriptions.
         </p>
         <button
           onClick={onIntrospectSchema}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+          style={{
+            ...COMPONENT_STYLES.button.primary,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: SPACING.md
+          }}
         >
           <RefreshCw size={16} />
           Introspect Schema
@@ -106,48 +178,104 @@ export const SchemaExplorer: React.FC<SchemaExplorerProps> = ({
   }
 
   return (
-    <div className="flex h-full">
+    <div style={{ display: 'flex', height: '100%' }}>
       {/* Left Panel - Type List */}
-      <div className="w-80 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
+      <div style={{
+        width: '320px',
+        borderRight: `1px solid ${COLORS.border.primary}`,
+        backgroundColor: COLORS.background.primary
+      }}>
         {/* Schema Stats Header */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+        <div style={{
+          padding: SPACING['2xl'],
+          borderBottom: `1px solid ${COLORS.border.primary}`,
+          backgroundColor: COLORS.background.secondary
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: SPACING.lg
+          }}>
+            <h3 style={{
+              fontWeight: TYPOGRAPHY.fontWeight.semibold,
+              color: COLORS.text.primary
+            }}>
               Schema Overview
             </h3>
             <button
               onClick={onIntrospectSchema}
               disabled={isLoading}
-              className="p-1.5 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded transition-colors"
+              style={{
+                padding: SPACING.sm,
+                color: COLORS.text.secondary,
+                borderRadius: RADIUS.sm,
+                border: 'none',
+                backgroundColor: 'transparent',
+                cursor: isLoading ? 'not-allowed' : 'pointer',
+                transition: 'color 0.2s ease'
+              }}
               title="Refresh Schema"
+              onMouseEnter={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.color = COLORS.text.primary;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isLoading) {
+                  e.currentTarget.style.color = COLORS.text.secondary;
+                }
+              }}
             >
-              <RefreshCw size={16} className={isLoading ? 'animate-spin' : ''} />
+              <RefreshCw 
+                size={16} 
+                style={{
+                  animation: isLoading ? 'spin 1s linear infinite' : 'none'
+                }}
+              />
             </button>
           </div>
           
           {schemaStats && (
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="flex items-center gap-2">
-                <TrendingUp size={14} className="text-blue-500" />
-                <span className="text-gray-600 dark:text-gray-400">
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: SPACING.lg,
+              fontSize: TYPOGRAPHY.fontSize.sm
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
+                <TrendingUp size={14} style={{ color: COLORS.accent.blue }} />
+                <span style={{ color: COLORS.text.secondary }}>
                   {schemaStats.totalTypes} types
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <Database size={14} className="text-green-500" />
-                <span className="text-gray-600 dark:text-gray-400">
+              <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
+                <Database size={14} style={{ color: COLORS.accent.green }} />
+                <span style={{ color: COLORS.text.secondary }}>
                   {schemaStats.totalQueries} queries
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 bg-purple-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-600 dark:text-gray-400">
+              <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
+                <span style={{
+                  width: '14px',
+                  height: '14px',
+                  backgroundColor: COLORS.accent.purple,
+                  borderRadius: '50%',
+                  flexShrink: 0
+                }} />
+                <span style={{ color: COLORS.text.secondary }}>
                   {schemaStats.totalMutations} mutations
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3.5 h-3.5 bg-orange-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-600 dark:text-gray-400">
+              <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
+                <span style={{
+                  width: '14px',
+                  height: '14px',
+                  backgroundColor: COLORS.accent.orange,
+                  borderRadius: '50%',
+                  flexShrink: 0
+                }} />
+                <span style={{ color: COLORS.text.secondary }}>
                   {schemaStats.totalSubscriptions} subscriptions
                 </span>
               </div>
@@ -155,7 +283,11 @@ export const SchemaExplorer: React.FC<SchemaExplorerProps> = ({
           )}
           
           {schemaInfo.lastUpdated && (
-            <div className="mt-3 text-xs text-gray-500 dark:text-gray-400">
+            <div style={{
+              marginTop: SPACING.lg,
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: COLORS.text.muted
+            }}>
               Updated {new Date(schemaInfo.lastUpdated).toLocaleString()}
             </div>
           )}
@@ -172,19 +304,35 @@ export const SchemaExplorer: React.FC<SchemaExplorerProps> = ({
       </div>
 
       {/* Right Panel - Type Details or Empty State */}
-      <div className="flex-1 bg-white dark:bg-gray-900">
+      <div style={{ flex: 1, backgroundColor: COLORS.background.primary }}>
         {selectedTypeInfo ? (
           <TypeDetails
             type={selectedTypeInfo}
             onTypeSelect={onTypeSelect}
           />
         ) : (
-          <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-            <Database size={48} className="text-gray-400 mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            padding: SPACING['4xl'],
+            textAlign: 'center'
+          }}>
+            <Database size={48} style={{ color: COLORS.text.muted, marginBottom: SPACING['2xl'] }} />
+            <h3 style={{
+              fontSize: TYPOGRAPHY.fontSize.lg,
+              fontWeight: TYPOGRAPHY.fontWeight.semibold,
+              color: COLORS.text.primary,
+              marginBottom: SPACING.md
+            }}>
               Select a Type
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 max-w-md">
+            <p style={{
+              color: COLORS.text.secondary,
+              maxWidth: '20rem'
+            }}>
               Choose a type from the list to view its details, fields, and relationships.
             </p>
           </div>

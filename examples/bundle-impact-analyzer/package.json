@@ -16,6 +16,7 @@
     "chart.js": "^4.4.0"
   },
   "devDependencies": {
+    "@sucoza/bundle-impact-analyzer-devtools-plugin": "^0.1.9",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@types/lodash": "^4.14.195",

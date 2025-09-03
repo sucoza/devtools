@@ -52,17 +52,175 @@ importers:
         specifier: ^5.9.2
         version: 5.9.2
 
-  examples/packages/devtools-importer:
+  examples/accessibility-devtools:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@sucoza/accessibility-devtools-plugin':
+        specifier: ^0.1.9
+        version: link:../../plugins/accessibility-devtools
+      '@types/react':
+        specifier: ^18.2.0
+        version: 18.3.24
+      '@types/react-dom':
+        specifier: ^18.2.0
+        version: 18.3.7(@types/react@18.3.24)
+      '@vitejs/plugin-react':
+        specifier: ^4.0.4
+        version: 4.7.0(vite@4.5.14)
+      typescript:
+        specifier: ^5.0.2
+        version: 5.9.2
+      vite:
+        specifier: ^4.4.5
+        version: 4.5.14(@types/node@24.3.0)
+
+  examples/auth-permissions-mock:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@sucoza/auth-permissions-mock-devtools-plugin':
+        specifier: ^0.1.9
+        version: link:../../plugins/auth-permissions-mock
+      '@types/react':
+        specifier: ^18.2.0
+        version: 18.3.24
+      '@types/react-dom':
+        specifier: ^18.2.0
+        version: 18.3.7(@types/react@18.3.24)
+      '@vitejs/plugin-react':
+        specifier: ^4.0.4
+        version: 4.7.0(vite@4.5.14)
+      typescript:
+        specifier: ^5.0.2
+        version: 5.9.2
+      vite:
+        specifier: ^4.4.5
+        version: 4.5.14(@types/node@24.3.0)
+
+  examples/browser-automation-test-recorder:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@sucoza/browser-automation-test-recorder-devtools-plugin':
+        specifier: ^0.1.9
+        version: link:../../plugins/browser-automation-test-recorder
+      '@types/react':
+        specifier: ^18.2.0
+        version: 18.3.24
+      '@types/react-dom':
+        specifier: ^18.2.0
+        version: 18.3.7(@types/react@18.3.24)
+      '@vitejs/plugin-react':
+        specifier: ^4.0.4
+        version: 4.7.0(vite@4.5.14)
+      typescript:
+        specifier: ^5.0.2
+        version: 5.9.2
+      vite:
+        specifier: ^4.4.5
+        version: 4.5.14(@types/node@24.3.0)
+
+  examples/bundle-impact-analyzer:
+    dependencies:
+      chart.js:
+        specifier: ^4.4.0
+        version: 4.5.0
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
+      moment:
+        specifier: ^2.29.4
+        version: 2.30.1
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@sucoza/bundle-impact-analyzer-devtools-plugin':
+        specifier: ^0.1.9
+        version: link:../../plugins/bundle-impact-analyzer
+      '@types/lodash':
+        specifier: ^4.14.195
+        version: 4.17.20
+      '@types/react':
+        specifier: ^18.2.21
+        version: 18.3.24
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.3.7(@types/react@18.3.24)
+      '@vitejs/plugin-react':
+        specifier: ^4.0.4
+        version: 4.7.0(vite@4.5.14)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.9.2
+      vite:
+        specifier: ^4.4.9
+        version: 4.5.14(@types/node@24.3.0)
+
+  examples/design-system-inspector:
+    dependencies:
+      '@tanstack/devtools':
+        specifier: ^0.6.2
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
+      clsx:
+        specifier: ^2.1.0
+        version: 2.1.1
+      lucide-react:
+        specifier: ^0.263.1
+        version: 0.263.1(react@18.3.1)
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.21
+        version: 18.3.24
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.3.7(@types/react@18.3.24)
+      '@vitejs/plugin-react':
+        specifier: ^4.0.4
+        version: 4.7.0(vite@4.5.14)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.9.2
+      vite:
+        specifier: ^4.4.9
+        version: 4.5.14(@types/node@24.3.0)
+
+  examples/devtools-importer:
     dependencies:
       '@sucoza/api-mock-interceptor-devtools-plugin':
         specifier: workspace:*
-        version: link:../../../plugins/api-mock-interceptor
+        version: link:../../plugins/api-mock-interceptor
       '@sucoza/devtools-importer':
         specifier: workspace:*
-        version: link:../../../packages/devtools-importer
+        version: link:../../packages/devtools-importer
       '@sucoza/websocket-signalr-devtools-plugin':
         specifier: workspace:*
-        version: link:../../../plugins/websocket-signalr-devtools
+        version: link:../../plugins/websocket-signalr-devtools
       react:
         specifier: ^19.1.1
         version: 19.1.1
@@ -101,17 +259,153 @@ importers:
         specifier: ^5.2.0
         version: 5.4.19(@types/node@24.3.0)
 
-  examples/packages/i18n:
+  examples/feature-flag-manager:
+    dependencies:
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.21
+        version: 18.3.24
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.3.7(@types/react@18.3.24)
+      '@vitejs/plugin-react':
+        specifier: ^4.0.4
+        version: 4.7.0(vite@4.5.14)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.9.2
+      vite:
+        specifier: ^4.4.9
+        version: 4.5.14(@types/node@24.3.0)
+
+  examples/graphql-devtools:
+    dependencies:
+      '@tanstack/devtools':
+        specifier: ^0.6.2
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
+      graphql:
+        specifier: ^16.8.1
+        version: 16.11.0
+      graphql-ws:
+        specifier: ^5.14.3
+        version: 5.16.2(graphql@16.11.0)
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.21
+        version: 18.3.24
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.3.7(@types/react@18.3.24)
+      '@vitejs/plugin-react':
+        specifier: ^4.0.4
+        version: 4.7.0(vite@4.5.14)
+      autoprefixer:
+        specifier: ^10.4.16
+        version: 10.4.21(postcss@8.5.6)
+      postcss:
+        specifier: ^8.4.31
+        version: 8.5.6
+      tailwindcss:
+        specifier: ^3.3.5
+        version: 3.4.17
+      typescript:
+        specifier: ^5.2.2
+        version: 5.9.2
+      vite:
+        specifier: ^4.4.9
+        version: 4.5.14(@types/node@24.3.0)
+
+  examples/i18n:
     dependencies:
       '@sucoza/i18n':
         specifier: workspace:*
-        version: link:../../../packages/i18n
+        version: link:../../packages/i18n
       '@sucoza/i18n-devtools-plugin':
         specifier: workspace:*
-        version: link:../../../plugins/i18n-devtools
+        version: link:../../plugins/i18n-devtools
       '@tanstack/devtools':
         specifier: link:D:/source/thirdparty/tanstack/devtools/packages/devtools
-        version: link:../../../../../thirdparty/tanstack/devtools/packages/devtools
+        version: link:../../../../thirdparty/tanstack/devtools/packages/devtools
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.21
+        version: 18.3.24
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.3.7(@types/react@18.3.24)
+      '@vitejs/plugin-react':
+        specifier: ^4.0.4
+        version: 4.7.0(vite@4.5.14)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.9.2
+      vite:
+        specifier: ^4.4.9
+        version: 4.5.14(@types/node@24.3.0)
+
+  examples/i18n-devtools:
+    dependencies:
+      '@sucoza/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
+      '@sucoza/i18n-devtools-plugin':
+        specifier: workspace:*
+        version: link:../../plugins/i18n-devtools
+      '@tanstack/react-devtools':
+        specifier: link:D:/source/thirdparty/tanstack/devtools/packages/react-devtools
+        version: link:../../../../thirdparty/tanstack/devtools/packages/react-devtools
+      i18next:
+        specifier: ^23.0.0
+        version: 23.16.8
+      react:
+        specifier: ^18.2.0
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.2.0
+        version: 18.3.1(react@18.3.1)
+      react-i18next:
+        specifier: ^13.0.0
+        version: 13.5.0(i18next@23.16.8)(react-dom@18.3.1)(react@18.3.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^18.2.21
+        version: 18.3.24
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.3.7(@types/react@18.3.24)
+      '@vitejs/plugin-react':
+        specifier: ^4.0.4
+        version: 4.7.0(vite@4.5.14)
+      typescript:
+        specifier: ^5.2.2
+        version: 5.9.2
+      vite:
+        specifier: ^4.4.9
+        version: 4.5.14(@types/node@24.3.0)
+
+  examples/memory-performance-profiler:
+    dependencies:
+      '@tanstack/react-devtools':
+        specifier: latest
+        version: 0.6.2(@tanstack/devtools-ui@0.3.4)(@types/react-dom@18.3.7)(@types/react@18.3.24)(csstype@3.1.3)(react-dom@18.3.1)(react@18.3.1)(solid-js@1.9.9)
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -214,271 +508,11 @@ importers:
         specifier: ^7.1.2
         version: 7.1.4(@types/node@24.3.0)
 
-  examples/plugins/accessibility-devtools:
-    dependencies:
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
-    devDependencies:
-      '@sucoza/accessibility-devtools-plugin':
-        specifier: ^0.1.9
-        version: link:../../../plugins/accessibility-devtools
-      '@types/react':
-        specifier: ^18.2.0
-        version: 18.3.24
-      '@types/react-dom':
-        specifier: ^18.2.0
-        version: 18.3.7(@types/react@18.3.24)
-      '@vitejs/plugin-react':
-        specifier: ^4.0.4
-        version: 4.7.0(vite@4.5.14)
-      typescript:
-        specifier: ^5.0.2
-        version: 5.9.2
-      vite:
-        specifier: ^4.4.5
-        version: 4.5.14(@types/node@24.3.0)
-
-  examples/plugins/browser-automation-test-recorder:
-    dependencies:
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
-    devDependencies:
-      '@types/react':
-        specifier: ^18.2.0
-        version: 18.3.24
-      '@types/react-dom':
-        specifier: ^18.2.0
-        version: 18.3.7(@types/react@18.3.24)
-      '@vitejs/plugin-react':
-        specifier: ^4.0.4
-        version: 4.7.0(vite@4.5.14)
-      typescript:
-        specifier: ^5.0.2
-        version: 5.9.2
-      vite:
-        specifier: ^4.4.5
-        version: 4.5.14(@types/node@24.3.0)
-
-  examples/plugins/bundle-impact-analyzer:
-    dependencies:
-      chart.js:
-        specifier: ^4.4.0
-        version: 4.5.0
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
-      moment:
-        specifier: ^2.29.4
-        version: 2.30.1
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
-    devDependencies:
-      '@types/lodash':
-        specifier: ^4.14.195
-        version: 4.17.20
-      '@types/react':
-        specifier: ^18.2.21
-        version: 18.3.24
-      '@types/react-dom':
-        specifier: ^18.2.7
-        version: 18.3.7(@types/react@18.3.24)
-      '@vitejs/plugin-react':
-        specifier: ^4.0.4
-        version: 4.7.0(vite@4.5.14)
-      typescript:
-        specifier: ^5.2.2
-        version: 5.9.2
-      vite:
-        specifier: ^4.4.9
-        version: 4.5.14(@types/node@24.3.0)
-
-  examples/plugins/design-system-inspector:
-    dependencies:
-      '@tanstack/devtools':
-        specifier: ^0.6.2
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
-      clsx:
-        specifier: ^2.1.0
-        version: 2.1.1
-      lucide-react:
-        specifier: ^0.263.1
-        version: 0.263.1(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
-    devDependencies:
-      '@types/react':
-        specifier: ^18.2.21
-        version: 18.3.24
-      '@types/react-dom':
-        specifier: ^18.2.7
-        version: 18.3.7(@types/react@18.3.24)
-      '@vitejs/plugin-react':
-        specifier: ^4.0.4
-        version: 4.7.0(vite@4.5.14)
-      typescript:
-        specifier: ^5.2.2
-        version: 5.9.2
-      vite:
-        specifier: ^4.4.9
-        version: 4.5.14(@types/node@24.3.0)
-
-  examples/plugins/feature-flag-manager/basic-app:
-    dependencies:
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
-    devDependencies:
-      '@types/react':
-        specifier: ^18.2.21
-        version: 18.3.24
-      '@types/react-dom':
-        specifier: ^18.2.7
-        version: 18.3.7(@types/react@18.3.24)
-      '@vitejs/plugin-react':
-        specifier: ^4.0.4
-        version: 4.7.0(vite@4.5.14)
-      typescript:
-        specifier: ^5.2.2
-        version: 5.9.2
-      vite:
-        specifier: ^4.4.9
-        version: 4.5.14(@types/node@24.3.0)
-
-  examples/plugins/graphql-devtools:
-    dependencies:
-      '@tanstack/devtools':
-        specifier: ^0.6.2
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
-      graphql:
-        specifier: ^16.8.1
-        version: 16.11.0
-      graphql-ws:
-        specifier: ^5.14.3
-        version: 5.16.2(graphql@16.11.0)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
-    devDependencies:
-      '@types/react':
-        specifier: ^18.2.21
-        version: 18.3.24
-      '@types/react-dom':
-        specifier: ^18.2.7
-        version: 18.3.7(@types/react@18.3.24)
-      '@vitejs/plugin-react':
-        specifier: ^4.0.4
-        version: 4.7.0(vite@4.5.14)
-      autoprefixer:
-        specifier: ^10.4.16
-        version: 10.4.21(postcss@8.5.6)
-      postcss:
-        specifier: ^8.4.31
-        version: 8.5.6
-      tailwindcss:
-        specifier: ^3.3.5
-        version: 3.4.17
-      typescript:
-        specifier: ^5.2.2
-        version: 5.9.2
-      vite:
-        specifier: ^4.4.9
-        version: 4.5.14(@types/node@24.3.0)
-
-  examples/plugins/i18n-devtools:
-    dependencies:
-      '@sucoza/i18n':
-        specifier: workspace:*
-        version: link:../../../packages/i18n
-      '@sucoza/i18n-devtools-plugin':
-        specifier: workspace:*
-        version: link:../../../plugins/i18n-devtools
-      '@tanstack/react-devtools':
-        specifier: link:D:/source/thirdparty/tanstack/devtools/packages/react-devtools
-        version: link:../../../../../thirdparty/tanstack/devtools/packages/react-devtools
-      i18next:
-        specifier: ^23.0.0
-        version: 23.16.8
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
-      react-i18next:
-        specifier: ^13.0.0
-        version: 13.5.0(i18next@23.16.8)(react-dom@18.3.1)(react@18.3.1)
-    devDependencies:
-      '@types/react':
-        specifier: ^18.2.21
-        version: 18.3.24
-      '@types/react-dom':
-        specifier: ^18.2.7
-        version: 18.3.7(@types/react@18.3.24)
-      '@vitejs/plugin-react':
-        specifier: ^4.0.4
-        version: 4.7.0(vite@4.5.14)
-      typescript:
-        specifier: ^5.2.2
-        version: 5.9.2
-      vite:
-        specifier: ^4.4.9
-        version: 4.5.14(@types/node@24.3.0)
-
-  examples/plugins/memory-performance-profiler:
-    dependencies:
-      '@tanstack/react-devtools':
-        specifier: latest
-        version: 0.6.2(@tanstack/devtools-ui@0.3.4)(@types/react-dom@18.3.7)(@types/react@18.3.24)(csstype@3.1.3)(react-dom@18.3.1)(react@18.3.1)(solid-js@1.9.9)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
-    devDependencies:
-      '@types/react':
-        specifier: ^18.2.21
-        version: 18.3.24
-      '@types/react-dom':
-        specifier: ^18.2.7
-        version: 18.3.7(@types/react@18.3.24)
-      '@vitejs/plugin-react':
-        specifier: ^4.0.4
-        version: 4.7.0(vite@4.5.14)
-      typescript:
-        specifier: ^5.2.2
-        version: 5.9.2
-      vite:
-        specifier: ^4.4.9
-        version: 4.5.14(@types/node@24.3.0)
-
-  examples/plugins/render-waste-detector:
+  examples/render-waste-detector:
     dependencies:
       '@tanstack/render-waste-detector':
         specifier: file:..
-        version: file:examples/plugins
+        version: file:examples
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -502,7 +536,7 @@ importers:
         specifier: ^4.4.9
         version: 4.5.14(@types/node@24.3.0)
 
-  examples/plugins/security-audit-panel:
+  examples/security-audit-panel:
     dependencies:
       '@tanstack/devtools':
         specifier: ^0.6.1
@@ -530,7 +564,7 @@ importers:
         specifier: ^4.4.9
         version: 4.5.14(@types/node@24.3.0)
 
-  examples/plugins/visual-regression-monitor:
+  examples/visual-regression-monitor:
     dependencies:
       clsx:
         specifier: ^2.1.0
@@ -538,59 +572,6 @@ importers:
       lucide-react:
         specifier: ^0.263.1
         version: 0.263.1(react@18.3.1)
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
-    devDependencies:
-      '@types/react':
-        specifier: ^18.2.21
-        version: 18.3.24
-      '@types/react-dom':
-        specifier: ^18.2.7
-        version: 18.3.7(@types/react@18.3.24)
-      '@vitejs/plugin-react':
-        specifier: ^4.0.4
-        version: 4.7.0(vite@4.5.14)
-      typescript:
-        specifier: ^5.2.2
-        version: 5.9.2
-      vite:
-        specifier: ^4.4.9
-        version: 4.5.14(@types/node@24.3.0)
-
-  examples/plugins/websocket-signalr-devtools/signalr-app:
-    dependencies:
-      '@microsoft/signalr':
-        specifier: ^8.0.0
-        version: 8.0.17
-      react:
-        specifier: ^18.2.0
-        version: 18.3.1
-      react-dom:
-        specifier: ^18.2.0
-        version: 18.3.1(react@18.3.1)
-    devDependencies:
-      '@types/react':
-        specifier: ^18.2.21
-        version: 18.3.24
-      '@types/react-dom':
-        specifier: ^18.2.7
-        version: 18.3.7(@types/react@18.3.24)
-      '@vitejs/plugin-react':
-        specifier: ^4.0.4
-        version: 4.7.0(vite@4.5.14)
-      typescript:
-        specifier: ^5.2.2
-        version: 5.9.2
-      vite:
-        specifier: ^4.4.9
-        version: 4.5.14(@types/node@24.3.0)
-
-  examples/plugins/websocket-signalr-devtools/websocket-app:
-    dependencies:
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -4941,20 +4922,6 @@ packages:
       read-yaml-file: 1.1.0
     dev: true
 
-  /@microsoft/signalr@8.0.17:
-    resolution: {integrity: sha512-5pM6xPtKZNJLO0Tq5nQasVyPFwi/WBY3QB5uc/v3dIPTpS1JXQbaXAQAPxFoQ5rTBFE094w8bbqkp17F9ReQvA==}
-    dependencies:
-      abort-controller: 3.0.0
-      eventsource: 2.0.2
-      fetch-cookie: 2.2.0
-      node-fetch: 2.7.0
-      ws: 7.5.10
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - utf-8-validate
-    dev: false
-
   /@napi-rs/wasm-runtime@0.2.12:
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
     requiresBuild: true
@@ -6530,13 +6497,6 @@ packages:
       loupe: 3.2.1
       tinyrainbow: 2.0.0
     dev: true
-
-  /abort-controller@3.0.0:
-    resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
-    engines: {node: '>=6.5'}
-    dependencies:
-      event-target-shim: 5.0.1
-    dev: false
 
   /acorn-jsx@5.3.2(acorn@8.15.0):
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -8290,19 +8250,9 @@ packages:
       through: 2.3.8
     dev: true
 
-  /event-target-shim@5.0.1:
-    resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
-    engines: {node: '>=6'}
-    dev: false
-
   /eventemitter3@4.0.7:
     resolution: {integrity: sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==}
     dev: true
-
-  /eventsource@2.0.2:
-    resolution: {integrity: sha512-IzUmBGPR3+oUG9dUeXynyNmf91/3zUSJg1lCktzKw47OXuhco54U3r9B7O4XX+Rb1Itm9OZ2b0RkTs10bICOxA==}
-    engines: {node: '>=12.0.0'}
-    dev: false
 
   /execa@5.1.1:
     resolution: {integrity: sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==}
@@ -8390,13 +8340,6 @@ packages:
         optional: true
     dependencies:
       picomatch: 4.0.3
-
-  /fetch-cookie@2.2.0:
-    resolution: {integrity: sha512-h9AgfjURuCgA2+2ISl8GbavpUdR+WGAM2McW/ovn4tVccegp8ZqCKWSBR8uRdM8dDNlx5WdKRWxBYUwteLDCNQ==}
-    dependencies:
-      set-cookie-parser: 2.7.1
-      tough-cookie: 4.1.4
-    dev: false
 
   /fflate@0.8.2:
     resolution: {integrity: sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==}
@@ -10099,18 +10042,6 @@ packages:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: true
 
-  /node-fetch@2.7.0:
-    resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
-    engines: {node: 4.x || >=6.0.0}
-    peerDependencies:
-      encoding: ^0.1.0
-    peerDependenciesMeta:
-      encoding:
-        optional: true
-    dependencies:
-      whatwg-url: 5.0.0
-    dev: false
-
   /node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
     dev: true
@@ -10955,15 +10886,10 @@ packages:
       react-is: 16.13.1
     dev: true
 
-  /psl@1.15.0:
-    resolution: {integrity: sha512-JZd3gMVBAVQkSs6HdNZo9Sdo0LNcQeMNP3CozBJb3JYC/QUYZTnKxP+f8oWRX4rHP5EurWxqAHTSwUCjlNKa1w==}
-    dependencies:
-      punycode: 2.3.1
-    dev: false
-
   /punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+    dev: true
 
   /pure-rand@7.0.1:
     resolution: {integrity: sha512-oTUZM/NAZS8p7ANR3SHh30kXB+zK2r2BPcEn/awJIbOvq82WoMN4p62AWWp3Hhw50G0xMsw1mhIBLqHw64EcNQ==}
@@ -10972,10 +10898,6 @@ packages:
   /quansync@0.2.11:
     resolution: {integrity: sha512-AifT7QEbW9Nri4tAwR5M/uzpBuqfZf+zwaEM/QkzEjj7NBuFD2rBuy0K3dE+8wltbezDV7JMA0WfnCPYRSYbXA==}
     dev: true
-
-  /querystringify@2.2.0:
-    resolution: {integrity: sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==}
-    dev: false
 
   /queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
@@ -11192,10 +11114,6 @@ packages:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
     dev: true
-
-  /requires-port@1.0.0:
-    resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
-    dev: false
 
   /resolve-cwd@3.0.0:
     resolution: {integrity: sha512-OrZaX2Mb+rJCpH/6CpSqt9xFVpN++x01XnN2ie9g6P5/3xelLAkXWVADpdz1IHD/KFfEXyE6V0U01OQ3UO2rEg==}
@@ -11986,26 +11904,12 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /tough-cookie@4.1.4:
-    resolution: {integrity: sha512-Loo5UUvLD9ScZ6jh8beX1T6sO1w2/MpCRpEP7V280GKMVUQ0Jzar2U3UJPsrdbziLEMMhu3Ujnq//rhiFuIeag==}
-    engines: {node: '>=6'}
-    dependencies:
-      psl: 1.15.0
-      punycode: 2.3.1
-      universalify: 0.2.0
-      url-parse: 1.5.10
-    dev: false
-
   /tough-cookie@5.1.2:
     resolution: {integrity: sha512-FVDYdxtnj0G6Qm/DhNPSb8Ju59ULcup3tuJxkFb5K8Bv2pUXILbf0xZWU8PX8Ov19OXljbUyveOFwRMwkXzO+A==}
     engines: {node: '>=16'}
     dependencies:
       tldts: 6.1.86
     dev: true
-
-  /tr46@0.0.3:
-    resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
-    dev: false
 
   /tr46@5.1.1:
     resolution: {integrity: sha512-hdF5ZgjTqgAntKkklYw0R03MG2x/bSzTtkxmIRw/sTNV8YXsCJ1tfLAX23lhxhHJlEf3CRCOCGGWw3vI3GaSPw==}
@@ -12227,11 +12131,6 @@ packages:
     engines: {node: '>= 4.0.0'}
     dev: true
 
-  /universalify@0.2.0:
-    resolution: {integrity: sha512-CJ1QgKmNg3CwvAv/kOFmtnEN05f0D/cn9QntgNOQlQF9dgvVTHj3t+8JPdjqawCHk7V/KA+fbUqzZ9XWhcqPUg==}
-    engines: {node: '>= 4.0.0'}
-    dev: false
-
   /universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
@@ -12279,13 +12178,6 @@ packages:
     dependencies:
       punycode: 2.3.1
     dev: true
-
-  /url-parse@1.5.10:
-    resolution: {integrity: sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==}
-    dependencies:
-      querystringify: 2.2.0
-      requires-port: 1.0.0
-    dev: false
 
   /use-sync-external-store@1.5.0(react@19.1.1):
     resolution: {integrity: sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==}
@@ -12548,10 +12440,6 @@ packages:
       makeerror: 1.0.12
     dev: true
 
-  /webidl-conversions@3.0.1:
-    resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
-    dev: false
-
   /webidl-conversions@7.0.0:
     resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
     engines: {node: '>=12'}
@@ -12576,13 +12464,6 @@ packages:
       tr46: 5.1.1
       webidl-conversions: 7.0.0
     dev: true
-
-  /whatwg-url@5.0.0:
-    resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
-    dependencies:
-      tr46: 0.0.3
-      webidl-conversions: 3.0.1
-    dev: false
 
   /which-boxed-primitive@1.1.1:
     resolution: {integrity: sha512-TbX3mj8n0odCBFVlY8AxkqcHASw3L60jIuF8jFP78az3C2YhmGvqbHBpAjTRH2/xqYunrJ9g1jSyjCjpoWzIAA==}
@@ -12815,7 +12696,7 @@ packages:
       react: 19.1.1
       use-sync-external-store: 1.5.0(react@19.1.1)
 
-  file:examples/plugins:
-    resolution: {directory: examples/plugins, type: directory}
-    name: plugins
+  file:examples:
+    resolution: {directory: examples, type: directory}
+    name: examples
     dev: false

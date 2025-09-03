@@ -12,6 +12,7 @@ import {
   Copy,
   Check
 } from 'lucide-react';
+import { COLORS, TYPOGRAPHY, SPACING, RADIUS, ScrollableContainer, Badge, Alert } from '@sucoza/shared-components';
 import type { GraphQLTypeInfo, GraphQLFieldInfo } from '../../types';
 
 interface TypeDetailsProps {
@@ -23,13 +24,13 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
   const [copiedField, setCopiedField] = React.useState<string | null>(null);
 
   const getTypeIcon = (kind: string) => {
-    if (kind.includes('OBJECT')) return <Type size={20} className="text-blue-500" />;
-    if (kind.includes('SCALAR')) return <Database size={20} className="text-green-500" />;
-    if (kind.includes('ENUM')) return <List size={20} className="text-yellow-500" />;
-    if (kind.includes('INTERFACE')) return <Settings size={20} className="text-purple-500" />;
-    if (kind.includes('UNION')) return <Zap size={20} className="text-red-500" />;
-    if (kind.includes('INPUT')) return <Square size={20} className="text-gray-500" />;
-    return <Type size={20} className="text-gray-400" />;
+    if (kind.includes('OBJECT')) return <Type size={20} style={{ color: COLORS.accent.blue }} />;
+    if (kind.includes('SCALAR')) return <Database size={20} style={{ color: COLORS.accent.green }} />;
+    if (kind.includes('ENUM')) return <List size={20} style={{ color: COLORS.accent.yellow }} />;
+    if (kind.includes('INTERFACE')) return <Settings size={20} style={{ color: COLORS.accent.purple }} />;
+    if (kind.includes('UNION')) return <Zap size={20} style={{ color: COLORS.accent.red }} />;
+    if (kind.includes('INPUT')) return <Square size={20} style={{ color: COLORS.text.secondary }} />;
+    return <Type size={20} style={{ color: COLORS.text.muted }} />;
   };
 
   const getTypeKindLabel = (kind: string) => {
@@ -67,7 +68,10 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
     
     if (isBuiltinType(coreType)) {
       return (
-        <span className="text-green-600 dark:text-green-400 font-mono">
+        <span style={{
+          color: COLORS.accent.green,
+          fontFamily: TYPOGRAPHY.fontFamily.mono
+        }}>
           {typeString}
         </span>
       );
@@ -76,7 +80,28 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
     return (
       <button
         onClick={() => onTypeSelect(coreType)}
-        className="text-blue-600 dark:text-blue-400 font-mono hover:underline focus:outline-none focus:underline"
+        style={{
+          color: COLORS.accent.blue,
+          fontFamily: TYPOGRAPHY.fontFamily.mono,
+          textDecoration: 'none',
+          border: 'none',
+          background: 'none',
+          padding: 0,
+          cursor: 'pointer',
+          outline: 'none'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.textDecoration = 'underline';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.textDecoration = 'none';
+        }}
+        onFocus={(e) => {
+          e.currentTarget.style.textDecoration = 'underline';
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.textDecoration = 'none';
+        }}
       >
         {typeString}
       </button>
@@ -84,62 +109,122 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
   };
 
   const renderField = (field: GraphQLFieldInfo) => (
-    <div key={field.name} className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <div className="flex items-center gap-2">
+    <div key={field.name} style={{
+      border: `1px solid ${COLORS.border.primary}`,
+      borderRadius: RADIUS.lg,
+      padding: SPACING['2xl'],
+      backgroundColor: COLORS.background.secondary
+    }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
             <button
               onClick={() => handleCopyField(field.name)}
-              className="flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded px-2 py-1 transition-colors"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: SPACING.md,
+                borderRadius: RADIUS.sm,
+                padding: `${SPACING.sm} ${SPACING.md}`,
+                border: 'none',
+                backgroundColor: 'transparent',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = COLORS.background.hover;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
             >
-              <span className="font-mono font-semibold text-gray-900 dark:text-gray-100">
+              <span style={{
+                fontFamily: TYPOGRAPHY.fontFamily.mono,
+                fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                color: COLORS.text.primary
+              }}>
                 {field.name}
               </span>
               {copiedField === field.name ? (
-                <Check size={14} className="text-green-500" />
+                <Check size={14} style={{ color: COLORS.accent.green }} />
               ) : (
-                <Copy size={14} className="text-gray-400" />
+                <Copy size={14} style={{ color: COLORS.text.muted }} />
               )}
             </button>
-            <ArrowRight size={14} className="text-gray-400" />
+            <ArrowRight size={14} style={{ color: COLORS.text.muted }} />
             {renderTypeLink(field.type)}
             {field.isDeprecated && (
-              <span title="Deprecated"><AlertTriangle size={14} className="text-yellow-500" /></span>
+              <span title="Deprecated"><AlertTriangle size={14} style={{ color: COLORS.status.warning }} /></span>
             )}
           </div>
           
           {field.description && (
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            <p style={{
+              marginTop: SPACING.md,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.secondary
+            }}>
               {field.description}
             </p>
           )}
 
           {field.isDeprecated && field.deprecationReason && (
-            <div className="mt-2 p-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded">
-              <div className="flex items-center gap-2 text-yellow-800 dark:text-yellow-200">
+            <div style={{
+              marginTop: SPACING.md,
+              padding: SPACING.md,
+              backgroundColor: COLORS.background.warning,
+              border: `1px solid ${COLORS.border.warning}`,
+              borderRadius: RADIUS.md
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: SPACING.md,
+                color: COLORS.text.warning
+              }}>
                 <AlertTriangle size={14} />
-                <span className="text-sm font-medium">Deprecated</span>
+                <span style={{
+                  fontSize: TYPOGRAPHY.fontSize.sm,
+                  fontWeight: TYPOGRAPHY.fontWeight.medium
+                }}>Deprecated</span>
               </div>
-              <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-1">
+              <p style={{
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                color: COLORS.text.warning,
+                marginTop: SPACING.sm
+              }}>
                 {field.deprecationReason}
               </p>
             </div>
           )}
 
           {field.args && field.args.length > 0 && (
-            <div className="mt-3">
-              <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <div style={{ marginTop: SPACING.lg }}>
+              <h5 style={{
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                color: COLORS.text.secondary,
+                marginBottom: SPACING.md
+              }}>
                 Arguments:
               </h5>
-              <div className="space-y-2">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.md }}>
                 {field.args.map((arg) => (
-                  <div key={arg.name} className="flex items-center gap-2 text-sm">
-                    <span className="font-mono text-gray-600 dark:text-gray-400">
+                  <div key={arg.name} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: SPACING.md,
+                    fontSize: TYPOGRAPHY.fontSize.sm
+                  }}>
+                    <span style={{
+                      fontFamily: TYPOGRAPHY.fontFamily.mono,
+                      color: COLORS.text.secondary
+                    }}>
                       {arg.name}:
                     </span>
                     {renderTypeLink(arg.type)}
                     {arg.defaultValue !== undefined && (
-                      <span className="text-gray-500 dark:text-gray-400">
+                      <span style={{ color: COLORS.text.muted }}>
                         = {JSON.stringify(arg.defaultValue)}
                       </span>
                     )}
@@ -154,42 +239,60 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
   );
 
   return (
-    <div className="flex flex-col h-full">
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* Header */}
-      <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center gap-3">
+      <div style={{
+        padding: SPACING['2xl'],
+        borderBottom: `1px solid ${COLORS.border.primary}`
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.lg }}>
           {getTypeIcon(type.kind)}
-          <div className="flex-1">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+          <div style={{ flex: 1 }}>
+            <h2 style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.text.primary
+            }}>
               {type.name}
             </h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.secondary
+            }}>
               {getTypeKindLabel(type.kind)}
             </p>
           </div>
         </div>
         
         {type.description && (
-          <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
-            <div className="flex items-start gap-2">
-              <Info size={16} className="text-blue-500 mt-0.5 flex-shrink-0" />
-              <p className="text-sm text-blue-800 dark:text-blue-200">
-                {type.description}
-              </p>
-            </div>
-          </div>
+          <Alert
+            type="info"
+            message={type.description}
+            style={{ marginTop: SPACING.lg }}
+          />
         )}
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto p-4 space-y-6">
+      <ScrollableContainer style={{
+        flex: 1,
+        padding: SPACING['2xl'],
+        display: 'flex',
+        flexDirection: 'column',
+        gap: SPACING['3xl']
+      }}>
         {/* Fields */}
         {type.fields && type.fields.length > 0 && (
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+            <h3 style={{
+              fontSize: TYPOGRAPHY.fontSize.lg,
+              fontWeight: TYPOGRAPHY.fontWeight.semibold,
+              color: COLORS.text.primary,
+              marginBottom: SPACING.lg
+            }}>
               Fields ({type.fields.length})
             </h3>
-            <div className="space-y-3">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.lg }}>
               {type.fields.map(renderField)}
             </div>
           </div>
@@ -198,32 +301,58 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
         {/* Enum Values */}
         {type.enumValues && type.enumValues.length > 0 && (
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+            <h3 style={{
+              fontSize: TYPOGRAPHY.fontSize.lg,
+              fontWeight: TYPOGRAPHY.fontWeight.semibold,
+              color: COLORS.text.primary,
+              marginBottom: SPACING.lg
+            }}>
               Enum Values ({type.enumValues.length})
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: SPACING.lg
+            }}>
               {type.enumValues.map((enumValue) => (
                 <div 
-                  key={enumValue.name} 
-                  className="border rounded-lg p-3 bg-gray-50 dark:bg-gray-800"
+                  key={enumValue.name}
+                  style={{
+                    border: `1px solid ${COLORS.border.primary}`,
+                    borderRadius: RADIUS.lg,
+                    padding: SPACING.lg,
+                    backgroundColor: COLORS.background.secondary
+                  }}
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono font-semibold text-gray-900 dark:text-gray-100">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
+                    <span style={{
+                      fontFamily: TYPOGRAPHY.fontFamily.mono,
+                      fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                      color: COLORS.text.primary
+                    }}>
                       {enumValue.name}
                     </span>
                     {enumValue.isDeprecated && (
-                      <span title="Deprecated"><AlertTriangle size={14} className="text-yellow-500" /></span>
+                      <span title="Deprecated"><AlertTriangle size={14} style={{ color: COLORS.status.warning }} /></span>
                     )}
                   </div>
                   
                   {enumValue.description && (
-                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    <p style={{
+                      marginTop: SPACING.sm,
+                      fontSize: TYPOGRAPHY.fontSize.sm,
+                      color: COLORS.text.secondary
+                    }}>
                       {enumValue.description}
                     </p>
                   )}
 
                   {enumValue.isDeprecated && enumValue.deprecationReason && (
-                    <div className="mt-2 text-sm text-yellow-600 dark:text-yellow-400">
+                    <div style={{
+                      marginTop: SPACING.md,
+                      fontSize: TYPOGRAPHY.fontSize.sm,
+                      color: COLORS.text.warning
+                    }}>
                       Deprecated: {enumValue.deprecationReason}
                     </div>
                   )}
@@ -236,29 +365,47 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
         {/* Input Fields */}
         {type.inputFields && type.inputFields.length > 0 && (
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+            <h3 style={{
+              fontSize: TYPOGRAPHY.fontSize.lg,
+              fontWeight: TYPOGRAPHY.fontWeight.semibold,
+              color: COLORS.text.primary,
+              marginBottom: SPACING.lg
+            }}>
               Input Fields ({type.inputFields.length})
             </h3>
-            <div className="space-y-3">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.lg }}>
               {type.inputFields.map((inputField) => (
                 <div 
-                  key={inputField.name} 
-                  className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800"
+                  key={inputField.name}
+                  style={{
+                    border: `1px solid ${COLORS.border.primary}`,
+                    borderRadius: RADIUS.lg,
+                    padding: SPACING['2xl'],
+                    backgroundColor: COLORS.background.secondary
+                  }}
                 >
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono font-semibold text-gray-900 dark:text-gray-100">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
+                    <span style={{
+                      fontFamily: TYPOGRAPHY.fontFamily.mono,
+                      fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                      color: COLORS.text.primary
+                    }}>
                       {inputField.name}:
                     </span>
                     {renderTypeLink(inputField.type)}
                     {inputField.defaultValue !== undefined && (
-                      <span className="text-gray-500 dark:text-gray-400">
+                      <span style={{ color: COLORS.text.muted }}>
                         = {JSON.stringify(inputField.defaultValue)}
                       </span>
                     )}
                   </div>
                   
                   {inputField.description && (
-                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    <p style={{
+                      marginTop: SPACING.md,
+                      fontSize: TYPOGRAPHY.fontSize.sm,
+                      color: COLORS.text.secondary
+                    }}>
                       {inputField.description}
                     </p>
                   )}
@@ -271,18 +418,25 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
         {/* Possible Types (for Unions) */}
         {type.possibleTypes && type.possibleTypes.length > 0 && (
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+            <h3 style={{
+              fontSize: TYPOGRAPHY.fontSize.lg,
+              fontWeight: TYPOGRAPHY.fontWeight.semibold,
+              color: COLORS.text.primary,
+              marginBottom: SPACING.lg
+            }}>
               Possible Types ({type.possibleTypes.length})
             </h3>
-            <div className="flex flex-wrap gap-2">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: SPACING.md }}>
               {type.possibleTypes.map((possibleType) => (
-                <button
+                <Badge
                   key={possibleType.name}
+                  variant="primary"
+                  size="md"
+                  interactive
                   onClick={() => onTypeSelect(possibleType.name)}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
                 >
                   {possibleType.name}
-                </button>
+                </Badge>
               ))}
             </div>
           </div>
@@ -291,23 +445,31 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
         {/* Interfaces */}
         {type.interfaces && type.interfaces.length > 0 && (
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+            <h3 style={{
+              fontSize: TYPOGRAPHY.fontSize.lg,
+              fontWeight: TYPOGRAPHY.fontWeight.semibold,
+              color: COLORS.text.primary,
+              marginBottom: SPACING.lg
+            }}>
               Implements ({type.interfaces.length})
             </h3>
-            <div className="flex flex-wrap gap-2">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: SPACING.md }}>
               {type.interfaces.map((interfaceType) => (
-                <button
+                <Badge
                   key={interfaceType.name}
+                  variant="secondary"
+                  size="md"
+                  interactive
                   onClick={() => onTypeSelect(interfaceType.name)}
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors"
+                  style={{ backgroundColor: COLORS.accent.purple + '20', color: COLORS.accent.purple }}
                 >
                   {interfaceType.name}
-                </button>
+                </Badge>
               ))}
             </div>
           </div>
         )}
-      </div>
+      </ScrollableContainer>
     </div>
   );
 };

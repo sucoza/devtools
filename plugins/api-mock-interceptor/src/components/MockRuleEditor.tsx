@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { clsx } from 'clsx';
 import { Save, X, Hash, Link, Globe, Clock } from 'lucide-react';
+import { COLORS, TYPOGRAPHY, SPACING, RADIUS, COMPONENT_STYLES, mergeStyles } from '@sucoza/shared-components';
 import type { MockRule, HttpMethod, RequestMatcher, MockResponse } from '../types';
 import { generateId, getTimestamp } from '../utils';
 
@@ -154,56 +154,68 @@ export function MockRuleEditor({ rule, onSave, onCancel }: MockRuleEditorProps) 
   };
 
   return (
-    <div className="h-full flex flex-col bg-white dark:bg-gray-800">
+    <div style={COMPONENT_STYLES.container.base}>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div style={COMPONENT_STYLES.header.base}>
+        <h2 style={COMPONENT_STYLES.header.title}>
           {rule ? 'Edit Mock Rule' : 'Create Mock Rule'}
         </h2>
-        <div className="flex items-center gap-2">
+        <div style={COMPONENT_STYLES.header.controls}>
           <button
             onClick={validateAndSave}
-            className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+            style={mergeStyles(COMPONENT_STYLES.button.base, COMPONENT_STYLES.button.primary)}
           >
-            <Save className="w-4 h-4" />
+            <Save style={{ width: '16px', height: '16px' }} />
             Save
           </button>
           <button
             onClick={onCancel}
-            className="flex items-center gap-2 px-3 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 dark:bg-gray-600 dark:text-gray-300 dark:hover:bg-gray-500 transition-colors"
+            style={COMPONENT_STYLES.button.base}
           >
-            <X className="w-4 h-4" />
+            <X style={{ width: '16px', height: '16px' }} />
             Cancel
           </button>
         </div>
       </div>
 
       {/* Form */}
-      <div className="flex-1 overflow-auto p-4 space-y-6">
+      <div style={COMPONENT_STYLES.content.scrollable}>
         {/* Basic Settings */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">Basic Settings</h3>
+        <div style={{ marginBottom: SPACING['6xl'] }}>
+          <h3 style={mergeStyles(COMPONENT_STYLES.header.title, { marginBottom: SPACING['2xl'] })}>Basic Settings</h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: SPACING['2xl'] }}>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label style={{
+                display: 'block',
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                color: COLORS.text.secondary,
+                marginBottom: SPACING.xs
+              }}>
                 Rule Name *
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className={clsx(
-                  'w-full px-3 py-2 text-sm border rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                  errors.name ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
+                style={mergeStyles(
+                  COMPONENT_STYLES.input.base,
+                  errors.name ? { borderColor: COLORS.status.error, boxShadow: `0 0 0 1px ${COLORS.status.error}` } : {}
                 )}
                 placeholder="Enter rule name"
               />
-              {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name}</p>}
+              {errors.name && <p style={{ color: COLORS.status.error, fontSize: TYPOGRAPHY.fontSize.xs, marginTop: SPACING.xs }}>{errors.name}</p>}
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label style={{
+                display: 'block',
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                color: COLORS.text.secondary,
+                marginBottom: SPACING.xs
+              }}>
                 Priority
               </label>
               <input
@@ -212,119 +224,174 @@ export function MockRuleEditor({ rule, onSave, onCancel }: MockRuleEditorProps) 
                 onChange={(e) => setPriority(parseInt(e.target.value) || 1)}
                 min="1"
                 max="100"
-                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                style={COMPONENT_STYLES.input.base}
               />
             </div>
           </div>
           
-          <div>
-            <label className="flex items-center gap-2 cursor-pointer">
+          <div style={{ marginTop: SPACING['3xl'] }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: SPACING.md, cursor: 'pointer' }}>
               <input
                 type="checkbox"
                 checked={enabled}
                 onChange={(e) => setEnabled(e.target.checked)}
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                style={{
+                  width: '16px',
+                  height: '16px',
+                  accentColor: COLORS.border.focus
+                }}
               />
-              <span className="text-sm text-gray-700 dark:text-gray-300">Enable this rule</span>
+              <span style={{ fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.text.secondary }}>Enable this rule</span>
             </label>
           </div>
         </div>
 
         {/* Request Matcher */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white flex items-center gap-2">
-            <Hash className="w-5 h-5" />
+        <div style={{ marginBottom: SPACING['6xl'] }}>
+          <h3 style={mergeStyles(COMPONENT_STYLES.header.title, { 
+            marginBottom: SPACING['2xl'], 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: SPACING.md 
+          })}>
+            <Hash style={{ width: '20px', height: '20px' }} />
             Request Matcher
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: SPACING['2xl'], marginBottom: SPACING['3xl'] }}>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                <Link className="w-4 h-4 inline mr-1" />
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: SPACING.xs,
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                color: COLORS.text.secondary,
+                marginBottom: SPACING.xs
+              }}>
+                <Link style={{ width: '16px', height: '16px' }} />
                 Exact URL
               </label>
               <input
                 type="text"
                 value={matcherUrl}
                 onChange={(e) => setMatcherUrl(e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                style={COMPONENT_STYLES.input.base}
                 placeholder="https://api.example.com/users"
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                <Globe className="w-4 h-4 inline mr-1" />
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: SPACING.xs,
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                color: COLORS.text.secondary,
+                marginBottom: SPACING.xs
+              }}>
+                <Globe style={{ width: '16px', height: '16px' }} />
                 URL Pattern
               </label>
               <input
                 type="text"
                 value={matcherUrlPattern}
                 onChange={(e) => setMatcherUrlPattern(e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                style={COMPONENT_STYLES.input.base}
                 placeholder="*/api/users/* or /api\/users\/\d+/"
               />
             </div>
           </div>
           
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <div style={{ marginBottom: SPACING['3xl'] }}>
+            <label style={{
+              display: 'block',
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary,
+              marginBottom: SPACING.xs
+            }}>
               HTTP Methods (comma-separated)
             </label>
             <input
               type="text"
               value={matcherMethod}
               onChange={(e) => setMatcherMethod(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              style={COMPONENT_STYLES.input.base}
               placeholder="GET, POST, PUT"
             />
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <p style={{
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: COLORS.text.muted,
+              marginTop: SPACING.xs
+            }}>
               Available: {httpMethods.join(', ')}
             </p>
           </div>
           
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <div style={{ marginBottom: SPACING['3xl'] }}>
+            <label style={{
+              display: 'block',
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary,
+              marginBottom: SPACING.xs
+            }}>
               Headers (JSON)
             </label>
             <textarea
               value={matcherHeaders}
               onChange={(e) => setMatcherHeaders(e.target.value)}
               rows={4}
-              className={clsx(
-                'w-full px-3 py-2 text-sm border rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                errors.matcherHeaders ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
+              style={mergeStyles(
+                COMPONENT_STYLES.input.base,
+                { fontFamily: TYPOGRAPHY.fontFamily.mono },
+                errors.matcherHeaders ? { borderColor: COLORS.status.error, boxShadow: `0 0 0 1px ${COLORS.status.error}` } : {}
               )}
               placeholder='{"authorization": "Bearer *", "content-type": "application/json"}'
             />
-            {errors.matcherHeaders && <p className="text-red-600 text-xs mt-1">{errors.matcherHeaders}</p>}
+            {errors.matcherHeaders && <p style={{ color: COLORS.status.error, fontSize: TYPOGRAPHY.fontSize.xs, marginTop: SPACING.xs }}>{errors.matcherHeaders}</p>}
           </div>
           
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <div style={{ marginBottom: SPACING['3xl'] }}>
+            <label style={{
+              display: 'block',
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary,
+              marginBottom: SPACING.xs
+            }}>
               Request Body (JSON)
             </label>
             <textarea
               value={matcherBody}
               onChange={(e) => setMatcherBody(e.target.value)}
               rows={4}
-              className={clsx(
-                'w-full px-3 py-2 text-sm border rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                errors.matcherBody ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
+              style={mergeStyles(
+                COMPONENT_STYLES.input.base,
+                { fontFamily: TYPOGRAPHY.fontFamily.mono },
+                errors.matcherBody ? { borderColor: COLORS.status.error, boxShadow: `0 0 0 1px ${COLORS.status.error}` } : {}
               )}
               placeholder='{"userId": 123}'
             />
-            {errors.matcherBody && <p className="text-red-600 text-xs mt-1">{errors.matcherBody}</p>}
+            {errors.matcherBody && <p style={{ color: COLORS.status.error, fontSize: TYPOGRAPHY.fontSize.xs, marginTop: SPACING.xs }}>{errors.matcherBody}</p>}
           </div>
         </div>
 
         {/* Mock Response */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white">Mock Response</h3>
+        <div style={{ marginBottom: SPACING['6xl'] }}>
+          <h3 style={mergeStyles(COMPONENT_STYLES.header.title, { marginBottom: SPACING['2xl'] })}>Mock Response</h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: SPACING['2xl'], marginBottom: SPACING['3xl'] }}>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label style={{
+                display: 'block',
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                color: COLORS.text.secondary,
+                marginBottom: SPACING.xs
+              }}>
                 Status Code *
               </label>
               <input
@@ -333,30 +400,44 @@ export function MockRuleEditor({ rule, onSave, onCancel }: MockRuleEditorProps) 
                 onChange={(e) => setResponseStatus(parseInt(e.target.value) || 200)}
                 min="100"
                 max="599"
-                className={clsx(
-                  'w-full px-3 py-2 text-sm border rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                  errors.responseStatus ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
+                style={mergeStyles(
+                  COMPONENT_STYLES.input.base,
+                  errors.responseStatus ? { borderColor: COLORS.status.error, boxShadow: `0 0 0 1px ${COLORS.status.error}` } : {}
                 )}
               />
-              {errors.responseStatus && <p className="text-red-600 text-xs mt-1">{errors.responseStatus}</p>}
+              {errors.responseStatus && <p style={{ color: COLORS.status.error, fontSize: TYPOGRAPHY.fontSize.xs, marginTop: SPACING.xs }}>{errors.responseStatus}</p>}
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label style={{
+                display: 'block',
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                color: COLORS.text.secondary,
+                marginBottom: SPACING.xs
+              }}>
                 Status Text
               </label>
               <input
                 type="text"
                 value={responseStatusText}
                 onChange={(e) => setResponseStatusText(e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                style={COMPONENT_STYLES.input.base}
                 placeholder="OK"
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                <Clock className="w-4 h-4 inline mr-1" />
+              <label style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: SPACING.xs,
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                color: COLORS.text.secondary,
+                marginBottom: SPACING.xs
+              }}>
+                <Clock style={{ width: '16px', height: '16px' }} />
                 Delay (ms)
               </label>
               <input
@@ -364,48 +445,66 @@ export function MockRuleEditor({ rule, onSave, onCancel }: MockRuleEditorProps) 
                 value={responseDelay}
                 onChange={(e) => setResponseDelay(parseInt(e.target.value) || 0)}
                 min="0"
-                className={clsx(
-                  'w-full px-3 py-2 text-sm border rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                  errors.responseDelay ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
+                style={mergeStyles(
+                  COMPONENT_STYLES.input.base,
+                  errors.responseDelay ? { borderColor: COLORS.status.error, boxShadow: `0 0 0 1px ${COLORS.status.error}` } : {}
                 )}
               />
-              {errors.responseDelay && <p className="text-red-600 text-xs mt-1">{errors.responseDelay}</p>}
+              {errors.responseDelay && <p style={{ color: COLORS.status.error, fontSize: TYPOGRAPHY.fontSize.xs, marginTop: SPACING.xs }}>{errors.responseDelay}</p>}
             </div>
           </div>
           
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <div style={{ marginBottom: SPACING['3xl'] }}>
+            <label style={{
+              display: 'block',
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary,
+              marginBottom: SPACING.xs
+            }}>
               Response Headers (JSON)
             </label>
             <textarea
               value={responseHeaders}
               onChange={(e) => setResponseHeaders(e.target.value)}
               rows={4}
-              className={clsx(
-                'w-full px-3 py-2 text-sm border rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                errors.responseHeaders ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
+              style={mergeStyles(
+                COMPONENT_STYLES.input.base,
+                { fontFamily: TYPOGRAPHY.fontFamily.mono },
+                errors.responseHeaders ? { borderColor: COLORS.status.error, boxShadow: `0 0 0 1px ${COLORS.status.error}` } : {}
               )}
               placeholder='{"content-type": "application/json", "x-custom-header": "value"}'
             />
-            {errors.responseHeaders && <p className="text-red-600 text-xs mt-1">{errors.responseHeaders}</p>}
+            {errors.responseHeaders && <p style={{ color: COLORS.status.error, fontSize: TYPOGRAPHY.fontSize.xs, marginTop: SPACING.xs }}>{errors.responseHeaders}</p>}
           </div>
           
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <div style={{ marginBottom: SPACING['3xl'] }}>
+            <label style={{
+              display: 'block',
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary,
+              marginBottom: SPACING.xs
+            }}>
               Response Body (JSON)
             </label>
             <textarea
               value={responseBody}
               onChange={(e) => setResponseBody(e.target.value)}
               rows={8}
-              className={clsx(
-                'w-full px-3 py-2 text-sm border rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 font-mono focus:ring-2 focus:ring-blue-500 focus:border-transparent',
-                errors.responseBody ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
+              style={mergeStyles(
+                COMPONENT_STYLES.input.base,
+                { fontFamily: TYPOGRAPHY.fontFamily.mono },
+                errors.responseBody ? { borderColor: COLORS.status.error, boxShadow: `0 0 0 1px ${COLORS.status.error}` } : {}
               )}
               placeholder='{"id": 123, "name": "John Doe", "email": "john@example.com"}'
             />
-            {errors.responseBody && <p className="text-red-600 text-xs mt-1">{errors.responseBody}</p>}
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            {errors.responseBody && <p style={{ color: COLORS.status.error, fontSize: TYPOGRAPHY.fontSize.xs, marginTop: SPACING.xs }}>{errors.responseBody}</p>}
+            <p style={{
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: COLORS.text.muted,
+              marginTop: SPACING.xs
+            }}>
               Supports template variables: {'{{'} timestamp {'}}'}, {'{{'} iso_date {'}}'}, {'{{'} random_id {'}}'}, {'{{'} random_uuid {'}}'}, etc.
             </p>
           </div>

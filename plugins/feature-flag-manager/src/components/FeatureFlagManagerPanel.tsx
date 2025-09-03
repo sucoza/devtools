@@ -8,7 +8,11 @@ import {
   Tabs,
   Badge,
   ConfigMenu,
-  type ConfigMenuItem
+  type ConfigMenuItem,
+  COLORS,
+  TYPOGRAPHY,
+  SPACING,
+  RADIUS
 } from '@sucoza/shared-components';
 import { DashboardTab } from './DashboardTab';
 import { FlagsTab } from './FlagsTab';
@@ -113,10 +117,20 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
   if (!state) {
     return (
       <div 
-        className={`feature-flag-manager-panel ${resolvedTheme}`}
-        style={{ height, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        style={{ 
+          height, 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          fontFamily: TYPOGRAPHY.fontFamily.sans,
+          fontSize: TYPOGRAPHY.fontSize.sm,
+          backgroundColor: COLORS.background.primary,
+          border: `1px solid ${COLORS.border.primary}`,
+          borderRadius: RADIUS.lg,
+          color: COLORS.text.primary
+        }}
       >
-        <div className="text-gray-500">Loading feature flags...</div>
+        <div style={{ color: COLORS.text.muted }}>Loading feature flags...</div>
       </div>
     );
   }
@@ -248,8 +262,19 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
 
   return (
     <div 
-      className={`feature-flag-manager-panel ${resolvedTheme}`}
-      style={{ height, display: 'flex', flexDirection: 'column', position: 'relative' }}
+      style={{ 
+        height, 
+        display: 'flex', 
+        flexDirection: 'column', 
+        position: 'relative',
+        fontFamily: TYPOGRAPHY.fontFamily.sans,
+        fontSize: TYPOGRAPHY.fontSize.sm,
+        backgroundColor: COLORS.background.primary,
+        border: `1px solid ${COLORS.border.primary}`,
+        borderRadius: RADIUS.lg,
+        overflow: 'hidden',
+        color: COLORS.text.primary
+      }}
     >
       {/* Notifications */}
       {notifications.length > 0 && (
@@ -266,7 +291,11 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
 
       {/* User Context Panel */}
       {showUserContext && (
-        <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb' }}>
+        <div style={{ 
+          padding: SPACING['2xl'], 
+          borderBottom: `1px solid ${COLORS.border.primary}`,
+          backgroundColor: COLORS.background.secondary
+        }}>
           <UserContextPanel
             context={state.currentContext}
             segments={state.userSegments}
@@ -287,39 +316,6 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
         />
       </div>
 
-      <style>{`
-        .feature-flag-manager-panel {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-          font-size: 14px;
-          background-color: white;
-          border: 1px solid #e5e7eb;
-          border-radius: 8px;
-          overflow: hidden;
-        }
-        
-        .feature-flag-manager-panel.dark {
-          background-color: #1f2937;
-          border-color: #374151;
-          color: #f9fafb;
-        }
-        
-        .panel-header {
-          background-color: #f9fafb;
-        }
-        
-        .dark .panel-header {
-          background-color: #374151;
-          border-color: #4b5563;
-        }
-        
-        button:hover {
-          opacity: 0.9;
-        }
-        
-        button:active {
-          transform: scale(0.98);
-        }
-      `}</style>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { AuthPermissionsMockPanel } from '../src/index';
+import { AuthPermissionsMockPanel } from '@sucoza/auth-permissions-mock-devtools-plugin';
 
 function App() {
   return (

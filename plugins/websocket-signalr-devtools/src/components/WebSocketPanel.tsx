@@ -1,4 +1,5 @@
 import React from 'react';
+import { COLORS, TYPOGRAPHY, SPACING, RADIUS, EmptyState } from '@sucoza/shared-components';
 import { useDevToolsSelector } from '../core/devtools-store';
 import { createWebSocketSignalRDevToolsClient } from '../core/devtools-client';
 import { ConnectionList } from './ConnectionList';
@@ -79,52 +80,21 @@ export function WebSocketPanel() {
 
   if (connections.length === 0) {
     return (
-      <div className="empty-state">
-        <div className="empty-icon">🔌</div>
-        <div className="empty-title">No WebSocket Connections</div>
-        <div className="empty-description">
-          WebSocket connections will appear here when your application creates them.
-          Make sure the DevTools is enabled before creating connections.
-        </div>
-
-        <style>{`
-          .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            text-align: center;
-            color: var(--devtools-text-secondary);
-            padding: 2rem;
-          }
-
-          .empty-icon {
-            font-size: 64px;
-            margin-bottom: 1.5rem;
-            opacity: 0.6;
-          }
-
-          .empty-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: var(--devtools-color);
-          }
-
-          .empty-description {
-            font-size: 0.875rem;
-            max-width: 320px;
-            line-height: 1.6;
-            color: var(--devtools-text-muted);
-          }
-        `}</style>
-      </div>
+      <EmptyState
+        icon="🔌"
+        title="No WebSocket Connections"
+        description="WebSocket connections will appear here when your application creates them. Make sure the DevTools is enabled before creating connections."
+      />
     );
   }
 
   return (
-    <div className="websocket-panel">
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+      backgroundColor: COLORS.background.primary
+    }}>
       <MetricsBar 
         metrics={{
           connections: metrics.activeConnections,
@@ -135,10 +105,39 @@ export function WebSocketPanel() {
         }}
       />
 
-      <div className="panel-content">
-        <div className="connections-section">
-          <div className="section-header">
-            <h3>Connections ({filteredConnections.length})</h3>
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        overflow: 'hidden',
+        gap: '1px',
+        backgroundColor: COLORS.border.primary
+      }}>
+        <div style={{
+          width: '320px',
+          backgroundColor: COLORS.background.primary,
+          display: 'flex',
+          flexDirection: 'column',
+          borderRadius: `${RADIUS.md} 0 0 ${RADIUS.md}`
+        }}>
+          <div style={{
+            padding: `${SPACING['2xl']} ${SPACING['2.5xl']}`,
+            backgroundColor: COLORS.background.secondary,
+            borderBottom: `1px solid ${COLORS.border.primary}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}>
+            <h3 style={{
+              margin: 0,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.semibold,
+              color: COLORS.text.primary,
+              display: 'flex',
+              alignItems: 'center',
+              gap: SPACING.md
+            }}>
+              Connections ({filteredConnections.length})
+            </h3>
           </div>
           <ConnectionList
             connections={filteredConnections}
@@ -149,9 +148,33 @@ export function WebSocketPanel() {
           />
         </div>
 
-        <div className="messages-section">
-          <div className="section-header">
-            <h3>Messages ({filteredMessages.length})</h3>
+        <div style={{
+          flex: 1,
+          backgroundColor: COLORS.background.primary,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          borderRadius: `0 ${RADIUS.md} ${RADIUS.md} 0`
+        }}>
+          <div style={{
+            padding: `${SPACING['2xl']} ${SPACING['2.5xl']}`,
+            backgroundColor: COLORS.background.secondary,
+            borderBottom: `1px solid ${COLORS.border.primary}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}>
+            <h3 style={{
+              margin: 0,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.semibold,
+              color: COLORS.text.primary,
+              display: 'flex',
+              alignItems: 'center',
+              gap: SPACING.md
+            }}>
+              Messages ({filteredMessages.length})
+            </h3>
           </div>
           <MessageList
             messages={filteredMessages}
@@ -160,59 +183,6 @@ export function WebSocketPanel() {
           />
         </div>
       </div>
-
-      <style>{`
-        .websocket-panel {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-          background: var(--devtools-bg);
-        }
-
-        .panel-content {
-          flex: 1;
-          display: flex;
-          overflow: hidden;
-          gap: 1px;
-          background: var(--devtools-border);
-        }
-
-        .connections-section {
-          width: 320px;
-          background: var(--devtools-bg);
-          display: flex;
-          flex-direction: column;
-          border-radius: 6px 0 0 6px;
-        }
-
-        .messages-section {
-          flex: 1;
-          background: var(--devtools-bg);
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-          border-radius: 0 6px 6px 0;
-        }
-
-        .section-header {
-          padding: 1rem 1.25rem;
-          background: var(--devtools-panel-bg);
-          border-bottom: 1px solid var(--devtools-border);
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .section-header h3 {
-          margin: 0;
-          font-size: 0.875rem;
-          font-weight: 600;
-          color: var(--devtools-color);
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        }
-      `}</style>
     </div>
   );
 }

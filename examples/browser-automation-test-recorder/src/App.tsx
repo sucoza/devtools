@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserAutomationPanel } from '@/index';
+import { BrowserAutomationPanel } from '@sucoza/browser-automation-test-recorder-devtools-plugin';
 
 function App() {
   const [devToolsVisible, setDevToolsVisible] = useState(true);

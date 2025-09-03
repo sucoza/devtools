@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { clsx } from 'clsx';
 import { Filter, Search, ExternalLink, Clock, AlertCircle, CheckCircle } from 'lucide-react';
+import { COLORS, TYPOGRAPHY, SPACING, RADIUS, COMPONENT_STYLES, mergeStyles } from '@sucoza/shared-components';
 import { useInterceptor } from '../hooks/useInterceptor';
 import type { HttpMethod } from '../types';
 import { ApiCallDetails } from './ApiCallDetails';
@@ -30,28 +30,28 @@ export function ApiCallsTab() {
 
   const getMethodColor = (method: HttpMethod) => {
     const colors = {
-      GET: 'text-green-600 bg-green-50 dark:text-green-400 dark:bg-green-900/30',
-      POST: 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-900/30',
-      PUT: 'text-yellow-600 bg-yellow-50 dark:text-yellow-400 dark:bg-yellow-900/30',
-      PATCH: 'text-orange-600 bg-orange-50 dark:text-orange-400 dark:bg-orange-900/30',
-      DELETE: 'text-red-600 bg-red-50 dark:text-red-400 dark:bg-red-900/30',
-      HEAD: 'text-gray-600 bg-gray-50 dark:text-gray-400 dark:bg-gray-900/30',
-      OPTIONS: 'text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-900/30',
+      GET: { color: COLORS.status.success, background: 'rgba(78, 201, 176, 0.1)' },
+      POST: { color: COLORS.status.info, background: 'rgba(52, 152, 219, 0.1)' },
+      PUT: { color: COLORS.status.warning, background: 'rgba(243, 156, 18, 0.1)' },
+      PATCH: { color: '#f39c12', background: 'rgba(243, 156, 18, 0.1)' },
+      DELETE: { color: COLORS.status.error, background: 'rgba(231, 76, 60, 0.1)' },
+      HEAD: { color: COLORS.text.muted, background: COLORS.background.tertiary },
+      OPTIONS: { color: '#9b59b6', background: 'rgba(155, 89, 182, 0.1)' },
     };
     return colors[method] || colors.GET;
   };
 
   const getStatusColor = (status: number) => {
     if (status >= 200 && status < 300) {
-      return 'text-green-600 dark:text-green-400';
+      return COLORS.status.success;
     } else if (status >= 300 && status < 400) {
-      return 'text-yellow-600 dark:text-yellow-400';
+      return COLORS.status.warning;
     } else if (status >= 400 && status < 500) {
-      return 'text-orange-600 dark:text-orange-400';
+      return '#f39c12';
     } else if (status >= 500) {
-      return 'text-red-600 dark:text-red-400';
+      return COLORS.status.error;
     }
-    return 'text-gray-600 dark:text-gray-400';
+    return COLORS.text.muted;
   };
 
   const formatDuration = (duration?: number) => {
@@ -70,31 +70,51 @@ export function ApiCallsTab() {
   };
 
   return (
-    <div className="flex h-full">
+    <div style={{ display: 'flex', height: '100%' }}>
       {/* API Calls List */}
-      <div className="flex-1 flex flex-col border-r border-gray-200 dark:border-gray-700">
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        borderRight: `1px solid ${COLORS.border.primary}`
+      }}>
         {/* Search and Filter Bar */}
-        <div className="flex items-center gap-2 p-3 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: SPACING.md,
+          padding: SPACING.lg,
+          background: COLORS.background.secondary,
+          borderBottom: `1px solid ${COLORS.border.primary}`
+        }}>
+          <div style={{ flex: 1, position: 'relative' }}>
+            <Search style={{
+              position: 'absolute',
+              left: SPACING.lg,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: '16px',
+              height: '16px',
+              color: COLORS.text.muted
+            }} />
             <input
               type="text"
               placeholder="Search API calls..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              style={mergeStyles(COMPONENT_STYLES.input.search, {
+                paddingLeft: '40px'
+              })}
             />
           </div>
           <button
             onClick={actions.toggleFilters}
-            className={clsx(
-              'flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors',
-              state.ui.showFilters
-                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+            style={mergeStyles(
+              COMPONENT_STYLES.button.base,
+              state.ui.showFilters ? COMPONENT_STYLES.button.active : {}
             )}
           >
-            <Filter className="w-4 h-4" />
+            <Filter style={{ width: '16px', height: '16px' }} />
             Filters
           </button>
         </div>
@@ -103,12 +123,16 @@ export function ApiCallsTab() {
         {state.ui.showFilters && <FilterPanel />}
 
         {/* API Calls List */}
-        <div className="flex-1 overflow-auto">
+        <div style={{ flex: 1, overflowY: 'auto' }}>
           {searchFilteredCalls.length === 0 ? (
-            <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
-              <div className="text-center">
-                <div className="text-lg font-medium mb-2">No API calls found</div>
-                <div className="text-sm">
+            <div style={COMPONENT_STYLES.empty.container}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{
+                  fontSize: TYPOGRAPHY.fontSize.lg,
+                  fontWeight: TYPOGRAPHY.fontWeight.medium,
+                  marginBottom: SPACING.md
+                }}>No API calls found</div>
+                <div style={{ fontSize: TYPOGRAPHY.fontSize.sm }}>
                   {!state.isInterceptionEnabled
                     ? 'Enable interception to start capturing API calls'
                     : 'Make some API requests to see them here'
@@ -117,58 +141,97 @@ export function ApiCallsTab() {
               </div>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            <div>
               {searchFilteredCalls.map((call) => (
                 <div
                   key={call.id}
                   onClick={() => actions.selectCall(call.id)}
-                  className={clsx(
-                    'p-3 cursor-pointer transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50',
-                    selectedCall?.id === call.id && 'bg-blue-50 dark:bg-blue-900/30'
+                  style={mergeStyles(
+                    COMPONENT_STYLES.list.item.base,
+                    selectedCall?.id === call.id ? COMPONENT_STYLES.list.item.selected : {}
                   )}
+                  onMouseEnter={(e) => {
+                    if (selectedCall?.id !== call.id) {
+                      e.currentTarget.style.background = COLORS.background.hover;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (selectedCall?.id !== call.id) {
+                      e.currentTarget.style.background = 'transparent';
+                    }
+                  }}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: SPACING.md
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
                       <span
-                        className={clsx(
-                          'px-2 py-1 text-xs font-medium rounded',
-                          getMethodColor(call.request.method)
-                        )}
+                        style={{
+                          padding: `${SPACING.xs} ${SPACING.md}`,
+                          fontSize: TYPOGRAPHY.fontSize.xs,
+                          fontWeight: TYPOGRAPHY.fontWeight.medium,
+                          borderRadius: RADIUS.md,
+                          ...getMethodColor(call.request.method)
+                        }}
                       >
                         {call.request.method}
                       </span>
                       
                       {call.response && (
-                        <span className={clsx('text-sm font-medium', getStatusColor(call.response.status))}>
+                        <span style={{
+                          fontSize: TYPOGRAPHY.fontSize.sm,
+                          fontWeight: TYPOGRAPHY.fontWeight.medium,
+                          color: getStatusColor(call.response.status)
+                        }}>
                           {call.response.status}
                         </span>
                       )}
                       
                       {call.error && (
-                        <AlertCircle className="w-4 h-4 text-red-500" />
+                        <AlertCircle style={{ width: '16px', height: '16px', color: COLORS.status.error }} />
                       )}
                       
                       {call.isMocked && (
-                        <CheckCircle className="w-4 h-4 text-green-500" />
+                        <CheckCircle style={{ width: '16px', height: '16px', color: COLORS.status.success }} />
                       )}
                     </div>
                     
-                    <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: SPACING.md,
+                      fontSize: TYPOGRAPHY.fontSize.xs,
+                      color: COLORS.text.muted
+                    }}>
                       <span>{formatDuration(call.duration)}</span>
-                      <Clock className="w-3 h-3" />
+                      <Clock style={{ width: '12px', height: '12px' }} />
                       <span>{formatTimestamp(call.timestamp)}</span>
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-900 dark:text-white font-mono">
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{
+                      fontSize: TYPOGRAPHY.fontSize.sm,
+                      color: COLORS.text.primary,
+                      fontFamily: TYPOGRAPHY.fontFamily.mono
+                    }}>
                       {truncateUrl(call.request.url)}
                     </span>
-                    <ExternalLink className="w-4 h-4 text-gray-400" />
+                    <ExternalLink style={{ width: '16px', height: '16px', color: COLORS.text.muted }} />
                   </div>
                   
                   {call.error && (
-                    <div className="mt-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 p-2 rounded">
+                    <div style={{
+                      marginTop: SPACING.md,
+                      fontSize: TYPOGRAPHY.fontSize.sm,
+                      color: COLORS.status.error,
+                      background: 'rgba(231, 76, 60, 0.1)',
+                      padding: SPACING.md,
+                      borderRadius: RADIUS.md
+                    }}>
                       {call.error}
                     </div>
                   )}
@@ -180,14 +243,18 @@ export function ApiCallsTab() {
       </div>
 
       {/* API Call Details */}
-      <div className="w-1/2">
+      <div style={{ width: '50%' }}>
         {selectedCall ? (
           <ApiCallDetails call={selectedCall} />
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-            <div className="text-center">
-              <div className="text-lg font-medium mb-2">Select an API call</div>
-              <div className="text-sm">Click on an API call to view its details</div>
+          <div style={COMPONENT_STYLES.empty.container}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{
+                fontSize: TYPOGRAPHY.fontSize.lg,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                marginBottom: SPACING.md
+              }}>Select an API call</div>
+              <div style={{ fontSize: TYPOGRAPHY.fontSize.sm }}>Click on an API call to view its details</div>
             </div>
           </div>
         )}

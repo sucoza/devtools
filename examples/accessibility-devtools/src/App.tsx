@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { AccessibilityDevToolsPanel } from '../src/components/AccessibilityDevToolsPanel';
-import { createAccessibilityDevToolsEventClient } from '../src/core/accessibility-event-client';
+import { AccessibilityDevToolsPanel, createAccessibilityDevToolsEventClient } from '@sucoza/accessibility-devtools-plugin';
 
 // Initialize the accessibility event client
 const accessibilityClient = createAccessibilityDevToolsEventClient();
@@ -46,7 +45,7 @@ function App() {
                   Please enter your first and last name
                 </p>
               </div>
-              
+
               <button
                 type="button"
                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -66,7 +65,7 @@ function App() {
             <div className="text-xl font-semibold text-gray-900 mb-4">
               Bad Accessibility Examples (Issues to Find)
             </div>
-            
+
             <div className="space-y-4">
               {/* Poor color contrast */}
               <div>
@@ -77,45 +76,45 @@ function App() {
                   type="email"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   placeholder="Enter email"
-                  // Missing id and aria-describedby
+                // Missing id and aria-describedby
                 />
                 <p style={{ color: '#ddd' }} className="text-sm mt-1">
                   We'll never share your email
                 </p>
               </div>
-              
+
               {/* Missing alt text */}
               <div>
-                <img 
-                  src="https://via.placeholder.com/150x100/cccccc/ffffff?text=No+Alt+Text" 
+                <img
+                  src="https://via.placeholder.com/150x100/cccccc/ffffff?text=No+Alt+Text"
                   className="w-32 h-20 object-cover rounded"
-                  // Missing alt attribute
+                // Missing alt attribute
                 />
               </div>
-              
+
               {/* Button with poor accessibility */}
-              <div 
+              <div
                 className="bg-red-500 text-white px-4 py-2 rounded-md cursor-pointer inline-block"
                 onClick={() => alert('This should be a button!')}
-                // Missing role, tabindex, keyboard handling
+              // Missing role, tabindex, keyboard handling
               >
                 Click Me (Not Actually a Button)
               </div>
-              
+
               {/* Form without labels */}
               <div>
                 <input type="text" placeholder="First Name" className="mr-2 px-2 py-1 border" />
                 <input type="text" placeholder="Last Name" className="mr-2 px-2 py-1 border" />
                 <input type="submit" value="Submit" className="px-2 py-1 bg-gray-500 text-white" />
               </div>
-              
+
               {/* Link with poor description */}
               <div>
                 <a href="#" className="text-blue-500">
                   Click here
                 </a> to learn more about our services.
               </div>
-              
+
               {/* Missing form labels and fieldsets */}
               <form>
                 <div className="space-y-2">
@@ -133,13 +132,13 @@ function App() {
                   </div>
                 </div>
               </form>
-              
+
               {/* Inaccessible custom dropdown */}
               <div className="relative">
-                <div 
+                <div
                   className="bg-white border border-gray-300 rounded-md px-3 py-2 cursor-pointer"
-                  onClick={() => {}}
-                  // Missing ARIA attributes, keyboard support
+                  onClick={() => { }}
+                // Missing ARIA attributes, keyboard support
                 >
                   Select an option
                 </div>

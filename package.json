@@ -74,6 +74,24 @@
     "@sucoza/logger": "workspace:*",
     "@sucoza/plugin-core": "workspace:*",
     "@sucoza/shared-components": "workspace:*",
-    "@sucoza/accessibility-devtools-plugin": "workspace:*"
+    "@sucoza/accessibility-devtools-plugin": "workspace:*",
+    "@sucoza/auth-permissions-mock-devtools-plugin": "workspace:*",
+    "@sucoza/browser-automation-test-recorder-devtools-plugin": "workspace:*",
+    "@sucoza/bundle-impact-analyzer-devtools-plugin": "workspace:*",
+    "@sucoza/design-system-inspector-devtools-plugin": "workspace:*",
+    "@sucoza/error-boundary-visualizer-devtools-plugin": "workspace:*",
+    "@sucoza/feature-flag-manager-devtools-plugin": "workspace:*",
+    "@sucoza/form-state-inspector-devtools-plugin": "workspace:*",
+    "@sucoza/graphql-devtools-plugin": "workspace:*",
+    "@sucoza/i18n-devtools-plugin": "workspace:*",
+    "@sucoza/logger-devtools-plugin": "workspace:*",
+    "@sucoza/memory-performance-profiler-devtools-plugin": "workspace:*",
+    "@sucoza/render-waste-detector-devtools-plugin": "workspace:*",
+    "@sucoza/router-devtools-plugin": "workspace:*",
+    "@sucoza/security-audit-panel-devtools-plugin": "workspace:*",
+    "@sucoza/stress-testing-devtools-plugin": "workspace:*",
+    "@sucoza/visual-regression-monitor-devtools-plugin": "workspace:*",
+    "@sucoza/websocket-signalr-devtools-plugin": "workspace:*",
+    "@sucoza/zustand-devtools-plugin": "workspace:*"
   }
 }

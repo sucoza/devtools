@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // Import from the plugin - in a real scenario this would come from the npm package
-import { BundleImpactAnalyzerPanel } from '../src';
+import { BundleImpactAnalyzerPanel } from '@sucoza/bundle-impact-analyzer-devtools-plugin';
 
 // Import some dependencies to make the bundle more interesting
 import _ from 'lodash';

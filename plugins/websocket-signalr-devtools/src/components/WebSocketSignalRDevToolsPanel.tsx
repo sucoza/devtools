@@ -4,7 +4,11 @@ import {
   StatusIndicator,
   Footer,
   ScrollableContainer,
-  Badge
+  Badge,
+  COLORS,
+  TYPOGRAPHY,
+  SPACING,
+  RADIUS
 } from '@sucoza/shared-components';
 import { useDevToolsSelector } from '../core/devtools-store';
 import { createWebSocketSignalRDevToolsClient } from '../core/devtools-client';
@@ -15,7 +19,6 @@ import { ConnectionDetails } from './ConnectionDetails';
 import { MessageDetails } from './MessageDetails';
 import { FilterPanel } from './FilterPanel';
 import { ConfigMenu, type ConfigMenuItem } from '@sucoza/shared-components';
-import { clsx } from 'clsx';
 
 export interface WebSocketSignalRDevToolsPanelProps {
   className?: string;
@@ -139,12 +142,20 @@ export function WebSocketSignalRDevToolsPanel({
 
   return (
     <div 
-      className={clsx(
-        'websocket-signalr-devtools',
-        `theme-${uiTheme}`,
-        className
-      )}
-      style={{ height }}
+      className={className}
+      style={{
+        height,
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: COLORS.background.primary,
+        color: COLORS.text.primary,
+        fontFamily: TYPOGRAPHY.fontFamily.sans,
+        fontSize: TYPOGRAPHY.fontSize.sm,
+        border: `1px solid ${COLORS.border.primary}`,
+        borderRadius: RADIUS.lg,
+        overflow: 'hidden',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)'
+      }}
     >
       <Tabs
         tabs={tabs}
@@ -156,15 +167,30 @@ export function WebSocketSignalRDevToolsPanel({
         panelStyle={{ display: 'none' }} // Hide panel content since we render it separately
       />
 
-      <div className="devtools-toolbar">
-        <div className="toolbar-left">
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: `${SPACING.md} ${SPACING.lg}`,
+        backgroundColor: COLORS.background.secondary,
+        borderBottom: `1px solid ${COLORS.border.primary}`
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: SPACING.lg
+        }}>
           <StatusIndicator
             status={selectedTab === 'websocket' ? (wsRecording ? 'success' : 'inactive') : (srRecording ? 'success' : 'inactive')}
             label={selectedTab === 'websocket' ? (wsRecording ? 'Recording WebSocket' : 'WebSocket Paused') : (srRecording ? 'Recording SignalR' : 'SignalR Paused')}
             size="sm"
           />
         </div>
-        <div className="toolbar-right">
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: SPACING.md
+        }}>
           <ConfigMenu items={configMenuItems} />
         </div>
       </div>
@@ -174,18 +200,38 @@ export function WebSocketSignalRDevToolsPanel({
         autoHideScrollbar={true}
       >
         {showFilters && (
-          <div className="devtools-filters">
+          <div style={{
+            borderBottom: `1px solid ${COLORS.border.primary}`,
+            backgroundColor: COLORS.background.secondary,
+            padding: `${SPACING.lg} ${SPACING['2xl']}`
+          }}>
             <FilterPanel />
           </div>
         )}
         
-        <div className="devtools-content">
-          <div className="devtools-main">
+        <div style={{
+          flex: 1,
+          display: 'flex',
+          overflow: 'hidden',
+          backgroundColor: COLORS.background.primary
+        }}>
+          <div style={{
+            flex: 1,
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
             {tabs.find(tab => tab.id === selectedTab)?.content || tabs[0].content}
           </div>
           
           {selectedConnectionId && (
-            <div className="devtools-sidebar">
+            <div style={{
+              width: '320px',
+              borderLeft: `1px solid ${COLORS.border.primary}`,
+              backgroundColor: COLORS.background.secondary,
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
               <ConnectionDetails 
                 connectionId={selectedConnectionId}
                 type={selectedTab as 'websocket' | 'signalr'}
@@ -194,7 +240,13 @@ export function WebSocketSignalRDevToolsPanel({
           )}
           
           {selectedMessageId && (
-            <div className="devtools-message-details">
+            <div style={{
+              width: '400px',
+              borderLeft: `1px solid ${COLORS.border.primary}`,
+              backgroundColor: COLORS.background.secondary,
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
               <MessageDetails 
                 messageId={selectedMessageId}
                 type={selectedTab as 'websocket' | 'signalr'}
@@ -229,148 +281,6 @@ export function WebSocketSignalRDevToolsPanel({
         variant="compact"
       />
 
-      <style>{`
-        .websocket-signalr-devtools {
-          display: flex;
-          flex-direction: column;
-          background: var(--devtools-bg);
-          color: var(--devtools-color);
-          font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-          font-size: 13px;
-          border: 1px solid var(--devtools-border);
-          border-radius: 8px;
-          overflow: hidden;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .devtools-filters {
-          border-bottom: 1px solid var(--devtools-border);
-          background: var(--devtools-panel-bg);
-          padding: 12px 16px;
-        }
-
-        .devtools-toolbar {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 8px 12px;
-          background: var(--devtools-panel-bg);
-          border-bottom: 1px solid var(--devtools-border);
-        }
-
-        .toolbar-left {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .toolbar-right {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .devtools-content {
-          flex: 1;
-          display: flex;
-          overflow: hidden;
-          background: var(--devtools-bg);
-        }
-
-        .devtools-main {
-          flex: 1;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .devtools-sidebar {
-          width: 320px;
-          border-left: 1px solid var(--devtools-border);
-          background: var(--devtools-panel-bg);
-          display: flex;
-          flex-direction: column;
-        }
-
-        .devtools-message-details {
-          width: 400px;
-          border-left: 1px solid var(--devtools-border);
-          background: var(--devtools-panel-bg);
-          display: flex;
-          flex-direction: column;
-        }
-
-        /* Modern theme variables */
-        .theme-light {
-          --devtools-bg: #ffffff;
-          --devtools-color: #1e293b;
-          --devtools-border: #e2e8f0;
-          --devtools-panel-bg: #f8fafc;
-          --devtools-accent: #3b82f6;
-          --devtools-accent-hover: #2563eb;
-          --devtools-accent-contrast: #ffffff;
-          --devtools-success: #10b981;
-          --devtools-warning: #f59e0b;
-          --devtools-danger: #ef4444;
-          --devtools-text-secondary: #64748b;
-          --devtools-text-muted: #94a3b8;
-          --devtools-button-bg: #ffffff;
-          --devtools-button-hover-bg: #f1f5f9;
-        }
-
-        .theme-dark {
-          --devtools-bg: #0f172a;
-          --devtools-color: #f1f5f9;
-          --devtools-border: #334155;
-          --devtools-panel-bg: #1e293b;
-          --devtools-accent: #60a5fa;
-          --devtools-accent-hover: #3b82f6;
-          --devtools-accent-contrast: #ffffff;
-          --devtools-success: #34d399;
-          --devtools-warning: #fbbf24;
-          --devtools-danger: #f87171;
-          --devtools-text-secondary: #cbd5e1;
-          --devtools-text-muted: #94a3b8;
-          --devtools-button-bg: #334155;
-          --devtools-button-hover-bg: #475569;
-        }
-
-        .theme-auto {
-          --devtools-bg: #ffffff;
-          --devtools-color: #1e293b;
-          --devtools-border: #e2e8f0;
-          --devtools-panel-bg: #f8fafc;
-          --devtools-accent: #3b82f6;
-          --devtools-accent-hover: #2563eb;
-          --devtools-accent-contrast: #ffffff;
-          --devtools-success: #10b981;
-          --devtools-warning: #f59e0b;
-          --devtools-danger: #ef4444;
-          --devtools-text-secondary: #64748b;
-          --devtools-text-muted: #94a3b8;
-          --devtools-button-bg: #ffffff;
-          --devtools-button-hover-bg: #f1f5f9;
-        }
-
-        @media (prefers-color-scheme: dark) {
-          .theme-auto {
-            --devtools-bg: #0f172a;
-            --devtools-color: #f1f5f9;
-            --devtools-border: #334155;
-            --devtools-panel-bg: #1e293b;
-            --devtools-accent: #60a5fa;
-            --devtools-accent-hover: #3b82f6;
-            --devtools-accent-contrast: #ffffff;
-            --devtools-success: #34d399;
-            --devtools-warning: #fbbf24;
-            --devtools-danger: #f87171;
-            --devtools-text-secondary: #cbd5e1;
-            --devtools-text-muted: #94a3b8;
-            --devtools-button-bg: #334155;
-            --devtools-button-hover-bg: #475569;
-          }
-        }
-      `}</style>
     </div>
   );
 }
