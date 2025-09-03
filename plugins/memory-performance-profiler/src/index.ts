@@ -1,11 +1,15 @@
 // Main plugin exports
 export { MemoryProfilerPanel } from './components';
+export { MemoryProfilerPanel as MemoryPerformanceProfilerDevToolsPanel } from './components';
 export { 
   MemoryProfiler, 
   useMemoryProfilerStore, 
   memoryProfilerClient, 
   useMemoryProfilerDevTools 
 } from './core';
+
+// Default export for devtools-importer
+export { MemoryProfilerPanel as default } from './components';
 
 // Type exports
 export type {

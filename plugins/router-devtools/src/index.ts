@@ -6,6 +6,8 @@
  */
 
 import React from 'react';
+import { createReactRouterAdapter } from './adapters/react-router-adapter';
+import { routerStateManager } from './core/router-state-manager';
 
 // Main exports
 export { RouterDevToolsPanel } from './components/RouterDevToolsPanel';
