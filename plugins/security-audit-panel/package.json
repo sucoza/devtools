@@ -11,7 +11,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "example": "cd example && npm run dev",
+    "example": "cd ../../examples/plugins/security-audit-panel && npm run dev",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "typecheck": "tsc --noEmit",

@@ -8,7 +8,7 @@ import {
   Ruler,
   Zap
 } from 'lucide-react';
-import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles } from '@sucoza/shared-components';
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles, ScrollableContainer } from '@sucoza/shared-components';
 import { useDesignSystemInspector } from '../../hooks';
 
 export function DashboardTab() {
@@ -94,12 +94,20 @@ export function DashboardTab() {
   ];
 
   return (
-    <div style={{
-      padding: SPACING['5xl'],
-      display: 'flex',
-      flexDirection: 'column',
-      gap: SPACING['5xl']
-    }}>
+    <ScrollableContainer
+      showShadows={true}
+      shadowIntensity="medium"
+      smoothScroll={true}
+      scrollbarWidth="thin"
+      autoHideScrollbar={true}
+      style={{ height: '100%' }}
+    >
+      <div style={{
+        padding: SPACING['5xl'],
+        display: 'flex',
+        flexDirection: 'column',
+        gap: SPACING['5xl']
+      }}>
       <div>
         <h2 style={{
           fontSize: TYPOGRAPHY.fontSize.xl,
@@ -339,6 +347,7 @@ export function DashboardTab() {
         </div>
       </div>
     </div>
+    </ScrollableContainer>
   );
 }
 

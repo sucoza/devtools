@@ -11,7 +11,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "example": "cd example && npm run dev",
+    "example": "cd ../../examples/plugins/browser-automation-test-recorder && npm run dev",
     "test": "vitest run --exclude '**/performance/**' --exclude '**/e2e/**'",
     "test:ui": "vitest --ui",
     "test:unit": "vitest run src/__tests__/unit",
