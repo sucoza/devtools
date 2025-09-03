@@ -6,7 +6,7 @@ import {
   resetForm,
   formReplayEngine,
   trackHTMLForm 
-} from '../index';
+} from '@sucoza/form-state-inspector-devtools-plugin';
 
 function App() {
   // Example 1: Manual tracking with custom form

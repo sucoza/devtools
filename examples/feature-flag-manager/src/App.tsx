@@ -3,7 +3,7 @@ import {
   FeatureFlagManagerPanel, 
   createFeatureFlagDevToolsClient,
   useFeatureFlagManager 
-} from '@tanstack/feature-flag-manager-devtools';
+} from '@sucoza/feature-flag-manager-devtools-plugin';
 
 const client = createFeatureFlagDevToolsClient();
 

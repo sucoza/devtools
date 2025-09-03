@@ -2,18 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { TanStackDevtools } from '@tanstack/react-devtools';
 import App from './App';
-import { formStateInspectorPlugin } from '../plugin';
+import { FormStateDevToolsPanel } from '@sucoza/form-state-inspector-devtools-plugin';
 
 // Initialize Form State Inspector
-import '../index';
+import '@sucoza/form-state-inspector-devtools-plugin';
 
 function Root() {
   return (
     <>
       <App />
-      <TanStackDevtools 
-        initialIsOpen={false}
-        plugins={[formStateInspectorPlugin]}
+      <TanStackDevtools
+        plugins={[{
+          name: "Form Inspector",
+          render: () => <FormStateDevToolsPanel />
+        }]}
       />
     </>
   );

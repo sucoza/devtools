@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DesignSystemInspectorPanel } from '../../src';
+import { DesignSystemInspectorPanel } from '@sucoza/design-system-inspector-devtools-plugin';
 import { ExampleComponents } from './components/ExampleComponents';
 
 export function App() {
