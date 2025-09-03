@@ -3,6 +3,15 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import {
+  Toolbar,
+  Tabs,
+  Footer,
+  Alert,
+  ScrollableContainer,
+  type Tab
+} from '@sucoza/shared-components';
+import { Download, Trash2, Navigation } from 'lucide-react';
 import { routerEventClient } from '../core/router-event-client';
 import { 
   NavigationState, 
@@ -199,123 +208,120 @@ export function RouterDevToolsPanel() {
     setState(prevState => ({ ...prevState, navigationHistory: [] }));
   }, []);
 
+  const exportRoutes = useCallback(() => {
+    const exportData = {
+      routeTree: state.routeTree,
+      navigationHistory: state.navigationHistory,
+      currentState: state.currentState,
+      timestamp: new Date().toISOString()
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `router-devtools-export-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    
+    URL.revokeObjectURL(url);
+  }, [state.routeTree, state.navigationHistory, state.currentState]);
+
   // Get route statistics
   const routeStats = getRouteStatistics(state.routeTreeNodes);
 
   if (!state.isConnected) {
     return (
       <div style={{
-        padding: '20px',
-        textAlign: 'center',
-        color: '#969696',
-        fontFamily: '"SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace',
-        background: '#1e1e1e',
         height: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        flexDirection: 'column'
+        padding: '20px'
       }}>
-        <div style={{ fontSize: '16px', marginBottom: '10px' }}>Router DevTools</div>
-        <div style={{ fontSize: '14px', marginBottom: '20px' }}>
-          Waiting for router adapter to connect...
-        </div>
-        <div style={{ fontSize: '12px', color: '#666' }}>
-          Make sure you have registered a router adapter in your application.
-        </div>
+        <Alert
+          type="warning"
+          title="Router DevTools"
+          description={
+            <div>
+              <p>Waiting for router adapter to connect...</p>
+              <p style={{ marginTop: '8px', fontSize: '12px' }}>
+                Make sure you have registered a router adapter in your application.
+              </p>
+            </div>
+          }
+          icon={<Navigation size={20} />}
+          showIcon
+        />
       </div>
     );
   }
 
+  // Define tabs
+  const tabs: Tab[] = [
+    {
+      id: 'tree',
+      label: 'Route Tree',
+      icon: <Navigation size={16} />
+    },
+    {
+      id: 'params',
+      label: 'Parameters'
+    },
+    {
+      id: 'timeline',
+      label: 'Timeline'
+    }
+  ];
+
   return (
     <div style={{
-      padding: '10px',
-      fontFamily: '"SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace',
-      fontSize: '12px',
       height: '100%',
       display: 'flex',
-      flexDirection: 'column',
-      background: '#1e1e1e',
-      color: '#d4d4d4'
+      flexDirection: 'column'
     }}>
-      {/* Header */}
-      <div style={{ marginBottom: '10px', borderBottom: '1px solid #3c3c3c', paddingBottom: '10px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-          <h3 style={{ margin: 0, color: '#cccccc', fontSize: '14px', fontWeight: '600' }}>
-            🧭 Router DevTools Enhanced
-          </h3>
-          <div style={{ fontSize: '11px', color: '#969696' }}>
-            {routeStats.totalRoutes} routes • {routeStats.activeRoutes} active • {state.navigationHistory.length} history
-          </div>
-        </div>
-        
-        {/* Search Bar */}
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <input
-            type="text"
-            placeholder="Search routes..."
-            value={state.searchQuery}
-            onChange={(e) => handleSearchChange(e.target.value)}
-            style={{
-              padding: '4px 8px',
-              borderRadius: '4px',
-              border: '1px solid #3c3c3c',
-              background: '#252526',
-              color: '#cccccc',
-              flex: 1,
-              fontSize: '11px'
-            }}
-          />
-          <button
-            onClick={clearHistory}
-            style={{
-              padding: '4px 8px',
-              borderRadius: '4px',
-              border: '1px solid #3c3c3c',
-              background: '#2d2d30',
-              color: '#cccccc',
-              cursor: 'pointer',
-              fontSize: '11px'
-            }}
-          >
-            Clear History
-          </button>
-        </div>
-      </div>
+      {/* Header Toolbar */}
+      <Toolbar
+        title="🧭 Router DevTools Enhanced"
+        subtitle={`${routeStats.totalRoutes} routes • ${routeStats.activeRoutes} active • ${state.navigationHistory.length} history`}
+        showSearch
+        searchValue={state.searchQuery}
+        onSearchChange={handleSearchChange}
+        searchPlaceholder="Search routes..."
+        actions={[
+          {
+            id: 'clear-history',
+            label: 'Clear History',
+            icon: <Trash2 size={16} />,
+            onClick: clearHistory,
+            tooltip: 'Clear navigation history',
+            variant: 'danger'
+          },
+          {
+            id: 'export-routes',
+            label: 'Export Routes',
+            icon: <Download size={16} />,
+            onClick: exportRoutes,
+            tooltip: 'Export route data as JSON'
+          }
+        ]}
+        size="md"
+        variant="default"
+      />
 
       {/* Tab Navigation */}
-      <div style={{ 
-        display: 'flex', 
-        borderBottom: '1px solid #3c3c3c', 
-        marginBottom: '10px',
-        gap: '1px'
-      }}>
-        {[
-          { key: 'tree', label: 'Route Tree' },
-          { key: 'params', label: 'Parameters' },
-          { key: 'timeline', label: 'Timeline' }
-        ].map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => handleTabChange(tab.key as 'tree' | 'params' | 'timeline')}
-            style={{
-              padding: '8px 16px',
-              background: state.activeTab === tab.key ? '#1e1e1e' : 'transparent',
-              border: 'none',
-              borderBottom: state.activeTab === tab.key ? '2px solid #007acc' : '2px solid transparent',
-              color: state.activeTab === tab.key ? '#cccccc' : '#969696',
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: '500'
-            }}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        tabs={tabs}
+        activeTab={state.activeTab}
+        onTabChange={(tabId) => handleTabChange(tabId as 'tree' | 'params' | 'timeline')}
+        variant="underline"
+        size="md"
+        fullWidth={false}
+      />
 
       {/* Tab Content */}
-      <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+      <ScrollableContainer style={{ flex: 1 }}>
         {state.activeTab === 'tree' && (
           <RouteTreeView
             nodes={state.routeTreeNodes}
@@ -347,7 +353,45 @@ export function RouterDevToolsPanel() {
             onClearHistory={clearHistory}
           />
         )}
-      </div>
+      </ScrollableContainer>
+      
+      {/* Footer with Statistics */}
+      <Footer
+        stats={[
+          {
+            id: 'total-routes',
+            label: 'Total Routes',
+            value: routeStats.totalRoutes,
+            tooltip: 'Total number of defined routes'
+          },
+          {
+            id: 'active-routes',
+            label: 'Active Routes',
+            value: routeStats.activeRoutes,
+            tooltip: 'Number of currently active/matched routes',
+            variant: 'success'
+          },
+          {
+            id: 'navigation-count',
+            label: 'Navigation Count',
+            value: state.navigationHistory.length,
+            tooltip: 'Total number of navigation events'
+          },
+          {
+            id: 'error-rate',
+            label: 'Error Rate',
+            value: `${((state.navigationHistory.filter(h => h.loadingState === 'submitting' && h.duration && h.duration > 5000).length / Math.max(state.navigationHistory.length, 1)) * 100).toFixed(1)}%`,
+            tooltip: 'Percentage of navigation attempts that were slow or problematic',
+            variant: state.navigationHistory.filter(h => h.loadingState === 'submitting' && h.duration && h.duration > 5000).length > 0 ? 'warning' : 'default'
+          }
+        ]}
+        status={{
+          type: state.isConnected ? 'connected' : 'disconnected',
+          message: state.isConnected ? 'Router Adapter Connected' : 'Router Adapter Disconnected'
+        }}
+        size="sm"
+        variant="default"
+      />
     </div>
   );
 }

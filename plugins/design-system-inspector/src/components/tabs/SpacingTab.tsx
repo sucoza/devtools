@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles } from '@sucoza/shared-components';
 import { useDesignSystemInspector } from '../../hooks';
 
 export function SpacingTab() {
@@ -7,68 +8,179 @@ export function SpacingTab() {
   const { spacingAnalysis } = state;
 
   return (
-    <div className="p-6 space-y-6">
+    <div style={{
+      padding: SPACING['5xl'],
+      display: 'flex',
+      flexDirection: 'column',
+      gap: SPACING['5xl']
+    }}>
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+        <h2 style={{
+          fontSize: TYPOGRAPHY.fontSize.xl,
+          fontWeight: TYPOGRAPHY.fontWeight.bold,
+          color: COLORS.text.heading,
+          margin: 0,
+          marginBottom: SPACING.lg
+        }}>
           Spacing Analysis
         </h2>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p style={{
+          color: COLORS.text.secondary,
+          margin: 0
+        }}>
           Analyze spacing consistency and adherence to your design scale.
         </p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: SPACING.xl
+      }}>
+        <div style={{
+          backgroundColor: COLORS.background.secondary,
+          borderRadius: RADIUS.lg,
+          border: `1px solid ${COLORS.border.primary}`,
+          padding: SPACING.xl
+        }}>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.xl,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            color: COLORS.text.primary,
+            margin: 0
+          }}>
             {spacingAnalysis.scale.length}
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">Spacing Tokens</div>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.secondary
+          }}>Spacing Tokens</div>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+        <div style={{
+          backgroundColor: COLORS.background.secondary,
+          borderRadius: RADIUS.lg,
+          border: `1px solid ${COLORS.border.primary}`,
+          padding: SPACING.xl
+        }}>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.xl,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            color: COLORS.status.success,
+            margin: 0
+          }}>
             {Math.round(spacingAnalysis.consistency)}%
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">Consistency</div>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.secondary
+          }}>Consistency</div>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+        <div style={{
+          backgroundColor: COLORS.background.secondary,
+          borderRadius: RADIUS.lg,
+          border: `1px solid ${COLORS.border.primary}`,
+          padding: SPACING.xl
+        }}>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.xl,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            color: COLORS.status.error,
+            margin: 0
+          }}>
             {spacingAnalysis.violations.length}
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">Violations</div>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.secondary
+          }}>Violations</div>
         </div>
       </div>
 
       {/* Spacing Scale */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+      <div style={{
+        backgroundColor: COLORS.background.secondary,
+        borderRadius: RADIUS.lg,
+        border: `1px solid ${COLORS.border.primary}`,
+        padding: SPACING['5xl']
+      }}>
+        <h3 style={{
+          fontSize: TYPOGRAPHY.fontSize.lg,
+          fontWeight: TYPOGRAPHY.fontWeight.semibold,
+          color: COLORS.text.heading,
+          margin: 0,
+          marginBottom: SPACING.xl
+        }}>
           Spacing Scale
         </h3>
-        <div className="space-y-3">
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: SPACING['2xl']
+        }}>
           {spacingAnalysis.scale.map((token: any, index: number) => (
-            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div className="flex items-center space-x-4">
+            <div key={index} style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: SPACING['2xl'],
+              backgroundColor: COLORS.background.tertiary,
+              borderRadius: RADIUS.lg
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: SPACING.xl
+              }}>
                 <div 
-                  className="bg-blue-200 dark:bg-blue-800 border-2 border-dashed border-blue-400"
-                  style={{ width: `${Math.min(token.pixels, 100)}px`, height: '16px' }}
+                  style={{
+                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                    border: `2px dashed ${COLORS.border.focus}`,
+                    width: `${Math.min(token.pixels, 100)}px`,
+                    height: '16px'
+                  }}
                 />
                 <div>
-                  <div className="font-medium text-gray-900 dark:text-white">
+                  <div style={{
+                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                    color: COLORS.text.primary
+                  }}>
                     {token.name}
                   </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                  <div style={{
+                    fontSize: TYPOGRAPHY.fontSize.sm,
+                    color: COLORS.text.secondary
+                  }}>
                     {token.pixels}px ({token.rem.toFixed(2)}rem)
                   </div>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: SPACING.lg
+              }}>
+                <span style={{
+                  fontSize: TYPOGRAPHY.fontSize.xs,
+                  backgroundColor: COLORS.background.primary,
+                  color: COLORS.text.secondary,
+                  padding: `${SPACING.xs} ${SPACING.lg}`,
+                  borderRadius: RADIUS.sm
+                }}>
                   {token.usageCount}x
                 </span>
                 {token.isValid ? (
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle style={{
+                    width: '16px',
+                    height: '16px',
+                    color: COLORS.status.success
+                  }} />
                 ) : (
-                  <AlertTriangle className="w-4 h-4 text-red-500" />
+                  <AlertTriangle style={{
+                    width: '16px',
+                    height: '16px',
+                    color: COLORS.status.error
+                  }} />
                 )}
               </div>
             </div>
@@ -78,19 +190,58 @@ export function SpacingTab() {
 
       {/* Violations */}
       {spacingAnalysis.violations.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <div style={{
+          backgroundColor: COLORS.background.secondary,
+          borderRadius: RADIUS.lg,
+          border: `1px solid ${COLORS.border.primary}`,
+          padding: SPACING['5xl']
+        }}>
+          <h3 style={{
+            fontSize: TYPOGRAPHY.fontSize.lg,
+            fontWeight: TYPOGRAPHY.fontWeight.semibold,
+            color: COLORS.text.heading,
+            margin: 0,
+            marginBottom: SPACING.xl
+          }}>
             Spacing Issues ({spacingAnalysis.violations.length})
           </h3>
-          <div className="space-y-3">
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: SPACING['2xl']
+          }}>
             {spacingAnalysis.violations.slice(0, 10).map((violation: any, index: number) => (
-              <div key={index} className="flex items-start p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400 mr-3 mt-0.5 flex-none" />
-                <div className="flex-1">
-                  <div className="text-red-800 dark:text-red-200 text-sm font-medium">
+              <div key={index} style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                padding: SPACING['2xl'],
+                backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                borderRadius: RADIUS.lg
+              }}>
+                <AlertTriangle style={{
+                  width: '20px',
+                  height: '20px',
+                  color: COLORS.status.error,
+                  marginRight: SPACING['2xl'],
+                  marginTop: '2px',
+                  flexShrink: 0
+                }} />
+                <div style={{
+                  flex: 1
+                }}>
+                  <div style={{
+                    color: COLORS.status.error,
+                    fontSize: TYPOGRAPHY.fontSize.sm,
+                    fontWeight: TYPOGRAPHY.fontWeight.medium
+                  }}>
                     Inconsistent {violation.property} spacing
                   </div>
-                  <div className="text-red-600 dark:text-red-300 text-xs mt-1">
+                  <div style={{
+                    color: COLORS.status.error,
+                    fontSize: TYPOGRAPHY.fontSize.xs,
+                    marginTop: SPACING.sm,
+                    opacity: 0.8
+                  }}>
                     Current: {violation.actual} | Suggested: {violation.suggestion}
                   </div>
                 </div>

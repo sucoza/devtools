@@ -1,5 +1,6 @@
 import React from 'react';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles } from '@sucoza/shared-components';
 import { useDesignSystemInspector } from '../../hooks';
 import type { ColorToken } from '../../types';
 
@@ -9,83 +10,210 @@ export function ColorsTab() {
 
 
   return (
-    <div className="p-6 space-y-6">
+    <div style={{
+      padding: SPACING['5xl'],
+      display: 'flex',
+      flexDirection: 'column',
+      gap: SPACING['5xl']
+    }}>
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+        <h2 style={{
+          fontSize: TYPOGRAPHY.fontSize.xl,
+          fontWeight: TYPOGRAPHY.fontWeight.bold,
+          color: COLORS.text.heading,
+          margin: 0,
+          marginBottom: SPACING.lg
+        }}>
           Color Palette
         </h2>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p style={{
+          color: COLORS.text.secondary,
+          margin: 0
+        }}>
           Analyze color usage, accessibility, and consistency across your design system.
         </p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: SPACING.xl
+      }}>
+        <div style={{
+          backgroundColor: COLORS.background.secondary,
+          borderRadius: RADIUS.lg,
+          border: `1px solid ${COLORS.border.primary}`,
+          padding: SPACING.xl
+        }}>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.xl,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            color: COLORS.text.primary,
+            margin: 0
+          }}>
             {colorUsage.totalColors}
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">Total Colors</div>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.secondary
+          }}>Total Colors</div>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+        <div style={{
+          backgroundColor: COLORS.background.secondary,
+          borderRadius: RADIUS.lg,
+          border: `1px solid ${COLORS.border.primary}`,
+          padding: SPACING.xl
+        }}>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.xl,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            color: COLORS.status.success,
+            margin: 0
+          }}>
             {colorUsage.tokenizedColors}
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">Tokenized</div>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.secondary
+          }}>Tokenized</div>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+        <div style={{
+          backgroundColor: COLORS.background.secondary,
+          borderRadius: RADIUS.lg,
+          border: `1px solid ${COLORS.border.primary}`,
+          padding: SPACING.xl
+        }}>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.xl,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            color: COLORS.status.warning,
+            margin: 0
+          }}>
             {colorUsage.customColors}
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">Custom</div>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.secondary
+          }}>Custom</div>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+        <div style={{
+          backgroundColor: COLORS.background.secondary,
+          borderRadius: RADIUS.lg,
+          border: `1px solid ${COLORS.border.primary}`,
+          padding: SPACING.xl
+        }}>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.xl,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            color: COLORS.status.error,
+            margin: 0
+          }}>
             {colorUsage.accessibilityIssues}
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">A11Y Issues</div>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.secondary
+          }}>A11Y Issues</div>
         </div>
       </div>
 
       {/* Color Categories */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+        gap: SPACING['5xl']
+      }}>
         {Object.entries(colorPalette).map(([category, colors]) => (
           <ColorCategory key={category} title={category} colors={colors} />
         ))}
       </div>
 
       {/* Most Used Colors */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+      <div style={{
+        backgroundColor: COLORS.background.secondary,
+        borderRadius: RADIUS.lg,
+        border: `1px solid ${COLORS.border.primary}`,
+        padding: SPACING['5xl']
+      }}>
+        <h3 style={{
+          fontSize: TYPOGRAPHY.fontSize.lg,
+          fontWeight: TYPOGRAPHY.fontWeight.semibold,
+          color: COLORS.text.heading,
+          margin: 0,
+          marginBottom: SPACING.xl
+        }}>
           Most Used Colors
         </h3>
-        <div className="space-y-3">
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: SPACING['2xl']
+        }}>
           {colorUsage.mostUsedColors.slice(0, 10).map((colorItem: any, index: number) => (
-            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div className="flex items-center space-x-3">
+            <div key={index} style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: SPACING['2xl'],
+              backgroundColor: COLORS.background.tertiary,
+              borderRadius: RADIUS.lg
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: SPACING['2xl']
+              }}>
                 <div 
-                  className="w-6 h-6 rounded border border-gray-300 dark:border-gray-600"
-                  style={{ backgroundColor: colorItem.color }}
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: RADIUS.sm,
+                    border: `1px solid ${COLORS.border.primary}`,
+                    backgroundColor: colorItem.color
+                  }}
                 />
                 <div>
-                  <div className="font-mono text-sm text-gray-900 dark:text-white">
+                  <div style={{
+                    fontFamily: TYPOGRAPHY.fontFamily.mono,
+                    fontSize: TYPOGRAPHY.fontSize.sm,
+                    color: COLORS.text.primary
+                  }}>
                     {colorItem.color}
                   </div>
                   {colorItem.isToken && colorItem.tokenName && (
-                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                    <div style={{
+                      fontSize: TYPOGRAPHY.fontSize.xs,
+                      color: COLORS.text.secondary
+                    }}>
                       {colorItem.tokenName}
                     </div>
                   )}
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: SPACING.lg
+              }}>
+                <span style={{
+                  fontSize: TYPOGRAPHY.fontSize.sm,
+                  color: COLORS.text.secondary
+                }}>
                   {colorItem.count} uses
                 </span>
                 {colorItem.isToken ? (
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle style={{
+                    width: '16px',
+                    height: '16px',
+                    color: COLORS.status.success
+                  }} />
                 ) : (
-                  <AlertTriangle className="w-4 h-4 text-yellow-500" />
+                  <AlertTriangle style={{
+                    width: '16px',
+                    height: '16px',
+                    color: COLORS.status.warning
+                  }} />
                 )}
               </div>
             </div>
@@ -106,41 +234,103 @@ function ColorCategory({
   if (colors.length === 0) return null;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 capitalize">
+    <div style={{
+      backgroundColor: COLORS.background.secondary,
+      borderRadius: RADIUS.lg,
+      border: `1px solid ${COLORS.border.primary}`,
+      padding: SPACING['5xl']
+    }}>
+      <h3 style={{
+        fontSize: TYPOGRAPHY.fontSize.lg,
+        fontWeight: TYPOGRAPHY.fontWeight.semibold,
+        color: COLORS.text.heading,
+        margin: 0,
+        marginBottom: SPACING.xl,
+        textTransform: 'capitalize'
+      }}>
         {title} Colors ({colors.length})
       </h3>
-      <div className="grid grid-cols-1 gap-3">
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr',
+        gap: SPACING['2xl']
+      }}>
         {colors.slice(0, 8).map((color, index) => (
-          <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-700">
-            <div className="flex items-center space-x-3">
+          <div key={index} style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: SPACING['2xl'],
+            borderRadius: RADIUS.lg,
+            backgroundColor: COLORS.background.tertiary
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: SPACING['2xl']
+            }}>
               <div 
-                className="w-8 h-8 rounded border border-gray-300 dark:border-gray-600"
-                style={{ backgroundColor: color.value }}
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: RADIUS.sm,
+                  border: `1px solid ${COLORS.border.primary}`,
+                  backgroundColor: color.value
+                }}
               />
               <div>
-                <div className="font-medium text-gray-900 dark:text-white">
+                <div style={{
+                  fontWeight: TYPOGRAPHY.fontWeight.medium,
+                  color: COLORS.text.primary
+                }}>
                   {color.name}
                 </div>
-                <div className="font-mono text-sm text-gray-500 dark:text-gray-400">
+                <div style={{
+                  fontFamily: TYPOGRAPHY.fontFamily.mono,
+                  fontSize: TYPOGRAPHY.fontSize.sm,
+                  color: COLORS.text.secondary
+                }}>
                   {color.hex}
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <span className="text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: SPACING.lg
+            }}>
+              <span style={{
+                fontSize: TYPOGRAPHY.fontSize.xs,
+                backgroundColor: COLORS.background.primary,
+                color: COLORS.text.secondary,
+                padding: `${SPACING.xs} ${SPACING.lg}`,
+                borderRadius: RADIUS.sm
+              }}>
                 {color.usageCount}x
               </span>
               {color.isAccessible ? (
-                <CheckCircle className="w-4 h-4 text-green-500" />
+                <CheckCircle style={{
+                  width: '16px',
+                  height: '16px',
+                  color: COLORS.status.success
+                }} />
               ) : (
-                <AlertTriangle className="w-4 h-4 text-red-500" />
+                <AlertTriangle style={{
+                  width: '16px',
+                  height: '16px',
+                  color: COLORS.status.error
+                }} />
               )}
             </div>
           </div>
         ))}
         {colors.length > 8 && (
-          <div className="text-center text-sm text-gray-500 dark:text-gray-400 mt-2">
+          <div style={{
+            textAlign: 'center',
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.secondary,
+            marginTop: SPACING.lg
+          }}>
             +{colors.length - 8} more colors
           </div>
         )}

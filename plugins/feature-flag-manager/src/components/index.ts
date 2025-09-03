@@ -11,7 +11,7 @@ export { HistoryTab } from './HistoryTab';
 export { SettingsTab } from './SettingsTab';
 
 // Shared components
-export { TabNavigation } from './TabNavigation';
+// TabNavigation has been removed - using standardized Tabs component
 export { NotificationBar } from './NotificationBar';
 export { UserContextPanel } from './UserContextPanel';
 export { FlagListItem } from './FlagListItem';

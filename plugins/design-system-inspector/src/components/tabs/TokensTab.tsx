@@ -10,6 +10,7 @@ import {
   AlertTriangle,
   CheckCircle
 } from 'lucide-react';
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles } from '@sucoza/shared-components';
 import { useDesignSystemInspector, useFilteredData, useTokenStats } from '../../hooks';
 
 export function TokensTab() {
@@ -49,18 +50,46 @@ export function TokensTab() {
   };
 
   return (
-    <div className="flex h-full">
+    <div style={COMPONENT_STYLES.content.split}>
       {/* Token List */}
-      <div className="flex-none w-80 border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div style={mergeStyles(
+        COMPONENT_STYLES.sidebar.base,
+        {
+          width: '320px',
+          flexShrink: 0,
+          display: 'flex',
+          flexDirection: 'column'
+        }
+      )}>
+        <div style={{
+          padding: SPACING.xl,
+          borderBottom: `1px solid ${COLORS.border.primary}`
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: SPACING['2xl']
+          }}>
+            <h3 style={{
+              fontSize: TYPOGRAPHY.fontSize.lg,
+              fontWeight: TYPOGRAPHY.fontWeight.semibold,
+              color: COLORS.text.heading,
+              margin: 0
+            }}>
               Tokens ({filteredData.tokens.length})
             </h3>
             <select
               value={groupBy}
               onChange={(e) => setGroupBy(e.target.value as 'type' | 'category')}
-              className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              style={mergeStyles(
+                COMPONENT_STYLES.input.base,
+                {
+                  fontSize: TYPOGRAPHY.fontSize.sm,
+                  padding: `${SPACING.sm} ${SPACING.lg}`,
+                  minWidth: 'auto'
+                }
+              )}
             >
               <option value="type">Group by Type</option>
               <option value="category">Group by Category</option>
@@ -68,31 +97,82 @@ export function TokensTab() {
           </div>
           
           {/* Stats */}
-          <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="bg-white dark:bg-gray-900 rounded-lg p-3">
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: SPACING['2xl'],
+            fontSize: TYPOGRAPHY.fontSize.sm
+          }}>
+            <div style={{
+              backgroundColor: COLORS.background.primary,
+              borderRadius: RADIUS.lg,
+              padding: SPACING['2xl']
+            }}>
+              <div style={{
+                fontSize: TYPOGRAPHY.fontSize.xl,
+                fontWeight: TYPOGRAPHY.fontWeight.bold,
+                color: COLORS.text.primary,
+                margin: 0
+              }}>
                 {tokenStats.utilizationRate.toFixed(0)}%
               </div>
-              <div className="text-gray-500 dark:text-gray-400">Utilization</div>
+              <div style={{
+                color: COLORS.text.secondary,
+                fontSize: TYPOGRAPHY.fontSize.xs
+              }}>Utilization</div>
             </div>
-            <div className="bg-white dark:bg-gray-900 rounded-lg p-3">
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div style={{
+              backgroundColor: COLORS.background.primary,
+              borderRadius: RADIUS.lg,
+              padding: SPACING['2xl']
+            }}>
+              <div style={{
+                fontSize: TYPOGRAPHY.fontSize.xl,
+                fontWeight: TYPOGRAPHY.fontWeight.bold,
+                color: COLORS.text.primary,
+                margin: 0
+              }}>
                 {tokenStats.validTokens}
               </div>
-              <div className="text-gray-500 dark:text-gray-400">Valid</div>
+              <div style={{
+                color: COLORS.text.secondary,
+                fontSize: TYPOGRAPHY.fontSize.xs
+              }}>Valid</div>
             </div>
           </div>
         </div>
         
-        <div className="overflow-y-auto flex-1">
+        <div style={{
+          overflowY: 'auto',
+          flex: 1
+        }}>
           {Object.keys(groupedTokens).length === 0 ? (
-            <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-              <Palette className="w-12 h-12 mx-auto mb-4 opacity-50" />
-              <p>No tokens found</p>
-              <p className="text-sm">Try adjusting your search or filters</p>
+            <div style={{
+              padding: SPACING['6xl'],
+              textAlign: 'center',
+              color: COLORS.text.muted
+            }}>
+              <Palette style={{
+                width: '48px',
+                height: '48px',
+                margin: '0 auto',
+                marginBottom: SPACING.xl,
+                opacity: 0.5
+              }} />
+              <p style={{
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                margin: 0,
+                marginBottom: SPACING.sm
+              }}>No tokens found</p>
+              <p style={{
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                margin: 0
+              }}>Try adjusting your search or filters</p>
             </div>
           ) : (
-            <div className="p-2">
+            <div style={{
+              padding: SPACING.lg
+            }}>
               {Object.entries(groupedTokens).map(([group, tokens]) => (
                 <TokenGroup
                   key={group}
@@ -109,15 +189,39 @@ export function TokensTab() {
       </div>
 
       {/* Token Details */}
-      <div className="flex-1 overflow-y-auto">
+      <div style={{
+        flex: 1,
+        overflowY: 'auto'
+      }}>
         {selectedTokenData ? (
           <TokenDetails token={selectedTokenData} />
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-            <div className="text-center">
-              <Palette className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <p className="text-lg font-medium">Select a token</p>
-              <p>Choose a design token from the list to view its details</p>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            color: COLORS.text.muted
+          }}>
+            <div style={{
+              textAlign: 'center'
+            }}>
+              <Palette style={{
+                width: '64px',
+                height: '64px',
+                margin: '0 auto',
+                marginBottom: SPACING.xl,
+                opacity: 0.5
+              }} />
+              <p style={{
+                fontSize: TYPOGRAPHY.fontSize.lg,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                margin: 0,
+                marginBottom: SPACING.sm
+              }}>Select a token</p>
+              <p style={{
+                margin: 0
+              }}>Choose a design token from the list to view its details</p>
             </div>
           </div>
         )}
@@ -142,21 +246,52 @@ function TokenGroup({
   const [isExpanded, setIsExpanded] = useState(true);
 
   return (
-    <div className="mb-4">
+    <div style={{
+      marginBottom: SPACING.xl
+    }}>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center justify-between w-full p-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          padding: SPACING.lg,
+          textAlign: 'left',
+          backgroundColor: 'transparent',
+          border: 'none',
+          borderRadius: RADIUS.lg,
+          cursor: 'pointer',
+          transition: 'background-color 0.15s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = COLORS.background.hover;
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = 'transparent';
+        }}
       >
-        <span className="font-medium text-gray-900 dark:text-white capitalize">
+        <span style={{
+          fontWeight: TYPOGRAPHY.fontWeight.medium,
+          color: COLORS.text.primary,
+          textTransform: 'capitalize'
+        }}>
           {title} ({tokens.length})
         </span>
-        <span className="text-gray-400">
+        <span style={{
+          color: COLORS.text.muted
+        }}>
           {isExpanded ? '▼' : '▶'}
         </span>
       </button>
       
       {isExpanded && (
-        <div className="ml-4 space-y-1">
+        <div style={{
+          marginLeft: SPACING.xl,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: SPACING.sm
+        }}>
           {tokens.map((token) => (
             <TokenListItem
               key={token.id}
@@ -187,54 +322,127 @@ function TokenListItem({
 
   return (
     <div
-      className={clsx(
-        'p-3 rounded-lg cursor-pointer transition-colors border',
-        isSelected
-          ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
-          : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
+      style={mergeStyles(
+        COMPONENT_STYLES.list.item.base,
+        {
+          padding: SPACING['2xl'],
+          borderRadius: RADIUS.lg,
+          cursor: 'pointer',
+          border: `1px solid ${COLORS.border.primary}`,
+          backgroundColor: isSelected ? COLORS.background.selected : COLORS.background.secondary,
+          borderColor: isSelected ? COLORS.border.focus : COLORS.border.primary
+        }
       )}
       onClick={() => onSelect(token.id)}
+      onMouseEnter={(e) => {
+        if (!isSelected) {
+          e.currentTarget.style.backgroundColor = COLORS.background.hover;
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isSelected) {
+          e.currentTarget.style.backgroundColor = COLORS.background.secondary;
+        }
+      }}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center flex-1 min-w-0">
-          <Icon className={clsx(
-            'w-4 h-4 mr-2 flex-none',
-            isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'
-          )} />
-          <div className="min-w-0 flex-1">
-            <div className="font-medium text-gray-900 dark:text-white truncate">
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          flex: 1,
+          minWidth: 0
+        }}>
+          <Icon style={{
+            width: '16px',
+            height: '16px',
+            marginRight: SPACING.lg,
+            flexShrink: 0,
+            color: isSelected ? COLORS.text.accent : COLORS.text.muted
+          }} />
+          <div style={{
+            minWidth: 0,
+            flex: 1
+          }}>
+            <div style={{
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.primary,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+            }}>
               {token.name}
             </div>
-            <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.secondary,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+            }}>
               {token.value}
             </div>
           </div>
         </div>
-        <div className="flex items-center space-x-2 ml-2">
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: SPACING.lg,
+          marginLeft: SPACING.lg
+        }}>
           {hasIssues && (
-            <AlertTriangle className="w-4 h-4 text-yellow-500" />
+            <AlertTriangle style={{
+              width: '16px',
+              height: '16px',
+              color: COLORS.status.warning
+            }} />
           )}
           {token.isValid && !hasIssues && (
-            <CheckCircle className="w-4 h-4 text-green-500" />
+            <CheckCircle style={{
+              width: '16px',
+              height: '16px',
+              color: COLORS.status.success
+            }} />
           )}
-          <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">
+          <span style={{
+            fontSize: TYPOGRAPHY.fontSize.xs,
+            backgroundColor: COLORS.background.tertiary,
+            color: COLORS.text.secondary,
+            padding: `${SPACING.xs} ${SPACING.lg}`,
+            borderRadius: RADIUS.md
+          }}>
             {token.usageCount}x
           </span>
         </div>
       </div>
       
       {token.type === 'color' && (
-        <div className="flex items-center mt-2">
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          marginTop: SPACING.lg
+        }}>
           <div 
-            className="w-4 h-4 rounded border border-gray-300 dark:border-gray-600 mr-2"
-            style={{ backgroundColor: token.value }}
+            style={{
+              width: '16px',
+              height: '16px',
+              borderRadius: RADIUS.sm,
+              border: `1px solid ${COLORS.border.primary}`,
+              marginRight: SPACING.lg,
+              backgroundColor: token.value
+            }}
           />
           <TokenPreview token={token} />
         </div>
       )}
       
       {(token.type === 'typography' || token.type === 'spacing') && (
-        <div className="mt-2">
+        <div style={{
+          marginTop: SPACING.lg
+        }}>
           <TokenPreview token={token} />
         </div>
       )}
@@ -247,15 +455,26 @@ function TokenPreview({ token }: { token: import('../../types').DesignToken }) {
     case 'color': {
       const colorToken = token as import('../../types').ColorToken;
       return (
-        <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: SPACING.lg,
+          fontSize: TYPOGRAPHY.fontSize.xs,
+          color: COLORS.text.secondary
+        }}>
           <span>{colorToken.hex}</span>
           {colorToken.isAccessible !== undefined && (
-            <span className={clsx(
-              'px-1 py-0.5 rounded text-xs',
-              colorToken.isAccessible
-                ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
-                : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'
-            )}>
+            <span style={{
+              padding: `${SPACING.xs} ${SPACING.sm}`,
+              borderRadius: RADIUS.sm,
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              backgroundColor: colorToken.isAccessible
+                ? 'rgba(78, 201, 176, 0.1)'
+                : 'rgba(231, 76, 60, 0.1)',
+              color: colorToken.isAccessible
+                ? COLORS.status.success
+                : COLORS.status.error
+            }}>
               {colorToken.isAccessible ? 'A11Y' : '!A11Y'}
             </span>
           )}
@@ -267,9 +486,9 @@ function TokenPreview({ token }: { token: import('../../types').DesignToken }) {
       const typographyToken = token as import('../../types').TypographyToken;
       return (
         <div 
-          className="text-xs text-gray-700 dark:text-gray-300"
           style={{ 
-            fontSize: '12px',
+            fontSize: TYPOGRAPHY.fontSize.xs,
+            color: COLORS.text.secondary,
             fontFamily: typographyToken.fontFamily,
             fontWeight: typographyToken.fontWeight 
           }}
@@ -282,7 +501,10 @@ function TokenPreview({ token }: { token: import('../../types').DesignToken }) {
     case 'spacing': {
       const spacingToken = token as import('../../types').SpacingToken;
       return (
-        <div className="text-xs text-gray-500 dark:text-gray-400">
+        <div style={{
+          fontSize: TYPOGRAPHY.fontSize.xs,
+          color: COLORS.text.secondary
+        }}>
           {spacingToken.pixels}px ({spacingToken.rem.toFixed(2)}rem)
         </div>
       );
@@ -311,70 +533,175 @@ function TokenDetails({
   ];
 
   return (
-    <div className="h-full flex flex-col">
+    <div style={{
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
       {/* Header */}
-      <div className="flex-none border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <TokenTypeIcon type={token.type} className="w-8 h-8 mr-3 text-gray-600 dark:text-gray-400" />
+      <div style={{
+        flexShrink: 0,
+        borderBottom: `1px solid ${COLORS.border.primary}`,
+        backgroundColor: COLORS.background.secondary,
+        padding: SPACING['5xl']
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center'
+          }}>
+            <TokenTypeIcon 
+              type={token.type} 
+              style={{
+                width: '32px',
+                height: '32px',
+                marginRight: SPACING['2xl'],
+                color: COLORS.text.muted
+              }} 
+            />
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h2 style={{
+                fontSize: TYPOGRAPHY.fontSize.xl,
+                fontWeight: TYPOGRAPHY.fontWeight.bold,
+                color: COLORS.text.heading,
+                margin: 0
+              }}>
                 {token.name}
               </h2>
-              <div className="flex items-center mt-2 space-x-4 text-sm text-gray-500 dark:text-gray-400">
-                <span className="flex items-center">
-                  <span className={clsx(
-                    'inline-block w-2 h-2 rounded-full mr-2',
-                    token.isValid ? 'bg-green-500' : 'bg-red-500'
-                  )} />
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginTop: SPACING.lg,
+                gap: SPACING.xl,
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                color: COLORS.text.secondary
+              }}>
+                <span style={{
+                  display: 'flex',
+                  alignItems: 'center'
+                }}>
+                  <span style={{
+                    display: 'inline-block',
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: RADIUS.full,
+                    marginRight: SPACING.lg,
+                    backgroundColor: token.isValid ? COLORS.status.success : COLORS.status.error
+                  }} />
                   {token.isValid ? 'Valid' : 'Invalid'}
                 </span>
                 <span>{token.usageCount} uses</span>
-                <span className="capitalize">{token.category}</span>
+                <span style={{ textTransform: 'capitalize' }}>{token.category}</span>
               </div>
             </div>
           </div>
           
-          <div className="flex items-center space-x-2">
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: SPACING.lg
+          }}>
             <button
               onClick={() => copyToClipboard(token.value)}
-              className="flex items-center px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg transition-colors"
+              style={mergeStyles(
+                COMPONENT_STYLES.button.base,
+                {
+                  fontSize: TYPOGRAPHY.fontSize.sm
+                }
+              )}
             >
-              <Copy className="w-4 h-4 mr-2" />
+              <Copy style={{
+                width: '16px',
+                height: '16px',
+                marginRight: SPACING.lg
+              }} />
               Copy Value
             </button>
             <button
               onClick={() => copyToClipboard(token.name)}
-              className="flex items-center px-3 py-2 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg transition-colors"
+              style={mergeStyles(
+                COMPONENT_STYLES.button.base,
+                {
+                  fontSize: TYPOGRAPHY.fontSize.sm
+                }
+              )}
             >
-              <Copy className="w-4 h-4 mr-2" />
+              <Copy style={{
+                width: '16px',
+                height: '16px',
+                marginRight: SPACING.lg
+              }} />
               Copy Name
             </button>
           </div>
         </div>
         
         {/* Token Preview */}
-        <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg">
+        <div style={{
+          marginTop: SPACING.xl,
+          padding: SPACING.xl,
+          backgroundColor: COLORS.background.primary,
+          borderRadius: RADIUS.lg
+        }}>
           <TokenLargePreview token={token} />
         </div>
         
         {/* Section Navigation */}
-        <div className="flex space-x-1 mt-4">
+        <div style={{
+          display: 'flex',
+          gap: SPACING.sm,
+          marginTop: SPACING.xl
+        }}>
           {sections.map((section) => (
             <button
               key={section.id}
               onClick={() => setActiveSection(section.id as any)}
-              className={clsx(
-                'flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                activeSection === section.id
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+              style={mergeStyles(
+                COMPONENT_STYLES.tabs.tab.base,
+                activeSection === section.id 
+                  ? COMPONENT_STYLES.tabs.tab.active 
+                  : undefined,
+                {
+                  padding: `${SPACING.lg} ${SPACING['2xl']}`,
+                  fontSize: TYPOGRAPHY.fontSize.sm,
+                  fontWeight: TYPOGRAPHY.fontWeight.medium,
+                  border: 'none',
+                  borderRadius: RADIUS.lg,
+                  backgroundColor: activeSection === section.id 
+                    ? 'rgba(52, 152, 219, 0.1)' 
+                    : 'transparent'
+                }
               )}
+              onMouseEnter={(e) => {
+                if (activeSection !== section.id) {
+                  e.currentTarget.style.color = COLORS.text.primary;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (activeSection !== section.id) {
+                  e.currentTarget.style.color = COLORS.text.secondary;
+                }
+              }}
             >
-              <section.icon className="w-4 h-4 mr-2" />
+              <section.icon style={{
+                width: '16px',
+                height: '16px',
+                marginRight: SPACING.lg
+              }} />
               {section.label}
               {section.count !== undefined && section.count > 0 && (
-                <span className="ml-2 px-2 py-1 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-full text-xs">
+                <span style={{
+                  marginLeft: SPACING.lg,
+                  padding: `${SPACING.xs} ${SPACING.lg}`,
+                  backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                  color: COLORS.status.error,
+                  borderRadius: RADIUS.full,
+                  fontSize: TYPOGRAPHY.fontSize.xs
+                }}>
                   {section.count}
                 </span>
               )}
@@ -384,7 +711,11 @@ function TokenDetails({
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-6">
+      <div style={{
+        flex: 1,
+        overflowY: 'auto',
+        padding: SPACING['5xl']
+      }}>
         {activeSection === 'overview' && (
           <TokenOverview token={token} />
         )}
@@ -399,7 +730,7 @@ function TokenDetails({
   );
 }
 
-function TokenTypeIcon({ type, className }: { type: string; className?: string }) {
+function TokenTypeIcon({ type, style }: { type: string; style?: React.CSSProperties }) {
   const icons = {
     color: Palette,
     typography: Type,
@@ -410,7 +741,7 @@ function TokenTypeIcon({ type, className }: { type: string; className?: string }
   };
   
   const Icon = icons[type as keyof typeof icons] || Box;
-  return <Icon className={className} />;
+  return <Icon style={style} />;
 }
 
 function TokenLargePreview({ token }: { token: import('../../types').DesignToken }) {
@@ -418,22 +749,52 @@ function TokenLargePreview({ token }: { token: import('../../types').DesignToken
     case 'color': {
       const colorToken = token as import('../../types').ColorToken;
       return (
-        <div className="flex items-center space-x-4">
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: SPACING.xl
+        }}>
           <div 
-            className="w-16 h-16 rounded-lg border border-gray-300 dark:border-gray-600 flex-none"
-            style={{ backgroundColor: colorToken.value }}
+            style={{
+              width: '64px',
+              height: '64px',
+              borderRadius: RADIUS.lg,
+              border: `1px solid ${COLORS.border.primary}`,
+              flexShrink: 0,
+              backgroundColor: colorToken.value
+            }}
           />
-          <div className="space-y-1">
-            <div className="font-mono text-sm text-gray-900 dark:text-white">
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: SPACING.sm
+          }}>
+            <div style={{
+              fontFamily: TYPOGRAPHY.fontFamily.mono,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.primary
+            }}>
               {colorToken.value}
             </div>
-            <div className="font-mono text-xs text-gray-500 dark:text-gray-400">
+            <div style={{
+              fontFamily: TYPOGRAPHY.fontFamily.mono,
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: COLORS.text.secondary
+            }}>
               HEX: {colorToken.hex}
             </div>
-            <div className="font-mono text-xs text-gray-500 dark:text-gray-400">
+            <div style={{
+              fontFamily: TYPOGRAPHY.fontFamily.mono,
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: COLORS.text.secondary
+            }}>
               RGB: {colorToken.rgb}
             </div>
-            <div className="font-mono text-xs text-gray-500 dark:text-gray-400">
+            <div style={{
+              fontFamily: TYPOGRAPHY.fontFamily.mono,
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: COLORS.text.secondary
+            }}>
               HSL: {colorToken.hsl}
             </div>
           </div>
@@ -444,34 +805,56 @@ function TokenLargePreview({ token }: { token: import('../../types').DesignToken
     case 'typography': {
       const typographyToken = token as import('../../types').TypographyToken;
       return (
-        <div className="space-y-3">
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: SPACING['2xl']
+        }}>
           <div 
-            className="text-2xl text-gray-900 dark:text-white"
             style={{ 
               fontSize: typographyToken.fontSize,
               fontWeight: typographyToken.fontWeight,
               fontFamily: typographyToken.fontFamily,
-              lineHeight: typographyToken.lineHeight 
+              lineHeight: typographyToken.lineHeight,
+              color: COLORS.text.primary
             }}
           >
             The quick brown fox jumps
           </div>
-          <div className="grid grid-cols-2 gap-4 text-sm">
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: SPACING.xl,
+            fontSize: TYPOGRAPHY.fontSize.sm
+          }}>
             <div>
-              <span className="text-gray-500 dark:text-gray-400">Size:</span>
-              <span className="ml-2 font-mono">{typographyToken.fontSize}</span>
+              <span style={{ color: COLORS.text.secondary }}>Size:</span>
+              <span style={{
+                marginLeft: SPACING.lg,
+                fontFamily: TYPOGRAPHY.fontFamily.mono
+              }}>{typographyToken.fontSize}</span>
             </div>
             <div>
-              <span className="text-gray-500 dark:text-gray-400">Weight:</span>
-              <span className="ml-2 font-mono">{typographyToken.fontWeight}</span>
+              <span style={{ color: COLORS.text.secondary }}>Weight:</span>
+              <span style={{
+                marginLeft: SPACING.lg,
+                fontFamily: TYPOGRAPHY.fontFamily.mono
+              }}>{typographyToken.fontWeight}</span>
             </div>
             <div>
-              <span className="text-gray-500 dark:text-gray-400">Line Height:</span>
-              <span className="ml-2 font-mono">{typographyToken.lineHeight}</span>
+              <span style={{ color: COLORS.text.secondary }}>Line Height:</span>
+              <span style={{
+                marginLeft: SPACING.lg,
+                fontFamily: TYPOGRAPHY.fontFamily.mono
+              }}>{typographyToken.lineHeight}</span>
             </div>
             <div>
-              <span className="text-gray-500 dark:text-gray-400">Family:</span>
-              <span className="ml-2 font-mono text-xs">{typographyToken.fontFamily}</span>
+              <span style={{ color: COLORS.text.secondary }}>Family:</span>
+              <span style={{
+                marginLeft: SPACING.lg,
+                fontFamily: TYPOGRAPHY.fontFamily.mono,
+                fontSize: TYPOGRAPHY.fontSize.xs
+              }}>{typographyToken.fontFamily}</span>
             </div>
           </div>
         </div>
@@ -481,28 +864,57 @@ function TokenLargePreview({ token }: { token: import('../../types').DesignToken
     case 'spacing': {
       const spacingToken = token as import('../../types').SpacingToken;
       return (
-        <div className="space-y-3">
-          <div className="flex items-center space-x-4">
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: SPACING['2xl']
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: SPACING.xl
+          }}>
             <div 
-              className="bg-blue-200 dark:bg-blue-800 border-2 border-dashed border-blue-400"
-              style={{ width: `${Math.min(spacingToken.pixels, 200)}px`, height: '32px' }}
+              style={{
+                backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                border: `2px dashed ${COLORS.border.focus}`,
+                width: `${Math.min(spacingToken.pixels, 200)}px`,
+                height: '32px'
+              }}
             />
-            <div className="text-sm text-gray-600 dark:text-gray-400">
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.secondary
+            }}>
               {spacingToken.pixels}px visual representation
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-4 text-sm">
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr 1fr',
+            gap: SPACING.xl,
+            fontSize: TYPOGRAPHY.fontSize.sm
+          }}>
             <div>
-              <span className="text-gray-500 dark:text-gray-400">Pixels:</span>
-              <span className="ml-2 font-mono">{spacingToken.pixels}px</span>
+              <span style={{ color: COLORS.text.secondary }}>Pixels:</span>
+              <span style={{
+                marginLeft: SPACING.lg,
+                fontFamily: TYPOGRAPHY.fontFamily.mono
+              }}>{spacingToken.pixels}px</span>
             </div>
             <div>
-              <span className="text-gray-500 dark:text-gray-400">REM:</span>
-              <span className="ml-2 font-mono">{spacingToken.rem.toFixed(2)}rem</span>
+              <span style={{ color: COLORS.text.secondary }}>REM:</span>
+              <span style={{
+                marginLeft: SPACING.lg,
+                fontFamily: TYPOGRAPHY.fontFamily.mono
+              }}>{spacingToken.rem.toFixed(2)}rem</span>
             </div>
             <div>
-              <span className="text-gray-500 dark:text-gray-400">Scale:</span>
-              <span className="ml-2 font-mono">{spacingToken.scale}</span>
+              <span style={{ color: COLORS.text.secondary }}>Scale:</span>
+              <span style={{
+                marginLeft: SPACING.lg,
+                fontFamily: TYPOGRAPHY.fontFamily.mono
+              }}>{spacingToken.scale}</span>
             </div>
           </div>
         </div>
@@ -511,7 +923,11 @@ function TokenLargePreview({ token }: { token: import('../../types').DesignToken
       
     default:
       return (
-        <div className="font-mono text-lg text-gray-900 dark:text-white">
+        <div style={{
+          fontFamily: TYPOGRAPHY.fontFamily.mono,
+          fontSize: TYPOGRAPHY.fontSize.lg,
+          color: COLORS.text.primary
+        }}>
           {token.value}
         </div>
       );
@@ -520,40 +936,102 @@ function TokenLargePreview({ token }: { token: import('../../types').DesignToken
 
 function TokenOverview({ token }: { token: import('../../types').DesignToken }) {
   return (
-    <div className="space-y-6">
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: SPACING['5xl']
+    }}>
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <h3 style={{
+          fontSize: TYPOGRAPHY.fontSize.lg,
+          fontWeight: TYPOGRAPHY.fontWeight.semibold,
+          color: COLORS.text.heading,
+          margin: 0,
+          marginBottom: SPACING.xl
+        }}>
           Token Information
         </h3>
-        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <dl style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gap: SPACING.xl
+        }}>
           <div>
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Name</dt>
-            <dd className="mt-1 text-sm text-gray-900 dark:text-white font-mono">{token.name}</dd>
+            <dt style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary
+            }}>Name</dt>
+            <dd style={{
+              marginTop: SPACING.sm,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.primary,
+              fontFamily: TYPOGRAPHY.fontFamily.mono
+            }}>{token.name}</dd>
           </div>
           <div>
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Value</dt>
-            <dd className="mt-1 text-sm text-gray-900 dark:text-white font-mono">{token.value}</dd>
+            <dt style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary
+            }}>Value</dt>
+            <dd style={{
+              marginTop: SPACING.sm,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.primary,
+              fontFamily: TYPOGRAPHY.fontFamily.mono
+            }}>{token.value}</dd>
           </div>
           <div>
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Type</dt>
-            <dd className="mt-1 text-sm text-gray-900 dark:text-white capitalize">{token.type}</dd>
+            <dt style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary
+            }}>Type</dt>
+            <dd style={{
+              marginTop: SPACING.sm,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.primary,
+              textTransform: 'capitalize'
+            }}>{token.type}</dd>
           </div>
           <div>
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Category</dt>
-            <dd className="mt-1 text-sm text-gray-900 dark:text-white capitalize">{token.category}</dd>
+            <dt style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary
+            }}>Category</dt>
+            <dd style={{
+              marginTop: SPACING.sm,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.primary,
+              textTransform: 'capitalize'
+            }}>{token.category}</dd>
           </div>
           <div>
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Usage Count</dt>
-            <dd className="mt-1 text-sm text-gray-900 dark:text-white">{token.usageCount}</dd>
+            <dt style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary
+            }}>Usage Count</dt>
+            <dd style={{
+              marginTop: SPACING.sm,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.primary
+            }}>{token.usageCount}</dd>
           </div>
           <div>
-            <dt className="text-sm font-medium text-gray-500 dark:text-gray-400">Status</dt>
-            <dd className={clsx(
-              'mt-1 text-sm font-medium',
-              token.isValid 
-                ? 'text-green-600 dark:text-green-400' 
-                : 'text-red-600 dark:text-red-400'
-            )}>
+            <dt style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary
+            }}>Status</dt>
+            <dd style={{
+              marginTop: SPACING.sm,
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: token.isValid ? COLORS.status.success : COLORS.status.error
+            }}>
               {token.isValid ? 'Valid' : 'Invalid'}
             </dd>
           </div>
@@ -562,8 +1040,17 @@ function TokenOverview({ token }: { token: import('../../types').DesignToken }) 
       
       {token.description && (
         <div>
-          <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Description</h4>
-          <p className="text-sm text-gray-900 dark:text-white">{token.description}</p>
+          <h4 style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            fontWeight: TYPOGRAPHY.fontWeight.medium,
+            color: COLORS.text.secondary,
+            marginBottom: SPACING.lg
+          }}>Description</h4>
+          <p style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.primary,
+            margin: 0
+          }}>{token.description}</p>
         </div>
       )}
     </div>
@@ -572,45 +1059,115 @@ function TokenOverview({ token }: { token: import('../../types').DesignToken }) 
 
 function TokenUsage({ token }: { token: import('../../types').DesignToken }) {
   return (
-    <div className="space-y-6">
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: SPACING['5xl']
+    }}>
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <h3 style={{
+          fontSize: TYPOGRAPHY.fontSize.lg,
+          fontWeight: TYPOGRAPHY.fontWeight.semibold,
+          color: COLORS.text.heading,
+          margin: 0,
+          marginBottom: SPACING.xl
+        }}>
           Usage Analysis
         </h3>
         
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-          <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        <div style={{
+          backgroundColor: COLORS.background.tertiary,
+          borderRadius: RADIUS.lg,
+          padding: SPACING.xl
+        }}>
+          <div style={{
+            fontSize: '24px',
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            color: COLORS.text.primary,
+            marginBottom: SPACING.lg
+          }}>
             {token.usageCount}
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.secondary
+          }}>
             Times used in your application
           </div>
         </div>
       </div>
       
       <div>
-        <h4 className="font-medium text-gray-900 dark:text-white mb-3">Recommendations</h4>
-        <div className="space-y-2 text-sm">
+        <h4 style={{
+          fontWeight: TYPOGRAPHY.fontWeight.medium,
+          color: COLORS.text.primary,
+          marginBottom: SPACING['2xl']
+        }}>Recommendations</h4>
+        <div style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: SPACING.lg,
+          fontSize: TYPOGRAPHY.fontSize.sm
+        }}>
           {token.usageCount === 0 && (
-            <div className="flex items-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-              <AlertTriangle className="w-4 h-4 text-yellow-600 dark:text-yellow-400 mr-2" />
-              <span className="text-yellow-800 dark:text-yellow-200">
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: SPACING['2xl'],
+              backgroundColor: 'rgba(243, 156, 18, 0.1)',
+              borderRadius: RADIUS.lg
+            }}>
+              <AlertTriangle style={{
+                width: '16px',
+                height: '16px',
+                color: COLORS.status.warning,
+                marginRight: SPACING.lg
+              }} />
+              <span style={{
+                color: COLORS.status.warning
+              }}>
                 This token is not being used. Consider removing it or documenting its purpose.
               </span>
             </div>
           )}
           {token.usageCount === 1 && (
-            <div className="flex items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <Box className="w-4 h-4 text-blue-600 dark:text-blue-400 mr-2" />
-              <span className="text-blue-800 dark:text-blue-200">
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: SPACING['2xl'],
+              backgroundColor: 'rgba(52, 152, 219, 0.1)',
+              borderRadius: RADIUS.lg
+            }}>
+              <Box style={{
+                width: '16px',
+                height: '16px',
+                color: COLORS.status.info,
+                marginRight: SPACING.lg
+              }} />
+              <span style={{
+                color: COLORS.status.info
+              }}>
                 This token is only used once. Consider if it should be a token or just a value.
               </span>
             </div>
           )}
           {token.usageCount > 10 && (
-            <div className="flex items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-              <CheckCircle className="w-4 h-4 text-green-600 dark:text-green-400 mr-2" />
-              <span className="text-green-800 dark:text-green-200">
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: SPACING['2xl'],
+              backgroundColor: 'rgba(78, 201, 176, 0.1)',
+              borderRadius: RADIUS.lg
+            }}>
+              <CheckCircle style={{
+                width: '16px',
+                height: '16px',
+                color: COLORS.status.success,
+                marginRight: SPACING.lg
+              }} />
+              <span style={{
+                color: COLORS.status.success
+              }}>
                 This token is well-utilized across your application.
               </span>
             </div>
@@ -625,27 +1182,75 @@ function TokenIssues({ token }: { token: import('../../types').DesignToken }) {
   const issues = token.violations || [];
   
   return (
-    <div className="space-y-6">
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: SPACING['5xl']
+    }}>
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <h3 style={{
+          fontSize: TYPOGRAPHY.fontSize.lg,
+          fontWeight: TYPOGRAPHY.fontWeight.semibold,
+          color: COLORS.text.heading,
+          margin: 0,
+          marginBottom: SPACING.xl
+        }}>
           Issues ({issues.length})
         </h3>
         
         {issues.length === 0 ? (
-          <div className="flex items-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-            <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400 mr-3" />
-            <span className="text-green-800 dark:text-green-200">
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            padding: SPACING.xl,
+            backgroundColor: 'rgba(78, 201, 176, 0.1)',
+            borderRadius: RADIUS.lg
+          }}>
+            <CheckCircle style={{
+              width: '20px',
+              height: '20px',
+              color: COLORS.status.success,
+              marginRight: SPACING['2xl']
+            }} />
+            <span style={{
+              color: COLORS.status.success
+            }}>
               No issues found with this token.
             </span>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: SPACING['2xl']
+          }}>
             {issues.map((issue, index) => (
-              <div key={index} className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-                <div className="flex items-start">
-                  <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400 mr-3 mt-0.5 flex-none" />
-                  <div className="flex-1">
-                    <p className="text-red-800 dark:text-red-200 text-sm">
+              <div key={index} style={{
+                padding: SPACING.xl,
+                backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                borderRadius: RADIUS.lg,
+                border: `1px solid rgba(231, 76, 60, 0.2)`
+              }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'flex-start'
+                }}>
+                  <AlertTriangle style={{
+                    width: '20px',
+                    height: '20px',
+                    color: COLORS.status.error,
+                    marginRight: SPACING['2xl'],
+                    marginTop: '2px',
+                    flexShrink: 0
+                  }} />
+                  <div style={{
+                    flex: 1
+                  }}>
+                    <p style={{
+                      color: COLORS.status.error,
+                      fontSize: TYPOGRAPHY.fontSize.sm,
+                      margin: 0
+                    }}>
                       {issue}
                     </p>
                   </div>

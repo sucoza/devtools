@@ -1,13 +1,20 @@
 import React from 'react';
+import { 
+  Tabs,
+  StatusIndicator,
+  Footer,
+  ScrollableContainer,
+  Badge
+} from '@sucoza/shared-components';
 import { useDevToolsSelector } from '../core/devtools-store';
 import { createWebSocketSignalRDevToolsClient } from '../core/devtools-client';
-import { TabNavigation } from './TabNavigation';
 import { WebSocketPanel } from './WebSocketPanel';
 import { SignalRPanel } from './SignalRPanel';
 import { PerformancePanel } from './PerformancePanel';
 import { ConnectionDetails } from './ConnectionDetails';
 import { MessageDetails } from './MessageDetails';
 import { FilterPanel } from './FilterPanel';
+import { ConfigMenu, type ConfigMenuItem } from '@sucoza/shared-components';
 import { clsx } from 'clsx';
 
 export interface WebSocketSignalRDevToolsPanelProps {
@@ -38,18 +45,97 @@ export function WebSocketSignalRDevToolsPanel({
     }
   }, [client, theme]);
 
-  const renderActivePanel = () => {
-    switch (selectedTab) {
-      case 'websocket':
-        return <WebSocketPanel />;
-      case 'signalr':
-        return <SignalRPanel />;
-      case 'performance':
-        return <PerformancePanel />;
-      default:
-        return <WebSocketPanel />;
+  const websocketMetrics = useDevToolsSelector(state => state.websocket.metrics);
+  const signalrMetrics = useDevToolsSelector(state => state.signalr.metrics);
+
+  const tabs = [
+    {
+      id: 'websocket',
+      label: 'WebSocket',
+      icon: '🔌',
+      badge: websocketMetrics.activeConnections > 0 ? <Badge size="xs" variant="primary">{websocketMetrics.activeConnections}</Badge> : undefined,
+      content: <WebSocketPanel />
+    },
+    {
+      id: 'signalr',
+      label: 'SignalR',
+      icon: '📡',
+      badge: signalrMetrics.activeConnections > 0 ? <Badge size="xs" variant="primary">{signalrMetrics.activeConnections}</Badge> : undefined,
+      content: <SignalRPanel />
+    },
+    {
+      id: 'performance',
+      label: 'Performance',
+      icon: '📊',
+      content: <PerformancePanel />
     }
-  };
+  ];
+
+  const wsConnectionsCount = Object.keys(useDevToolsSelector(state => state.websocket.connections)).length;
+  const srConnectionsCount = Object.keys(useDevToolsSelector(state => state.signalr.connections)).length;
+  const wsMessagesCount = Object.values(useDevToolsSelector(state => state.websocket.messages)).flat().length;
+  const srMessagesCount = Object.values(useDevToolsSelector(state => state.signalr.messages)).flat().length;
+
+  const configMenuItems: ConfigMenuItem[] = [
+    {
+      id: 'toggle-recording',
+      icon: selectedTab === 'websocket' 
+        ? (wsRecording ? '⏸️' : '▶️')
+        : (srRecording ? '⏸️' : '▶️'),
+      label: selectedTab === 'websocket' 
+        ? (wsRecording ? 'Pause Recording' : 'Start Recording')
+        : (srRecording ? 'Pause Recording' : 'Start Recording'),
+      onClick: () => {
+        if (selectedTab === 'websocket') {
+          client.toggleWebSocketRecording();
+        } else if (selectedTab === 'signalr') {
+          client.toggleSignalRRecording();
+        }
+      },
+      shortcut: 'Ctrl+R'
+    },
+    {
+      id: 'toggle-filters',
+      icon: '🔍',
+      label: showFilters ? 'Hide Filters' : 'Show Filters',
+      onClick: client.toggleFilters,
+      shortcut: 'Ctrl+F'
+    },
+    {
+      id: 'clear-data',
+      icon: '🗑️',
+      label: `Clear ${selectedTab === 'websocket' ? 'WebSocket' : 'SignalR'} Data`,
+      onClick: () => {
+        if (selectedTab === 'websocket') {
+          client.clearWebSocketData();
+        } else if (selectedTab === 'signalr') {
+          client.clearSignalRData();
+        }
+      },
+      separator: true,
+      shortcut: 'Ctrl+K'
+    },
+    {
+      id: 'export-data',
+      icon: '💾',
+      label: 'Export Data',
+      onClick: () => {
+        // TODO: Implement export functionality
+        console.log('Export data functionality to be implemented');
+      },
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'settings',
+      icon: '⚙️',
+      label: 'Settings',
+      onClick: () => {
+        // TODO: Implement settings functionality
+        console.log('Settings functionality to be implemented');
+      },
+      separator: true
+    }
+  ];
 
   return (
     <div 
@@ -60,55 +146,33 @@ export function WebSocketSignalRDevToolsPanel({
       )}
       style={{ height }}
     >
-      <div className="devtools-header">
-        <TabNavigation />
-        <div className="devtools-actions">
-          <button
-            onClick={client.toggleFilters}
-            className={clsx('btn btn-sm', {
-              'active': showFilters
-            })}
-            title="Toggle Filters"
-          >
-            🔍
-          </button>
-          <button
-            onClick={() => {
-              if (selectedTab === 'websocket') {
-                client.clearWebSocketData();
-              } else if (selectedTab === 'signalr') {
-                client.clearSignalRData();
-              }
-            }}
-            className="btn btn-sm"
-            title="Clear Data"
-          >
-            🗑️
-          </button>
-          <button
-            onClick={() => {
-              if (selectedTab === 'websocket') {
-                client.toggleWebSocketRecording();
-              } else if (selectedTab === 'signalr') {
-                client.toggleSignalRRecording();
-              }
-            }}
-            className={clsx('btn btn-sm', {
-              'recording': selectedTab === 'websocket' 
-                ? wsRecording 
-                : srRecording
-            })}
-            title="Toggle Recording"
-          >
-            {selectedTab === 'websocket' 
-              ? (wsRecording ? '⏸️' : '▶️')
-              : (srRecording ? '⏸️' : '▶️')
-            }
-          </button>
+      <Tabs
+        tabs={tabs}
+        activeTab={selectedTab}
+        onTabChange={(tabId) => client.selectTab(tabId as 'websocket' | 'signalr' | 'performance')}
+        variant="underline"
+        size="md"
+        tabListStyle={{ borderBottom: '1px solid var(--devtools-border)' }}
+        panelStyle={{ display: 'none' }} // Hide panel content since we render it separately
+      />
+
+      <div className="devtools-toolbar">
+        <div className="toolbar-left">
+          <StatusIndicator
+            status={selectedTab === 'websocket' ? (wsRecording ? 'success' : 'inactive') : (srRecording ? 'success' : 'inactive')}
+            label={selectedTab === 'websocket' ? (wsRecording ? 'Recording WebSocket' : 'WebSocket Paused') : (srRecording ? 'Recording SignalR' : 'SignalR Paused')}
+            size="sm"
+          />
+        </div>
+        <div className="toolbar-right">
+          <ConfigMenu items={configMenuItems} />
         </div>
       </div>
 
-      <div className="devtools-body">
+      <ScrollableContainer
+        style={{ flex: 1, height: '100%' }}
+        autoHideScrollbar={true}
+      >
         {showFilters && (
           <div className="devtools-filters">
             <FilterPanel />
@@ -117,7 +181,7 @@ export function WebSocketSignalRDevToolsPanel({
         
         <div className="devtools-content">
           <div className="devtools-main">
-            {renderActivePanel()}
+            {tabs.find(tab => tab.id === selectedTab)?.content || tabs[0].content}
           </div>
           
           {selectedConnectionId && (
@@ -138,7 +202,32 @@ export function WebSocketSignalRDevToolsPanel({
             </div>
           )}
         </div>
-      </div>
+      </ScrollableContainer>
+
+      <Footer
+        stats={[
+          {
+            id: 'connections',
+            label: 'Connections',
+            value: selectedTab === 'websocket' ? wsConnectionsCount : srConnectionsCount,
+            tooltip: `${selectedTab === 'websocket' ? wsConnectionsCount : srConnectionsCount} active connections`
+          },
+          {
+            id: 'messages',
+            label: 'Messages',
+            value: selectedTab === 'websocket' ? wsMessagesCount : srMessagesCount,
+            tooltip: `${selectedTab === 'websocket' ? wsMessagesCount : srMessagesCount} total messages`
+          }
+        ]}
+        status={{
+          type: selectedTab === 'websocket' ? (wsRecording ? 'connected' : 'disconnected') : (srRecording ? 'connected' : 'disconnected'),
+          message: selectedTab === 'websocket' 
+            ? (wsRecording ? 'WebSocket Recording' : 'WebSocket Paused')
+            : (srRecording ? 'SignalR Recording' : 'SignalR Paused')
+        }}
+        size="xs"
+        variant="compact"
+      />
 
       <style>{`
         .websocket-signalr-devtools {
@@ -146,149 +235,139 @@ export function WebSocketSignalRDevToolsPanel({
           flex-direction: column;
           background: var(--devtools-bg);
           color: var(--devtools-color);
-          font-family: system-ui, -apple-system, sans-serif;
+          font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
           font-size: 13px;
           border: 1px solid var(--devtools-border);
-        }
-
-        .devtools-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 8px 12px;
-          background: var(--devtools-header-bg);
-          border-bottom: 1px solid var(--devtools-border);
-        }
-
-        .devtools-actions {
-          display: flex;
-          gap: 8px;
-        }
-
-        .devtools-body {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
+          border-radius: 8px;
           overflow: hidden;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .devtools-filters {
           border-bottom: 1px solid var(--devtools-border);
           background: var(--devtools-panel-bg);
+          padding: 12px 16px;
+        }
+
+        .devtools-toolbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 8px 12px;
+          background: var(--devtools-panel-bg);
+          border-bottom: 1px solid var(--devtools-border);
+        }
+
+        .toolbar-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .toolbar-right {
+          display: flex;
+          align-items: center;
+          gap: 8px;
         }
 
         .devtools-content {
           flex: 1;
           display: flex;
           overflow: hidden;
+          background: var(--devtools-bg);
         }
 
         .devtools-main {
           flex: 1;
           overflow: hidden;
+          display: flex;
+          flex-direction: column;
         }
 
         .devtools-sidebar {
-          width: 300px;
+          width: 320px;
           border-left: 1px solid var(--devtools-border);
           background: var(--devtools-panel-bg);
+          display: flex;
+          flex-direction: column;
         }
 
         .devtools-message-details {
           width: 400px;
           border-left: 1px solid var(--devtools-border);
           background: var(--devtools-panel-bg);
+          display: flex;
+          flex-direction: column;
         }
 
-        .btn {
-          padding: 4px 8px;
-          border: 1px solid var(--devtools-border);
-          background: var(--devtools-button-bg);
-          color: var(--devtools-color);
-          cursor: pointer;
-          border-radius: 3px;
-          font-size: 11px;
-        }
-
-        .btn:hover {
-          background: var(--devtools-button-hover-bg);
-        }
-
-        .btn.active {
-          background: var(--devtools-accent);
-          color: var(--devtools-accent-contrast);
-        }
-
-        .btn.recording {
-          background: var(--devtools-success);
-          color: white;
-        }
-
-        .btn-sm {
-          padding: 2px 6px;
-          font-size: 10px;
-        }
-
-        /* Theme variables */
+        /* Modern theme variables */
         .theme-light {
           --devtools-bg: #ffffff;
-          --devtools-color: #333333;
-          --devtools-border: #e1e1e1;
-          --devtools-header-bg: #f8f9fa;
-          --devtools-panel-bg: #f5f6f7;
-          --devtools-button-bg: #ffffff;
-          --devtools-button-hover-bg: #f0f0f0;
-          --devtools-accent: #007acc;
+          --devtools-color: #1e293b;
+          --devtools-border: #e2e8f0;
+          --devtools-panel-bg: #f8fafc;
+          --devtools-accent: #3b82f6;
+          --devtools-accent-hover: #2563eb;
           --devtools-accent-contrast: #ffffff;
-          --devtools-success: #28a745;
-          --devtools-warning: #ffc107;
-          --devtools-danger: #dc3545;
+          --devtools-success: #10b981;
+          --devtools-warning: #f59e0b;
+          --devtools-danger: #ef4444;
+          --devtools-text-secondary: #64748b;
+          --devtools-text-muted: #94a3b8;
+          --devtools-button-bg: #ffffff;
+          --devtools-button-hover-bg: #f1f5f9;
         }
 
         .theme-dark {
-          --devtools-bg: #1e1e1e;
-          --devtools-color: #cccccc;
-          --devtools-border: #3e3e42;
-          --devtools-header-bg: #2d2d30;
-          --devtools-panel-bg: #252526;
-          --devtools-button-bg: #3c3c3c;
-          --devtools-button-hover-bg: #464647;
-          --devtools-accent: #0e639c;
+          --devtools-bg: #0f172a;
+          --devtools-color: #f1f5f9;
+          --devtools-border: #334155;
+          --devtools-panel-bg: #1e293b;
+          --devtools-accent: #60a5fa;
+          --devtools-accent-hover: #3b82f6;
           --devtools-accent-contrast: #ffffff;
-          --devtools-success: #107c10;
-          --devtools-warning: #ffb900;
-          --devtools-danger: #d13438;
+          --devtools-success: #34d399;
+          --devtools-warning: #fbbf24;
+          --devtools-danger: #f87171;
+          --devtools-text-secondary: #cbd5e1;
+          --devtools-text-muted: #94a3b8;
+          --devtools-button-bg: #334155;
+          --devtools-button-hover-bg: #475569;
         }
 
         .theme-auto {
           --devtools-bg: #ffffff;
-          --devtools-color: #333333;
-          --devtools-border: #e1e1e1;
-          --devtools-header-bg: #f8f9fa;
-          --devtools-panel-bg: #f5f6f7;
-          --devtools-button-bg: #ffffff;
-          --devtools-button-hover-bg: #f0f0f0;
-          --devtools-accent: #007acc;
+          --devtools-color: #1e293b;
+          --devtools-border: #e2e8f0;
+          --devtools-panel-bg: #f8fafc;
+          --devtools-accent: #3b82f6;
+          --devtools-accent-hover: #2563eb;
           --devtools-accent-contrast: #ffffff;
-          --devtools-success: #28a745;
-          --devtools-warning: #ffc107;
-          --devtools-danger: #dc3545;
+          --devtools-success: #10b981;
+          --devtools-warning: #f59e0b;
+          --devtools-danger: #ef4444;
+          --devtools-text-secondary: #64748b;
+          --devtools-text-muted: #94a3b8;
+          --devtools-button-bg: #ffffff;
+          --devtools-button-hover-bg: #f1f5f9;
         }
 
         @media (prefers-color-scheme: dark) {
           .theme-auto {
-            --devtools-bg: #1e1e1e;
-            --devtools-color: #cccccc;
-            --devtools-border: #3e3e42;
-            --devtools-header-bg: #2d2d30;
-            --devtools-panel-bg: #252526;
-            --devtools-button-bg: #3c3c3c;
-            --devtools-button-hover-bg: #464647;
-            --devtools-accent: #0e639c;
+            --devtools-bg: #0f172a;
+            --devtools-color: #f1f5f9;
+            --devtools-border: #334155;
+            --devtools-panel-bg: #1e293b;
+            --devtools-accent: #60a5fa;
+            --devtools-accent-hover: #3b82f6;
             --devtools-accent-contrast: #ffffff;
-            --devtools-success: #107c10;
-            --devtools-warning: #ffb900;
-            --devtools-danger: #d13438;
+            --devtools-success: #34d399;
+            --devtools-warning: #fbbf24;
+            --devtools-danger: #f87171;
+            --devtools-text-secondary: #cbd5e1;
+            --devtools-text-muted: #94a3b8;
+            --devtools-button-bg: #334155;
+            --devtools-button-hover-bg: #475569;
           }
         }
       `}</style>

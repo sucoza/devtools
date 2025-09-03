@@ -4,6 +4,11 @@ import {
   FeatureFlagDevToolsState, 
   PanelTab 
 } from '../types';
+import {
+  Tabs,
+  Badge,
+  Toolbar
+} from '@sucoza/shared-components';
 import { DashboardTab } from './DashboardTab';
 import { FlagsTab } from './FlagsTab';
 import { OverridesTab } from './OverridesTab';
@@ -11,9 +16,9 @@ import { ExperimentsTab } from './ExperimentsTab';
 import { SegmentsTab } from './SegmentsTab';
 import { HistoryTab } from './HistoryTab';
 import { SettingsTab } from './SettingsTab';
-import { TabNavigation } from './TabNavigation';
 import { UserContextPanel } from './UserContextPanel';
 import { NotificationBar } from './NotificationBar';
+import { RefreshCw, Settings, User } from 'lucide-react';
 
 interface FeatureFlagManagerPanelProps {
   client: FeatureFlagDevToolsClient;
@@ -115,14 +120,86 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
     );
   }
 
-  const tabs: Array<{ id: PanelTab; label: string; count?: number }> = [
-    { id: 'dashboard', label: 'Dashboard' },
-    { id: 'flags', label: 'Flags', count: state.flags.size },
-    { id: 'overrides', label: 'Overrides', count: state.overrides.size },
-    { id: 'experiments', label: 'Experiments', count: state.experiments.length },
-    { id: 'segments', label: 'Segments', count: state.userSegments.length },
-    { id: 'history', label: 'History', count: state.evaluationHistory.length },
-    { id: 'settings', label: 'Settings' }
+  const tabs = [
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      content: (
+        <DashboardTab
+          state={state}
+          client={client}
+          onToggleFlag={handleToggleFlag}
+          onNavigateToTab={setActiveTab}
+        />
+      )
+    },
+    {
+      id: 'flags',
+      label: 'Flags',
+      badge: state.flags.size > 0 ? <Badge size="xs" variant="primary">{state.flags.size}</Badge> : undefined,
+      content: (
+        <FlagsTab
+          state={state}
+          client={client}
+          onToggleFlag={handleToggleFlag}
+        />
+      )
+    },
+    {
+      id: 'overrides',
+      label: 'Overrides',
+      badge: state.overrides.size > 0 ? <Badge size="xs" variant="warning">{state.overrides.size}</Badge> : undefined,
+      content: (
+        <OverridesTab
+          state={state}
+          client={client}
+        />
+      )
+    },
+    {
+      id: 'experiments',
+      label: 'Experiments',
+      badge: state.experiments.length > 0 ? <Badge size="xs" variant="info">{state.experiments.length}</Badge> : undefined,
+      content: (
+        <ExperimentsTab
+          state={state}
+          client={client}
+        />
+      )
+    },
+    {
+      id: 'segments',
+      label: 'Segments',
+      badge: state.userSegments.length > 0 ? <Badge size="xs" variant="info">{state.userSegments.length}</Badge> : undefined,
+      content: (
+        <SegmentsTab
+          state={state}
+          client={client}
+        />
+      )
+    },
+    {
+      id: 'history',
+      label: 'History',
+      badge: state.evaluationHistory.length > 0 ? <Badge size="xs" variant="default">{state.evaluationHistory.length}</Badge> : undefined,
+      content: (
+        <HistoryTab
+          state={state}
+          client={client}
+        />
+      )
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: <Settings size={16} />,
+      content: (
+        <SettingsTab
+          state={state}
+          client={client}
+        />
+      )
+    }
   ];
 
   return (
@@ -139,115 +216,51 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
       )}
 
       {/* Header */}
-      <div className="panel-header" style={{ borderBottom: '1px solid #e5e7eb', padding: '16px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600' }}>
-            Feature Flag Manager
-          </h2>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button
-              onClick={handleRefresh}
-              style={{
-                padding: '6px 12px',
-                backgroundColor: '#3b82f6',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '14px'
-              }}
-            >
-              Refresh
-            </button>
-            <button
-              onClick={() => setShowUserContext(!showUserContext)}
-              style={{
-                padding: '6px 12px',
-                backgroundColor: showUserContext ? '#10b981' : '#6b7280',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '14px'
-              }}
-            >
-              User Context
-            </button>
-          </div>
-        </div>
-
-        {/* User Context Panel */}
-        {showUserContext && (
-          <div style={{ marginTop: '16px', padding: '16px', backgroundColor: '#f9fafb', borderRadius: '8px' }}>
-            <UserContextPanel
-              context={state.currentContext}
-              segments={state.userSegments}
-              onChange={handleContextChange}
-            />
-          </div>
-        )}
-      </div>
-
-      {/* Tab Navigation */}
-      <TabNavigation
-        tabs={tabs}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
+      <Toolbar
+        title="Feature Flag Manager"
+        actions={[
+          {
+            id: 'refresh',
+            label: 'Refresh',
+            icon: <RefreshCw size={16} />,
+            onClick: handleRefresh,
+            variant: 'primary',
+            tooltip: 'Refresh flags'
+          },
+          {
+            id: 'user-context',
+            label: 'User Context',
+            icon: <User size={16} />,
+            onClick: () => setShowUserContext(!showUserContext),
+            variant: showUserContext ? 'primary' : 'default',
+            tooltip: 'Toggle user context panel'
+          }
+        ]}
+        size="md"
+        variant="default"
       />
 
-      {/* Tab Content */}
-      <div style={{ flex: 1, overflow: 'hidden' }}>
-        {activeTab === 'dashboard' && (
-          <DashboardTab
-            state={state}
-            client={client}
-            onToggleFlag={handleToggleFlag}
-            onNavigateToTab={setActiveTab}
+      {/* User Context Panel */}
+      {showUserContext && (
+        <div style={{ padding: '16px', borderBottom: '1px solid #e5e7eb' }}>
+          <UserContextPanel
+            context={state.currentContext}
+            segments={state.userSegments}
+            onChange={handleContextChange}
           />
-        )}
-        
-        {activeTab === 'flags' && (
-          <FlagsTab
-            state={state}
-            client={client}
-            onToggleFlag={handleToggleFlag}
-          />
-        )}
-        
-        {activeTab === 'overrides' && (
-          <OverridesTab
-            state={state}
-            client={client}
-          />
-        )}
-        
-        {activeTab === 'experiments' && (
-          <ExperimentsTab
-            state={state}
-            client={client}
-          />
-        )}
-        
-        {activeTab === 'segments' && (
-          <SegmentsTab
-            state={state}
-            client={client}
-          />
-        )}
-        
-        {activeTab === 'history' && (
-          <HistoryTab
-            state={state}
-            client={client}
-          />
-        )}
-        
-        {activeTab === 'settings' && (
-          <SettingsTab
-            state={state}
-            client={client}
-          />
-        )}
+        </div>
+      )}
+
+      {/* Tab Navigation and Content */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+        <Tabs
+          tabs={tabs}
+          activeTab={activeTab}
+          onTabChange={(tabId) => setActiveTab(tabId as PanelTab)}
+          variant="underline"
+          size="md"
+          panelStyle={{ flex: 1, overflow: 'hidden', padding: 0 }}
+        />
       </div>
 
       <style>{`

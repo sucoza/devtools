@@ -1,0 +1,26 @@
+{
+  "name": "i18n-example",
+  "version": "0.0.1",
+  "description": "Example application demonstrating the @sucoza/i18n utility",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@sucoza/i18n": "workspace:*",
+    "@sucoza/i18n-devtools-plugin": "workspace:*",
+		"@tanstack/devtools": "link:D:/source/thirdparty/tanstack/devtools/packages/devtools"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.4",
+    "typescript": "^5.2.2",
+    "vite": "^4.4.9"
+  }
+}

@@ -14,6 +14,12 @@ import {
   Upload,
   Trash2
 } from 'lucide-react';
+import {
+  Tabs,
+  Badge,
+  Alert,
+  ScrollableContainer
+} from '@sucoza/shared-components';
 import { useAuthMockClient } from '../core/devtools-client';
 import '../styles.css';
 
@@ -73,46 +79,59 @@ export function AuthPermissionsMockPanel() {
     navigator.clipboard.writeText(text);
   };
 
-  return (
-    <div className="auth-mock-panel">
-      {/* Warning Banner */}
-      {showWarning && state.mockMode && (
-        <div className="warning-banner">
-          <AlertTriangle className="icon" />
-          <span>Mock Mode Active - Client-side only. Server validation still applies.</span>
-          <button onClick={() => setShowWarning(false)} className="close-btn">
-            <X className="icon-sm" />
-          </button>
-        </div>
-      )}
+  const tabs = [
+    {
+      id: 'overview',
+      label: 'Overview',
+      icon: <Shield size={16} />,
+      content: renderOverviewTab()
+    },
+    {
+      id: 'scenarios',
+      label: 'Scenarios',
+      icon: <Settings size={16} />,
+      badge: client.getScenarios().length > 0 ? <Badge size="xs" variant="info">{client.getScenarios().length}</Badge> : undefined,
+      content: renderScenariosTab()
+    },
+    {
+      id: 'roles',
+      label: 'Roles',
+      icon: <User size={16} />,
+      badge: state.authState.roles.length > 0 ? <Badge size="xs" variant="primary">{state.authState.roles.length}</Badge> : undefined,
+      content: renderRolesTab()
+    },
+    {
+      id: 'permissions',
+      label: 'Permissions',
+      icon: <Key size={16} />,
+      badge: state.authState.permissions.length > 0 ? <Badge size="xs" variant="success">{state.authState.permissions.length}</Badge> : undefined,
+      content: renderPermissionsTab()
+    },
+    {
+      id: 'jwt',
+      label: 'JWT Editor',
+      icon: <Lock size={16} />,
+      content: renderJwtTab()
+    },
+    {
+      id: 'storage',
+      label: 'Storage',
+      icon: <Settings size={16} />,
+      badge: state.storageOperations.length > 0 ? <Badge size="xs" variant="info">{state.storageOperations.length}</Badge> : undefined,
+      content: renderStorageTab()
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: <Settings size={16} />,
+      content: renderSettingsTab()
+    }
+  ];
 
-      {/* Tab Navigation */}
-      <div className="tab-navigation">
-        {[
-          { id: 'overview', label: 'Overview', icon: Shield },
-          { id: 'scenarios', label: 'Scenarios', icon: Settings },
-          { id: 'roles', label: 'Roles', icon: User },
-          { id: 'permissions', label: 'Permissions', icon: Key },
-          { id: 'jwt', label: 'JWT Editor', icon: Lock },
-          { id: 'storage', label: 'Storage', icon: Settings },
-          { id: 'settings', label: 'Settings', icon: Settings }
-        ].map(tab => (
-          <button
-            key={tab.id}
-            className={clsx('tab-btn', { active: activeTab === tab.id })}
-            onClick={() => setActiveTab(tab.id as TabType)}
-          >
-            <tab.icon className="icon-sm" />
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Tab Content */}
-      <div className="tab-content">
-        {/* Overview Tab */}
-        {activeTab === 'overview' && (
-          <div className="overview-tab">
+  function renderOverviewTab() {
+    return (
+      <ScrollableContainer>
+        <div className="overview-tab">
             <div className="auth-status">
               <h3>Authentication Status</h3>
               <div className={clsx('status-indicator', { 
@@ -186,12 +205,15 @@ export function AuthPermissionsMockPanel() {
                 Logout
               </button>
             )}
-          </div>
-        )}
+        </div>
+      </ScrollableContainer>
+    );
+  }
 
-        {/* Scenarios Tab */}
-        {activeTab === 'scenarios' && (
-          <div className="scenarios-tab">
+  function renderScenariosTab() {
+    return (
+      <ScrollableContainer>
+        <div className="scenarios-tab">
             <h3>Mock Scenarios</h3>
             <div className="scenario-list">
               {client.getScenarios().map(scenario => (
@@ -227,12 +249,15 @@ export function AuthPermissionsMockPanel() {
                 </div>
               ))}
             </div>
-          </div>
-        )}
+        </div>
+      </ScrollableContainer>
+    );
+  }
 
-        {/* Roles Tab */}
-        {activeTab === 'roles' && (
-          <div className="roles-tab">
+  function renderRolesTab() {
+    return (
+      <ScrollableContainer>
+        <div className="roles-tab">
             <h3>Available Roles</h3>
             <div className="role-list">
               {client.getRoles().map(role => (
@@ -259,12 +284,15 @@ export function AuthPermissionsMockPanel() {
                 </div>
               ))}
             </div>
-          </div>
-        )}
+        </div>
+      </ScrollableContainer>
+    );
+  }
 
-        {/* Permissions Tab */}
-        {activeTab === 'permissions' && (
-          <div className="permissions-tab">
+  function renderPermissionsTab() {
+    return (
+      <ScrollableContainer>
+        <div className="permissions-tab">
             <h3>Available Permissions</h3>
             <div className="permission-list">
               {client.getPermissions().map(permission => (
@@ -294,12 +322,15 @@ export function AuthPermissionsMockPanel() {
                 </div>
               ))}
             </div>
-          </div>
-        )}
+        </div>
+      </ScrollableContainer>
+    );
+  }
 
-        {/* JWT Editor Tab */}
-        {activeTab === 'jwt' && (
-          <div className="jwt-tab">
+  function renderJwtTab() {
+    return (
+      <ScrollableContainer>
+        <div className="jwt-tab">
             <h3>JWT Token Editor</h3>
             <div className="jwt-section">
               <h4>Current Token</h4>
@@ -361,12 +392,15 @@ export function AuthPermissionsMockPanel() {
                 </pre>
               </div>
             )}
-          </div>
-        )}
+        </div>
+      </ScrollableContainer>
+    );
+  }
 
-        {/* Storage Tab */}
-        {activeTab === 'storage' && (
-          <div className="storage-tab">
+  function renderStorageTab() {
+    return (
+      <ScrollableContainer>
+        <div className="storage-tab">
             <h3>Storage Operations</h3>
             <div className="storage-operations">
               {state.storageOperations.length > 0 ? (
@@ -410,12 +444,15 @@ export function AuthPermissionsMockPanel() {
                 </div>
               )}
             </div>
-          </div>
-        )}
+        </div>
+      </ScrollableContainer>
+    );
+  }
 
-        {/* Settings Tab */}
-        {activeTab === 'settings' && (
-          <div className="settings-tab">
+  function renderSettingsTab() {
+    return (
+      <ScrollableContainer>
+        <div className="settings-tab">
             <h3>Settings</h3>
             
             <div className="settings-section">
@@ -466,8 +503,31 @@ export function AuthPermissionsMockPanel() {
                 Clear All Data
               </button>
             </div>
-          </div>
-        )}
+        </div>
+      </ScrollableContainer>
+    );
+  }
+
+  return (
+    <div className="auth-mock-panel">
+      {/* Warning Banner */}
+      {showWarning && state.mockMode && (
+        <Alert
+          variant="outlined"
+          title="Mock Mode Active"
+          description="Client-side only. Server validation still applies."
+        />
+      )}
+
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <Tabs
+          tabs={tabs}
+          activeTab={activeTab}
+          onTabChange={(tabId) => setActiveTab(tabId as TabType)}
+          variant="underline"
+          size="md"
+          panelStyle={{ flex: 1, padding: 0 }}
+        />
       </div>
     </div>
   );

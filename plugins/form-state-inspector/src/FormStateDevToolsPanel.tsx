@@ -1,4 +1,36 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { 
+  Search, 
+  Filter, 
+  RefreshCw, 
+  Play, 
+  CheckCircle, 
+  AlertCircle, 
+  Clock, 
+  BarChart3, 
+  Eye,
+  ChevronDown,
+  ChevronRight,
+  FileText,
+  History,
+  Accessibility,
+  Send
+} from 'lucide-react';
+import {
+  PluginPanel,
+  SearchInput,
+  ScrollableContainer,
+  DataTable,
+  Badge,
+  EmptyState,
+  StatusIndicator,
+  Tabs,
+  SplitPane,
+  CodeBlock,
+  Alert,
+  Collapsible,
+  ProgressBar
+} from '@sucoza/shared-components';
 import { formStateEventClient } from './formEventClient';
 import type { 
   FormState, 
@@ -197,489 +229,342 @@ export function FormStateDevToolsPanel() {
     );
   };
 
-  return (
-    <div style={{ padding: '12px', backgroundColor: '#1a1a1a', color: '#e5e5e5', height: '100%', overflow: 'auto' }}>
-      {/* Header */}
-      <div style={{ marginBottom: '16px', borderBottom: '1px solid #333', paddingBottom: '12px' }}>
-        <h2 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '8px' }}>
-          Form State Inspector
-        </h2>
-        
-        {/* Controls */}
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <input
-            type="text"
-            placeholder="Search fields..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              padding: '4px 8px',
-              backgroundColor: '#2a2a2a',
-              border: '1px solid #444',
-              borderRadius: '4px',
-              color: '#e5e5e5',
-              fontSize: '12px',
-              flex: '1',
-              minWidth: '150px'
-            }}
-          />
-          
-          <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px' }}>
-            <input
-              type="checkbox"
-              checked={showOnlyDirty}
-              onChange={(e) => setShowOnlyDirty(e.target.checked)}
-            />
-            Dirty Only
-          </label>
-          
-          <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px' }}>
-            <input
-              type="checkbox"
-              checked={showOnlyInvalid}
-              onChange={(e) => setShowOnlyInvalid(e.target.checked)}
-            />
-            Invalid Only
-          </label>
-          
-          <label style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px' }}>
-            <input
-              type="checkbox"
-              checked={autoRefresh}
-              onChange={(e) => setAutoRefresh(e.target.checked)}
-            />
-            Auto Refresh
-          </label>
-        </div>
-      </div>
+  const tabs = [
+    {
+      id: 'fields',
+      label: 'Fields',
+      icon: FileText,
+      badge: selectedForm && filteredFields.length > 0 ? { count: filteredFields.length } : undefined,
+      content: renderFieldsTab()
+    },
+    {
+      id: 'validation',
+      label: 'Validation',
+      icon: CheckCircle,
+      badge: selectedForm ? { count: Object.values(selectedForm.fields).filter(f => !f.isValid).length, variant: (Object.values(selectedForm.fields).filter(f => !f.isValid).length > 0 ? 'critical' : 'default') as 'critical' | 'serious' | 'moderate' | 'minor' | 'default' } : undefined,
+      content: renderValidationTab()
+    },
+    {
+      id: 'history',
+      label: 'History',
+      icon: History,
+      badge: selectedForm && selectedForm.fieldHistory.length > 0 ? { count: selectedForm.fieldHistory.length } : undefined,
+      content: renderHistoryTab()
+    },
+    {
+      id: 'performance',
+      label: 'Performance',
+      icon: BarChart3,
+      content: renderPerformanceTab()
+    },
+    {
+      id: 'accessibility',
+      label: 'Accessibility',
+      icon: Accessibility,
+      badge: selectedForm ? { count: selectedForm.accessibilityIssues.length, variant: (selectedForm.accessibilityIssues.length > 0 ? 'moderate' : 'default') as 'critical' | 'serious' | 'moderate' | 'minor' | 'default' } : undefined,
+      content: renderAccessibilityTab()
+    },
+    {
+      id: 'submissions',
+      label: 'Submissions',
+      icon: Send,
+      badge: submissions.filter(s => s.formId === selectedFormId).length > 0 ? { count: submissions.filter(s => s.formId === selectedFormId).length } : undefined,
+      content: renderSubmissionsTab()
+    }
+  ];
 
-      {/* Main Content */}
-      <div style={{ display: 'flex', gap: '16px', height: 'calc(100% - 100px)' }}>
-        {/* Forms List */}
-        <div style={{ flex: '0 0 250px', borderRight: '1px solid #333', paddingRight: '12px', overflowY: 'auto' }}>
-          <h3 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>Active Forms</h3>
-          {Object.keys(forms).length === 0 ? (
-            <div style={{ fontSize: '12px', color: '#888', fontStyle: 'italic' }}>
-              No forms detected. Start tracking forms using the formStateRegistry.
+  const actions = [
+    {
+      id: 'auto-refresh',
+      label: autoRefresh ? 'Disable Auto Refresh' : 'Enable Auto Refresh',
+      icon: RefreshCw,
+      onClick: () => setAutoRefresh(!autoRefresh),
+      variant: autoRefresh ? 'primary' as const : 'default' as const
+    }
+  ];
+
+  const metrics = [
+    { label: 'Forms', value: Object.keys(forms).length },
+    { label: 'Active Fields', value: selectedForm ? Object.keys(selectedForm.fields).length : 0 },
+    { label: 'Dirty Fields', value: selectedForm ? Object.values(selectedForm.fields).filter(f => f.isDirty).length : 0 },
+    { label: 'Invalid Fields', value: selectedForm ? Object.values(selectedForm.fields).filter(f => !f.isValid).length : 0 }
+  ];
+
+  function renderFieldsTab() {
+    if (!selectedForm) return <EmptyState title="No form selected" description="Select a form to view its fields" />;
+
+    return (
+      <ScrollableContainer>
+        <div className="space-y-4">
+          <div className="text-sm font-medium">Form Fields ({filteredFields.length})</div>
+          <div className="space-y-2">
+            {filteredFields.map(field => (
+              <div key={field.name} className="bg-gray-800 rounded p-3 border border-gray-700">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold">{field.name}</span>
+                    <Badge variant="default">{field.type}</Badge>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <StatusIndicator 
+                      status={field.isValid ? 'success' : 'error'}
+                      label={field.isValid ? 'Valid' : 'Invalid'}
+                    />
+                  </div>
+                </div>
+                <div className="text-xs text-gray-400 mb-2">
+                  Value: <code>{JSON.stringify(field.value)}</code>
+                </div>
+                <div className="flex gap-1">
+                  {field.isDirty && <Badge variant="warning">Dirty</Badge>}
+                  {field.isTouched && <Badge variant="info">Touched</Badge>}
+                  {field.isRequired && <Badge variant="default">Required</Badge>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </ScrollableContainer>
+    );
+  }
+
+  function renderValidationTab() {
+    if (!selectedForm) return <EmptyState title="No form selected" description="Select a form to view validation status" />;
+
+    const invalidFields = Object.values(selectedForm.fields).filter(f => !f.isValid);
+
+    return (
+      <ScrollableContainer>
+        <div className="space-y-4">
+          {selectedForm.schema && (
+            <div className="p-3 bg-blue-900/20 text-blue-400 rounded border border-blue-500/30">
+              <div className="text-sm">
+                <strong>Schema Type:</strong> {selectedForm.schema.type}
+                <br />
+                <strong>Fields Defined:</strong> {Object.keys(selectedForm.schema.parsedFields).length}
+              </div>
+            </div>
+          )}
+
+          {invalidFields.length === 0 ? (
+            <div className="flex items-center gap-2 p-3 bg-green-900/20 text-green-400 rounded border border-green-500/30">
+              <CheckCircle className="w-4 h-4" />
+              All fields are valid
             </div>
           ) : (
-            Object.entries(forms).map(([formId, form]) => (
-              <div
-                key={formId}
-                style={{
-                  padding: '8px',
-                  marginBottom: '4px',
-                  backgroundColor: selectedFormId === formId ? '#2a3f5f' : '#2a2a2a',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  fontSize: '12px'
-                }}
-                onClick={() => setSelectedFormId(formId)}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontWeight: 'bold' }}>{formId}</span>
-                  <span style={{
-                    padding: '2px 6px',
-                    borderRadius: '4px',
-                    fontSize: '10px',
-                    backgroundColor: form.isValid ? '#10b98120' : '#ef444420',
-                    color: form.isValid ? '#10b981' : '#ef4444'
-                  }}>
-                    {form.isValid ? 'Valid' : 'Invalid'}
+            <div className="space-y-2">
+              {invalidFields.map(field => (
+                <div key={field.name} className="flex items-start gap-2 p-3 bg-red-900/20 text-red-400 rounded border border-red-500/30">
+                  <AlertCircle className="w-4 h-4 mt-0.5" />
+                  <div>
+                    <strong>{field.name}:</strong> {field.validation.message || 'Validation failed'}
+                    {field.validation.rule && (
+                      <div className="text-xs opacity-75 mt-1">Rule: {field.validation.rule}</div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </ScrollableContainer>
+    );
+  }
+
+  function renderHistoryTab() {
+    if (!selectedForm) return <EmptyState title="No form selected" description="Select a form to view field history" />;
+
+    return (
+      <ScrollableContainer>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-medium">Replay Speed: {replaySpeed}x</span>
+              <input
+                type="range"
+                min="0.5"
+                max="5"
+                step="0.5"
+                value={replaySpeed}
+                onChange={(e) => setReplaySpeed(parseFloat(e.target.value))}
+                className="w-24"
+              />
+            </div>
+            <button
+              onClick={() => handleReplayForm(selectedFormId!)}
+              disabled={isReplaying || selectedForm.fieldHistory.length === 0}
+              className="flex items-center gap-2 px-3 py-1 text-sm bg-blue-500 text-white rounded disabled:opacity-50"
+            >
+              <Play className="w-3 h-3" />
+              {isReplaying ? 'Replaying...' : 'Replay Form'}
+            </button>
+          </div>
+
+          <div className="space-y-2">
+            {selectedForm.fieldHistory.slice().reverse().map((entry, index) => (
+              <div key={`${entry.fieldName}-${entry.timestamp}-${index}`} className="bg-gray-800 rounded p-3">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-medium">{entry.fieldName} • {entry.action}</span>
+                  <span className="text-xs text-gray-400">
+                    {new Date(entry.timestamp).toLocaleTimeString()}
                   </span>
                 </div>
-                <div style={{ fontSize: '10px', color: '#888', marginTop: '4px' }}>
-                  {Object.keys(form.fields).length} fields • 
-                  {form.isDirty ? ' Modified' : ' Clean'} • 
-                  {form.submitCount} submissions
+                <div className="text-xs text-gray-400">
+                  <code>{JSON.stringify(entry.value)}</code>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </ScrollableContainer>
+    );
+  }
+
+  function renderPerformanceTab() {
+    if (!selectedForm) return <EmptyState title="No form selected" description="Select a form to view performance metrics" />;
+
+    return (
+      <ScrollableContainer>
+        <div className="space-y-6">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-gray-800 rounded p-4">
+              <div className="text-xs text-gray-400 mb-1">Average Validation Time</div>
+              <div className="text-2xl font-bold">{selectedForm.performanceMetrics.averageValidationTime.toFixed(2)}ms</div>
+            </div>
+            <div className="bg-gray-800 rounded p-4">
+              <div className="text-xs text-gray-400 mb-1">Total Renders</div>
+              <div className="text-2xl font-bold">{selectedForm.performanceMetrics.totalRenderCount}</div>
+            </div>
+            <div className="bg-gray-800 rounded p-4">
+              <div className="text-xs text-gray-400 mb-1">Last Validation</div>
+              <div className="text-2xl font-bold">{selectedForm.performanceMetrics.lastValidationTime.toFixed(2)}ms</div>
+            </div>
+            <div className="bg-gray-800 rounded p-4">
+              <div className="text-xs text-gray-400 mb-1">Form Age</div>
+              <div className="text-2xl font-bold">{((Date.now() - selectedForm.performanceMetrics.formInitTime) / 1000).toFixed(0)}s</div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold mb-3">Field Render Counts</h3>
+            <div className="space-y-2">
+              {Object.entries(selectedForm.performanceMetrics.fieldRenderCounts).map(([fieldName, count]) => (
+                <div key={fieldName} className="flex justify-between items-center bg-gray-800 rounded px-3 py-2">
+                  <span className="text-sm">{fieldName}</span>
+                  <Badge variant="default">{count}</Badge>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </ScrollableContainer>
+    );
+  }
+
+  function renderAccessibilityTab() {
+    if (!selectedForm) return <EmptyState title="No form selected" description="Select a form to view accessibility issues" />;
+
+    return (
+      <ScrollableContainer>
+        <div className="space-y-4">
+          {selectedForm.accessibilityIssues.length === 0 ? (
+            <div className="flex items-center gap-2 p-3 bg-green-900/20 text-green-400 rounded border border-green-500/30">
+              <CheckCircle className="w-4 h-4" />
+              No accessibility issues detected
+            </div>
+          ) : (
+            selectedForm.accessibilityIssues.map((issue, index) => (
+              <div 
+                key={`${issue.fieldName}-${issue.rule}-${index}`}
+                className={`p-3 rounded border ${
+                  issue.severity === 'error' ? 'bg-red-900/20 text-red-400 border-red-500/30' :
+                  issue.severity === 'warning' ? 'bg-yellow-900/20 text-yellow-400 border-yellow-500/30' :
+                  'bg-blue-900/20 text-blue-400 border-blue-500/30'
+                }`}
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <strong>{issue.fieldName}</strong>
+                    <Badge variant={issue.severity === 'error' ? 'error' : issue.severity === 'warning' ? 'warning' : 'default'}>
+                      {issue.severity}
+                    </Badge>
+                  </div>
+                  <div className="text-sm">{issue.message}</div>
+                  <div className="text-xs opacity-75">
+                    <strong>Rule:</strong> {issue.rule}
+                  </div>
+                  <div className="text-xs text-blue-400">
+                    💡 {issue.suggestion}
+                  </div>
                 </div>
               </div>
             ))
           )}
         </div>
+      </ScrollableContainer>
+    );
+  }
 
-        {/* Form Details */}
-        {selectedForm && (
-          <div style={{ flex: '1', overflow: 'auto' }}>
-            {/* Tabs */}
-            <div style={{ display: 'flex', gap: '4px', marginBottom: '12px', borderBottom: '1px solid #333' }}>
-              {(['fields', 'validation', 'history', 'performance', 'accessibility', 'submissions'] as const).map(tab => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  style={{
-                    padding: '8px 12px',
-                    backgroundColor: activeTab === tab ? '#2a3f5f' : 'transparent',
-                    border: 'none',
-                    color: activeTab === tab ? '#fff' : '#888',
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                    textTransform: 'capitalize',
-                    borderBottom: activeTab === tab ? '2px solid #3b82f6' : '2px solid transparent'
-                  }}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
+  function renderSubmissionsTab() {
+    const formSubmissions = submissions.filter(s => s.formId === selectedFormId);
 
-            {/* Tab Content */}
-            <div style={{ padding: '8px' }}>
-              {activeTab === 'fields' && (
-                <div>
-                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                    Form Fields ({filteredFields.length})
-                  </h4>
-                  {filteredFields.map(field => (
-                    <div
-                      key={field.name}
-                      style={{
-                        padding: '8px',
-                        marginBottom: '8px',
-                        backgroundColor: '#2a2a2a',
-                        borderRadius: '4px',
-                        border: `1px solid ${field.isValid ? '#333' : '#ef444450'}`
-                      }}
-                    >
-                      <div 
-                        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }}
-                        onClick={() => toggleFieldExpanded(field.name)}
-                      >
-                        <div>
-                          <span style={{ fontWeight: 'bold', fontSize: '12px' }}>{field.name}</span>
-                          <span style={{ marginLeft: '8px', fontSize: '10px', color: '#888' }}>
-                            ({field.type})
-                          </span>
-                        </div>
-                        <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
-                          <span style={{
-                            width: '8px',
-                            height: '8px',
-                            borderRadius: '50%',
-                            backgroundColor: getValidationStateColor(field.validation.state)
-                          }} />
-                          <span style={{ fontSize: '10px', color: '#888' }}>
-                            {expandedFields.includes(field.name) ? '▼' : '▶'}
-                          </span>
-                        </div>
-                      </div>
-                      
-                      {expandedFields.includes(field.name) && (
-                        <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid #444' }}>
-                          <div style={{ fontSize: '11px', marginBottom: '4px' }}>
-                            <strong>Value:</strong> {JSON.stringify(field.value)}
-                          </div>
-                          <div style={{ fontSize: '11px', marginBottom: '4px' }}>
-                            <strong>State:</strong> {getFieldStateIndicator(field)}
-                          </div>
-                          {field.validation.message && (
-                            <div style={{ fontSize: '11px', color: '#ef4444' }}>
-                              <strong>Error:</strong> {field.validation.message}
-                            </div>
-                          )}
-                          <div style={{ fontSize: '10px', color: '#666', marginTop: '4px' }}>
-                            Renders: {field.renderCount} • 
-                            {field.validationTime && ` Validation: ${field.validationTime}ms`}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
+    return (
+      <ScrollableContainer>
+        <div className="space-y-4">
+          {formSubmissions.length === 0 ? (
+            <EmptyState title="No submissions" description="No form submissions recorded yet" />
+          ) : (
+            formSubmissions.slice().reverse().map((submission, index) => (
+              <div 
+                key={`${submission.timestamp}-${index}`}
+                className={`bg-gray-800 rounded p-4 border-l-4 ${submission.success ? 'border-green-500' : 'border-red-500'}`}
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs text-gray-400">
+                    {new Date(submission.timestamp).toLocaleString()}
+                  </span>
+                  <Badge variant={submission.success ? 'success' : 'error'}>
+                    {submission.success ? 'Success' : 'Failed'}
+                  </Badge>
                 </div>
-              )}
-
-              {activeTab === 'validation' && (
-                <div>
-                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                    Validation Status
-                  </h4>
-                  {selectedForm.schema && (
-                    <div style={{ marginBottom: '12px', padding: '8px', backgroundColor: '#2a2a2a', borderRadius: '4px' }}>
-                      <div style={{ fontSize: '12px', marginBottom: '4px' }}>
-                        <strong>Schema Type:</strong> {selectedForm.schema.type}
-                      </div>
-                      <div style={{ fontSize: '11px', color: '#888' }}>
-                        {Object.keys(selectedForm.schema.parsedFields).length} fields defined
-                      </div>
-                    </div>
-                  )}
-                  
-                  {Object.values(selectedForm.fields).filter(f => !f.isValid).map(field => (
-                    <div
-                      key={field.name}
-                      style={{
-                        padding: '8px',
-                        marginBottom: '8px',
-                        backgroundColor: '#2a2a2a',
-                        borderRadius: '4px',
-                        border: '1px solid #ef444450'
-                      }}
-                    >
-                      <div style={{ fontSize: '12px', fontWeight: 'bold', marginBottom: '4px' }}>
-                        {field.name}
-                      </div>
-                      <div style={{ fontSize: '11px', color: '#ef4444' }}>
-                        {field.validation.message || 'Validation failed'}
-                      </div>
-                      {field.validation.rule && (
-                        <div style={{ fontSize: '10px', color: '#888', marginTop: '2px' }}>
-                          Rule: {field.validation.rule}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                <div className="text-xs text-gray-400 mb-2">
+                  Duration: {submission.duration}ms
                 </div>
-              )}
-
-              {activeTab === 'history' && (
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                    <h4 style={{ fontSize: '14px', fontWeight: 'bold' }}>
-                      Field History ({selectedForm.fieldHistory.length} entries)
-                    </h4>
-                    <button
-                      onClick={() => handleReplayForm(selectedFormId)}
-                      disabled={isReplaying || selectedForm.fieldHistory.length === 0}
-                      style={{
-                        padding: '4px 8px',
-                        fontSize: '11px',
-                        backgroundColor: isReplaying ? '#444' : '#3b82f6',
-                        color: '#fff',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: isReplaying ? 'not-allowed' : 'pointer'
-                      }}
-                    >
-                      {isReplaying ? 'Replaying...' : 'Replay Form'}
-                    </button>
+                {Object.keys(submission.validationErrors).length > 0 && (
+                  <div className="p-2 bg-red-900/20 text-red-400 rounded border border-red-500/30 mb-2">
+                    Errors: {Object.keys(submission.validationErrors).join(', ')}
                   </div>
-                  
-                  <div style={{ marginBottom: '8px' }}>
-                    <label style={{ fontSize: '11px', marginRight: '8px' }}>
-                      Replay Speed: {replaySpeed}x
-                    </label>
-                    <input
-                      type="range"
-                      min="0.5"
-                      max="5"
-                      step="0.5"
-                      value={replaySpeed}
-                      onChange={(e) => setReplaySpeed(parseFloat(e.target.value))}
-                      style={{ verticalAlign: 'middle' }}
-                    />
-                  </div>
-                  
-                  <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-                    {selectedForm.fieldHistory.slice().reverse().map((entry, index) => (
-                      <div
-                        key={`${entry.fieldName}-${entry.timestamp}-${index}`}
-                        style={{
-                          padding: '6px',
-                          marginBottom: '4px',
-                          backgroundColor: '#2a2a2a',
-                          borderRadius: '4px',
-                          fontSize: '11px'
-                        }}
-                      >
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <span>
-                            <strong>{entry.fieldName}</strong> • {entry.action}
-                          </span>
-                          <span style={{ color: '#888', fontSize: '10px' }}>
-                            {new Date(entry.timestamp).toLocaleTimeString()}
-                          </span>
-                        </div>
-                        <div style={{ fontSize: '10px', color: '#888', marginTop: '2px' }}>
-                          Value: {JSON.stringify(entry.value)}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                )}
+                <details className="mt-2">
+                  <summary className="cursor-pointer text-sm text-blue-400 hover:text-blue-300">View Submitted Values</summary>
+                  <pre className="mt-2 p-2 bg-gray-900 rounded text-xs overflow-auto">
+                    {JSON.stringify(submission.values, null, 2)}
+                  </pre>
+                </details>
+              </div>
+            ))
+          )}
+        </div>
+      </ScrollableContainer>
+    );
+  }
 
-              {activeTab === 'performance' && (
-                <div>
-                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                    Performance Metrics
-                  </h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-                    <div style={{ padding: '8px', backgroundColor: '#2a2a2a', borderRadius: '4px' }}>
-                      <div style={{ fontSize: '10px', color: '#888', marginBottom: '4px' }}>
-                        Average Validation Time
-                      </div>
-                      <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
-                        {selectedForm.performanceMetrics.averageValidationTime.toFixed(2)}ms
-                      </div>
-                    </div>
-                    
-                    <div style={{ padding: '8px', backgroundColor: '#2a2a2a', borderRadius: '4px' }}>
-                      <div style={{ fontSize: '10px', color: '#888', marginBottom: '4px' }}>
-                        Total Renders
-                      </div>
-                      <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
-                        {selectedForm.performanceMetrics.totalRenderCount}
-                      </div>
-                    </div>
-                    
-                    <div style={{ padding: '8px', backgroundColor: '#2a2a2a', borderRadius: '4px' }}>
-                      <div style={{ fontSize: '10px', color: '#888', marginBottom: '4px' }}>
-                        Last Validation
-                      </div>
-                      <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
-                        {selectedForm.performanceMetrics.lastValidationTime.toFixed(2)}ms
-                      </div>
-                    </div>
-                    
-                    <div style={{ padding: '8px', backgroundColor: '#2a2a2a', borderRadius: '4px' }}>
-                      <div style={{ fontSize: '10px', color: '#888', marginBottom: '4px' }}>
-                        Form Age
-                      </div>
-                      <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
-                        {((Date.now() - selectedForm.performanceMetrics.formInitTime) / 1000).toFixed(0)}s
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <h5 style={{ fontSize: '12px', fontWeight: 'bold', marginTop: '12px', marginBottom: '8px' }}>
-                    Field Render Counts
-                  </h5>
-                  <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
-                    {Object.entries(selectedForm.performanceMetrics.fieldRenderCounts).map(([fieldName, count]) => (
-                      <div
-                        key={fieldName}
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          padding: '4px 8px',
-                          backgroundColor: '#2a2a2a',
-                          borderRadius: '4px',
-                          marginBottom: '4px',
-                          fontSize: '11px'
-                        }}
-                      >
-                        <span>{fieldName}</span>
-                        <span style={{ fontWeight: 'bold' }}>{count}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {activeTab === 'accessibility' && (
-                <div>
-                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                    Accessibility Issues ({selectedForm.accessibilityIssues.length})
-                  </h4>
-                  {selectedForm.accessibilityIssues.length === 0 ? (
-                    <div style={{ fontSize: '12px', color: '#10b981', padding: '8px', backgroundColor: '#10b98120', borderRadius: '4px' }}>
-                      ✓ No accessibility issues detected
-                    </div>
-                  ) : (
-                    selectedForm.accessibilityIssues.map((issue, index) => (
-                      <div
-                        key={`${issue.fieldName}-${issue.rule}-${index}`}
-                        style={{
-                          padding: '8px',
-                          marginBottom: '8px',
-                          backgroundColor: '#2a2a2a',
-                          borderRadius: '4px',
-                          border: `1px solid ${
-                            issue.severity === 'error' ? '#ef444450' : 
-                            issue.severity === 'warning' ? '#f59e0b50' : '#33333350'
-                          }`
-                        }}
-                      >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                          <span style={{ fontSize: '12px', fontWeight: 'bold' }}>
-                            {issue.fieldName}
-                          </span>
-                          <span style={{
-                            padding: '2px 6px',
-                            borderRadius: '4px',
-                            fontSize: '10px',
-                            backgroundColor: 
-                              issue.severity === 'error' ? '#ef444420' : 
-                              issue.severity === 'warning' ? '#f59e0b20' : '#33333320',
-                            color: 
-                              issue.severity === 'error' ? '#ef4444' : 
-                              issue.severity === 'warning' ? '#f59e0b' : '#888'
-                          }}>
-                            {issue.severity}
-                          </span>
-                        </div>
-                        <div style={{ fontSize: '11px', marginBottom: '4px' }}>
-                          {issue.message}
-                        </div>
-                        <div style={{ fontSize: '10px', color: '#888' }}>
-                          <strong>Rule:</strong> {issue.rule}
-                        </div>
-                        <div style={{ fontSize: '10px', color: '#3b82f6', marginTop: '4px' }}>
-                          💡 {issue.suggestion}
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              )}
-
-              {activeTab === 'submissions' && (
-                <div>
-                  <h4 style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '8px' }}>
-                    Form Submissions ({submissions.filter(s => s.formId === selectedFormId).length})
-                  </h4>
-                  {submissions
-                    .filter(s => s.formId === selectedFormId)
-                    .slice().reverse()
-                    .map((submission, index) => (
-                      <div
-                        key={`${submission.timestamp}-${index}`}
-                        style={{
-                          padding: '8px',
-                          marginBottom: '8px',
-                          backgroundColor: '#2a2a2a',
-                          borderRadius: '4px',
-                          border: `1px solid ${submission.success ? '#10b98150' : '#ef444450'}`
-                        }}
-                      >
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-                          <span style={{ fontSize: '11px', color: '#888' }}>
-                            {new Date(submission.timestamp).toLocaleString()}
-                          </span>
-                          <span style={{
-                            padding: '2px 6px',
-                            borderRadius: '4px',
-                            fontSize: '10px',
-                            backgroundColor: submission.success ? '#10b98120' : '#ef444420',
-                            color: submission.success ? '#10b981' : '#ef4444'
-                          }}>
-                            {submission.success ? 'Success' : 'Failed'}
-                          </span>
-                        </div>
-                        <div style={{ fontSize: '10px', color: '#888', marginBottom: '4px' }}>
-                          Duration: {submission.duration}ms
-                        </div>
-                        {Object.keys(submission.validationErrors).length > 0 && (
-                          <div style={{ fontSize: '11px', color: '#ef4444' }}>
-                            Errors: {Object.keys(submission.validationErrors).join(', ')}
-                          </div>
-                        )}
-                        <details style={{ marginTop: '4px' }}>
-                          <summary style={{ fontSize: '10px', cursor: 'pointer', color: '#3b82f6' }}>
-                            View Submitted Values
-                          </summary>
-                          <pre style={{ fontSize: '10px', marginTop: '4px', padding: '4px', backgroundColor: '#1a1a1a', borderRadius: '4px', overflow: 'auto' }}>
-                            {JSON.stringify(submission.values, null, 2)}
-                          </pre>
-                        </details>
-                      </div>
-                    ))}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+  return (
+    <PluginPanel
+      title="Form State Inspector"
+      icon={FileText}
+      subtitle={selectedForm ? `${selectedForm.isDirty ? 'Modified' : 'Clean'} • ${Object.keys(selectedForm.fields).length} fields` : 'No form selected'}
+      tabs={tabs}
+      activeTabId={activeTab}
+      onTabChange={(tabId) => setActiveTab(tabId as any)}
+      actions={actions}
+      metrics={metrics}
+      showSearch={true}
+      searchValue={searchQuery}
+      onSearchChange={setSearchQuery}
+      searchPlaceholder="Search fields..."
+      // Simplified for now - add proper sidebar/filters later
+      showMetrics={true}
+    />
   );
 }

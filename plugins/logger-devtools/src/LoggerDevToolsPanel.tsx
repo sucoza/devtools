@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { loggingEventClient } from './loggingEventClient';
 import type { LogEntry, LogLevel, LoggerConfig, LogMetrics } from './loggingEventClient';
+import { Footer, type FooterStat } from '@sucoza/shared-components';
 
 const LOG_COLORS: Record<LogLevel, string> = {
   trace: '#7f8c8d',
@@ -33,6 +34,7 @@ interface LoggerUIState {
   selectedLogId: string | null;
   showSidebar: boolean;
   sidebarWidth: number;
+  chartExpanded: boolean;
 }
 
 const saveUIState = (state: LoggerUIState) => {
@@ -107,7 +109,8 @@ export function LoggerDevToolsPanel() {
   const [showSidebar, setShowSidebar] = useState(savedState.showSidebar ?? true);
   const [sidebarWidth, setSidebarWidth] = useState(savedState.sidebarWidth || 250);
   const [expandedLogs, setExpandedLogs] = useState<Set<string>>(new Set());
-  const [chartHover, setChartHover] = useState<{ x: number; data: any } | null>(null);
+  const [chartHover, setChartHover] = useState<{ x: number; y: number; data: any } | null>(null);
+  const [chartExpanded, setChartExpanded] = useState(savedState.chartExpanded ?? true);
 
   // Subscribe to events
   useEffect(() => {
@@ -242,9 +245,10 @@ export function LoggerDevToolsPanel() {
       selectedLogId: selectedLog?.id || null,
       showSidebar,
       sidebarWidth,
+      chartExpanded,
     };
     saveUIState(currentState);
-  }, [searchQuery, levelFilter, categoryFilter, sourceFilter, autoScroll, showMetrics, selectedLog, showSidebar, sidebarWidth]);
+  }, [searchQuery, levelFilter, categoryFilter, sourceFilter, autoScroll, showMetrics, selectedLog, showSidebar, sidebarWidth, chartExpanded]);
 
   // Generate facet data and time series from logs
   const { facetData, timeSeriesData } = useMemo(() => {
@@ -606,11 +610,11 @@ export function LoggerDevToolsPanel() {
     return <span>{String(data)}</span>;
   };
 
-  // Render full-width stacked area chart with hover tooltips
+  // Render full-width stacked bar chart with hover tooltips
   const renderMetricsChart = () => {
     if (timeSeriesData.length === 0) return null;
 
-    const chartHeight = 60;
+    const chartHeight = 60; // Taller for better visibility
     const maxValue = Math.max(...timeSeriesData.map(d => 
       d.trace + d.debug + d.info + d.warn + d.error + d.fatal
     ));
@@ -621,30 +625,23 @@ export function LoggerDevToolsPanel() {
     
     return (
       <div style={{ 
-        width: '100%', 
-        padding: '8px 0 4px 0',
-        borderTop: '1px solid #3c3c3c',
-        position: 'relative'
+        width: '100%', // Full width
+        position: 'relative',
+        minHeight: chartHeight,
+        padding: '0 8px' // Small padding for better visual spacing
       }}>
-        <div style={{ 
-          color: '#969696', 
-          fontSize: '9px', 
-          marginBottom: '4px',
-          textAlign: 'center'
-        }}>
-          📈 Activity (last 5 minutes)
-        </div>
         <div
           style={{ position: 'relative' }}
           onMouseMove={(e) => {
             const rect = e.currentTarget.getBoundingClientRect();
             const x = e.clientX - rect.left;
-            const chartWidth = rect.width;
+            const chartWidth = rect.width - 16; // Account for padding
             const dataIndex = Math.floor((x / chartWidth) * timeSeriesData.length);
             
             if (dataIndex >= 0 && dataIndex < timeSeriesData.length) {
               setChartHover({
                 x: e.clientX,
+                y: e.clientY,
                 data: timeSeriesData[dataIndex]
               });
             }
@@ -660,56 +657,45 @@ export function LoggerDevToolsPanel() {
               display: 'block'
             }}
             preserveAspectRatio="none"
-            viewBox={`0 0 100 ${chartHeight}`}
+            viewBox={`0 0 1000 ${chartHeight}`} // Use fixed viewBox width for consistent scaling
           >
-            {levelOrder.map(level => {
-              // Create area path for each level
-              const points = timeSeriesData.map((d, i) => {
-                const x = (i / (timeSeriesData.length - 1)) * 100;
-                
-                // Calculate stacked position
-                let y0 = 0;
-                let y1 = 0;
-                levelOrder.forEach(l => {
-                  if (l === level) {
-                    y1 = y0 + d[l];
-                  } else if (levelOrder.indexOf(l) < levelOrder.indexOf(level)) {
-                    y0 += d[l];
-                    y1 = y0 + d[l];
-                  }
-                });
-                
-                const scaledY0 = chartHeight - (y0 / maxValue) * chartHeight;
-                const scaledY1 = chartHeight - (y1 / maxValue) * chartHeight;
-                
-                return { x, y0: scaledY0, y1: scaledY1 };
-              });
-
-              if (points.length < 2) return null;
-
-              // Create area path
-              let pathD = `M ${points[0].x} ${points[0].y1}`;
+            {/* Render bars for each time slot */}
+            {timeSeriesData.map((d, i) => {
+              const viewBoxWidth = 1000; // Fixed viewBox width
+              const x = (i / timeSeriesData.length) * viewBoxWidth;
+              const barWidth = Math.max(2, (viewBoxWidth / timeSeriesData.length) - 2); // Bars with small gaps
+              const total = levelOrder.reduce((sum, level) => sum + d[level], 0);
               
-              // Top edge
-              for (let i = 1; i < points.length; i++) {
-                pathD += ` L ${points[i].x} ${points[i].y1}`;
-              }
+              if (total === 0) return null;
               
-              // Bottom edge (in reverse)
-              for (let i = points.length - 1; i >= 0; i--) {
-                pathD += ` L ${points[i].x} ${points[i].y0}`;
-              }
-              
-              pathD += ' Z';
+              let currentY = chartHeight;
               
               return (
-                <path
-                  key={level}
-                  d={pathD}
-                  fill={LOG_COLORS[level]}
-                  fillOpacity={0.8}
-                  stroke="none"
-                />
+                <g key={i}>
+                  {levelOrder.map(level => {
+                    const value = d[level];
+                    if (value === 0) return null;
+                    
+                    const barHeight = (value / maxValue) * chartHeight;
+                    const y = currentY - barHeight;
+                    
+                    const rect = (
+                      <rect
+                        key={level}
+                        x={x}
+                        y={y}
+                        width={barWidth}
+                        height={barHeight}
+                        fill={LOG_COLORS[level]}
+                        fillOpacity={0.9}
+                        stroke="none"
+                      />
+                    );
+                    
+                    currentY = y;
+                    return rect;
+                  })}
+                </g>
               );
             })}
             
@@ -719,20 +705,20 @@ export function LoggerDevToolsPanel() {
                 key={i}
                 x1={0}
                 y1={chartHeight * ratio}
-                x2={100}
+                x2={1000}
                 y2={chartHeight * ratio}
                 stroke="#3c3c3c"
-                strokeWidth={0.3}
-                strokeDasharray="1,1"
+                strokeWidth="0.5"
+                strokeDasharray="4,4"
               />
             ))}
             
             {/* Max value label */}
             <text
-              x={98}
-              y={8}
+              x={990}
+              y={12}
               fill="#969696"
-              fontSize="6"
+              fontSize="12"
               textAnchor="end"
             >
               {maxValue}
@@ -744,9 +730,9 @@ export function LoggerDevToolsPanel() {
             <div
               style={{
                 position: 'fixed',
-                left: chartHover.x + 10,
-                top: chartHover.x > window.innerWidth / 2 ? 'auto' : '100%',
-                bottom: chartHover.x > window.innerWidth / 2 ? '100%' : 'auto',
+                left: Math.min(chartHover.x + 10, window.innerWidth - 200),
+                top: 'auto',
+                bottom: 'auto',
                 background: '#2d2d30',
                 border: '1px solid #3c3c3c',
                 borderRadius: '4px',
@@ -976,49 +962,65 @@ export function LoggerDevToolsPanel() {
         </div>
       </div>
 
-      {/* Metrics Panel */}
+
+      {/* Activity Chart */}
       {showMetrics && (
         <div style={{
-          padding: '8px',
           background: '#252526',
           borderBottom: '1px solid #3c3c3c',
-          display: 'flex',
-          gap: '20px',
-          fontSize: '11px',
         }}>
-          <div>
-            <span style={{ color: '#969696' }}>Total:</span>{' '}
-            <span style={{ color: '#4ec9b0' }}>{metrics.totalLogs}</span>
-          </div>
-          <div>
-            <span style={{ color: '#969696' }}>Rate:</span>{' '}
-            <span style={{ color: '#4ec9b0' }}>{metrics.logsPerSecond}/s</span>
-            {' '}
-            <span style={{ color: '#666' }}>(peak: {metrics.peakLogsPerSecond}/s)</span>
-          </div>
-          <div>
-            <span style={{ color: '#969696' }}>Errors:</span>{' '}
-            <span style={{ color: metrics.errorRate > 0 ? '#e74c3c' : '#4ec9b0' }}>
-              {metrics.errorRate.toFixed(1)}%
-            </span>
-          </div>
-          <div>
-            <span style={{ color: '#969696' }}>Warnings:</span>{' '}
-            <span style={{ color: metrics.warningRate > 0 ? '#f39c12' : '#4ec9b0' }}>
-              {metrics.warningRate.toFixed(1)}%
-            </span>
-          </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
-            {Object.entries(metrics.logsByLevel).map(([level, count]) => (
-              <span key={level}>
-                <span style={{ color: LOG_COLORS[level as LogLevel] }}>
-                  {level}:{count}
-                </span>
+          {/* Chart Header */}
+          <div 
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '8px 12px',
+              cursor: 'pointer',
+              borderBottom: chartExpanded ? '1px solid #3c3c3c' : 'none',
+            }}
+            onClick={() => setChartExpanded(!chartExpanded)}
+          >
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}>
+              <span style={{ 
+                color: '#969696', 
+                fontSize: '11px',
+                fontWeight: '500',
+                transition: 'transform 0.2s ease',
+                transform: chartExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+              }}>
+                ▶
               </span>
-            ))}
+              <span style={{ 
+                color: '#cccccc', 
+                fontSize: '12px',
+                fontWeight: '500'
+              }}>
+                📈 Activity (last 5 minutes)
+              </span>
+            </div>
+            <span style={{
+              color: '#969696',
+              fontSize: '10px',
+            }}>
+              {chartExpanded ? 'Click to collapse' : 'Click to expand'}
+            </span>
           </div>
-          {/* Activity Chart */}
-          {renderMetricsChart()}
+          
+          {/* Chart Content */}
+          {chartExpanded && (
+            <div style={{
+              padding: '12px',
+              display: 'flex',
+              justifyContent: 'center',
+            }}>
+              {renderMetricsChart()}
+            </div>
+          )}
         </div>
       )}
 
@@ -1454,6 +1456,59 @@ export function LoggerDevToolsPanel() {
           </div>
         )}
       </div>
+
+      {/* Footer with metrics */}
+      {showMetrics && (
+        <Footer
+          size="sm"
+          variant="default"
+          stats={[
+            // Total logs
+            {
+              id: 'total-logs',
+              label: 'Total',
+              value: metrics.totalLogs.toLocaleString(),
+              tooltip: 'Total number of logs captured',
+            },
+            // Rate stats
+            {
+              id: 'logs-per-second',
+              label: 'Rate',
+              value: `${metrics.logsPerSecond}/s`,
+              tooltip: `Current: ${metrics.logsPerSecond}/s, Peak: ${metrics.peakLogsPerSecond}/s`,
+              variant: metrics.logsPerSecond > 10 ? 'warning' : 'default',
+            },
+            // Error rate
+            {
+              id: 'error-rate',
+              label: 'Errors',
+              value: `${metrics.errorRate.toFixed(1)}%`,
+              variant: metrics.errorRate > 0 ? 'error' : 'success',
+              tooltip: 'Percentage of logs that are errors or fatal',
+            },
+            // Warning rate
+            {
+              id: 'warning-rate',
+              label: 'Warnings',
+              value: `${metrics.warningRate.toFixed(1)}%`,
+              variant: metrics.warningRate > 0 ? 'warning' : 'success',
+              tooltip: 'Percentage of logs that are warnings',
+            },
+            // Log level counts
+            ...Object.entries(metrics.logsByLevel)
+              .filter(([, count]) => (count as number) > 0)
+              .map(([level, count]): FooterStat => ({
+                id: `level-${level}`,
+                label: level.charAt(0).toUpperCase() + level.slice(1),
+                value: (count as number).toLocaleString(),
+                onClick: () => setLevelFilter(level as LogLevel),
+                tooltip: `Click to filter by ${level} level`,
+                variant: level === 'error' || level === 'fatal' ? 'error' : 
+                        level === 'warn' ? 'warning' : 'default',
+              })),
+          ]}
+        />
+      )}
     </div>
   );
 }

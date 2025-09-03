@@ -181,9 +181,12 @@ importers:
 
   packages/devtools-importer:
     dependencies:
+      '@sucoza/logger':
+        specifier: workspace:*
+        version: link:../logger
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-bus':
         specifier: ^0.3.1
         version: 0.3.1
@@ -309,6 +312,57 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4(@types/node@24.3.0)(@vitest/ui@3.2.4)(jsdom@26.1.0)
 
+  packages/i18n:
+    devDependencies:
+      '@rollup/plugin-commonjs':
+        specifier: ^28.0.6
+        version: 28.0.6(rollup@4.50.0)
+      '@rollup/plugin-node-resolve':
+        specifier: ^16.0.1
+        version: 16.0.1(rollup@4.50.0)
+      '@rollup/plugin-typescript':
+        specifier: ^12.1.4
+        version: 12.1.4(rollup@4.50.0)(tslib@2.8.1)(typescript@5.9.2)
+      '@types/node':
+        specifier: ^24.3.0
+        version: 24.3.0
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^8.42.0
+        version: 8.42.0(@typescript-eslint/parser@8.42.0)(eslint@8.57.1)(typescript@5.9.2)
+      '@typescript-eslint/parser':
+        specifier: ^8.42.0
+        version: 8.42.0(eslint@8.57.1)(typescript@5.9.2)
+      '@vitejs/plugin-react':
+        specifier: ^5.0.2
+        version: 5.0.2(vite@7.1.4)
+      eslint:
+        specifier: ^8.57.1
+        version: 8.57.1
+      jsdom:
+        specifier: ^26.1.0
+        version: 26.1.0
+      prettier:
+        specifier: ^3.6.2
+        version: 3.6.2
+      rollup:
+        specifier: ^4.50.0
+        version: 4.50.0
+      rollup-plugin-peer-deps-external:
+        specifier: ^2.2.4
+        version: 2.2.4(rollup@4.50.0)
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.2
+      vite:
+        specifier: ^7.1.4
+        version: 7.1.4(@types/node@24.3.0)
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/node@24.3.0)(@vitest/ui@3.2.4)(jsdom@26.1.0)
+
   packages/logger:
     devDependencies:
       '@rollup/plugin-commonjs':
@@ -383,7 +437,7 @@ importers:
         version: 12.1.4(rollup@4.50.0)(tslib@2.8.1)(typescript@5.9.2)
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@types/node':
         specifier: ^24.3.0
         version: 24.3.0
@@ -516,7 +570,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -628,7 +682,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -731,7 +785,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -837,7 +891,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -991,7 +1045,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -1109,7 +1163,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -1215,7 +1269,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -1333,7 +1387,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -1436,7 +1490,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -1539,7 +1593,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -1645,7 +1699,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -1757,7 +1811,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -1860,7 +1914,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -1966,7 +2020,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -2072,7 +2126,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -2175,7 +2229,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -2278,7 +2332,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -2381,7 +2435,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -2484,7 +2538,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -2587,7 +2641,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: ^0.6.3
-        version: 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: ^0.2.3
         version: 0.2.3
@@ -4345,6 +4399,19 @@ packages:
       solid-js: 1.9.9
     transitivePeerDependencies:
       - csstype
+    dev: false
+
+  /@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9):
+    resolution: {integrity: sha512-W3FnFhot91c30I/DyZUKSCd5gan5FRe35EvxUrZTxMN3qQ4kOtZSmYi8N8cAP4rmAp54ivv6pvT3LXlpjEeE0w==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      solid-js: '>=1.9.7'
+    dependencies:
+      clsx: 2.1.1
+      goober: 2.1.16(csstype@3.1.3)
+      solid-js: 1.9.9
+    transitivePeerDependencies:
+      - csstype
 
   /@tanstack/devtools-vite@0.2.10(vite@7.1.4):
     resolution: {integrity: sha512-L4eBhW+8ISIJy9arevZVnxFAtXrRHLGrOzA5IoxahvQhnXLfzfBgffSKyRNfvDwGaJtMIGEu3ZWJPKFs2isdRA==}
@@ -4375,6 +4442,25 @@ packages:
       '@solid-primitives/keyboard': 1.3.3(solid-js@1.9.9)
       '@tanstack/devtools-event-bus': 0.3.1
       '@tanstack/devtools-ui': 0.3.3(csstype@3.1.3)(solid-js@1.9.9)
+      clsx: 2.1.1
+      goober: 2.1.16(csstype@3.1.3)
+      solid-js: 1.9.9
+    transitivePeerDependencies:
+      - bufferutil
+      - csstype
+      - utf-8-validate
+    dev: false
+
+  /@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4)(csstype@3.1.3)(solid-js@1.9.9):
+    resolution: {integrity: sha512-aIU94NOqcqgEBXsFRKVEizmXpHsgr0z1997YiQe89v2NrOgk8O7fUvSI9w4zcEBjnquz9gbnPqdd1hCjf2p9Ww==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@tanstack/devtools-ui': 0.3.4
+      solid-js: '>=1.9.7'
+    dependencies:
+      '@solid-primitives/keyboard': 1.3.3(solid-js@1.9.9)
+      '@tanstack/devtools-event-bus': 0.3.1
+      '@tanstack/devtools-ui': 0.3.4(csstype@3.1.3)(solid-js@1.9.9)
       clsx: 2.1.1
       goober: 2.1.16(csstype@3.1.3)
       solid-js: 1.9.9

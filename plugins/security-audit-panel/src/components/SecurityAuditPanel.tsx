@@ -1,5 +1,4 @@
 import React from 'react';
-import { clsx } from 'clsx';
 import { 
   Shield, 
   Play, 
@@ -11,6 +10,19 @@ import {
   Search,
   Download
 } from 'lucide-react';
+import {
+  PluginPanel,
+  ScrollableContainer,
+  Tabs,
+  Badge,
+  StatusIndicator,
+  Toolbar,
+  Footer,
+  COLORS,
+  SPACING,
+  TYPOGRAPHY,
+  RADIUS,
+} from '@sucoza/shared-components';
 import { useSecurityAudit } from '../hooks';
 import { DashboardTab } from './DashboardTab';
 import { VulnerabilitiesTab } from './VulnerabilitiesTab';
@@ -68,172 +80,165 @@ export function SecurityAuditPanel({ className }: SecurityAuditPanelProps) {
     }
   };
 
-  const getTabIcon = (tab: string) => {
-    switch (tab) {
-      case 'dashboard':
-        return <Shield className="w-4 h-4" />;
-      case 'vulnerabilities':
-        return <AlertTriangle className="w-4 h-4" />;
-      case 'scanners':
-        return <Search className="w-4 h-4" />;
-      case 'reports':
-        return <FileText className="w-4 h-4" />;
-      case 'settings':
-        return <Settings className="w-4 h-4" />;
-      default:
-        return null;
-    }
-  };
+  // Tab configuration
+  const tabs = [
+    { id: 'dashboard', label: 'Dashboard', icon: Shield },
+    { id: 'vulnerabilities', label: 'Vulnerabilities', icon: AlertTriangle },
+    { id: 'scanners', label: 'Scanners', icon: Search },
+    { id: 'reports', label: 'Reports', icon: FileText },
+    { id: 'settings', label: 'Settings', icon: Settings },
+  ];
 
-  const renderActiveTab = () => {
-    switch (state.ui.activeTab) {
-      case 'dashboard':
-        return <DashboardTab />;
-      case 'vulnerabilities':
-        return <VulnerabilitiesTab />;
-      case 'scanners':
-        return <ScannersTab />;
-      case 'reports':
-        return <ReportsTab />;
-      case 'settings':
-        return <SettingsTab />;
-      default:
-        return <DashboardTab />;
-    }
-  };
+  // Prepare toolbar actions
+  const toolbarActions = [
+    {
+      icon: Play,
+      label: state.isScanning ? 'Scanning...' : 'Start Scan',
+      onClick: handleStartScan,
+      disabled: state.isScanning,
+      variant: 'primary' as const,
+    },
+    ...(state.isScanning ? [{
+      icon: Square,
+      label: 'Stop',
+      onClick: handleStopScan,
+      variant: 'danger' as const,
+    }] : []),
+    {
+      icon: RotateCcw,
+      label: 'Clear',
+      onClick: handleClearVulnerabilities,
+      disabled: state.metrics.totalVulnerabilities === 0,
+    },
+    {
+      icon: Download,
+      label: 'Export',
+      onClick: handleExport,
+      disabled: state.metrics.totalVulnerabilities === 0,
+      variant: 'secondary' as const,
+    },
+  ];
 
   const getVulnerabilityCountBySeverity = (severity: string) => {
     return state.metrics.vulnerabilitiesBySeverity[severity as keyof typeof state.metrics.vulnerabilitiesBySeverity] || 0;
   };
 
+  // Footer stats
+  const footerStats = [
+    { label: 'Total', value: state.metrics.totalVulnerabilities.toString() },
+    { label: 'Critical', value: getVulnerabilityCountBySeverity('critical').toString() },
+    { label: 'High', value: getVulnerabilityCountBySeverity('high').toString() },
+    { label: 'Medium', value: getVulnerabilityCountBySeverity('medium').toString() },
+    { label: 'Low', value: getVulnerabilityCountBySeverity('low').toString() },
+    { label: 'Security Score', value: `${state.metrics.securityScore}/100` },
+  ];
+
   return (
-    <div className={clsx('flex flex-col h-full bg-gray-50 dark:bg-gray-900', className)}>
-      {/* Header */}
-      <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center gap-2">
-          <Shield className="w-5 h-5 text-red-500" />
-          <span className="font-semibold text-gray-900 dark:text-white">
-            Security Audit Panel
-          </span>
-          <div className="flex items-center gap-1 ml-2">
-            {state.isScanning && (
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            )}
-            <span className="text-sm text-gray-600 dark:text-gray-400">
-              {state.metrics.totalVulnerabilities} vulnerabilities
-            </span>
-          </div>
-        </div>
-
-        {/* Controls */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleStartScan}
-            disabled={state.isScanning}
-            className={clsx(
-              'flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded',
-              state.isScanning
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : 'bg-green-100 text-green-700 hover:bg-green-200'
-            )}
-          >
-            <Play className="w-4 h-4" />
-            {state.isScanning ? 'Scanning...' : 'Start Scan'}
-          </button>
-
+    <PluginPanel
+      title="Security Audit Panel"
+      icon={Shield}
+      className={className}
+      headerContent={(
+        <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.xs }}>
           {state.isScanning && (
-            <button
-              onClick={handleStopScan}
-              className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-red-700 bg-red-100 rounded hover:bg-red-200"
-            >
-              <Square className="w-4 h-4" />
-              Stop
-            </button>
+            <StatusIndicator
+              status="loading"
+              size="sm"
+              label=""
+            />
           )}
-
-          <button
-            onClick={handleClearVulnerabilities}
-            disabled={state.metrics.totalVulnerabilities === 0}
-            className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <RotateCcw className="w-4 h-4" />
-            Clear
-          </button>
-
-          <button
-            onClick={handleExport}
-            disabled={state.metrics.totalVulnerabilities === 0}
-            className="flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-blue-700 bg-blue-100 rounded hover:bg-blue-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Download className="w-4 h-4" />
-            Export
-          </button>
+          <span style={{ 
+            fontSize: '12px',
+            color: COLORS.text.secondary,
+            ...TYPOGRAPHY.caption 
+          }}>
+            {state.metrics.totalVulnerabilities} vulnerabilities
+          </span>
         </div>
-      </div>
+      )}
+    >
+      <Toolbar actions={toolbarActions} />
 
       {/* Severity Summary Bar */}
-      <div className="flex items-center gap-4 px-3 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center gap-2 text-sm">
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-red-500 rounded"></div>
-            <span className="text-gray-700 dark:text-gray-300">
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: SPACING.sm,
+        backgroundColor: COLORS.background.tertiary,
+        borderBottom: `1px solid ${COLORS.border.primary}`,
+        gap: SPACING.md,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.xs }}>
+            <div style={{ 
+              width: '12px', 
+              height: '12px', 
+              backgroundColor: COLORS.status.danger, 
+              borderRadius: RADIUS.sm 
+            }} />
+            <span style={{ ...TYPOGRAPHY.body.small, color: COLORS.text.primary }}>
               Critical: {getVulnerabilityCountBySeverity('critical')}
             </span>
           </div>
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-orange-500 rounded"></div>
-            <span className="text-gray-700 dark:text-gray-300">
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.xs }}>
+            <div style={{ 
+              width: '12px', 
+              height: '12px', 
+              backgroundColor: COLORS.status.warning, 
+              borderRadius: RADIUS.sm 
+            }} />
+            <span style={{ ...TYPOGRAPHY.body.small, color: COLORS.text.primary }}>
               High: {getVulnerabilityCountBySeverity('high')}
             </span>
           </div>
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-yellow-500 rounded"></div>
-            <span className="text-gray-700 dark:text-gray-300">
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.xs }}>
+            <div style={{ 
+              width: '12px', 
+              height: '12px', 
+              backgroundColor: '#f59e0b', 
+              borderRadius: RADIUS.sm 
+            }} />
+            <span style={{ ...TYPOGRAPHY.body.small, color: COLORS.text.primary }}>
               Medium: {getVulnerabilityCountBySeverity('medium')}
             </span>
           </div>
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 bg-green-500 rounded"></div>
-            <span className="text-gray-700 dark:text-gray-300">
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.xs }}>
+            <div style={{ 
+              width: '12px', 
+              height: '12px', 
+              backgroundColor: COLORS.status.success, 
+              borderRadius: RADIUS.sm 
+            }} />
+            <span style={{ ...TYPOGRAPHY.body.small, color: COLORS.text.primary }}>
               Low: {getVulnerabilityCountBySeverity('low')}
             </span>
           </div>
         </div>
 
-        <div className="ml-auto text-sm text-gray-600 dark:text-gray-400">
+        <div style={{ 
+          ...TYPOGRAPHY.body.small, 
+          color: COLORS.text.secondary 
+        }}>
           Security Score: {state.metrics.securityScore}/100
         </div>
       </div>
 
-      {/* Tab Navigation */}
-      <div className="flex border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-        {[
-          { key: 'dashboard', label: 'Dashboard' },
-          { key: 'vulnerabilities', label: 'Vulnerabilities' },
-          { key: 'scanners', label: 'Scanners' },
-          { key: 'reports', label: 'Reports' },
-          { key: 'settings', label: 'Settings' },
-        ].map(({ key, label }) => (
-          <button
-            key={key}
-            onClick={() => actions.selectTab(key as typeof state.ui.activeTab)}
-            className={clsx(
-              'flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors',
-              state.ui.activeTab === key
-                ? 'border-blue-500 text-blue-600 bg-blue-50 dark:bg-blue-900/20'
-                : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:border-gray-300'
-            )}
-          >
-            {getTabIcon(key)}
-            {label}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        activeTab={state.ui.activeTab}
+        onTabChange={(tabId) => actions.selectTab(tabId as typeof state.ui.activeTab)}
+        tabs={tabs}
+      >
+        <ScrollableContainer>
+          {state.ui.activeTab === 'dashboard' && <DashboardTab />}
+          {state.ui.activeTab === 'vulnerabilities' && <VulnerabilitiesTab />}
+          {state.ui.activeTab === 'scanners' && <ScannersTab />}
+          {state.ui.activeTab === 'reports' && <ReportsTab />}
+          {state.ui.activeTab === 'settings' && <SettingsTab />}
+        </ScrollableContainer>
+      </Tabs>
 
-      {/* Tab Content */}
-      <div className="flex-1 overflow-hidden">
-        {renderActiveTab()}
-      </div>
-    </div>
+      <Footer stats={footerStats} />
+    </PluginPanel>
   );
 }

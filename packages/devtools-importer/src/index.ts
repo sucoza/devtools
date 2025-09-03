@@ -1,7 +1,6 @@
 import type { Plugin, UserConfig } from "vite";
 import { devtools as tanstackDevtoolsVite } from "@tanstack/devtools-vite";
-import type { TanStackDevtoolsConfig } from "@tanstack/devtools";
-import type { ServerEventBusConfig } from "@tanstack/devtools-event-bus/server";
+import type { ClientEventBusConfig, TanStackDevtoolsConfig } from "@tanstack/devtools";
 import { findAvailablePort } from "./port";
 
 export type EnhancedLogs = { enabled: boolean };
@@ -21,7 +20,7 @@ export type TanstackDevtoolsImporterOptions = {
     /**
      * Server event bus config seed. The port will be injected automatically in dev.
      */
-    eventBusConfig?: Partial<ServerEventBusConfig>;
+    eventBusConfig?: Partial<Omit<ClientEventBusConfig, 'port'>>;
 
     /**
      * Optional enhanced logging toggle you want to pass through to your app.
@@ -79,7 +78,7 @@ export function tanstackDevtoolsImporter(opts: TanstackDevtoolsImporterOptions):
     const appConfig = {
         plugins,
         config,
-        eventBusConfig: { ...eventBusConfig } as Partial<ServerEventBusConfig>,
+        eventBusConfig: { ...eventBusConfig } as Partial<ClientEventBusConfig>,
         enhancedLogs,
     };
 

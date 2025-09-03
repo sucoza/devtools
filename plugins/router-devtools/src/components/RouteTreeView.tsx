@@ -3,6 +3,11 @@
  */
 
 import React, { useMemo } from 'react';
+import {
+  Badge,
+  EmptyState
+} from '@sucoza/shared-components';
+import { Route } from 'lucide-react';
 import { RouteTreeNode } from '../types/router';
 
 interface RouteTreeViewProps {
@@ -121,41 +126,19 @@ function RouteNode({
           
           {/* Active indicator */}
           {node.isActive && (
-            <span style={{ 
-              color: '#27ae60', 
-              fontSize: '9px', 
-              background: '#1e3a28', 
-              padding: '1px 4px', 
-              borderRadius: '2px' 
-            }}>
-              ACTIVE
-            </span>
+            <Badge variant="success" size="xs">ACTIVE</Badge>
           )}
           
           {/* Matched indicator */}
           {node.isMatched && !node.isActive && (
-            <span style={{ 
-              color: '#f39c12', 
-              fontSize: '9px', 
-              background: '#3c2415', 
-              padding: '1px 4px', 
-              borderRadius: '2px' 
-            }}>
-              MATCHED
-            </span>
+            <Badge variant="warning" size="xs">MATCHED</Badge>
           )}
           
           {/* Parameters count */}
           {node.params && Object.keys(node.params).length > 0 && (
-            <span style={{ 
-              color: '#3498db', 
-              fontSize: '9px',
-              background: '#1e293b',
-              padding: '1px 4px',
-              borderRadius: '2px'
-            }}>
-              {Object.keys(node.params).length} param{Object.keys(node.params).length > 1 ? 's' : ''}
-            </span>
+            <Badge variant="info" size="xs">
+              {`${Object.keys(node.params).length} param${Object.keys(node.params).length > 1 ? 's' : ''}`}
+            </Badge>
           )}
         </div>
         
@@ -256,7 +239,8 @@ export function RouteTreeView({
   onNavigate,
   currentLocation 
 }: RouteTreeViewProps) {
-  const currentPath = currentLocation?.pathname;
+  const currentPath = currentLocation?.pathname + (currentLocation?.search || '') + (currentLocation?.hash || '');
+  
   
   const stats = useMemo(() => {
     let totalNodes = 0;
@@ -280,17 +264,11 @@ export function RouteTreeView({
 
   if (nodes.length === 0) {
     return (
-      <div style={{ 
-        padding: '20px', 
-        textAlign: 'center', 
-        color: '#969696',
-        fontSize: '12px'
-      }}>
-        <div style={{ marginBottom: '8px' }}>No routes found</div>
-        <div style={{ fontSize: '11px' }}>
-          Make sure your router adapter is properly connected and routes are defined.
-        </div>
-      </div>
+      <EmptyState
+        icon={<Route size={48} />}
+        title="No routes found"
+        description="Make sure your router adapter is properly connected and routes are defined."
+      />
     );
   }
 

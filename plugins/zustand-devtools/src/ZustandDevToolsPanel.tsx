@@ -1,4 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { 
+  Toolbar, 
+  Tabs, 
+  TabPanel, 
+  TreeView, 
+  ScrollableContainer, 
+  Footer, 
+  SearchInput,
+  Badge,
+  StatusIndicator,
+  EmptyState
+} from '@sucoza/shared-components';
 import { zustandEventClient } from './zustandEventClient';
 import type { ZustandStoreState } from './zustandEventClient';
 
@@ -421,364 +433,304 @@ export function ZustandDevToolsPanel() {
     name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  return (
-    <div style={{ 
-      padding: '10px', 
-      fontFamily: '"SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, "Courier New", monospace', 
-      fontSize: '12px',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      background: '#1e1e1e',
-      color: '#d4d4d4'
-    }}>
-      <div style={{ marginBottom: '10px', borderBottom: '1px solid #3c3c3c', paddingBottom: '10px' }}>
-        <h3 style={{ margin: '0 0 10px 0', color: '#cccccc', fontSize: '14px', fontWeight: '600' }}>
-          🔍 Zustand Store Inspector
-        </h3>
-        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+  const toolbarActions = [
+    {
+      id: 'auto-refresh',
+      label: (
+        <label style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
           <input
-            type="text"
-            placeholder="Search stores..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              padding: '4px 8px',
-              borderRadius: '4px',
-              border: '1px solid #3c3c3c',
-              background: '#252526',
-              color: '#cccccc',
-              flex: 1
-            }}
+            type="checkbox"
+            checked={autoRefresh}
+            onChange={(e) => setAutoRefresh(e.target.checked)}
           />
-          <label style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#cccccc' }}>
-            <input
-              type="checkbox"
-              checked={autoRefresh}
-              onChange={(e) => setAutoRefresh(e.target.checked)}
-            />
-            Auto-refresh
-          </label>
-          <button
-            onClick={() => setActionHistory([])}
-            style={{
-              padding: '4px 8px',
-              borderRadius: '4px',
-              border: '1px solid #3c3c3c',
-              background: '#2d2d30',
-              color: '#cccccc',
-              cursor: 'pointer'
-            }}
-          >
-            Clear History
-          </button>
-        </div>
-      </div>
+          Auto-refresh
+        </label>
+      ),
+      tooltip: 'Toggle automatic refresh of store data',
+    },
+  ];
+
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Toolbar
+        title="🔍 Zustand Store Inspector"
+        showSearch={true}
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search stores..."
+        actions={toolbarActions}
+        showClear={true}
+        onClear={() => setActionHistory([])}
+        size="md"
+        variant="default"
+      />
 
       <div style={{ display: 'flex', gap: '10px', flex: 1, overflow: 'hidden' }}>
-        {/* Action History - Left Side */}
-        <div style={{ 
-          flex: '0 0 250px', 
-          borderRight: '1px solid #3c3c3c',
-          paddingRight: '10px',
-          overflowY: 'auto'
-        }}>
-          <h4 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '12px' }}>
-            Stores ({filteredStores.length})
-          </h4>
-          {filteredStores.map(([name, store]) => {
-            const storeHistory = actionHistory.filter(action => action.storeName === name);
-            const isCollapsed = collapsedStores.has(name);
-            
-            return (
-              <div key={name} style={{ marginBottom: '10px' }}>
-                <div 
-                  onClick={() => toggleStoreCollapse(name)}
-                  style={{ 
-                    fontWeight: '500', 
-                    color: '#4ec9b0', 
-                    marginBottom: '4px',
-                    padding: '4px 8px',
-                    background: '#2d2d30',
-                    borderRadius: '3px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <span>{isCollapsed ? '▸' : '▾'} {name}</span>
-                  <span style={{ fontSize: '10px', color: '#969696' }}>
-                    {storeHistory.length + 1} entries
-                  </span>
-                </div>
-                
-                {!isCollapsed && (
-                  <>
-                    {/* Current state entry */}
-                    <div
-                      onClick={() => {
-                        setSelectedStore(name);
-                        setSelectedHistoryIndex(null);
-                      }}
-                      style={{
-                        padding: '4px 8px',
-                        margin: '2px 0 2px 12px',
-                        borderRadius: '3px',
-                        background: selectedStore === name && selectedHistoryIndex === null ? '#094771' : '#252526',
-                        cursor: 'pointer',
-                        border: '1px solid',
-                        borderColor: selectedStore === name && selectedHistoryIndex === null ? '#007acc' : 'transparent',
-                        fontSize: '11px'
-                      }}
-                    >
-                      <div style={{ color: '#cccccc', fontWeight: '500' }}>Current</div>
-                      <div style={{ fontSize: '10px', color: '#969696' }}>
-                        {countProperties(store.state)} properties
-                      </div>
-                    </div>
-                    
-                    {/* History entries for this store */}
-                    {storeHistory
-                      .slice(0, 10)
-                      .map((action, index) => (
-                        <div
-                          key={`${action.timestamp}-${index}`}
-                          onClick={() => {
-                            setSelectedStore(name);
-                            setSelectedHistoryIndex(actionHistory.indexOf(action));
-                          }}
-                          style={{
-                            padding: '4px 8px',
-                            margin: '2px 0 2px 12px',
-                            borderRadius: '3px',
-                            background: selectedStore === name && selectedHistoryIndex === actionHistory.indexOf(action) ? '#094771' : '#252526',
-                            cursor: 'pointer',
-                            border: '1px solid',
-                            borderColor: selectedStore === name && selectedHistoryIndex === actionHistory.indexOf(action) ? '#007acc' : 'transparent',
-                            fontSize: '11px'
-                          }}
-                        >
-                          <div style={{ color: '#969696', fontSize: '10px' }}>
-                            {new Date(action.timestamp).toLocaleTimeString()}
-                          </div>
-                          <div style={{ fontSize: '10px', color: '#969696' }}>
-                            {countProperties(action.nextState)} properties
-                          </div>
+        {/* Store List - Left Side */}
+        <div style={{ flex: '0 0 250px', borderRight: '1px solid #3c3c3c' }}>
+          <div style={{ padding: '8px 10px', borderBottom: '1px solid #3c3c3c' }}>
+            <h4 style={{ margin: '0', color: '#9cdcfe', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              Stores 
+              <Badge variant="outline" size="sm">
+                {filteredStores.length}
+              </Badge>
+            </h4>
+          </div>
+          <ScrollableContainer style={{ height: '100%', padding: '10px' }} autoHideScrollbar={true}>
+            {filteredStores.map(([name, store]) => {
+              const storeHistory = actionHistory.filter(action => action.storeName === name);
+              const isCollapsed = collapsedStores.has(name);
+              
+              return (
+                <div key={name} style={{ marginBottom: '10px' }}>
+                  <div 
+                    onClick={() => toggleStoreCollapse(name)}
+                    style={{ 
+                      fontWeight: '500', 
+                      color: '#4ec9b0', 
+                      marginBottom: '4px',
+                      padding: '4px 8px',
+                      background: '#2d2d30',
+                      borderRadius: '3px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}
+                  >
+                    <span>{isCollapsed ? '▸' : '▾'} {name}</span>
+                    <Badge variant="outline" size="xs">
+                      {storeHistory.length + 1}
+                    </Badge>
+                  </div>
+                  
+                  {!isCollapsed && (
+                    <>
+                      {/* Current state entry */}
+                      <div
+                        onClick={() => {
+                          setSelectedStore(name);
+                          setSelectedHistoryIndex(null);
+                        }}
+                        style={{
+                          padding: '4px 8px',
+                          margin: '2px 0 2px 12px',
+                          borderRadius: '3px',
+                          background: selectedStore === name && selectedHistoryIndex === null ? '#094771' : '#252526',
+                          cursor: 'pointer',
+                          border: '1px solid',
+                          borderColor: selectedStore === name && selectedHistoryIndex === null ? '#007acc' : 'transparent',
+                          fontSize: '11px'
+                        }}
+                      >
+                        <div style={{ color: '#cccccc', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          Current
+                          <StatusIndicator 
+                            status="success" 
+                            size="xs" 
+                            label="Current"
+                          />
                         </div>
-                      ))}
-                  </>
-                )}
-              </div>
-            );
-          })}
+                        <div style={{ fontSize: '10px', color: '#969696' }}>
+                          {countProperties(store.state)} properties
+                        </div>
+                      </div>
+                      
+                      {/* History entries for this store */}
+                      {storeHistory
+                        .slice(0, 10)
+                        .map((action, index) => (
+                          <div
+                            key={`${action.timestamp}-${index}`}
+                            onClick={() => {
+                              setSelectedStore(name);
+                              setSelectedHistoryIndex(actionHistory.indexOf(action));
+                            }}
+                            style={{
+                              padding: '4px 8px',
+                              margin: '2px 0 2px 12px',
+                              borderRadius: '3px',
+                              background: selectedStore === name && selectedHistoryIndex === actionHistory.indexOf(action) ? '#094771' : '#252526',
+                              cursor: 'pointer',
+                              border: '1px solid',
+                              borderColor: selectedStore === name && selectedHistoryIndex === actionHistory.indexOf(action) ? '#007acc' : 'transparent',
+                              fontSize: '11px'
+                            }}
+                          >
+                            <div style={{ color: '#969696', fontSize: '10px' }}>
+                              {new Date(action.timestamp).toLocaleTimeString()}
+                            </div>
+                            <div style={{ fontSize: '10px', color: '#969696' }}>
+                              {countProperties(action.nextState)} properties
+                            </div>
+                          </div>
+                        ))}
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </ScrollableContainer>
         </div>
 
         {/* Right Panel with Tabs */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           {selectedStore && stores[selectedStore] ? (
             <>
-              {/* Tab Header */}
-              <div style={{ display: 'flex', borderBottom: '1px solid #3c3c3c', marginBottom: '10px' }}>
-                <button
-                  onClick={() => setActiveTab('state')}
-                  style={{
-                    padding: '6px 16px',
-                    background: activeTab === 'state' ? '#1e1e1e' : 'transparent',
-                    border: 'none',
-                    borderBottom: activeTab === 'state' ? '2px solid #007acc' : '2px solid transparent',
-                    color: activeTab === 'state' ? '#cccccc' : '#969696',
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                    fontWeight: '500'
-                  }}
-                >
-                  State
-                </button>
-                <button
-                  onClick={() => setActiveTab('diff')}
-                  style={{
-                    padding: '6px 16px',
-                    background: activeTab === 'diff' ? '#1e1e1e' : 'transparent',
-                    border: 'none',
-                    borderBottom: activeTab === 'diff' ? '2px solid #007acc' : '2px solid transparent',
-                    color: activeTab === 'diff' ? '#cccccc' : '#969696',
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                    fontWeight: '500'
-                  }}
-                >
-                  Diff
-                </button>
-                <div style={{ flex: 1 }} />
-                {/* Copy button */}
-                <button
-                  onClick={() => {
-                    const dataToShow = selectedHistoryIndex !== null 
-                      ? actionHistory[selectedHistoryIndex].nextState 
-                      : stores[selectedStore].state;
-                    copyToClipboard(dataToShow, selectedStore);
-                  }}
-                  style={{
-                    padding: '4px 12px',
-                    fontSize: '11px',
-                    border: '1px solid #3c3c3c',
-                    background: copySuccess === selectedStore ? '#1e5f1e' : '#2d2d30',
-                    color: copySuccess === selectedStore ? '#4ec9b0' : '#cccccc',
-                    cursor: 'pointer',
-                    borderRadius: '3px',
-                    margin: '2px 4px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}
-                >
-                  {copySuccess === selectedStore ? '✓ Copied!' : '📋 Copy'}
-                </button>
-                {activeTab === 'state' && (
-                  <button
-                    onClick={() => toggleStateExpansion(selectedStore)}
-                    style={{
-                      padding: '4px 12px',
-                      fontSize: '11px',
-                      border: '1px solid #3c3c3c',
-                      background: '#2d2d30',
-                      color: '#cccccc',
-                      cursor: 'pointer',
-                      borderRadius: '3px',
-                      margin: '2px 8px'
-                    }}
-                  >
-                    {expandedStates.has(selectedStore) ? 'JSON View' : 'Tree View'}
-                  </button>
-                )}
-              </div>
+              <Tabs
+                tabs={[
+                  { id: 'state', label: 'State' },
+                  { id: 'diff', label: 'Diff' }
+                ]}
+                activeTab={activeTab}
+                onTabChange={(tabId) => setActiveTab(tabId as 'state' | 'diff')}
+                variant="underline"
+                size="md"
+              />
 
-              {/* Tab Content */}
-              <div style={{ 
-                flex: 1, 
-                overflowY: 'auto',
-                background: '#252526',
-                padding: '12px',
-                borderRadius: '4px',
-                border: '1px solid #3c3c3c'
-              }}>
-                {activeTab === 'state' ? (
-                  // State Tab - Show current or selected historical state
-                  <>
-                    <h5 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '12px' }}>
-                      {selectedHistoryIndex !== null 
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px' }}>
+                  <div style={{ fontSize: '12px', color: '#9cdcfe' }}>
+                    {activeTab === 'state' ? (
+                      selectedHistoryIndex !== null 
                         ? `Historical State - ${new Date(actionHistory[selectedHistoryIndex].timestamp).toLocaleTimeString()}`
                         : 'Current State'
-                      }
-                    </h5>
-                    {expandedStates.has(selectedStore) 
-                      ? (
-                          <div style={{ fontSize: '12px' }}>
-                            <TreeNode 
-                              data={selectedHistoryIndex !== null 
-                                ? actionHistory[selectedHistoryIndex].nextState 
-                                : stores[selectedStore].state
-                              }
-                              path={selectedStore || 'root'}
-                            />
-                          </div>
-                        )
-                      : (
-                        <pre style={{ margin: 0, color: '#d4d4d4' }}>
-                          {JSON.stringify(
-                            selectedHistoryIndex !== null 
-                              ? actionHistory[selectedHistoryIndex].nextState 
-                              : stores[selectedStore].state, 
-                            null, 
-                            2
-                          )}
-                        </pre>
-                      )
-                    }
-                  </>
-                ) : (
-                  // Diff Tab - Show inline diff
-                  <>
-                    {(() => {
-                      // Get the diff data based on selection
-                      let prevState, nextState, timeLabel;
-                      
-                      if (selectedHistoryIndex !== null) {
-                        // Historical entry selected - show that diff
-                        prevState = actionHistory[selectedHistoryIndex].prevState;
-                        nextState = actionHistory[selectedHistoryIndex].nextState;
-                        timeLabel = `Changes at ${new Date(actionHistory[selectedHistoryIndex].timestamp).toLocaleTimeString()}`;
-                      } else {
-                        // Current selected - compare with last action for this store
-                        const storeHistory = actionHistory.filter(a => a.storeName === selectedStore);
-                        if (storeHistory.length > 0) {
-                          const lastAction = storeHistory[storeHistory.length - 1];
-                          prevState = lastAction.nextState;
-                          nextState = stores[selectedStore].state;
-                          timeLabel = 'Changes since last action';
+                    ) : (
+                      selectedHistoryIndex !== null 
+                        ? `Changes at ${new Date(actionHistory[selectedHistoryIndex].timestamp).toLocaleTimeString()}`
+                        : 'Changes since last action'
+                    )}
+                  </div>
+                  
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <button
+                      onClick={() => {
+                        const dataToShow = selectedHistoryIndex !== null 
+                          ? actionHistory[selectedHistoryIndex].nextState 
+                          : stores[selectedStore].state;
+                        copyToClipboard(dataToShow, selectedStore);
+                      }}
+                      style={{
+                        padding: '4px 8px',
+                        fontSize: '11px',
+                        border: '1px solid #3c3c3c',
+                        background: copySuccess === selectedStore ? '#1e5f1e' : '#2d2d30',
+                        color: copySuccess === selectedStore ? '#4ec9b0' : '#cccccc',
+                        cursor: 'pointer',
+                        borderRadius: '3px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      {copySuccess === selectedStore ? '✓ Copied!' : '📋 Copy'}
+                    </button>
+                    
+                    {activeTab === 'state' && (
+                      <button
+                        onClick={() => toggleStateExpansion(selectedStore)}
+                        style={{
+                          padding: '4px 8px',
+                          fontSize: '11px',
+                          border: '1px solid #3c3c3c',
+                          background: '#2d2d30',
+                          color: '#cccccc',
+                          cursor: 'pointer',
+                          borderRadius: '3px'
+                        }}
+                      >
+                        {expandedStates.has(selectedStore) ? 'JSON View' : 'Tree View'}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <ScrollableContainer
+                  style={{ height: '100%', flex: 1 }}
+                  autoHideScrollbar={true}
+                >
+                  {activeTab === 'state' ? (
+                    expandedStates.has(selectedStore) ? (
+                      <div style={{ fontSize: '12px' }}>
+                        <TreeNode 
+                          data={selectedHistoryIndex !== null 
+                            ? actionHistory[selectedHistoryIndex].nextState 
+                            : stores[selectedStore].state
+                          }
+                          path={selectedStore || 'root'}
+                        />
+                      </div>
+                    ) : (
+                      <pre style={{ margin: 0, color: '#d4d4d4' }}>
+                        {JSON.stringify(
+                          selectedHistoryIndex !== null 
+                            ? actionHistory[selectedHistoryIndex].nextState 
+                            : stores[selectedStore].state, 
+                          null, 
+                          2
+                        )}
+                      </pre>
+                    )
+                  ) : (
+                    <div>
+                      {(() => {
+                        // Get the diff data based on selection
+                        let prevState, nextState;
+                        
+                        if (selectedHistoryIndex !== null) {
+                          prevState = actionHistory[selectedHistoryIndex].prevState;
+                          nextState = actionHistory[selectedHistoryIndex].nextState;
                         } else {
-                          // No history - show initial state
-                          prevState = {};
-                          nextState = stores[selectedStore].state;
-                          timeLabel = 'Initial state';
+                          const storeHistory = actionHistory.filter(a => a.storeName === selectedStore);
+                          if (storeHistory.length > 0) {
+                            const lastAction = storeHistory[storeHistory.length - 1];
+                            prevState = lastAction.nextState;
+                            nextState = stores[selectedStore].state;
+                          } else {
+                            prevState = {};
+                            nextState = stores[selectedStore].state;
+                          }
                         }
-                      }
-                      
-                      return (
-                        <>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                            <h5 style={{ margin: 0, color: '#9cdcfe', fontSize: '12px' }}>
-                              {timeLabel}
-                            </h5>
-                            <div style={{ display: 'flex', gap: '8px' }}>
-                              <button
-                                onClick={() => copyToClipboard(prevState, `${selectedStore}-prev`)}
-                                style={{
-                                  padding: '2px 8px',
-                                  fontSize: '10px',
-                                  border: '1px solid #3c3c3c',
-                                  background: copySuccess === `${selectedStore}-prev` ? '#1e5f1e' : '#2d2d30',
-                                  color: copySuccess === `${selectedStore}-prev` ? '#4ec9b0' : '#cccccc',
-                                  cursor: 'pointer',
-                                  borderRadius: '2px'
-                                }}
-                              >
-                                {copySuccess === `${selectedStore}-prev` ? '✓ Prev' : 'Copy Prev'}
-                              </button>
-                              <button
-                                onClick={() => copyToClipboard(nextState, `${selectedStore}-next`)}
-                                style={{
-                                  padding: '2px 8px',
-                                  fontSize: '10px',
-                                  border: '1px solid #3c3c3c',
-                                  background: copySuccess === `${selectedStore}-next` ? '#1e5f1e' : '#2d2d30',
-                                  color: copySuccess === `${selectedStore}-next` ? '#4ec9b0' : '#cccccc',
-                                  cursor: 'pointer',
-                                  borderRadius: '2px'
-                                }}
-                              >
-                                {copySuccess === `${selectedStore}-next` ? '✓ Next' : 'Copy Next'}
-                              </button>
-                            </div>
-                          </div>
-                          <div>
-                            {renderDiff(prevState, nextState)}
-                          </div>
-                        </>
-                      );
-                    })()}
-                  </>
-                )}
+                        
+                        return renderDiff(prevState, nextState);
+                      })()}
+                    </div>
+                  )}
+                </ScrollableContainer>
               </div>
             </>
           ) : (
-            <div style={{ color: '#969696', textAlign: 'center', marginTop: '20px' }}>
-              Select a store to inspect
-            </div>
+            <EmptyState
+              title="No Store Selected"
+              description="Select a store from the left panel to inspect its state and history"
+              icon="📦"
+            />
           )}
         </div>
       </div>
+
+      <Footer
+        stats={[
+          {
+            id: 'store-count',
+            label: 'Stores',
+            value: filteredStores.length,
+            tooltip: `${filteredStores.length} stores found`
+          },
+          {
+            id: 'history-count',
+            label: 'History',
+            value: actionHistory.length,
+            tooltip: `${actionHistory.length} actions recorded`
+          }
+        ]}
+        status={{
+          type: autoRefresh ? 'connected' : 'disconnected',
+          message: autoRefresh ? 'Auto-refresh enabled' : 'Auto-refresh disabled'
+        }}
+        size="sm"
+        variant="compact"
+      />
     </div>
   );
 }

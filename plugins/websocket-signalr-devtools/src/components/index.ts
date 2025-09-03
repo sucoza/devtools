@@ -1,5 +1,5 @@
 export { WebSocketSignalRDevToolsPanel } from './WebSocketSignalRDevToolsPanel';
-export { TabNavigation } from './TabNavigation';
+// TabNavigation has been removed - using standardized Tabs component
 export { WebSocketPanel } from './WebSocketPanel';
 export { SignalRPanel } from './SignalRPanel';
 export { PerformancePanel } from './PerformancePanel';

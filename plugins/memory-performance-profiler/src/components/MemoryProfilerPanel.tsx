@@ -15,6 +15,19 @@ import {
   Activity,
   Zap
 } from 'lucide-react';
+import { 
+  Toolbar, 
+  Tabs, 
+  DataTable, 
+  ProgressBar, 
+  Footer, 
+  Alert,
+  Badge,
+  StatusIndicator,
+  EmptyState,
+  ScrollableContainer,
+  SearchInput
+} from '@sucoza/shared-components';
 import { useMemoryProfilerDevTools } from '../core/devtools-client';
 import type { ComponentMemoryInfo, MemoryLeak, MemoryOptimizationSuggestion } from '../types';
 
@@ -53,30 +66,105 @@ export function MemoryProfilerPanel() {
 
   if (!isSupported) {
     return (
-      <div className="memory-profiler-panel">
-        <div className="memory-profiler-unsupported">
-          <AlertTriangle className="icon-warning" />
-          <h3>Memory Profiler Not Supported</h3>
-          <p>This browser doesn&apos;t support the required APIs for memory profiling.</p>
-          <div className="support-info">
-            <h4>Required Features:</h4>
-            <ul>
-              <li className={supportInfo.memoryAPI ? 'supported' : 'not-supported'}>
-                {supportInfo.memoryAPI ? <CheckCircle /> : <XCircle />}
+      <div style={{ 
+        height: '100%', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        padding: '32px'
+      }}>
+        <div style={{
+          maxWidth: '500px',
+          textAlign: 'center',
+          padding: '32px',
+          background: '#f8f9fa',
+          borderRadius: '12px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <AlertTriangle size={48} style={{ 
+            color: '#ff9800',
+            marginBottom: '16px'
+          }} />
+          <h3 style={{
+            fontSize: '24px',
+            fontWeight: 600,
+            marginBottom: '12px',
+            color: '#1a1a1a'
+          }}>Memory Profiler Not Supported</h3>
+          <p style={{
+            fontSize: '14px',
+            color: '#666',
+            marginBottom: '24px'
+          }}>This browser doesn&apos;t support the required APIs for memory profiling.</p>
+          <div style={{
+            textAlign: 'left',
+            background: 'white',
+            borderRadius: '8px',
+            padding: '20px',
+            border: '1px solid #e0e0e0'
+          }}>
+            <h4 style={{
+              fontSize: '16px',
+              fontWeight: 600,
+              marginBottom: '16px',
+              color: '#333'
+            }}>Required Features:</h4>
+            <ul style={{
+              listStyle: 'none',
+              padding: 0,
+              margin: 0,
+              marginBottom: '20px'
+            }}>
+              <li style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 0',
+                fontSize: '14px',
+                color: supportInfo.memoryAPI ? '#4caf50' : '#f44336'
+              }}>
+                {supportInfo.memoryAPI ? <CheckCircle size={18} /> : <XCircle size={18} />}
                 Performance Memory API
               </li>
-              <li className={supportInfo.performanceObserver ? 'supported' : 'not-supported'}>
-                {supportInfo.performanceObserver ? <CheckCircle /> : <XCircle />}
+              <li style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 0',
+                fontSize: '14px',
+                color: supportInfo.performanceObserver ? '#4caf50' : '#f44336'
+              }}>
+                {supportInfo.performanceObserver ? <CheckCircle size={18} /> : <XCircle size={18} />}
                 Performance Observer API
               </li>
-              <li className={supportInfo.reactDevTools ? 'supported' : 'not-supported'}>
-                {supportInfo.reactDevTools ? <CheckCircle /> : <XCircle />}
+              <li style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 0',
+                fontSize: '14px',
+                color: supportInfo.reactDevTools ? '#4caf50' : '#666'
+              }}>
+                {supportInfo.reactDevTools ? <CheckCircle size={18} /> : <XCircle size={18} />}
                 React DevTools Hook (optional)
               </li>
             </ul>
-            <p className="help-text">
+            <p style={{
+              fontSize: '13px',
+              color: '#666',
+              background: '#f5f5f5',
+              padding: '12px',
+              borderRadius: '4px',
+              margin: 0
+            }}>
               For best results, use Chrome with: <br />
-              <code>--enable-precise-memory-info --js-flags=&quot;--expose-gc&quot;</code>
+              <code style={{
+                fontFamily: 'monospace',
+                fontSize: '12px',
+                background: '#e8e8e8',
+                padding: '2px 4px',
+                borderRadius: '3px'
+              }}>--enable-precise-memory-info --js-flags=&quot;--expose-gc&quot;</code>
             </p>
           </div>
         </div>
@@ -129,114 +217,151 @@ export function MemoryProfilerPanel() {
     URL.revokeObjectURL(url);
   };
 
+  const toolbarActions = [
+    {
+      id: 'start-stop',
+      icon: isRunning ? <Pause size={16} /> : <Play size={16} />,
+      label: isRunning ? 'Stop' : 'Start',
+      onClick: isRunning ? stop : () => start(),
+      variant: (isRunning ? 'danger' : 'primary') as 'primary' | 'default' | 'danger',
+      tooltip: isRunning ? 'Stop profiling' : 'Start profiling'
+    },
+    {
+      id: 'reset',
+      icon: <Square size={16} />,
+      onClick: reset,
+      tooltip: 'Reset profiler data'
+    },
+    {
+      id: 'force-gc',
+      icon: <Trash2 size={16} />,
+      label: 'GC',
+      onClick: forceGC,
+      tooltip: 'Force Garbage Collection'
+    },
+    {
+      id: 'export',
+      icon: <Download size={16} />,
+      onClick: handleExport,
+      tooltip: 'Export data'
+    }
+  ];
+
   return (
-    <div className="memory-profiler-panel">
-      {/* Header with controls */}
-      <div className="memory-profiler-header">
-        <div className="profiler-controls">
-          {isRunning ? (
-            <button onClick={stop} className="control-btn stop">
-              <Pause />
-              Stop
-            </button>
-          ) : (
-            <button onClick={() => start()} className="control-btn start">
-              <Play />
-              Start
-            </button>
-          )}
-          
-          <button onClick={reset} className="control-btn reset">
-            <Square />
-            Reset
-          </button>
-
-          <button onClick={forceGC} className="control-btn gc" title="Force Garbage Collection">
-            <Trash2 />
-            GC
-          </button>
-
-          <div className="snapshot-controls">
-            <input 
-              type="text" 
-              placeholder="Snapshot name..." 
-              value={snapshotName}
-              onChange={(e) => setSnapshotName(e.target.value)}
-              className="snapshot-input"
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Toolbar
+        title="Memory & Performance Profiler"
+        actions={toolbarActions}
+        size="md"
+        variant="default"
+        rightContent={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <input 
+                type="text" 
+                placeholder="Snapshot name..." 
+                value={snapshotName}
+                onChange={(e) => setSnapshotName(e.target.value)}
+                style={{
+                  padding: '4px 8px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  width: '150px'
+                }}
+              />
+              <button 
+                onClick={handleSnapshot}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  padding: '4px 8px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  background: 'white',
+                  cursor: 'pointer',
+                  fontSize: '12px'
+                }}
+              >
+                <Camera size={14} />
+                Snapshot
+              </button>
+            </div>
+            
+            <StatusIndicator
+              status={isRunning ? 'active' : 'inactive'}
+              label={isRunning ? 'Profiling' : 'Stopped'}
+              size="sm"
             />
-            <button onClick={handleSnapshot} className="control-btn snapshot">
-              <Camera />
-              Snapshot
-            </button>
-          </div>
-
-          <button onClick={handleExport} className="control-btn export">
-            <Download />
-            Export
-          </button>
-        </div>
-
-        <div className="memory-status">
-          <div className="status-indicator">
-            <Activity className={`status-icon ${isRunning ? 'running' : 'stopped'}`} />
-            <span>{isRunning ? 'Profiling' : 'Stopped'}</span>
-          </div>
-          
-          {currentMemory && (
-            <div className="memory-display">
-              <span className="memory-usage">
-                {formatBytes(currentMemory.heapUsed)} / {formatBytes(currentMemory.heapLimit)}
-              </span>
-              <div className="memory-bar">
-                <div 
-                  className="memory-bar-fill" 
-                  style={{ width: `${(currentMemory.heapUsed / currentMemory.heapLimit) * 100}%` }}
+            
+            {currentMemory && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px' }}>
+                <span>{formatBytes(currentMemory.heapUsed)} / {formatBytes(currentMemory.heapLimit)}</span>
+                <ProgressBar
+                  value={(currentMemory.heapUsed / currentMemory.heapLimit) * 100}
+                  size="sm"
+                  style={{ width: '80px' }}
                 />
               </div>
-            </div>
-          )}
-        </div>
-      </div>
+            )}
+          </div>
+        }
+      />
 
       {/* Alerts */}
       {alerts.length > 0 && (
-        <div className="memory-alerts">
+        <div style={{ padding: '8px' }}>
           {alerts.slice(0, 3).map(alert => (
-            <div key={alert.id} className={`alert alert-${alert.severity}`}>
-              <AlertTriangle />
-              <span>{alert.message}</span>
-              <button onClick={() => dismissAlert(alert.id)} className="alert-dismiss">
-                <XCircle />
-              </button>
-            </div>
+            <Alert
+              key={alert.id}
+              variant="default"
+              title={alert.message}
+              onDismiss={() => dismissAlert(alert.id)}
+              style={{ marginBottom: '4px' }}
+            />
           ))}
         </div>
       )}
 
-      {/* Tab Navigation */}
-      <div className="tab-navigation">
-        {[
-          { id: 'overview', label: 'Overview', count: null },
-          { id: 'components', label: 'Components', count: components.length },
-          { id: 'leaks', label: 'Leaks', count: leaks.length },
-          { id: 'suggestions', label: 'Suggestions', count: suggestions.length },
-          { id: 'timeline', label: 'Timeline', count: null }
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`tab ${activeTab === tab.id ? 'active' : ''}`}
-          >
-            {tab.label}
-            {tab.count !== null && tab.count > 0 && (
-              <span className="tab-badge">{tab.count}</span>
-            )}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        tabs={[
+          { 
+            id: 'overview', 
+            label: 'Overview',
+            content: null 
+          },
+          { 
+            id: 'components', 
+            label: 'Components',
+            badge: components.length > 0 ? <Badge variant="default" size="xs">{components.length}</Badge> : undefined
+          },
+          { 
+            id: 'leaks', 
+            label: 'Leaks',
+            badge: leaks.length > 0 ? <Badge variant="error" size="xs">{leaks.length}</Badge> : undefined
+          },
+          { 
+            id: 'suggestions', 
+            label: 'Suggestions',
+            badge: suggestions.length > 0 ? <Badge variant="warning" size="xs">{suggestions.length}</Badge> : undefined
+          },
+          { 
+            id: 'timeline', 
+            label: 'Timeline',
+            content: null 
+          }
+        ]}
+        activeTab={activeTab}
+        onTabChange={(tabId) => setActiveTab(tabId as any)}
+        variant="underline"
+        size="md"
+      />
 
-      {/* Tab Content */}
-      <div className="tab-content">
+      <ScrollableContainer
+        style={{ flex: 1 }}
+        autoHideScrollbar={true}
+      >
         {activeTab === 'overview' && (
           <OverviewTab 
             currentMemory={currentMemory}
@@ -262,7 +387,48 @@ export function MemoryProfilerPanel() {
         {activeTab === 'timeline' && (
           <TimelineTab timeline={timeline} />
         )}
-      </div>
+      </ScrollableContainer>
+
+      <Footer
+        stats={[
+          {
+            id: 'components',
+            label: 'Components',
+            value: components.length,
+            tooltip: `${components.length} components tracked`
+          },
+          {
+            id: 'memory-usage',
+            label: 'Memory',
+            value: currentMemory ? formatBytes(currentMemory.heapUsed) : 'N/A',
+            tooltip: currentMemory ? `${formatBytes(currentMemory.heapUsed)} / ${formatBytes(currentMemory.heapLimit)} used` : 'No memory data'
+          },
+          {
+            id: 'leaks',
+            label: 'Leaks',
+            value: leaks.length,
+            variant: leaks.length > 0 ? 'error' : 'default',
+            tooltip: `${leaks.length} memory leaks detected`
+          },
+          {
+            id: 'suggestions',
+            label: 'Suggestions',
+            value: suggestions.length,
+            variant: suggestions.length > 0 ? 'warning' : 'default',
+            tooltip: `${suggestions.length} optimization suggestions`
+          }
+        ]}
+        status={{
+          type: isRunning ? 'connected' : 'disconnected',
+          message: isRunning ? 'Profiling active' : 'Profiler stopped'
+        }}
+        metrics={currentMemory ? {
+          memory: (currentMemory.heapUsed / currentMemory.heapLimit) * 100,
+          ...(performance && { cpu: performance.memoryPressure === 'high' ? 70 : performance.memoryPressure === 'medium' ? 50 : 30 })
+        } : undefined}
+        size="sm"
+        variant="compact"
+      />
     </div>
   );
 }
@@ -365,71 +531,111 @@ function ComponentsTab({ components }: { components: ComponentMemoryInfo[] }) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const _getTrendIcon = (trend: string) => {
+  const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case 'up': return <TrendingUp className="trend-up" />;
-      case 'down': return <TrendingDown className="trend-down" />;
-      default: return <Minus className="trend-stable" />;
+      case 'up': return <TrendingUp size={16} style={{ color: '#f56565' }} />;
+      case 'down': return <TrendingDown size={16} style={{ color: '#38a169' }} />;
+      default: return <Minus size={16} style={{ color: '#718096' }} />;
     }
   };
 
   const sortedComponents = [...components].sort((a, b) => b.totalMemory - a.totalMemory);
 
-  return (
-    <div className="components-tab">
-      <div className="components-table">
-        <div className="table-header">
-          <span>Component</span>
-          <span>Instances</span>
-          <span>Total Memory</span>
-          <span>Avg/Instance</span>
-          <span>Trend</span>
-          <span>Status</span>
+  const columns = [
+    {
+      key: 'name',
+      header: 'Component',
+      flex: 2,
+      render: (component: ComponentMemoryInfo) => (
+        <span style={{ fontWeight: '500' }}>{component.name}</span>
+      )
+    },
+    {
+      key: 'instanceCount',
+      header: 'Instances',
+      width: 100,
+      align: 'center' as const,
+      render: (component: ComponentMemoryInfo) => (
+        <Badge variant="default" size="xs">{component.instanceCount}</Badge>
+      )
+    },
+    {
+      key: 'totalMemory',
+      header: 'Total Memory',
+      width: 120,
+      align: 'right' as const,
+      render: (component: ComponentMemoryInfo) => (
+        <span style={{ fontFamily: 'monospace' }}>{formatBytes(component.totalMemory)}</span>
+      )
+    },
+    {
+      key: 'averageMemoryPerInstance',
+      header: 'Avg/Instance',
+      width: 120,
+      align: 'right' as const,
+      render: (component: ComponentMemoryInfo) => (
+        <span style={{ fontFamily: 'monospace' }}>{formatBytes(component.averageMemoryPerInstance)}</span>
+      )
+    },
+    {
+      key: 'trend',
+      header: 'Trend',
+      width: 80,
+      align: 'center' as const,
+      render: (component: ComponentMemoryInfo) => getTrendIcon(component.trend)
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      width: 100,
+      render: (component: ComponentMemoryInfo) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          {component.suspiciousGrowth ? (
+            <>
+              <AlertTriangle size={16} style={{ color: '#f56565' }} />
+              <Badge variant="warning" size="xs">Growing</Badge>
+            </>
+          ) : (
+            <>
+              <CheckCircle size={16} style={{ color: '#38a169' }} />
+              <Badge variant="success" size="xs">Normal</Badge>
+            </>
+          )}
         </div>
-        
-        {sortedComponents.map((component, _index) => (
-          <div key={component.name} className="table-row">
-            <span className="component-name">{component.name}</span>
-            <span>{component.instanceCount}</span>
-            <span>{formatBytes(component.totalMemory)}</span>
-            <span>{formatBytes(component.averageMemoryPerInstance)}</span>
-            <span className="trend-cell">
-              {_getTrendIcon(component.trend)}
-            </span>
-            <span className={`status ${component.suspiciousGrowth ? 'warning' : 'normal'}`}>
-              {component.suspiciousGrowth ? (
-                <>
-                  <AlertTriangle />
-                  Growing
-                </>
-              ) : (
-                <>
-                  <CheckCircle />
-                  Normal
-                </>
-              )}
-            </span>
-          </div>
-        ))}
+      )
+    }
+  ];
 
-        {sortedComponents.length === 0 && (
-          <div className="empty-state">
-            <p>No component data available. Start profiling to see component memory usage.</p>
-          </div>
-        )}
-      </div>
-    </div>
+  if (sortedComponents.length === 0) {
+    return (
+      <EmptyState
+        title="No Component Data"
+        description="Start profiling to see component memory usage"
+        icon="🧩"
+      />
+    );
+  }
+
+  return (
+    <DataTable
+      data={sortedComponents}
+      columns={columns}
+      size="sm"
+      striped
+      hoverable
+      stickyHeader
+    />
   );
 }
 
 function LeaksTab({ leaks }: { leaks: MemoryLeak[] }) {
-  const _getSeverityColor = (severity: string) => {
+  const getSeverityVariant = (severity: string) => {
     switch (severity) {
-      case 'critical': return 'severity-critical';
-      case 'high': return 'severity-high';
-      case 'medium': return 'severity-medium';
-      case 'low': return 'severity-low';
-      default: return 'severity-info';
+      case 'critical': return 'error';
+      case 'high': return 'error';
+      case 'medium': return 'warning';
+      case 'low': return 'info';
+      default: return 'info';
     }
   };
 
@@ -438,52 +644,92 @@ function LeaksTab({ leaks }: { leaks: MemoryLeak[] }) {
     return (severityOrder as any)[b.severity] - (severityOrder as any)[a.severity];
   });
 
+  if (sortedLeaks.length === 0) {
+    return (
+      <EmptyState
+        title="No Memory Leaks Detected"
+        description="Great! No memory leaks have been detected in your application."
+        icon={<CheckCircle size={48} style={{ color: '#38a169' }} />}
+      />
+    );
+  }
+
   return (
-    <div className="leaks-tab">
-      {sortedLeaks.length > 0 ? (
-        <div className="leaks-list">
-          {sortedLeaks.map(leak => (
-            <div key={leak.id} className={`leak-card ${_getSeverityColor(leak.severity)}`}>
-              <div className="leak-header">
-                <div className="leak-title">
-                  <AlertTriangle />
-                  <span>{leak.component || 'Unknown Component'}</span>
-                  <span className="leak-type">{leak.type}</span>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      {sortedLeaks.map(leak => (
+        <div key={leak.id} style={{ 
+          border: '1px solid #e2e8f0', 
+          borderRadius: '8px', 
+          padding: '16px',
+          background: 'white'
+        }}>
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'flex-start',
+            marginBottom: '12px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertTriangle size={20} style={{ color: '#f56565' }} />
+              <div>
+                <div style={{ fontWeight: '600', fontSize: '14px' }}>
+                  {leak.component || 'Unknown Component'}
                 </div>
-                <span className={`severity-badge ${_getSeverityColor(leak.severity)}`}>
-                  {leak.severity}
-                </span>
+                <div style={{ fontSize: '12px', color: '#718096' }}>
+                  {leak.type}
+                </div>
               </div>
-              
-              <div className="leak-description">
-                {leak.description}
-              </div>
-
-              <div className="leak-details">
-                <span>Impact: ~{(leak.estimatedMemoryImpact / 1024).toFixed(1)} KB</span>
-                <span>Detected: {new Date(leak.detectedAt).toLocaleTimeString()}</span>
-              </div>
-
-              <div className="leak-recommendation">
-                <strong>Recommendation:</strong> {leak.recommendation}
-              </div>
-
-              {leak.autoFixAvailable && (
-                <button className="auto-fix-btn">
-                  <Zap />
-                  Auto Fix Available
-                </button>
-              )}
             </div>
-          ))}
+            <Badge variant={getSeverityVariant(leak.severity) as any} size="sm">
+              {leak.severity}
+            </Badge>
+          </div>
+          
+          <div style={{ marginBottom: '12px', fontSize: '14px', color: '#2d3748' }}>
+            {leak.description}
+          </div>
+
+          <div style={{ 
+            display: 'flex', 
+            gap: '16px', 
+            marginBottom: '12px',
+            fontSize: '12px',
+            color: '#718096'
+          }}>
+            <span>Impact: ~{(leak.estimatedMemoryImpact / 1024).toFixed(1)} KB</span>
+            <span>Detected: {new Date(leak.detectedAt).toLocaleTimeString()}</span>
+          </div>
+
+          <div style={{ 
+            padding: '12px',
+            background: '#f7fafc',
+            borderRadius: '6px',
+            marginBottom: '12px',
+            fontSize: '13px'
+          }}>
+            <strong>Recommendation:</strong> {leak.recommendation}
+          </div>
+
+          {leak.autoFixAvailable && (
+            <button style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 12px',
+              background: '#4299e1',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: '500'
+            }}>
+              <Zap size={14} />
+              Auto Fix Available
+            </button>
+          )}
         </div>
-      ) : (
-        <div className="empty-state">
-          <CheckCircle />
-          <h3>No Memory Leaks Detected</h3>
-          <p>Great! No memory leaks have been detected in your application.</p>
-        </div>
-      )}
+      ))}
     </div>
   );
 }

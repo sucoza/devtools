@@ -203,11 +203,32 @@ export function IssuesTab() {
             onResolve={handleResolveIssue}
           />
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-            <div className="text-center">
-              <AlertTriangle className="w-16 h-16 mx-auto mb-4 opacity-50" />
-              <p className="text-lg font-medium">Select an issue</p>
-              <p>Choose an issue from the list to view its details</p>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            color: COLORS.text.muted
+          }}>
+            <div style={{
+              textAlign: 'center'
+            }}>
+              <AlertTriangle style={{
+                width: '64px',
+                height: '64px',
+                margin: '0 auto',
+                marginBottom: SPACING.xl,
+                opacity: 0.5
+              }} />
+              <p style={{
+                fontSize: TYPOGRAPHY.fontSize.lg,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                margin: 0,
+                marginBottom: SPACING.sm
+              }}>Select an issue</p>
+              <p style={{
+                margin: 0
+              }}>Choose an issue from the list to view its details</p>
             </div>
           </div>
         )}
@@ -540,13 +561,29 @@ function IssueDetails({
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      <div style={{
+        flex: 1,
+        overflowY: 'auto',
+        padding: SPACING['5xl'],
+        display: 'flex',
+        flexDirection: 'column',
+        gap: SPACING['5xl']
+      }}>
         {/* Description */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+          <h3 style={{
+            fontSize: TYPOGRAPHY.fontSize.lg,
+            fontWeight: TYPOGRAPHY.fontWeight.semibold,
+            color: COLORS.text.heading,
+            margin: 0,
+            marginBottom: SPACING['2xl']
+          }}>
             Description
           </h3>
-          <p className="text-gray-700 dark:text-gray-300">
+          <p style={{
+            color: COLORS.text.secondary,
+            margin: 0
+          }}>
             {issue.description}
           </p>
         </div>
@@ -554,11 +591,25 @@ function IssueDetails({
         {/* Recommendation */}
         {issue.recommendation && (
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+            <h3 style={{
+              fontSize: TYPOGRAPHY.fontSize.lg,
+              fontWeight: TYPOGRAPHY.fontWeight.semibold,
+              color: COLORS.text.heading,
+              margin: 0,
+              marginBottom: SPACING['2xl']
+            }}>
               Recommendation
             </h3>
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-              <p className="text-blue-800 dark:text-blue-200">
+            <div style={{
+              padding: SPACING.xl,
+              backgroundColor: 'rgba(52, 152, 219, 0.1)',
+              borderRadius: RADIUS.lg,
+              border: `1px solid rgba(52, 152, 219, 0.2)`
+            }}>
+              <p style={{
+                color: COLORS.status.info,
+                margin: 0
+              }}>
                 {issue.recommendation}
               </p>
             </div>
@@ -568,14 +619,41 @@ function IssueDetails({
         {/* Occurrences */}
         {issue.occurrences && issue.occurrences.length > 0 && (
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+            <h3 style={{
+              fontSize: TYPOGRAPHY.fontSize.lg,
+              fontWeight: TYPOGRAPHY.fontWeight.semibold,
+              color: COLORS.text.heading,
+              margin: 0,
+              marginBottom: SPACING['2xl']
+            }}>
               Occurrences ({issue.occurrences.length})
             </h3>
-            <div className="space-y-3">
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: SPACING['2xl']
+            }}>
               {issue.occurrences.slice(0, 10).map((occurrence, index) => (
-                <div key={index} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center justify-between mb-2">
-                    <code className="text-sm font-mono text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-900 px-2 py-1 rounded">
+                <div key={index} style={{
+                  padding: SPACING.xl,
+                  backgroundColor: COLORS.background.tertiary,
+                  borderRadius: RADIUS.lg,
+                  border: `1px solid ${COLORS.border.primary}`
+                }}>
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: SPACING.lg
+                  }}>
+                    <code style={{
+                      fontSize: TYPOGRAPHY.fontSize.sm,
+                      fontFamily: TYPOGRAPHY.fontFamily.mono,
+                      color: COLORS.text.secondary,
+                      backgroundColor: COLORS.background.primary,
+                      padding: `${SPACING.xs} ${SPACING.lg}`,
+                      borderRadius: RADIUS.sm
+                    }}>
                       {occurrence.selector}
                     </code>
                     <button
@@ -590,20 +668,52 @@ function IssueDetails({
                           }, 2000);
                         }
                       }}
-                      className="flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-500"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        fontSize: TYPOGRAPHY.fontSize.sm,
+                        color: COLORS.status.info,
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        transition: 'color 0.15s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = COLORS.text.accent;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = COLORS.status.info;
+                      }}
                     >
-                      <ExternalLink className="w-4 h-4 mr-1" />
+                      <ExternalLink style={{
+                        width: '16px',
+                        height: '16px',
+                        marginRight: SPACING.sm
+                      }} />
                       Locate
                     </button>
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Current: <code className="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 px-2 py-1 rounded">
+                  <div style={{
+                    fontSize: TYPOGRAPHY.fontSize.sm,
+                    color: COLORS.text.secondary
+                  }}>
+                    Current: <code style={{
+                      backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                      color: COLORS.status.error,
+                      padding: `${SPACING.xs} ${SPACING.lg}`,
+                      borderRadius: RADIUS.sm
+                    }}>
                       {occurrence.actualValue}
                     </code>
                     {occurrence.expectedValue && (
                       <>
                         {' → Expected: '}
-                        <code className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 px-2 py-1 rounded">
+                        <code style={{
+                          backgroundColor: 'rgba(78, 201, 176, 0.1)',
+                          color: COLORS.status.success,
+                          padding: `${SPACING.xs} ${SPACING.lg}`,
+                          borderRadius: RADIUS.sm
+                        }}>
                           {occurrence.expectedValue}
                         </code>
                       </>
@@ -612,7 +722,11 @@ function IssueDetails({
                 </div>
               ))}
               {issue.occurrences.length > 10 && (
-                <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+                <div style={{
+                  textAlign: 'center',
+                  fontSize: TYPOGRAPHY.fontSize.sm,
+                  color: COLORS.text.secondary
+                }}>
                   +{issue.occurrences.length - 10} more occurrences
                 </div>
               )}

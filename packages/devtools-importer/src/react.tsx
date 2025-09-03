@@ -1,8 +1,12 @@
-import React, { useState, useCallback, lazy, Suspense, useEffect, useMemo, Component, ErrorInfo, ReactNode } from 'react';
+import React, { useState, lazy, Suspense, useEffect, useMemo, Component, ErrorInfo, ReactNode } from 'react';
+
+import { logger } from '@sucoza/logger';
 
 // Import the virtual modules provided by the Vite plugin
 import { pluginLoaders } from 'virtual:tdi/plugins';
 import { devtoolsConfig } from 'virtual:tdi/config';
+
+const devToolsLogger = logger.child({ category: 'DevToolsManager' })
 
 // Simple error boundary for each plugin
 class PluginErrorBoundary extends Component<
@@ -19,7 +23,7 @@ class PluginErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error(`[Plugin Error] ${this.props.pluginName}:`, error, errorInfo);
+    logger.error(`${this.props.pluginName}:`, [error, errorInfo], { category: 'Plugin Error' });
   }
 
   render() {
@@ -68,12 +72,12 @@ export interface DevToolsManagerProps {
    * Custom className for the DevTools container
    */
   className?: string;
-  
+
   /**
    * Error handler for plugin loading errors
    */
   onError?: (error: Error) => void;
-  
+
   /**
    * Callback when a plugin is loaded
    */
@@ -88,10 +92,10 @@ const createLazyDevTools = (
 ) => {
   return lazy(async () => {
     try {
-      console.log('[DevToolsManager] Loading TanStack DevTools...');
-      console.log('[DevToolsManager] Config:', devtoolsConfig);
-      console.log('[DevToolsManager] Plugin loaders:', pluginLoaders);
-      
+      devToolsLogger.info('Loading TanStack DevTools...');
+      devToolsLogger.info('Config:', devtoolsConfig);
+      devToolsLogger.info('Plugin loaders:', pluginLoaders);
+
       const { TanStackDevtools } = await import('@tanstack/react-devtools');
 
       const configuredIds: string[] = Array.isArray(devtoolsConfig.plugins)
@@ -111,18 +115,18 @@ const createLazyDevTools = (
             }
             return null;
           }
-          
+
           try {
             const module = await loader();
-            console.log(`[DevToolsManager] Loaded module for ${id}:`, module);
-            console.log(`[DevToolsManager] Module type:`, typeof module);
-            console.log(`[DevToolsManager] Module has default:`, 'default' in module, module.default);
-            console.log(`[DevToolsManager] Module keys:`, Object.keys(module));
-            console.log(`[DevToolsManager] Module own property names:`, Object.getOwnPropertyNames(module));
-            
+            devToolsLogger.info(`Loaded module for ${id}:`, module);
+            devToolsLogger.info(`Module type:`, typeof module);
+            devToolsLogger.info(`Module has default:`, 'default' in module, module.default);
+            devToolsLogger.info(`Module keys:`, Object.keys(module));
+            devToolsLogger.info(`Module own property names:`, Object.getOwnPropertyNames(module));
+
             // Try to get the component - check for default export first
             let PluginComponent = module.default;
-            
+
             // If no default export, try other common export patterns
             if (!PluginComponent) {
               // Check for specific named exports based on plugin name
@@ -134,30 +138,30 @@ const createLazyDevTools = (
                 const alternativeExportName = pluginName.split('-')
                   .map(part => part.charAt(0).toUpperCase() + part.slice(1))
                   .join('') + 'DevToolsPanel';
-                
-                PluginComponent = module[expectedExportName] || module[alternativeExportName] || 
-                                module.Plugin || module.Devtools || module.Panel;
+
+                PluginComponent = module[expectedExportName] || module[alternativeExportName] ||
+                  module.Plugin || module.Devtools || module.Panel;
               }
             }
-            
+
             // If still no component and module is a function, use it directly
             if (!PluginComponent && typeof module === 'function') {
               PluginComponent = module;
             }
-            
+
             // Validate that we have a valid component
-            if (!PluginComponent || (typeof PluginComponent !== 'function' && 
-                (typeof PluginComponent !== 'object' || !PluginComponent.$$typeof))) {
-              console.error(`[DevToolsManager] Invalid plugin component for ${id}:`, PluginComponent);
-              console.error(`[DevToolsManager] Module exports:`, Object.keys(module));
+            if (!PluginComponent || (typeof PluginComponent !== 'function' &&
+              (typeof PluginComponent !== 'object' || !PluginComponent.$$typeof))) {
+              devToolsLogger.error(`Invalid plugin component for ${id}:`, PluginComponent);
+              devToolsLogger.error(`Module exports:`, Object.keys(module));
               throw new Error(`Plugin ${id} does not export a valid React component`);
             }
-            
+
             onPluginLoad?.(id);
-            
+
             // Wrap the plugin component with an error boundary
             const pluginName = id.replace(/.*\//, '').replace(/-devtools-plugin$/, '');
-            
+
             // Convert the component to the expected plugin format
             // TanStack expects either a component or a render function that returns an element
             return {
@@ -171,7 +175,7 @@ const createLazyDevTools = (
           } catch (error) {
             onError?.(error as Error);
             if (import.meta.env.DEV) {
-              console.error(`[DevToolsManager] Failed to load plugin "${id}":`, error);
+              devToolsLogger.error(`Failed to load plugin "${id}":`, error);
             }
             return null;
           }
@@ -190,10 +194,10 @@ const createLazyDevTools = (
         </div>
       );
 
-      console.log('[DevToolsManager] Successfully created DevTools component with', validPlugins.length, 'plugins');
+      devToolsLogger.info(`Successfully created DevTools component with ${validPlugins.length} plugins`);
       return { default: DevtoolsWithConfig };
     } catch (error) {
-      console.error('[DevToolsManager] Failed to load DevTools:', error);
+      devToolsLogger.error('Failed to load DevTools:', error);
       throw error;
     }
   });
@@ -211,9 +215,9 @@ export const DevToolsManager: React.FC<DevToolsManagerProps> = ({
   const [loadError, setLoadError] = useState<Error | null>(null);
 
   useEffect(() => {
-    console.log('[DevToolsManager] Component mounted');
-    console.log('[DevToolsManager] devtoolsConfig:', devtoolsConfig);
-    console.log('[DevToolsManager] pluginLoaders:', pluginLoaders);
+    devToolsLogger.info('Component mounted');
+    devToolsLogger.info('devtoolsConfig:', devtoolsConfig);
+    devToolsLogger.info('pluginLoaders:', pluginLoaders);
   }, []);
 
   // Memoize the lazy component to prevent recreation
@@ -226,14 +230,14 @@ export const DevToolsManager: React.FC<DevToolsManagerProps> = ({
 
   // Only render when enabled
   if (!devtoolsConfig?.enabled) {
-    console.log('[DevToolsManager] DevTools disabled, not rendering');
+    devToolsLogger.info('DevTools disabled, not rendering');
     return null;
   }
 
   // Show error if loading failed
   if (loadError) {
     return (
-      <div style={{ 
+      <div style={{
         position: 'fixed',
         bottom: '20px',
         right: '20px',
@@ -250,9 +254,9 @@ export const DevToolsManager: React.FC<DevToolsManagerProps> = ({
   }
 
   return (
-    <Suspense 
+    <Suspense
       fallback={
-        <div style={{ 
+        <div style={{
           position: 'fixed',
           bottom: '20px',
           right: '20px',

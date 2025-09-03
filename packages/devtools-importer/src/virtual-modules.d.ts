@@ -4,13 +4,12 @@ declare module 'virtual:tdi/plugins' {
 }
 
 declare module 'virtual:tdi/config' {
-  import type { TanStackDevtoolsConfig } from '@tanstack/devtools';
-  import type { ServerEventBusConfig } from '@tanstack/devtools-event-bus/server';
+  import type { ClientEventBusConfig, TanStackDevtoolsConfig } from '@tanstack/devtools';
 
   export const devtoolsConfig: {
     plugins: string[];
     config?: Partial<TanStackDevtoolsConfig>;
-    eventBusConfig?: Partial<ServerEventBusConfig>;
+    eventBusConfig?: Partial<ClientEventBusConfig>;
     enhancedLogs?: { enabled: boolean };
     enabled: boolean;
   };

@@ -310,57 +310,59 @@ function AppContent() {
   }, [connectWebSocket, disconnectWebSocket])
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1400px', margin: '0 auto' }}>
-      <h1>🚀 TanStack DevTools Playground</h1>
-      <p>A comprehensive demo of all DevTools plugins. Press <kbd>Ctrl+Shift+Alt+D</kbd> to open DevTools.</p>
+    <div style={{ padding: '2rem', maxWidth: '1400px', margin: '0 auto', color: 'var(--text-primary)' }}>
+      <h1 style={{ color: 'var(--text-primary)', textAlign: 'center' }}>🚀 Sucoza DevTools Playground</h1>
+      <p style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
+        A comprehensive demo of all DevTools plugins. Press <kbd style={{ padding: '0.2rem 0.4rem', background: 'var(--bg-accent)', borderRadius: '3px', border: '1px solid var(--border-color)' }}>Ctrl+Shift+Alt+D</kbd> to open DevTools.
+      </p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '20px', marginTop: '20px' }}>
+      <div className="grid-layout">
 
         {/* Zustand Store Demo */}
-        <section style={{ padding: '20px', background: '#f9f9f9', borderRadius: '8px' }}>
+        <section className="section" style={{ padding: '1.5rem' }}>
           <h2>🏪 Zustand Store</h2>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+          <div className="button-group" style={{ marginBottom: '1rem' }}>
             <button onClick={store.increment}>Increment ({store.count})</button>
             <button onClick={store.decrement}>Decrement</button>
             <button onClick={() => store.setTheme(store.theme === 'light' ? 'dark' : 'light')}>
               Toggle Theme ({store.theme})
             </button>
           </div>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+          <div className="button-group" style={{ marginBottom: '1rem' }}>
             <button onClick={() => store.setUser({ name: 'John Doe', email: 'john@example.com' })}>
               Set User
             </button>
             <button onClick={() => store.setUser(null)}>Clear User</button>
           </div>
           {store.user && (
-            <div style={{ padding: '10px', background: '#e0e0e0', borderRadius: '4px' }}>
+            <div className="code-block">
               User: {store.user.name} ({store.user.email})
             </div>
           )}
-          <div style={{ marginTop: '10px' }}>
+          <div className="button-group" style={{ marginTop: '1rem' }}>
             <button onClick={() => store.addNotification(`Notification ${Date.now()}`)}>
               Add Notification ({store.notifications.length})
             </button>
-            <button onClick={store.clearNotifications} style={{ marginLeft: '10px' }}>
+            <button onClick={store.clearNotifications}>
               Clear All
             </button>
           </div>
         </section>
 
         {/* Router Demo */}
-        <section style={{ padding: '20px', background: '#f9f9f9', borderRadius: '8px' }}>
+        <section className="section" style={{ padding: '1.5rem' }}>
           <h2>🧭 Router Navigation</h2>
-          <nav style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+          <nav className="button-group" style={{ marginBottom: '1rem' }}>
             <Link to="/">Home</Link>
             <Link to="/dashboard">Dashboard</Link>
             <Link to="/settings">Settings</Link>
           </nav>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+          <div className="button-group" style={{ marginBottom: '1rem' }}>
             <button onClick={() => navigate('/')}>Go Home</button>
             <button onClick={() => navigate('/dashboard')}>Go Dashboard</button>
             <button onClick={() => navigate(-1)}>Go Back</button>
           </div>
-          <div style={{ padding: '10px', background: 'white', borderRadius: '4px', minHeight: '100px' }}>
+          <div className="code-block" style={{ minHeight: '100px', background: 'var(--bg-secondary)' }}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/dashboard" element={<Dashboard />} />
@@ -390,17 +392,17 @@ function AppContent() {
               Send Message
             </button>
           </div>
-          <div style={{ maxHeight: '150px', overflow: 'auto', background: 'white', padding: '10px', borderRadius: '4px' }}>
+          <div className="code-block" style={{ maxHeight: '150px', overflow: 'auto' }}>
             {wsMessages.map((msg, i) => (
-              <div key={i} style={{ fontSize: '12px', marginBottom: '4px' }}>{msg}</div>
+              <div key={i} style={{ fontSize: '0.875rem', marginBottom: '0.25rem', color: 'var(--text-secondary)' }}>{msg}</div>
             ))}
           </div>
         </section>
 
         {/* Error Boundary Demo */}
-        <section style={{ padding: '20px', background: '#f9f9f9', borderRadius: '8px' }}>
+        <section className="section" style={{ padding: '1.5rem' }}>
           <h2>⚠️ Error Boundary</h2>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+          <div className="button-group" style={{ marginBottom: '1rem' }}>
             <button onClick={() => setShouldError(!shouldError)}>
               {shouldError ? 'Disable' : 'Trigger'} Error
             </button>
@@ -417,9 +419,9 @@ function AppContent() {
         </section>
 
         {/* Performance Demo */}
-        <section style={{ padding: '20px', background: '#f9f9f9', borderRadius: '8px' }}>
+        <section className="section" style={{ padding: '1.5rem' }}>
           <h2>📊 Performance</h2>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+          <div className="button-group" style={{ marginBottom: '1rem' }}>
             <button onClick={() => setRenderCount(c => c + 1)}>
               Force Render ({renderCount})
             </button>
@@ -436,9 +438,9 @@ function AppContent() {
         </section>
 
         {/* Logger Demo */}
-        <section style={{ padding: '20px', background: '#f9f9f9', borderRadius: '8px' }}>
+        <section className="section" style={{ padding: '1.5rem' }}>
           <h2>📝 Logger</h2>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <div className="button-group">
             <button onClick={() => console.log('Log message', { data: 'test' })}>
               Log
             </button>
@@ -468,9 +470,9 @@ function AppContent() {
         </section>
 
         {/* API Demo */}
-        <section style={{ padding: '20px', background: '#f9f9f9', borderRadius: '8px' }}>
+        <section className="section" style={{ padding: '1.5rem' }}>
           <h2>🌐 API Calls</h2>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
+          <div className="button-group" style={{ marginBottom: '1rem' }}>
             <button onClick={fetchData} disabled={loading}>
               {loading ? 'Loading...' : 'Fetch Posts'}
             </button>
@@ -491,17 +493,17 @@ function AppContent() {
               POST Data
             </button>
           </div>
-          <div style={{ maxHeight: '150px', overflow: 'auto', background: 'white', padding: '10px', borderRadius: '4px' }}>
+          <div className="code-block" style={{ maxHeight: '150px', overflow: 'auto' }}>
             {apiData.slice(0, 3).map((post: any) => (
-              <div key={post.id} style={{ marginBottom: '8px' }}>
-                <strong>{post.title}</strong>
+              <div key={post.id} style={{ marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>
+                <strong style={{ color: 'var(--text-primary)' }}>{post.title}</strong>
               </div>
             ))}
           </div>
         </section>
 
         {/* Accessibility Demo */}
-        <section style={{ padding: '20px', background: '#f9f9f9', borderRadius: '8px' }}>
+        <section className="section" style={{ padding: '1.5rem' }}>
           <h2>♿ Accessibility</h2>
           <form>
             <label style={{ display: 'block', marginBottom: '10px' }}>
@@ -518,7 +520,7 @@ function AppContent() {
             </div>
           </form>
           <div
-            style={{ marginTop: '10px', padding: '5px', background: '#333', color: '#555' }}
+            style={{ marginTop: '1rem', padding: '0.5rem', background: '#333', color: '#555', borderRadius: '4px' }}
           >
             Low contrast text (accessibility issue)
           </div>
@@ -527,15 +529,15 @@ function AppContent() {
         </section>
 
         {/* Design System Demo */}
-        <section style={{ padding: '20px', background: '#f9f9f9', borderRadius: '8px' }}>
+        <section className="section" style={{ padding: '1.5rem' }}>
           <h2>🎨 Design System</h2>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '10px' }}>
+          <div className="button-group" style={{ marginBottom: '1rem' }}>
             <div style={{ width: '50px', height: '50px', background: '#007bff' }}></div>
             <div style={{ width: '50px', height: '50px', background: '#28a745' }}></div>
             <div style={{ width: '50px', height: '50px', background: '#dc3545' }}></div>
             <div style={{ width: '50px', height: '50px', background: '#ffc107' }}></div>
           </div>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <div className="button-group">
             <button style={{ padding: '8px 16px', fontSize: '14px' }}>14px Button</button>
             <button style={{ padding: '8px 16px', fontSize: '16px' }}>16px Button</button>
             <button style={{ padding: '8px 16px', fontSize: '18px' }}>18px Button</button>
@@ -549,18 +551,18 @@ function AppContent() {
 
       </div>
 
-      <div style={{ marginTop: '30px', padding: '20px', background: '#e8f4fd', borderRadius: '8px' }}>
-        <h2>📚 Plugin Guide</h2>
-        <ul>
-          <li><strong>Logger:</strong> Click the logger buttons to see console output tracking</li>
-          <li><strong>Zustand:</strong> Interact with the store to see state changes</li>
-          <li><strong>Router:</strong> Navigate between routes to see routing history</li>
-          <li><strong>WebSocket/SignalR:</strong> Connect and send messages to track real-time connections</li>
-          <li><strong>Error Boundary:</strong> Trigger errors to see error tracking and boundaries</li>
-          <li><strong>Memory Performance:</strong> Run memory tests to see performance metrics</li>
-          <li><strong>Render Waste:</strong> Force renders to detect unnecessary re-renders</li>
-          <li><strong>Accessibility:</strong> The form has intentional accessibility issues to detect</li>
-          <li><strong>Design System:</strong> Shows color palette and typography analysis</li>
+      <div className="section" style={{ marginTop: '2rem', padding: '2rem', background: 'linear-gradient(135deg, var(--bg-accent) 0%, var(--bg-secondary) 100%)' }}>
+        <h2 style={{ color: 'var(--text-primary)', marginBottom: '1.5rem' }}>📚 Plugin Guide</h2>
+        <ul style={{ color: 'var(--text-secondary)', lineHeight: '1.6', paddingLeft: '1.5rem' }}>
+          <li style={{ marginBottom: '0.5rem' }}><strong style={{ color: 'var(--text-primary)' }}>Logger:</strong> Click the logger buttons to see console output tracking</li>
+          <li style={{ marginBottom: '0.5rem' }}><strong style={{ color: 'var(--text-primary)' }}>Zustand:</strong> Interact with the store to see state changes</li>
+          <li style={{ marginBottom: '0.5rem' }}><strong style={{ color: 'var(--text-primary)' }}>Router:</strong> Navigate between routes to see routing history</li>
+          <li style={{ marginBottom: '0.5rem' }}><strong style={{ color: 'var(--text-primary)' }}>WebSocket/SignalR:</strong> Connect and send messages to track real-time connections</li>
+          <li style={{ marginBottom: '0.5rem' }}><strong style={{ color: 'var(--text-primary)' }}>Error Boundary:</strong> Trigger errors to see error tracking and boundaries</li>
+          <li style={{ marginBottom: '0.5rem' }}><strong style={{ color: 'var(--text-primary)' }}>Memory Performance:</strong> Run memory tests to see performance metrics</li>
+          <li style={{ marginBottom: '0.5rem' }}><strong style={{ color: 'var(--text-primary)' }}>Render Waste:</strong> Force renders to detect unnecessary re-renders</li>
+          <li style={{ marginBottom: '0.5rem' }}><strong style={{ color: 'var(--text-primary)' }}>Accessibility:</strong> The form has intentional accessibility issues to detect</li>
+          <li style={{ marginBottom: '0.5rem' }}><strong style={{ color: 'var(--text-primary)' }}>Design System:</strong> Shows color palette and typography analysis</li>
         </ul>
       </div>
     </div>
@@ -585,7 +587,7 @@ function App() {
         </div>
       )}
       onError={(error, errorInfo) => {
-        logger.error('Playground Error', error, { errorInfo });
+        logger.error('Playground Error', { error: error.message, stack: error.stack, errorInfo });
       }}
     >
       <BrowserRouter>

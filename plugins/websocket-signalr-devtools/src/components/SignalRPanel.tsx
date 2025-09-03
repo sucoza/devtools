@@ -117,25 +117,28 @@ export function SignalRPanel() {
             justify-content: center;
             height: 100%;
             text-align: center;
-            color: var(--devtools-color);
-            opacity: 0.6;
+            color: var(--devtools-text-secondary);
+            padding: 2rem;
           }
 
           .empty-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
+            font-size: 64px;
+            margin-bottom: 1.5rem;
+            opacity: 0.6;
           }
 
           .empty-title {
-            font-size: 18px;
+            font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 0.75rem;
+            color: var(--devtools-color);
           }
 
           .empty-description {
-            font-size: 14px;
-            max-width: 300px;
-            line-height: 1.4;
+            font-size: 0.875rem;
+            max-width: 320px;
+            line-height: 1.6;
+            color: var(--devtools-text-muted);
           }
         `}</style>
       </div>
@@ -207,20 +210,25 @@ export function SignalRPanel() {
           flex: 1;
           display: flex;
           overflow: hidden;
+          gap: 1px;
+          background: var(--devtools-border);
         }
 
         .connections-section {
-          width: 300px;
-          border-right: 1px solid var(--devtools-border);
+          width: 320px;
+          background: var(--devtools-bg);
           display: flex;
           flex-direction: column;
+          border-radius: 6px 0 0 6px;
         }
 
         .main-content {
           flex: 1;
+          background: var(--devtools-bg);
           display: flex;
           flex-direction: column;
           overflow: hidden;
+          border-radius: 0 6px 6px 0;
         }
 
         .messages-section {
@@ -236,19 +244,27 @@ export function SignalRPanel() {
           display: flex;
           flex-direction: column;
           min-height: 200px;
+          margin-top: 1px;
+          background: var(--devtools-bg);
         }
 
         .section-header {
-          padding: 12px 16px;
-          border-bottom: 1px solid var(--devtools-border);
+          padding: 1rem 1.25rem;
           background: var(--devtools-panel-bg);
+          border-bottom: 1px solid var(--devtools-border);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
         }
 
         .section-header h3 {
           margin: 0;
-          font-size: 14px;
+          font-size: 0.875rem;
           font-weight: 600;
           color: var(--devtools-color);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
         }
       `}</style>
     </div>

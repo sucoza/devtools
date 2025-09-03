@@ -84,3 +84,6 @@ export type { ToolbarProps, ToolbarAction, ToolbarGroup } from './Toolbar';
 
 export { Footer } from './Footer';
 export type { FooterProps, FooterStat, FooterAction } from './Footer';
+
+export { ConfigMenu } from './ConfigMenu';
+export type { ConfigMenuProps, ConfigMenuItem } from './ConfigMenu';

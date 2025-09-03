@@ -1,4 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import { Flame, Play, Settings, History } from 'lucide-react'
+import {
+  PluginPanel,
+  ScrollableContainer,
+  Tabs,
+  Badge,
+  StatusIndicator,
+  Footer,
+  COLORS,
+  SPACING,
+  TYPOGRAPHY,
+} from '@sucoza/shared-components'
 import { TestRunner } from './TestRunner'
 import { MetricsDisplay } from './MetricsDisplay'
 import { ConfigEditor } from './ConfigEditor'
@@ -128,77 +140,116 @@ export const StressTestPanel: React.FC = () => {
   const isRunning = testRunner !== null
   const activeMetrics = state.activeTestId ? state.metrics[state.activeTestId] : null
 
+  // Tab configuration
+  const tabs = [
+    { id: 'runner', label: 'Test Runner', icon: Play },
+    { id: 'config', label: 'Configuration', icon: Settings },
+    { id: 'history', label: 'History', icon: History, badge: state.testRuns.length },
+  ];
+
+  // Footer stats
+  const footerStats = [
+    { label: 'Configs', value: state.configs.length.toString() },
+    { label: 'Test Runs', value: state.testRuns.length.toString() },
+  ];
+
+  if (state.activeTestId && activeMetrics) {
+    footerStats.push(
+      { label: 'Requests', value: activeMetrics.totalRequests.toString() },
+      { label: 'Success Rate', value: `${(activeMetrics.successRate * 100).toFixed(1)}%` },
+      { label: 'Avg Response Time', value: `${activeMetrics.avgResponseTime.toFixed(1)}ms` },
+    );
+  }
+
   return (
-    <div className="stress-test-panel">
-      <div className="panel-header">
-        <h2>🔥 Stress Testing</h2>
-        <div className="panel-tabs">
-          <button
-            className={`panel-tab ${activeTab === 'runner' ? 'active' : ''}`}
-            onClick={() => setActiveTab('runner')}
-          >
-            Test Runner
-          </button>
-          <button
-            className={`panel-tab ${activeTab === 'config' ? 'active' : ''}`}
-            onClick={() => setActiveTab('config')}
-          >
-            Configuration
-          </button>
-          <button
-            className={`panel-tab ${activeTab === 'history' ? 'active' : ''}`}
-            onClick={() => setActiveTab('history')}
-          >
-            History ({state.testRuns.length})
-          </button>
-        </div>
-      </div>
+    <PluginPanel
+      title="Stress Testing"
+      icon={Flame}
+      headerContent={(
+        state.activeTestId && isRunning && (
+          <StatusIndicator
+            status="loading"
+            label="Running"
+            size="sm"
+          />
+        )
+      )}
+    >
+      <Tabs
+        activeTab={activeTab}
+        onTabChange={(tabId) => setActiveTab(tabId as 'runner' | 'config' | 'history')}
+        tabs={tabs}
+      >
+        <ScrollableContainer>
+          {activeTab === 'runner' && (
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: SPACING.lg,
+              padding: SPACING.md,
+            }}>
+              <div>
+                <TestRunner
+                  configs={state.configs}
+                  onRunFixedTest={handleRunFixedTest}
+                  onRunTimedTest={handleRunTimedTest}
+                  onStop={handleStopTest}
+                  isRunning={isRunning}
+                />
+              </div>
+              
+              <div>
+                <div style={{
+                  marginBottom: SPACING.md,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: SPACING.sm,
+                }}>
+                  <h3 style={{
+                    ...TYPOGRAPHY.heading.h3,
+                    color: COLORS.text.primary,
+                    margin: 0,
+                  }}>
+                    Live Metrics
+                  </h3>
+                  {state.activeTestId && isRunning && (
+                    <Badge variant="success" size="sm">
+                      Running
+                    </Badge>
+                  )}
+                </div>
+                <MetricsDisplay 
+                  metrics={activeMetrics} 
+                  isActive={isRunning}
+                />
+              </div>
+            </div>
+          )}
 
-      <div className="panel-content">
-        {activeTab === 'runner' && (
-          <div className="runner-layout">
-            <div className="runner-section">
-              <TestRunner
+          {activeTab === 'config' && (
+            <div style={{ padding: SPACING.md }}>
+              <ConfigEditor
                 configs={state.configs}
-                onRunFixedTest={handleRunFixedTest}
-                onRunTimedTest={handleRunTimedTest}
-                onStop={handleStopTest}
-                isRunning={isRunning}
+                onSave={handleSaveConfigs}
               />
             </div>
-            
-            <div className="metrics-section">
-              <h3>
-                Live Metrics
-                {state.activeTestId && isRunning && (
-                  <span className="running-indicator"> ⚡ Running</span>
-                )}
-              </h3>
-              <MetricsDisplay 
-                metrics={activeMetrics} 
-                isActive={isRunning}
+          )}
+
+          {activeTab === 'history' && (
+            <div style={{ padding: SPACING.md }}>
+              <TestHistory
+                testRuns={state.testRuns}
+                metrics={state.metrics}
+                onSelectTest={handleSelectTest}
+                onClearTest={handleClearTest}
+                activeTestId={state.activeTestId}
               />
             </div>
-          </div>
-        )}
+          )}
+        </ScrollableContainer>
+      </Tabs>
 
-        {activeTab === 'config' && (
-          <ConfigEditor
-            configs={state.configs}
-            onSave={handleSaveConfigs}
-          />
-        )}
-
-        {activeTab === 'history' && (
-          <TestHistory
-            testRuns={state.testRuns}
-            metrics={state.metrics}
-            onSelectTest={handleSelectTest}
-            onClearTest={handleClearTest}
-            activeTestId={state.activeTestId}
-          />
-        )}
-      </div>
-    </div>
+      <Footer stats={footerStats} />
+    </PluginPanel>
   )
 }

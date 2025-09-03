@@ -1,19 +1,31 @@
 import React from 'react';
 import { useDevToolsSelector } from '../core/devtools-store';
 // Mock recharts components for TypeScript compilation
-const LineChart = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>;
+const LineChart = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
+  <div {...props} style={{ background: 'var(--devtools-panel-bg)', borderRadius: '4px', padding: '8px' }}>{children}</div>
+);
 const Line = (props: Record<string, unknown>) => <div {...props} />;
-const AreaChart = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>;
+const AreaChart = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
+  <div {...props} style={{ background: 'var(--devtools-panel-bg)', borderRadius: '4px', padding: '8px' }}>{children}</div>
+);
 const Area = (props: Record<string, unknown>) => <div {...props} />;
 const XAxis = (props: Record<string, unknown>) => <div {...props} />;
 const YAxis = (props: Record<string, unknown>) => <div {...props} />;
 const CartesianGrid = (props: Record<string, unknown>) => <div {...props} />;
 const Tooltip = (props: Record<string, unknown>) => <div {...props} />;
-const ResponsiveContainer = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>;
-const PieChart = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>;
+const ResponsiveContainer = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
+  <div {...props} style={{ background: 'var(--devtools-panel-bg)', borderRadius: '4px', padding: '8px', minHeight: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--devtools-text-muted)', fontSize: '14px' }}>
+    {children || 'Chart placeholder (install recharts for real charts)'}
+  </div>
+);
+const PieChart = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
+  <div {...props} style={{ background: 'var(--devtools-panel-bg)', borderRadius: '4px', padding: '8px' }}>{children}</div>
+);
 const Pie = (props: Record<string, unknown>) => <div {...props} />;
 const Cell = (props: Record<string, unknown>) => <div {...props} />;
-const BarChart = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => <div {...props}>{children}</div>;
+const BarChart = ({ children, ...props }: { children: React.ReactNode; [key: string]: unknown }) => (
+  <div {...props} style={{ background: 'var(--devtools-panel-bg)', borderRadius: '4px', padding: '8px' }}>{children}</div>
+);
 const Bar = (props: Record<string, unknown>) => <div {...props} />;
 
 export function PerformancePanel() {

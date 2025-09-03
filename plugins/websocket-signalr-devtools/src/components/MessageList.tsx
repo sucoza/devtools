@@ -1,5 +1,6 @@
 import React from 'react';
-import { clsx } from 'clsx';
+import { DataTable, Badge, EmptyState } from '@sucoza/shared-components';
+import type { Column } from '@sucoza/shared-components';
 import type { WebSocketMessage, SignalRMessage } from '../types';
 
 interface MessageListProps {
@@ -9,7 +10,7 @@ interface MessageListProps {
 }
 
 export function MessageList({ messages, onMessageSelect, type }: MessageListProps) {
-  const [selectedMessageId, setSelectedMessageId] = React.useState<string>();
+  const [selectedRows, setSelectedRows] = React.useState<string[]>([]);
 
   const formatTimestamp = (timestamp: number) => {
     return new Date(timestamp).toLocaleTimeString(undefined, { 
@@ -20,28 +21,28 @@ export function MessageList({ messages, onMessageSelect, type }: MessageListProp
     } as Intl.DateTimeFormatOptions);
   };
 
-  const getMessageTypeColor = (message: WebSocketMessage | SignalRMessage) => {
+  const getMessageTypeBadgeVariant = (message: WebSocketMessage | SignalRMessage) => {
     if (type === 'websocket') {
       const wsMessage = message as WebSocketMessage;
       switch (wsMessage.type) {
-        case 'send': return 'var(--devtools-accent)';
-        case 'receive': return 'var(--devtools-success)';
-        case 'error': return 'var(--devtools-danger)';
-        case 'open': return 'var(--devtools-success)';
-        case 'close': return 'var(--devtools-warning)';
-        default: return 'var(--devtools-color)';
+        case 'send': return 'primary';
+        case 'receive': return 'success';
+        case 'error': return 'error';
+        case 'open': return 'success';
+        case 'close': return 'warning';
+        default: return 'secondary';
       }
     } else {
       const srMessage = message as SignalRMessage;
       switch (srMessage.type) {
         case 'Invocation': 
-          return srMessage.direction === 'send' ? 'var(--devtools-accent)' : 'var(--devtools-success)';
-        case 'Completion': return 'var(--devtools-success)';
-        case 'StreamItem': return 'var(--devtools-warning)';
-        case 'Ping': return 'var(--devtools-color)';
-        case 'Close': return 'var(--devtools-danger)';
-        case 'Handshake': return 'var(--devtools-success)';
-        default: return 'var(--devtools-color)';
+          return srMessage.direction === 'send' ? 'primary' : 'success';
+        case 'Completion': return 'success';
+        case 'StreamItem': return 'warning';
+        case 'Ping': return 'secondary';
+        case 'Close': return 'error';
+        case 'Handshake': return 'success';
+        default: return 'secondary';
       }
     }
   };
@@ -78,11 +79,11 @@ export function MessageList({ messages, onMessageSelect, type }: MessageListProp
       if (wsMessage.error) return wsMessage.error;
       
       if (typeof wsMessage.data === 'string') {
-        return wsMessage.data.length > 100 ? wsMessage.data.substring(0, 100) + '...' : wsMessage.data;
+        return wsMessage.data.length > 80 ? wsMessage.data.substring(0, 80) + '...' : wsMessage.data;
       } else {
         try {
           const jsonStr = JSON.stringify(wsMessage.data);
-          return jsonStr.length > 100 ? jsonStr.substring(0, 100) + '...' : jsonStr;
+          return jsonStr.length > 80 ? jsonStr.substring(0, 80) + '...' : jsonStr;
         } catch {
           return '[Binary Data]';
         }
@@ -95,211 +96,100 @@ export function MessageList({ messages, onMessageSelect, type }: MessageListProp
         const args = srMessage.arguments ? JSON.stringify(srMessage.arguments) : '';
         const result = srMessage.result ? JSON.stringify(srMessage.result) : '';
         const preview = `${srMessage.target}(${args})${result ? ' => ' + result : ''}`;
-        return preview.length > 100 ? preview.substring(0, 100) + '...' : preview;
+        return preview.length > 80 ? preview.substring(0, 80) + '...' : preview;
       }
       
       return srMessage.type;
     }
   };
 
-  const handleMessageClick = (message: WebSocketMessage | SignalRMessage) => {
-    const newSelectedId = selectedMessageId === message.id ? undefined : message.id;
-    setSelectedMessageId(newSelectedId);
-    onMessageSelect(newSelectedId ? message : null);
+  const columns: Column<WebSocketMessage | SignalRMessage>[] = [
+    {
+      key: 'timestamp',
+      header: 'Time',
+      width: 100,
+      render: (message: WebSocketMessage | SignalRMessage) => (
+        <span style={{ fontVariantNumeric: 'tabular-nums', fontSize: '11px', opacity: 0.8 }}>
+          {formatTimestamp(message.timestamp)}
+        </span>
+      )
+    },
+    {
+      key: 'type',
+      header: 'Type',
+      width: 120,
+      render: (message: WebSocketMessage | SignalRMessage) => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <span>{getMessageTypeIcon(message)}</span>
+          <Badge 
+            variant={getMessageTypeBadgeVariant(message) as any}
+            size="xs"
+          >
+            {type === 'websocket' 
+              ? (message as WebSocketMessage).type 
+              : (message as SignalRMessage).type
+            }
+          </Badge>
+        </div>
+      )
+    },
+    {
+      key: 'size',
+      header: 'Size',
+      width: 60,
+      align: 'right',
+      render: (message: WebSocketMessage | SignalRMessage) => (
+        <span style={{ fontSize: '11px', opacity: 0.7 }}>
+          {message.size > 0 ? `${message.size}B` : '-'}
+        </span>
+      )
+    },
+    {
+      key: 'preview',
+      header: 'Preview',
+      flex: 1,
+      render: (message: WebSocketMessage | SignalRMessage) => (
+        <span style={{ 
+          fontSize: '11px', 
+          opacity: 0.9,
+          fontFamily: 'monospace'
+        }}>
+          {getMessagePreview(message)}
+        </span>
+      )
+    }
+  ];
+
+  const handleRowSelect = (messageIds: string[]) => {
+    setSelectedRows(messageIds);
+    const selectedMessage = messageIds.length > 0 
+      ? messages.find(m => m.id === messageIds[0]) || null
+      : null;
+    onMessageSelect(selectedMessage);
   };
 
   if (messages.length === 0) {
     return (
-      <div className="message-list-empty">
-        <div>No messages to display</div>
-
-        <style>{`
-          .message-list-empty {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--devtools-color);
-            opacity: 0.5;
-            font-size: 14px;
-          }
-        `}</style>
-      </div>
+      <EmptyState
+        title="No Messages"
+        description={`No ${type === 'websocket' ? 'WebSocket' : 'SignalR'} messages to display`}
+        icon="📡"
+      />
     );
   }
 
   return (
-    <div className="message-list">
-      <div className="message-header">
-        <div className="header-col time">Time</div>
-        <div className="header-col type">Type</div>
-        <div className="header-col size">Size</div>
-        <div className="header-col preview">Preview</div>
-      </div>
-      
-      <div className="message-body">
-        {messages.map(message => (
-          <div
-            key={message.id}
-            className={clsx('message-item', {
-              'selected': selectedMessageId === message.id
-            })}
-            onClick={() => handleMessageClick(message)}
-          >
-            <div className="message-col time">{formatTimestamp(message.timestamp)}</div>
-            <div 
-              className="message-col type"
-              style={{ color: getMessageTypeColor(message) }}
-            >
-              <span className="type-icon">{getMessageTypeIcon(message)}</span>
-              <span className="type-text">
-                {type === 'websocket' 
-                  ? (message as WebSocketMessage).type 
-                  : (message as SignalRMessage).type
-                }
-              </span>
-            </div>
-            <div className="message-col size">
-              {message.size > 0 ? `${message.size}B` : '-'}
-            </div>
-            <div className="message-col preview">
-              {getMessagePreview(message)}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <style>{`
-        .message-list {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-          font-family: 'SF Mono', Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-        }
-
-        .message-header {
-          display: flex;
-          background: var(--devtools-panel-bg);
-          border-bottom: 1px solid var(--devtools-border);
-          padding: 8px 12px;
-          font-size: 11px;
-          font-weight: 600;
-          color: var(--devtools-color);
-          opacity: 0.8;
-          position: sticky;
-          top: 0;
-          z-index: 1;
-        }
-
-        .message-body {
-          flex: 1;
-          overflow-y: auto;
-          padding: 4px;
-        }
-
-        .header-col,
-        .message-col {
-          padding: 0 4px;
-        }
-
-        .header-col.time,
-        .message-col.time {
-          width: 100px;
-          flex-shrink: 0;
-        }
-
-        .header-col.type,
-        .message-col.type {
-          width: 120px;
-          flex-shrink: 0;
-        }
-
-        .header-col.size,
-        .message-col.size {
-          width: 60px;
-          flex-shrink: 0;
-          text-align: right;
-        }
-
-        .header-col.preview,
-        .message-col.preview {
-          flex: 1;
-          min-width: 0;
-        }
-
-        .message-item {
-          display: flex;
-          align-items: center;
-          padding: 6px 8px;
-          margin-bottom: 1px;
-          font-size: 12px;
-          cursor: pointer;
-          border-radius: 3px;
-          transition: background-color 0.15s ease;
-        }
-
-        .message-item:hover {
-          background: var(--devtools-button-hover-bg);
-        }
-
-        .message-item.selected {
-          background: var(--devtools-accent);
-          color: var(--devtools-accent-contrast);
-        }
-
-        .message-col.type {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          font-weight: 500;
-        }
-
-        .type-icon {
-          font-size: 14px;
-          line-height: 1;
-        }
-
-        .type-text {
-          font-size: 11px;
-          text-transform: uppercase;
-        }
-
-        .message-col.preview {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          font-size: 11px;
-          opacity: 0.9;
-        }
-
-        .message-item.selected .message-col.preview {
-          color: var(--devtools-accent-contrast);
-          opacity: 1;
-        }
-
-        .message-col.time {
-          font-size: 11px;
-          opacity: 0.7;
-          font-variant-numeric: tabular-nums;
-        }
-
-        .message-item.selected .message-col.time {
-          color: var(--devtools-accent-contrast);
-          opacity: 0.9;
-        }
-
-        .message-col.size {
-          font-size: 11px;
-          opacity: 0.7;
-          font-variant-numeric: tabular-nums;
-        }
-
-        .message-item.selected .message-col.size {
-          color: var(--devtools-accent-contrast);
-          opacity: 0.9;
-        }
-      `}</style>
-    </div>
+    <DataTable
+      data={messages}
+      columns={columns}
+      selectedRows={new Set(selectedRows.map((id, idx) => idx))}
+      onRowSelect={handleRowSelect}
+      selectionMode="single"
+      size="sm"
+      striped
+      hoverable
+      stickyHeader
+      virtualScrolling={messages.length > 500}
+    />
   );
 }

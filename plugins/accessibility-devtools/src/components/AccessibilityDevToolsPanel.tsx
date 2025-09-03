@@ -13,7 +13,7 @@ import {
   MapPin,
   BarChart3
 } from 'lucide-react';
-import { PluginPanel, PluginTab, PluginAction, PluginMetric, FilterSection, COLORS, COMPONENT_STYLES } from '@sucoza/shared-components';
+import { PluginPanel, PluginTab, PluginAction, PluginMetric, FilterSection, COLORS, COMPONENT_STYLES, ConfigMenu, type ConfigMenuItem } from '@sucoza/shared-components';
 import { useAccessibilityAudit } from '../hooks/useAccessibilityAudit';
 import { IssueList } from './IssueList';
 import { ColorContrastAnalyzer } from './ColorContrastAnalyzer';
@@ -55,16 +55,16 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
   const stats = getIssueStats();
   const filteredStats = getFilteredStats();
 
-  // Convert the severity filter into actions
-  const actions: PluginAction[] = [
+  // Convert actions into config menu items
+  const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'scan-toggle',
       label: scanState.isScanning 
-        ? (scanState.isPaused ? 'Resume' : 'Pause')
-        : 'Scan',
+        ? (scanState.isPaused ? 'Resume Scan' : 'Pause Scan')
+        : 'Start Scan',
       icon: scanState.isScanning 
-        ? (scanState.isPaused ? Play : Pause)
-        : Play,
+        ? (scanState.isPaused ? '▶️' : '⏸️')
+        : '▶️',
       onClick: () => {
         if (scanState.isScanning) {
           if (scanState.isPaused) {
@@ -76,28 +76,42 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
           startScan();
         }
       },
-      variant: scanState.isScanning 
-        ? 'warning'
-        : 'success',
-      tooltip: scanState.isScanning
-        ? (scanState.isPaused ? 'Resume Scan' : 'Pause Scan')
-        : 'Start Scan'
+      shortcut: 'Ctrl+R'
     },
     ...(scanState.isScanning ? [{
       id: 'stop',
-      label: 'Stop',
-      icon: Square,
+      label: 'Stop Scan',
+      icon: '⏹️',
       onClick: stopScan,
-      variant: 'danger' as const,
-      tooltip: 'Stop Scan'
+      shortcut: 'Ctrl+S'
     }] : []),
     {
       id: 'overlay-toggle',
-      label: 'Overlay',
-      icon: settings.enableOverlay ? Eye : EyeOff,
+      label: settings.enableOverlay ? 'Hide Overlay' : 'Show Overlay',
+      icon: settings.enableOverlay ? '👁️' : '👁️‍🗨️',
       onClick: () => updateSettings({ enableOverlay: !settings.enableOverlay }),
-      variant: settings.enableOverlay ? 'primary' : 'default',
-      tooltip: settings.enableOverlay ? 'Hide Overlay' : 'Show Overlay'
+      separator: true,
+      shortcut: 'Ctrl+O'
+    },
+    {
+      id: 'export-report',
+      label: 'Export Report',
+      icon: '💾',
+      onClick: () => {
+        // TODO: Implement export functionality
+        console.log('Export report functionality to be implemented');
+      },
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => {
+        // TODO: Implement settings functionality
+        console.log('Settings functionality to be implemented');
+      },
+      separator: true
     }
   ];
 
@@ -218,29 +232,39 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
   ];
 
   return (
-    <PluginPanel
-      title="Accessibility Auditor"
-      icon={Shield}
-      className={className}
-      tabs={tabs}
-      activeTabId={ui.activeTab}
-      onTabChange={selectTab}
-      actions={actions}
-      metrics={metrics}
-      showMetrics={true}
-      filterSections={filterSections}
-      showFilters={true}
-      searchValue={filters.searchQuery || ''}
-      onSearchChange={updateSearchFilter}
-      searchPlaceholder="Search issues..."
-      status={{
-        isActive: scanState.isScanning,
-        label: scanState.isScanning 
-          ? (scanState.isPaused ? 'Paused' : 'Scanning')
-          : 'Idle',
-        color: scanState.isScanning ? COLORS.status.success : COLORS.text.muted
-      }}
-    />
+    <div className={className} style={{ position: 'relative' }}>
+      <PluginPanel
+        title="Accessibility Auditor"
+        icon={Shield}
+        tabs={tabs}
+        activeTabId={ui.activeTab}
+        onTabChange={selectTab}
+        metrics={metrics}
+        showMetrics={true}
+        filterSections={filterSections}
+        showFilters={true}
+        searchValue={filters.searchQuery || ''}
+        onSearchChange={updateSearchFilter}
+        searchPlaceholder="Search issues..."
+        status={{
+          isActive: scanState.isScanning,
+          label: scanState.isScanning 
+            ? (scanState.isPaused ? 'Paused' : 'Scanning')
+            : 'Idle',
+          color: scanState.isScanning ? COLORS.status.success : COLORS.text.muted
+        }}
+      />
+      
+      {/* Custom ConfigMenu overlay */}
+      <div style={{
+        position: 'absolute',
+        top: '12px',
+        right: '12px',
+        zIndex: 10
+      }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
+    </div>
   );
 }
 
