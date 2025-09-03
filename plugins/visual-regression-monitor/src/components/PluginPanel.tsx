@@ -23,6 +23,8 @@ import {
   COLORS,
   SPACING,
   TYPOGRAPHY,
+  ConfigMenu,
+  type ConfigMenuItem,
 } from '@sucoza/shared-components';
 import { createVisualRegressionDevToolsClient } from '../core/devtools-client';
 import { ScreenshotCapture } from './ScreenshotCapture';
@@ -131,12 +133,94 @@ export function PluginPanel({ className }: PluginPanelProps) {
     });
   }
 
+  // Convert actions into config menu items
+  const configMenuItems: ConfigMenuItem[] = [
+    {
+      id: 'capture-baseline',
+      label: state.isCapturing ? 'Capturing...' : 'Capture Baseline',
+      icon: '📸',
+      onClick: () => {
+        client.selectTab('screenshots');
+        // Trigger baseline capture
+        client.captureBaseline();
+      },
+      disabled: state.isCapturing || !state.isPlaywrightConnected,
+      shortcut: 'Ctrl+C'
+    },
+    {
+      id: 'run-comparison',
+      label: state.isAnalyzing ? 'Analyzing...' : 'Run Comparison',
+      icon: '🔍',
+      onClick: () => {
+        client.selectTab('comparisons');
+        // Trigger comparison
+        client.runComparison();
+      },
+      disabled: state.isAnalyzing || !state.isPlaywrightConnected,
+      shortcut: 'Ctrl+R'
+    },
+    {
+      id: 'view-diff-report',
+      label: 'View Diff Report',
+      icon: '📊',
+      onClick: () => client.selectTab('comparisons'),
+      disabled: state.stats.totalDiffs === 0,
+      shortcut: 'Ctrl+D'
+    },
+    {
+      id: 'export-results',
+      label: 'Export Results',
+      icon: '💾',
+      onClick: () => {
+        const data = {
+          screenshots: state.screenshots,
+          comparisons: state.comparisons,
+          stats: state.stats,
+          timestamp: Date.now()
+        };
+        
+        const dataStr = JSON.stringify(data, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `visual-regression-results-${Date.now()}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      },
+      disabled: state.stats.totalScreenshots === 0,
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'clear-results',
+      label: 'Clear Results',
+      icon: '🗑️',
+      onClick: () => {
+        if (confirm('Are you sure you want to clear all visual regression data?')) {
+          client.clearData();
+        }
+      },
+      disabled: state.stats.totalScreenshots === 0,
+      shortcut: 'Ctrl+K',
+      separator: true
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => client.selectTab('settings')
+    }
+  ];
+
   return (
-    <BasePluginPanel
-      title="Visual Regression Monitor"
-      icon={Camera}
-      className={className}
-    >
+    <div style={{ position: 'relative', height: '100%' }}>
+      <BasePluginPanel
+        title="Visual Regression Monitor"
+        icon={Camera}
+        className={className}
+      >
       <Toolbar actions={toolbarActions.map((action, index) => ({
         id: `action-${index}`,
         ...action
@@ -168,11 +252,16 @@ export function PluginPanel({ className }: PluginPanelProps) {
         </ScrollableContainer>
       </Tabs>
 
-      <Footer stats={footerStats.map((stat, index) => ({
-        id: `stat-${index}`,
-        ...stat
-      }))} />
-    </BasePluginPanel>
+        <Footer stats={footerStats.map((stat, index) => ({
+          id: `stat-${index}`,
+          ...stat
+        }))} />
+      </BasePluginPanel>
+
+      <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
+    </div>
   );
 }
 

@@ -28,10 +28,12 @@ vi.mock('../hooks/useAccessibilityAudit', () => ({
     selectedIssue: null,
     filteredIssues: [],
     filters: {
-      impact: null,
-      wcagLevel: null,
-      tags: [],
+      severity: new Set(['critical', 'serious', 'moderate', 'minor']),
+      ruleIds: new Set(),
+      tags: new Set(),
       searchQuery: '',
+      showOnlyNew: false,
+      hideFixed: false,
     },
     settings: {
       realTimeScanning: false,

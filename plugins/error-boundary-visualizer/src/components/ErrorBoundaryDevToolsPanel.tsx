@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { 
-  PluginPanel
+  PluginPanel,
+  ConfigMenu,
+  type ConfigMenuItem
 } from '@sucoza/shared-components'
-import type { PluginTab, PluginAction } from '@sucoza/shared-components'
-import { Download, RotateCcw, Play, Settings, Trash2, AlertTriangle } from 'lucide-react'
+import type { PluginTab } from '@sucoza/shared-components'
+import { Play, Settings, AlertTriangle } from 'lucide-react'
 import { useErrorBoundaryDevTools } from '../core/store'
 import { ComponentTreeView } from './ComponentTreeView'
 import { ErrorList } from './ErrorList'
@@ -77,27 +79,35 @@ export const ErrorBoundaryDevToolsPanel: React.FC = () => {
     },
   ]
 
-  const toolbarActions: PluginAction[] = [
-    {
-      id: 'clear',
-      label: 'Clear Errors',
-      icon: Trash2,
-      onClick: clearErrors,
-      variant: 'default'
-    },
-    {
-      id: 'export',
-      label: 'Export Errors',
-      icon: Download,
-      onClick: handleExport,
-      variant: 'default'
-    },
+  const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'recording',
       label: isRecording ? 'Stop Recording' : 'Start Recording',
-      icon: isRecording ? RotateCcw : Play,
+      icon: isRecording ? '⏸️' : '▶️',
       onClick: handleToggleRecording,
-      variant: isRecording ? 'primary' : 'default'
+      shortcut: 'Ctrl+R'
+    },
+    {
+      id: 'clear',
+      label: 'Clear Errors',
+      icon: '🗑️',
+      onClick: clearErrors,
+      shortcut: 'Ctrl+K',
+      separator: true
+    },
+    {
+      id: 'export',
+      label: 'Export Error Data',
+      icon: '💾',
+      onClick: handleExport,
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => console.log('Settings clicked'),
+      separator: true
     }
   ]
 
@@ -109,13 +119,18 @@ export const ErrorBoundaryDevToolsPanel: React.FC = () => {
           50% { opacity: 0.5; }
         }
       `}</style>
-      <PluginPanel
-        title="Error Boundary DevTools"
-        tabs={tabs}
-        activeTabId={activeTab}
-        onTabChange={setActiveTab}
-        actions={toolbarActions}
-      />
+      <div style={{ position: 'relative', height: '100%' }}>
+        <PluginPanel
+          title="Error Boundary DevTools"
+          tabs={tabs}
+          activeTabId={activeTab}
+          onTabChange={setActiveTab}
+        />
+        
+        <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
+          <ConfigMenu items={configMenuItems} size="sm" />
+        </div>
+      </div>
     </>
   )
 }

@@ -12,6 +12,7 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@sucoza/accessibility-devtools-plugin": "^0.1.9",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.0.4",

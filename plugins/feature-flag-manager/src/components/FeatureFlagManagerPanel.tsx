@@ -7,7 +7,8 @@ import {
 import {
   Tabs,
   Badge,
-  Toolbar
+  ConfigMenu,
+  type ConfigMenuItem
 } from '@sucoza/shared-components';
 import { DashboardTab } from './DashboardTab';
 import { FlagsTab } from './FlagsTab';
@@ -18,7 +19,7 @@ import { HistoryTab } from './HistoryTab';
 import { SettingsTab } from './SettingsTab';
 import { UserContextPanel } from './UserContextPanel';
 import { NotificationBar } from './NotificationBar';
-import { RefreshCw, Settings, User } from 'lucide-react';
+import { Settings } from 'lucide-react';
 
 interface FeatureFlagManagerPanelProps {
   client: FeatureFlagDevToolsClient;
@@ -202,10 +203,53 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
     }
   ];
 
+  const configMenuItems: ConfigMenuItem[] = [
+    {
+      id: 'refresh',
+      label: 'Refresh Flags',
+      icon: '🔄',
+      onClick: handleRefresh,
+      shortcut: 'Ctrl+R'
+    },
+    {
+      id: 'user-context',
+      label: showUserContext ? 'Hide User Context' : 'Show User Context',
+      icon: '👤',
+      onClick: () => setShowUserContext(!showUserContext)
+    },
+    {
+      id: 'add-flag',
+      label: 'Add New Flag',
+      icon: '➕',
+      onClick: () => console.log('Add new flag clicked'),
+      separator: true
+    },
+    {
+      id: 'import-export',
+      label: 'Import/Export Flags',
+      icon: '💾',
+      onClick: () => console.log('Import/Export clicked'),
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'clear-overrides',
+      label: 'Clear All Overrides',
+      icon: '🗑️',
+      onClick: () => console.log('Clear overrides clicked')
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => setActiveTab('settings'),
+      separator: true
+    }
+  ];
+
   return (
     <div 
       className={`feature-flag-manager-panel ${resolvedTheme}`}
-      style={{ height, display: 'flex', flexDirection: 'column' }}
+      style={{ height, display: 'flex', flexDirection: 'column', position: 'relative' }}
     >
       {/* Notifications */}
       {notifications.length > 0 && (
@@ -215,30 +259,10 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
         />
       )}
 
-      {/* Header */}
-      <Toolbar
-        title="Feature Flag Manager"
-        actions={[
-          {
-            id: 'refresh',
-            label: 'Refresh',
-            icon: <RefreshCw size={16} />,
-            onClick: handleRefresh,
-            variant: 'primary',
-            tooltip: 'Refresh flags'
-          },
-          {
-            id: 'user-context',
-            label: 'User Context',
-            icon: <User size={16} />,
-            onClick: () => setShowUserContext(!showUserContext),
-            variant: showUserContext ? 'primary' : 'default',
-            tooltip: 'Toggle user context panel'
-          }
-        ]}
-        size="md"
-        variant="default"
-      />
+      {/* ConfigMenu Overlay */}
+      <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
 
       {/* User Context Panel */}
       {showUserContext && (

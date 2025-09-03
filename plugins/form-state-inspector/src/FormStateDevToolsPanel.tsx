@@ -1,16 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
-  Search, 
-  Filter, 
-  RefreshCw, 
   Play, 
   CheckCircle, 
   AlertCircle, 
-  Clock, 
   BarChart3, 
-  Eye,
-  ChevronDown,
-  ChevronRight,
   FileText,
   History,
   Accessibility,
@@ -29,7 +22,9 @@ import {
   CodeBlock,
   Alert,
   Collapsible,
-  ProgressBar
+  ProgressBar,
+  ConfigMenu,
+  type ConfigMenuItem
 } from '@sucoza/shared-components';
 import { formStateEventClient } from './formEventClient';
 import type { 
@@ -273,13 +268,53 @@ export function FormStateDevToolsPanel() {
     }
   ];
 
-  const actions = [
+  const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'auto-refresh',
       label: autoRefresh ? 'Disable Auto Refresh' : 'Enable Auto Refresh',
-      icon: RefreshCw,
+      icon: autoRefresh ? '⏸️' : '🔄',
       onClick: () => setAutoRefresh(!autoRefresh),
-      variant: autoRefresh ? 'primary' as const : 'default' as const
+      shortcut: 'Ctrl+R'
+    },
+    {
+      id: 'show-dirty',
+      label: showOnlyDirty ? 'Show All Fields' : 'Show Only Dirty Fields',
+      icon: '🔍',
+      onClick: () => setShowOnlyDirty(!showOnlyDirty)
+    },
+    {
+      id: 'show-invalid',
+      label: showOnlyInvalid ? 'Show All Fields' : 'Show Only Invalid Fields',
+      icon: '⚠️',
+      onClick: () => setShowOnlyInvalid(!showOnlyInvalid)
+    },
+    {
+      id: 'replay-form',
+      label: 'Replay Form History',
+      icon: '▶️',
+      onClick: () => selectedFormId && handleReplayForm(selectedFormId),
+      disabled: !selectedFormId || !selectedForm?.fieldHistory.length || isReplaying,
+      separator: true
+    },
+    {
+      id: 'export-data',
+      label: 'Export Form Data',
+      icon: '💾',
+      onClick: () => console.log('Export form data clicked'),
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'clear-history',
+      label: 'Clear Form History',
+      icon: '🗑️',
+      onClick: () => console.log('Clear history clicked')
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => console.log('Settings clicked'),
+      separator: true
     }
   ];
 
@@ -550,21 +585,26 @@ export function FormStateDevToolsPanel() {
   }
 
   return (
-    <PluginPanel
-      title="Form State Inspector"
-      icon={FileText}
-      subtitle={selectedForm ? `${selectedForm.isDirty ? 'Modified' : 'Clean'} • ${Object.keys(selectedForm.fields).length} fields` : 'No form selected'}
-      tabs={tabs}
-      activeTabId={activeTab}
-      onTabChange={(tabId) => setActiveTab(tabId as any)}
-      actions={actions}
-      metrics={metrics}
-      showSearch={true}
-      searchValue={searchQuery}
-      onSearchChange={setSearchQuery}
-      searchPlaceholder="Search fields..."
-      // Simplified for now - add proper sidebar/filters later
-      showMetrics={true}
-    />
+    <div style={{ position: 'relative', height: '100%' }}>
+      <PluginPanel
+        title="Form State Inspector"
+        icon={FileText}
+        subtitle={selectedForm ? `${selectedForm.isDirty ? 'Modified' : 'Clean'} • ${Object.keys(selectedForm.fields).length} fields` : 'No form selected'}
+        tabs={tabs}
+        activeTabId={activeTab}
+        onTabChange={(tabId) => setActiveTab(tabId as any)}
+        metrics={metrics}
+        showSearch={true}
+        searchValue={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder="Search fields..."
+        // Simplified for now - add proper sidebar/filters later
+        showMetrics={true}
+      />
+      
+      <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
+    </div>
   );
 }

@@ -3,7 +3,9 @@ import { Play, Pause, RotateCcw, Settings, Network, Database, List } from 'lucid
 import {
   PluginPanel,
   StatusIndicator,
-  Badge
+  Badge,
+  ConfigMenu,
+  type ConfigMenuItem
 } from '@sucoza/shared-components';
 import { useInterceptor } from '../hooks/useInterceptor';
 import { ApiCallsTab } from './ApiCallsTab';
@@ -57,28 +59,57 @@ export function ApiMockInterceptorPanel({ className }: ApiMockInterceptorPanelPr
     }
   ];
 
-  const pluginActions = [
+  const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'toggle-recording',
       label: state.isRecording ? 'Stop Recording' : 'Start Recording',
-      icon: state.isRecording ? Pause : Play,
+      icon: state.isRecording ? '⏸️' : '▶️',
       onClick: actions.toggleRecording,
-      variant: state.isRecording ? 'danger' as const : 'default' as const,
-      tooltip: state.isRecording ? 'Stop Recording' : 'Start Recording'
-    },
-    {
-      id: 'clear-calls',
-      label: 'Clear',
-      icon: RotateCcw,
-      onClick: handleClearCalls,
-      variant: 'default' as const,
-      tooltip: 'Clear All API Calls'
+      shortcut: 'Ctrl+R'
     },
     {
       id: 'toggle-interception',
-      label: state.isInterceptionEnabled ? 'Disable' : 'Enable',
+      label: state.isInterceptionEnabled ? 'Disable Interception' : 'Enable Interception',
+      icon: state.isInterceptionEnabled ? '🔴' : '🟢',
       onClick: state.isInterceptionEnabled ? actions.disableInterception : actions.enableInterception,
-      variant: 'primary' as const
+      shortcut: 'Ctrl+I'
+    },
+    {
+      id: 'clear-calls',
+      label: 'Clear All API Calls',
+      icon: '🗑️',
+      onClick: handleClearCalls,
+      separator: true,
+      shortcut: 'Ctrl+K'
+    },
+    {
+      id: 'export-data',
+      label: 'Export Data',
+      icon: '💾',
+      onClick: () => {
+        // TODO: Implement export functionality
+        console.log('Export data functionality to be implemented');
+      },
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'import-scenario',
+      label: 'Import Scenario',
+      icon: '📁',
+      onClick: () => {
+        // TODO: Implement import functionality
+        console.log('Import scenario functionality to be implemented');
+      }
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => {
+        // Navigate to settings tab or open settings dialog
+        actions.selectTab('settings');
+      },
+      separator: true
     }
   ];
 
@@ -90,25 +121,35 @@ export function ApiMockInterceptorPanel({ className }: ApiMockInterceptorPanelPr
   ];
 
   return (
-    <PluginPanel
-      className={className}
-      title="API Mock Interceptor"
-      icon={Network}
-      subtitle={
-        (state.isInterceptionEnabled ? 'Active' : 'Inactive') +
-        (state.activeMockScenario ? ` • Scenario: ${state.mockScenarios[state.activeMockScenario]?.name || 'Unknown'}` : '')
-      }
-      status={{
-        isActive: state.isInterceptionEnabled,
-        label: state.isInterceptionEnabled ? 'Active' : 'Inactive'
-      }}
-      tabs={tabs}
-      activeTabId={state.ui.activeTab}
-      onTabChange={actions.selectTab}
-      actions={pluginActions}
-      metrics={pluginMetrics}
-      showMetrics={true}
-    />
+    <div className={className} style={{ position: 'relative' }}>
+      <PluginPanel
+        title="API Mock Interceptor"
+        icon={Network}
+        subtitle={
+          (state.isInterceptionEnabled ? 'Active' : 'Inactive') +
+          (state.activeMockScenario ? ` • Scenario: ${state.mockScenarios[state.activeMockScenario]?.name || 'Unknown'}` : '')
+        }
+        status={{
+          isActive: state.isInterceptionEnabled,
+          label: state.isInterceptionEnabled ? 'Active' : 'Inactive'
+        }}
+        tabs={tabs}
+        activeTabId={state.ui.activeTab}
+        onTabChange={actions.selectTab}
+        metrics={pluginMetrics}
+        showMetrics={true}
+      />
+      
+      {/* Custom ConfigMenu overlay */}
+      <div style={{
+        position: 'absolute',
+        top: '12px',
+        right: '12px',
+        zIndex: 10
+      }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
+    </div>
   );
 }
 

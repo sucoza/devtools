@@ -25,6 +25,7 @@ import {
   createBrowserAutomationEventClient,
   getBrowserAutomationEventClient,
 } from '../core';
+import { ConfigMenu, type ConfigMenuItem } from '@sucoza/shared-components';
 
 // Tab Components (placeholder implementations)
 import RecorderTab from './tabs/RecorderTab';
@@ -72,6 +73,77 @@ export function BrowserAutomationPanel({
     eventClient.dispatch(action);
     onEvent?.(action);
   };
+
+  // Config menu items
+  const configMenuItems: ConfigMenuItem[] = [
+    {
+      id: 'toggle-recording',
+      label: state.recording.isRecording
+        ? state.recording.isPaused
+          ? 'Resume Recording'
+          : 'Pause Recording'
+        : 'Start Recording',
+      icon: state.recording.isRecording && !state.recording.isPaused ? '⏸️' : '▶️',
+      onClick: () => {
+        if (state.recording.isRecording) {
+          if (state.recording.isPaused) {
+            eventClient.resumeRecording();
+          } else {
+            eventClient.pauseRecording();
+          }
+        } else {
+          eventClient.startRecording();
+        }
+      },
+      shortcut: 'Ctrl+R'
+    },
+    {
+      id: 'stop-recording',
+      label: 'Stop Recording',
+      icon: '⏹️',
+      onClick: () => eventClient.stopRecording(),
+      disabled: !state.recording.isRecording,
+      shortcut: 'Ctrl+S'
+    },
+    {
+      id: 'clear-events',
+      label: 'Clear Events',
+      icon: '🗑️',
+      onClick: () => eventClient.clearRecording(),
+      disabled: state.events.length === 0,
+      separator: true,
+      shortcut: 'Ctrl+K'
+    },
+    {
+      id: 'generate-test',
+      label: 'Generate Test',
+      icon: '🧪',
+      onClick: () => {
+        handleTabChange('test-generator');
+      },
+      disabled: state.events.length === 0
+    },
+    {
+      id: 'export-events',
+      label: 'Export Events',
+      icon: '💾',
+      onClick: () => {
+        // TODO: Implement export functionality
+        console.log('Export events functionality to be implemented');
+      },
+      disabled: state.events.length === 0,
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => {
+        handleTabChange('settings');
+      },
+      separator: true
+    }
+  ];
 
   // Tab configuration
   const tabs: Array<{
@@ -151,56 +223,9 @@ export function BrowserAutomationPanel({
           <span>Browser Automation Test Recorder</span>
         </div>
         
-        {/* Quick Actions */}
-        <div className="quick-actions">
-          <button
-            onClick={() => {
-              if (state.recording.isRecording) {
-                if (state.recording.isPaused) {
-                  eventClient.resumeRecording();
-                } else {
-                  eventClient.pauseRecording();
-                }
-              } else {
-                eventClient.startRecording();
-              }
-            }}
-            className={clsx('quick-action-btn', {
-              'recording': state.recording.isRecording && !state.recording.isPaused,
-              'paused': state.recording.isPaused,
-            })}
-            title={
-              state.recording.isRecording
-                ? state.recording.isPaused
-                  ? 'Resume Recording'
-                  : 'Pause Recording'
-                : 'Start Recording'
-            }
-          >
-            {state.recording.isRecording && !state.recording.isPaused ? (
-              <Pause size={14} />
-            ) : (
-              <Activity size={14} />
-            )}
-          </button>
-
-          <button
-            onClick={() => eventClient.stopRecording()}
-            disabled={!state.recording.isRecording}
-            className="quick-action-btn"
-            title="Stop Recording"
-          >
-            <Square size={14} />
-          </button>
-
-          <button
-            onClick={() => eventClient.clearRecording()}
-            disabled={state.events.length === 0}
-            className="quick-action-btn"
-            title="Clear Events"
-          >
-            <RotateCcw size={14} />
-          </button>
+        {/* Config Menu */}
+        <div className="config-menu">
+          <ConfigMenu items={configMenuItems} size="sm" />
         </div>
       </div>
 

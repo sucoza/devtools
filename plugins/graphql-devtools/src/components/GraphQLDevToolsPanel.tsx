@@ -3,18 +3,15 @@ import {
   Database, 
   Search, 
   History, 
-  TrendingUp, 
-  Settings,
-  Play,
-  Square,
-  Download,
-  Upload
+  TrendingUp
 } from 'lucide-react';
 import {
   PluginPanel,
   Badge,
   StatusIndicator,
-  EmptyState
+  EmptyState,
+  ConfigMenu,
+  type ConfigMenuItem
 } from '@sucoza/shared-components';
 import { SchemaExplorer } from './SchemaExplorer';
 import { QueryBuilder } from './QueryBuilder';
@@ -241,26 +238,39 @@ export const GraphQLDevToolsPanel: React.FC = () => {
     }
   ];
 
-  const actions = [
+  const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'toggle-recording',
       label: state.ui.isRecording ? 'Stop Recording' : 'Start Recording',
-      icon: state.ui.isRecording ? Square : Play,
+      icon: state.ui.isRecording ? '⏸️' : '▶️',
       onClick: handleToggleRecording,
-      variant: state.ui.isRecording ? 'danger' as const : 'primary' as const
+      shortcut: 'Ctrl+R'
+    },
+    {
+      id: 'introspect-schema',
+      label: 'Introspect Schema',
+      icon: '🔍',
+      onClick: handleIntrospectSchema
+    },
+    {
+      id: 'clear-operations',
+      label: 'Clear Operations',
+      icon: '🗑️',
+      onClick: handleClearOperations,
+      shortcut: 'Ctrl+K',
+      separator: true
     },
     {
       id: 'export-data',
-      label: 'Export',
-      icon: Download,
+      label: 'Export Operations',
+      icon: '💾',
       onClick: handleExportData,
-      variant: 'default' as const,
-      tooltip: 'Export data'
+      shortcut: 'Ctrl+E'
     },
     {
       id: 'import-data',
-      label: 'Import',
-      icon: Upload,
+      label: 'Import Operations',
+      icon: '📥',
       onClick: () => {
         const input = document.createElement('input');
         input.type = 'file';
@@ -269,18 +279,16 @@ export const GraphQLDevToolsPanel: React.FC = () => {
           handleImportData(e as any);
         };
         input.click();
-      },
-      variant: 'default' as const,
-      tooltip: 'Import data'
+      }
     },
     {
       id: 'settings',
       label: 'Settings',
-      icon: Settings,
+      icon: '⚙️',
       onClick: () => {
         // TODO: Open settings modal
       },
-      variant: 'default' as const
+      separator: true
     }
   ];
 
@@ -292,20 +300,25 @@ export const GraphQLDevToolsPanel: React.FC = () => {
   ];
 
   return (
-    <PluginPanel
-      title="GraphQL DevTools"
-      icon={Database}
-      subtitle="Schema exploration, query building & performance monitoring"
-      tabs={tabs}
-      activeTabId={state.ui.activeTab}
-      onTabChange={handleTabChange}
-      actions={actions}
-      metrics={metrics}
-      showMetrics={true}
-      status={{
-        isActive: state.ui.isRecording,
-        label: state.ui.isRecording ? 'Recording' : 'Idle'
-      }}
-    />
+    <div style={{ position: 'relative', height: '100%' }}>
+      <PluginPanel
+        title="GraphQL DevTools"
+        icon={Database}
+        subtitle="Schema exploration, query building & performance monitoring"
+        tabs={tabs}
+        activeTabId={state.ui.activeTab}
+        onTabChange={handleTabChange}
+        metrics={metrics}
+        showMetrics={true}
+        status={{
+          isActive: state.ui.isRecording,
+          label: state.ui.isRecording ? 'Recording' : 'Idle'
+        }}
+      />
+      
+      <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
+    </div>
   );
 };

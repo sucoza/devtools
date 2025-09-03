@@ -9,6 +9,7 @@ import {
   Footer,
   Alert,
   ScrollableContainer,
+  ConfigMenu,
   type Tab
 } from '@sucoza/shared-components';
 import { Download, Trash2, Navigation } from 'lucide-react';
@@ -228,6 +229,58 @@ export function RouterDevToolsPanel() {
     URL.revokeObjectURL(url);
   }, [state.routeTree, state.navigationHistory, state.currentState]);
 
+  // ConfigMenu items
+  const configMenuItems = [
+    {
+      id: 'toggle-recording',
+      label: 'Toggle Recording',
+      icon: '🔄',
+      shortcut: 'Ctrl+R',
+      onClick: () => {
+        // Toggle recording functionality would be implemented here
+        console.log('Toggle recording');
+      },
+    },
+    {
+      id: 'clear-history',
+      label: 'Clear History',
+      icon: '🗑️',
+      shortcut: 'Ctrl+K',
+      onClick: clearHistory,
+    },
+    {
+      id: 'reset-navigation',
+      label: 'Reset Navigation',
+      icon: '📍',
+      onClick: () => {
+        setState(prevState => ({
+          ...prevState,
+          selectedRouteId: null,
+          expandedRouteIds: new Set(),
+          searchQuery: '',
+        }));
+      },
+    },
+    {
+      id: 'export-routes',
+      label: 'Export Routes',
+      icon: '💾',
+      shortcut: 'Ctrl+E',
+      onClick: exportRoutes,
+      separator: true,
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      shortcut: 'Ctrl+S',
+      onClick: () => {
+        // Settings would open a settings dialog or panel
+        console.log('Open settings');
+      },
+    },
+  ];
+
   // Get route statistics
   const routeStats = getRouteStatistics(state.routeTreeNodes);
 
@@ -276,39 +329,23 @@ export function RouterDevToolsPanel() {
   ];
 
   return (
-    <div style={{
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column'
-    }}>
-      {/* Header Toolbar */}
-      <Toolbar
-        title="🧭 Router DevTools Enhanced"
-        subtitle={`${routeStats.totalRoutes} routes • ${routeStats.activeRoutes} active • ${state.navigationHistory.length} history`}
-        showSearch
-        searchValue={state.searchQuery}
-        onSearchChange={handleSearchChange}
-        searchPlaceholder="Search routes..."
-        actions={[
-          {
-            id: 'clear-history',
-            label: 'Clear History',
-            icon: <Trash2 size={16} />,
-            onClick: clearHistory,
-            tooltip: 'Clear navigation history',
-            variant: 'danger'
-          },
-          {
-            id: 'export-routes',
-            label: 'Export Routes',
-            icon: <Download size={16} />,
-            onClick: exportRoutes,
-            tooltip: 'Export route data as JSON'
-          }
-        ]}
-        size="md"
-        variant="default"
-      />
+    <div style={{ position: 'relative', height: '100%' }}>
+      <div style={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        {/* Header Toolbar */}
+        <Toolbar
+          title="🧭 Router DevTools Enhanced"
+          subtitle={`${routeStats.totalRoutes} routes • ${routeStats.activeRoutes} active • ${state.navigationHistory.length} history`}
+          showSearch
+          searchValue={state.searchQuery}
+          onSearchChange={handleSearchChange}
+          searchPlaceholder="Search routes..."
+          size="md"
+          variant="default"
+        />
 
       {/* Tab Navigation */}
       <Tabs
@@ -392,6 +429,17 @@ export function RouterDevToolsPanel() {
         size="sm"
         variant="default"
       />
+      </div>
+      
+      {/* ConfigMenu overlay */}
+      <div style={{
+        position: 'absolute',
+        top: '12px',
+        right: '12px',
+        zIndex: 10
+      }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
     </div>
   );
 }

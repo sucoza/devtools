@@ -10,6 +10,8 @@ import {
   COLORS,
   SPACING,
   TYPOGRAPHY,
+  ConfigMenu,
+  type ConfigMenuItem,
 } from '@sucoza/shared-components'
 import { TestRunner } from './TestRunner'
 import { MetricsDisplay } from './MetricsDisplay'
@@ -137,6 +139,53 @@ export const StressTestPanel: React.FC = () => {
     }
   }, [state.testRuns, state.activeTestId])
 
+  const handleClearAllData = useCallback(() => {
+    if (confirm('Are you sure you want to clear all test data?')) {
+      // Clear all test runs and results
+      state.testRuns.forEach(run => {
+        stressTestStore.clearResults(run.id)
+      })
+      stressTestStore.getState().testRuns = []
+      stressTestStore.setActiveTest(null)
+    }
+  }, [state.testRuns])
+
+  const handleExportResults = useCallback(() => {
+    if (!state.activeTestId || !activeMetrics) return
+    
+    const testRun = state.testRuns.find(run => run.id === state.activeTestId)
+    const exportData = {
+      testRun,
+      metrics: activeMetrics,
+      results: state.results[state.activeTestId] || []
+    }
+    
+    const dataStr = JSON.stringify(exportData, null, 2)
+    const blob = new Blob([dataStr], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = `stress-test-results-${Date.now()}.json`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }, [state.activeTestId, activeMetrics, state.testRuns, state.results])
+
+  const handleResetTest = useCallback(() => {
+    if (testRunner) {
+      testRunner.stop()
+      if (state.activeTestId) {
+        stressTestStore.updateTestRun(state.activeTestId, {
+          status: 'stopped',
+          endTime: Date.now()
+        })
+      }
+      setTestRunner(null)
+    }
+    stressTestStore.setActiveTest(null)
+  }, [testRunner, state.activeTestId])
+
   const isRunning = testRunner !== null
   const activeMetrics = state.activeTestId ? state.metrics[state.activeTestId] : null
 
@@ -161,20 +210,83 @@ export const StressTestPanel: React.FC = () => {
     );
   }
 
+  // Convert actions into config menu items
+  const configMenuItems: ConfigMenuItem[] = [
+    {
+      id: 'start-test',
+      label: isRunning ? 'Running...' : 'Start Stress Test',
+      icon: '▶️',
+      onClick: () => {
+        if (!isRunning) {
+          // Start with default settings - fixed test with 100 requests, 10 concurrent
+          handleRunFixedTest(100, 10)
+        }
+      },
+      disabled: isRunning || state.configs.length === 0,
+      shortcut: 'Ctrl+R'
+    },
+    {
+      id: 'stop-test',
+      label: 'Stop Test',
+      icon: '⏹️',
+      onClick: handleStopTest,
+      disabled: !isRunning,
+      shortcut: 'Ctrl+S'
+    },
+    {
+      id: 'view-results',
+      label: 'View Results',
+      icon: '📊',
+      onClick: () => setActiveTab('history'),
+      disabled: state.testRuns.length === 0,
+      shortcut: 'Ctrl+V'
+    },
+    {
+      id: 'reset-test',
+      label: 'Reset Test',
+      icon: '🔄',
+      onClick: handleResetTest
+    },
+    {
+      id: 'export-results',
+      label: 'Export Results',
+      icon: '💾',
+      onClick: handleExportResults,
+      disabled: !state.activeTestId || !activeMetrics,
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'clear-data',
+      label: 'Clear Data',
+      icon: '🗑️',
+      onClick: handleClearAllData,
+      disabled: state.testRuns.length === 0,
+      shortcut: 'Ctrl+K',
+      separator: true
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => setActiveTab('config')
+    }
+  ];
+
   return (
-    <PluginPanel
-      title="Stress Testing"
-      icon={Flame}
-      headerContent={(
-        state.activeTestId && isRunning && (
-          <StatusIndicator
-            status="loading"
-            label="Running"
-            size="sm"
-          />
-        )
-      )}
-    >
+    <div style={{ position: 'relative', height: '100%' }}>
+      <PluginPanel
+        title="Stress Testing"
+        icon={Flame}
+        headerContent={(
+          state.activeTestId && isRunning && (
+            <StatusIndicator
+              status="loading"
+              label="Running"
+              size="sm"
+            />
+          )
+        )}
+      >
       <Tabs
         activeTab={activeTab}
         onTabChange={(tabId) => setActiveTab(tabId as 'runner' | 'config' | 'history')}
@@ -249,7 +361,12 @@ export const StressTestPanel: React.FC = () => {
         </ScrollableContainer>
       </Tabs>
 
-      <Footer stats={footerStats} />
-    </PluginPanel>
+        <Footer stats={footerStats} />
+      </PluginPanel>
+
+      <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
+    </div>
   )
 }

@@ -23,6 +23,8 @@ import {
   Toolbar,
   ProgressBar,
   Footer,
+  ConfigMenu,
+  type ConfigMenuItem,
   COLORS,
   SPACING,
   TYPOGRAPHY,
@@ -172,12 +174,12 @@ export function BundleImpactAnalyzerPanel({
     },
   ];
 
-  // Prepare toolbar actions
-  const toolbarActions = [
+  // Prepare config menu items
+  const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'toggle-analysis',
-      icon: React.createElement(state.isAnalyzing ? Square : Play),
       label: state.isAnalyzing ? 'Stop Analysis' : 'Start Analysis',
+      icon: state.isAnalyzing ? '⏹️' : '▶️',
       onClick: () => {
         if (state.isAnalyzing) {
           eventClient.stopAnalysis();
@@ -185,26 +187,48 @@ export function BundleImpactAnalyzerPanel({
           eventClient.startAnalysis();
         }
       },
-      variant: (state.isAnalyzing ? 'primary' : 'default') as 'primary' | 'default' | 'danger',
+      shortcut: 'Ctrl+R'
     },
     {
       id: 'tree-shaking',
-      icon: React.createElement(TreePine),
       label: 'Analyze Tree Shaking',
+      icon: '🌲',
       onClick: () => eventClient.startTreeShakingAnalysis(),
+      disabled: state.isAnalyzing,
+      shortcut: 'Ctrl+T'
     },
     {
       id: 'cdn-analysis',
-      icon: React.createElement(Globe),
       label: 'Analyze CDN Opportunities',
+      icon: '🌐',
       onClick: () => eventClient.startCDNAnalysis(),
+      disabled: state.isAnalyzing,
+      separator: true
+    },
+    {
+      id: 'export-analysis',
+      label: 'Export Analysis',
+      icon: '💾',
+      onClick: () => {
+        // TODO: Implement export functionality
+        console.log('Export analysis functionality to be implemented');
+      },
+      disabled: state.modules.length === 0,
+      shortcut: 'Ctrl+E'
     },
     {
       id: 'sample-data',
-      icon: React.createElement(Zap),
       label: 'Generate Sample Data (Dev)',
+      icon: '⚡',
       onClick: () => eventClient.generateSampleData(),
+      separator: true
     },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => handleTabChange('settings')
+    }
   ];
 
   // Prepare filter configs
@@ -240,24 +264,29 @@ export function BundleImpactAnalyzerPanel({
   ];
 
   return (
-    <PluginPanel
-      title="Bundle Impact Analyzer"
-      icon={Package}
-      className={className}
-    >
-      <Toolbar
-        actions={toolbarActions}
-        rightContent={(
-          <div style={{ display: 'flex', gap: SPACING.md, alignItems: 'center' }}>
+    <div className={className} style={{ position: 'relative' }}>
+      <PluginPanel
+        title="Bundle Impact Analyzer"
+        icon={Package}
+      >
+        {/* Stats Bar */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: SPACING.sm,
+          backgroundColor: COLORS.background.secondary,
+          borderBottom: `1px solid ${COLORS.border.primary}`,
+        }}>
+          <div style={{ display: 'flex', gap: SPACING.lg, alignItems: 'center' }}>
             {footerStats.map(stat => (
               <div key={stat.label} style={{ 
                 display: 'flex', 
-                flexDirection: 'column', 
                 alignItems: 'center',
                 gap: SPACING.xs,
               }}>
                 <span style={{ 
-                  fontSize: '10px', 
+                  fontSize: TYPOGRAPHY.fontSize.small, 
                   color: COLORS.text.secondary,
                 }}>
                   {stat.label}:
@@ -272,8 +301,15 @@ export function BundleImpactAnalyzerPanel({
               </div>
             ))}
           </div>
-        )}
-      />
+          
+          {state.isAnalyzing && (
+            <StatusIndicator
+              status="loading"
+              label={`Analyzing... ${state.jobs.find(j => j.status === 'running')?.progress || 0}%`}
+              size="sm"
+            />
+          )}
+        </div>
 
       {/* Filter Bar */}
       {state.modules.length > 0 && (
@@ -338,27 +374,20 @@ export function BundleImpactAnalyzerPanel({
         </ScrollableContainer>
       </div>
 
-      {/* Analysis Progress */}
-      {state.isAnalyzing && (
-        <Footer
-          leftContent={(
-            <StatusIndicator
-              status="loading"
-              label={`Analyzing bundle... ${state.jobs.find(j => j.status === 'running')?.progress || 0}%`}
-            />
-          )}
-          rightContent={(
-            <ProgressBar
-              value={state.jobs.find(j => j.status === 'running')?.progress || 0}
-              size="sm"
-            />
-          )}
-        />
-      )}
-
       {/* Custom children */}
       {children}
 
-    </PluginPanel>
+      </PluginPanel>
+
+      {/* Custom ConfigMenu overlay */}
+      <div style={{
+        position: 'absolute',
+        top: '12px',
+        right: '12px',
+        zIndex: 10
+      }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
+    </div>
   );
 }

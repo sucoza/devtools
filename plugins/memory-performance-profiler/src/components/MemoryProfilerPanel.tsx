@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Play, 
-  Pause, 
-  Square, 
-  Camera, 
-  Download, 
-  Trash2, 
   TrendingUp,
   TrendingDown,
   Minus,
@@ -16,7 +10,6 @@ import {
   Zap
 } from 'lucide-react';
 import { 
-  Toolbar, 
   Tabs, 
   DataTable, 
   ProgressBar, 
@@ -26,7 +19,9 @@ import {
   StatusIndicator,
   EmptyState,
   ScrollableContainer,
-  SearchInput
+  SearchInput,
+  ConfigMenu,
+  type ConfigMenuItem
 } from '@sucoza/shared-components';
 import { useMemoryProfilerDevTools } from '../core/devtools-client';
 import type { ComponentMemoryInfo, MemoryLeak, MemoryOptimizationSuggestion } from '../types';
@@ -217,97 +212,89 @@ export function MemoryProfilerPanel() {
     URL.revokeObjectURL(url);
   };
 
-  const toolbarActions = [
+  const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'start-stop',
-      icon: isRunning ? <Pause size={16} /> : <Play size={16} />,
-      label: isRunning ? 'Stop' : 'Start',
+      label: isRunning ? 'Stop Profiling' : 'Start Profiling',
+      icon: isRunning ? '⏸️' : '▶️',
       onClick: isRunning ? stop : () => start(),
-      variant: (isRunning ? 'danger' : 'primary') as 'primary' | 'default' | 'danger',
-      tooltip: isRunning ? 'Stop profiling' : 'Start profiling'
-    },
-    {
-      id: 'reset',
-      icon: <Square size={16} />,
-      onClick: reset,
-      tooltip: 'Reset profiler data'
+      shortcut: 'Ctrl+R'
     },
     {
       id: 'force-gc',
-      icon: <Trash2 size={16} />,
-      label: 'GC',
-      onClick: forceGC,
-      tooltip: 'Force Garbage Collection'
+      label: 'Force Garbage Collection',
+      icon: '🗑️',
+      onClick: forceGC
+    },
+    {
+      id: 'snapshot',
+      label: 'Take Memory Snapshot',
+      icon: '📸',
+      onClick: handleSnapshot,
+      separator: true
+    },
+    {
+      id: 'reset',
+      label: 'Reset Profiler Data',
+      icon: '🔄',
+      onClick: reset,
+      shortcut: 'Ctrl+K'
     },
     {
       id: 'export',
-      icon: <Download size={16} />,
+      label: 'Export Profiler Data',
+      icon: '💾',
       onClick: handleExport,
-      tooltip: 'Export data'
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'settings',
+      label: 'Profiler Settings',
+      icon: '⚙️',
+      onClick: () => console.log('Settings clicked'),
+      separator: true
     }
   ];
 
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Toolbar
-        title="Memory & Performance Profiler"
-        actions={toolbarActions}
-        size="md"
-        variant="default"
-        rightContent={
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <input 
-                type="text" 
-                placeholder="Snapshot name..." 
-                value={snapshotName}
-                onChange={(e) => setSnapshotName(e.target.value)}
-                style={{
-                  padding: '4px 8px',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  width: '150px'
-                }}
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+      {/* Header with status */}
+      <div style={{ 
+        padding: '12px 16px', 
+        borderBottom: '1px solid #e5e7eb',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        background: '#f9fafb'
+      }}>
+        <div>
+          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600', color: '#1f2937' }}>
+            Memory & Performance Profiler
+          </h2>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <StatusIndicator
+            status={isRunning ? 'active' : 'inactive'}
+            label={isRunning ? 'Profiling' : 'Stopped'}
+            size="sm"
+          />
+          {currentMemory && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px' }}>
+              <span>{formatBytes(currentMemory.heapUsed)} / {formatBytes(currentMemory.heapLimit)}</span>
+              <ProgressBar
+                value={(currentMemory.heapUsed / currentMemory.heapLimit) * 100}
+                size="sm"
+                style={{ width: '80px' }}
               />
-              <button 
-                onClick={handleSnapshot}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  padding: '4px 8px',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                  background: 'white',
-                  cursor: 'pointer',
-                  fontSize: '12px'
-                }}
-              >
-                <Camera size={14} />
-                Snapshot
-              </button>
             </div>
-            
-            <StatusIndicator
-              status={isRunning ? 'active' : 'inactive'}
-              label={isRunning ? 'Profiling' : 'Stopped'}
-              size="sm"
-            />
-            
-            {currentMemory && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px' }}>
-                <span>{formatBytes(currentMemory.heapUsed)} / {formatBytes(currentMemory.heapLimit)}</span>
-                <ProgressBar
-                  value={(currentMemory.heapUsed / currentMemory.heapLimit) * 100}
-                  size="sm"
-                  style={{ width: '80px' }}
-                />
-              </div>
-            )}
-          </div>
-        }
-      />
+          )}
+        </div>
+      </div>
+
+      {/* ConfigMenu Overlay */}
+      <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
 
       {/* Alerts */}
       {alerts.length > 0 && (

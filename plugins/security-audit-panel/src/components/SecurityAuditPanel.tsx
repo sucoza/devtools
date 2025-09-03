@@ -22,6 +22,8 @@ import {
   SPACING,
   TYPOGRAPHY,
   RADIUS,
+  ConfigMenu,
+  type ConfigMenuItem,
 } from '@sucoza/shared-components';
 import { useSecurityAudit } from '../hooks';
 import { DashboardTab } from './DashboardTab';
@@ -133,30 +135,87 @@ export function SecurityAuditPanel({ className }: SecurityAuditPanelProps) {
     { label: 'Security Score', value: `${state.metrics.securityScore}/100` },
   ];
 
+  // Convert actions into config menu items
+  const configMenuItems: ConfigMenuItem[] = [
+    {
+      id: 'run-audit',
+      label: state.isScanning ? 'Running...' : 'Run Security Audit',
+      icon: '▶️',
+      onClick: handleStartScan,
+      disabled: state.isScanning,
+      shortcut: 'Ctrl+R'
+    },
+    {
+      id: 'quick-scan',
+      label: 'Quick Scan',
+      icon: '🔍',
+      onClick: () => {
+        // Quick scan implementation
+        actions.quickScan();
+      },
+      disabled: state.isScanning,
+      shortcut: 'Ctrl+Q'
+    },
+    {
+      id: 'generate-report',
+      label: 'Generate Report',
+      icon: '📊',
+      onClick: () => {
+        // Generate report implementation
+        actions.generateReport();
+      },
+      shortcut: 'Ctrl+G'
+    },
+    {
+      id: 'export-results',
+      label: 'Export Results',
+      icon: '💾',
+      onClick: handleExport,
+      disabled: state.metrics.totalVulnerabilities === 0,
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'clear-results',
+      label: 'Clear Results',
+      icon: '🗑️',
+      onClick: handleClearVulnerabilities,
+      disabled: state.metrics.totalVulnerabilities === 0,
+      shortcut: 'Ctrl+K'
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => actions.selectTab('settings'),
+      separator: true
+    }
+  ];
+
   return (
-    <PluginPanel
-      title="Security Audit Panel"
-      icon={Shield}
-      className={className}
-      headerContent={(
-        <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.xs }}>
-          {state.isScanning && (
-            <StatusIndicator
-              status="loading"
-              size="sm"
-              label=""
-            />
-          )}
-          <span style={{ 
-            fontSize: '12px',
-            color: COLORS.text.secondary,
-            ...TYPOGRAPHY.caption 
-          }}>
-            {state.metrics.totalVulnerabilities} vulnerabilities
-          </span>
-        </div>
-      )}
-    >
+    <div style={{ position: 'relative', height: '100%' }}>
+      <PluginPanel
+        title="Security Audit Panel"
+        icon={Shield}
+        className={className}
+        headerContent={(
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.xs }}>
+            {state.isScanning && (
+              <StatusIndicator
+                status="loading"
+                size="sm"
+                label=""
+              />
+            )}
+            <span style={{ 
+              fontSize: '12px',
+              color: COLORS.text.secondary,
+              ...TYPOGRAPHY.caption 
+            }}>
+              {state.metrics.totalVulnerabilities} vulnerabilities
+            </span>
+          </div>
+        )}
+      >
       <Toolbar actions={toolbarActions} />
 
       {/* Severity Summary Bar */}
@@ -238,7 +297,12 @@ export function SecurityAuditPanel({ className }: SecurityAuditPanelProps) {
         </ScrollableContainer>
       </Tabs>
 
-      <Footer stats={footerStats} />
-    </PluginPanel>
+        <Footer stats={footerStats} />
+      </PluginPanel>
+
+      <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
+    </div>
   );
 }

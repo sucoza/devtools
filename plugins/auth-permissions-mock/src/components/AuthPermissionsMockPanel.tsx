@@ -18,7 +18,9 @@ import {
   Tabs,
   Badge,
   Alert,
-  ScrollableContainer
+  ScrollableContainer,
+  ConfigMenu,
+  type ConfigMenuItem
 } from '@sucoza/shared-components';
 import { useAuthMockClient } from '../core/devtools-client';
 import '../styles.css';
@@ -78,6 +80,69 @@ export function AuthPermissionsMockPanel() {
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
+
+  const configMenuItems: ConfigMenuItem[] = [
+    {
+      id: 'apply-scenario',
+      label: selectedScenario ? 'Change Scenario' : 'Apply Scenario',
+      icon: '🎭',
+      onClick: () => {
+        // Navigate to scenarios tab
+        setActiveTab('scenarios');
+      },
+      shortcut: 'Ctrl+S'
+    },
+    {
+      id: 'logout',
+      label: 'Logout',
+      icon: '🔒',
+      onClick: handleLogout,
+      disabled: !state.authState.isAuthenticated,
+      shortcut: 'Ctrl+L'
+    },
+    {
+      id: 'toggle-mock-mode',
+      label: state.mockMode ? 'Disable Mock Mode' : 'Enable Mock Mode',
+      icon: state.mockMode ? '🔴' : '🟢',
+      onClick: () => {
+        // Toggle mock mode functionality
+        console.log('Mock mode toggle to be implemented');
+      },
+      separator: true,
+      shortcut: 'Ctrl+M'
+    },
+    {
+      id: 'export-config',
+      label: 'Export Config',
+      icon: '💾',
+      onClick: handleExportConfig,
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'import-config',
+      label: 'Import Config',
+      icon: '📁',
+      onClick: () => {
+        // Trigger file input click
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = (e) => handleImportConfig(e as any);
+        input.click();
+      }
+    },
+    {
+      id: 'clear-data',
+      label: 'Clear All Data',
+      icon: '🗑️',
+      onClick: () => {
+        if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+          client.clear();
+        }
+      },
+      separator: true
+    }
+  ];
 
   const tabs = [
     {
@@ -509,7 +574,7 @@ export function AuthPermissionsMockPanel() {
   }
 
   return (
-    <div className="auth-mock-panel">
+    <div className="auth-mock-panel" style={{ position: 'relative' }}>
       {/* Warning Banner */}
       {showWarning && state.mockMode && (
         <Alert
@@ -528,6 +593,16 @@ export function AuthPermissionsMockPanel() {
           size="md"
           panelStyle={{ flex: 1, padding: 0 }}
         />
+      </div>
+
+      {/* Custom ConfigMenu overlay */}
+      <div style={{
+        position: 'absolute',
+        top: '12px',
+        right: '12px',
+        zIndex: 10
+      }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
       </div>
     </div>
   );

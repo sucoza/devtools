@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { COLORS, COMPONENT_STYLES, mergeStyles } from '@sucoza/shared-components';
-
-// Simple clsx replacement
-const clsx = (...classes: (string | undefined | boolean)[]): string => {
-  return classes.filter(Boolean).join(' ');
-};
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles, ScrollableContainer, Badge, EmptyState } from '@sucoza/shared-components';
 
 import { 
   Keyboard, 
@@ -218,14 +213,12 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
 
   const getIssueIcon = (severity: 'error' | 'warning') => {
     return severity === 'error' 
-      ? <XCircle className="w-4 h-4 text-red-500" />
-      : <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+      ? <XCircle style={{ width: '16px', height: '16px', color: COLORS.status.error }} />
+      : <AlertTriangle style={{ width: '16px', height: '16px', color: COLORS.status.warning }} />;
   };
 
   const getIssueColor = (severity: 'error' | 'warning') => {
-    return severity === 'error'
-      ? 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20'
-      : 'border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-900/20';
+    return severity === 'error' ? COLORS.status.error : COLORS.status.warning;
   };
 
   const stats = {
@@ -236,24 +229,34 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
   };
 
   return (
-    <div className={clsx('flex flex-col h-full', className)}>
+    <div style={mergeStyles(COMPONENT_STYLES.container.base, className ? {} : {})}>
       {/* Header */}
-      <div className="p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Keyboard className="w-5 h-5 text-green-500" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div style={mergeStyles(COMPONENT_STYLES.header.base, { borderBottom: `1px solid ${COLORS.border.primary}` })}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: SPACING['3xl']
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.lg }}>
+            <Keyboard style={{ width: '20px', height: '20px', color: COLORS.status.success }} />
+            <h2 style={COMPONENT_STYLES.header.title}>
               Keyboard Navigation
             </h2>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.lg }}>
             {!isVisualizing ? (
               <button
                 onClick={startVisualization}
-                className="flex items-center gap-2 px-3 py-2 text-sm bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
+                style={mergeStyles(
+                  COMPONENT_STYLES.button.base,
+                  COMPONENT_STYLES.button.success
+                )}
+                onMouseEnter={(e) => Object.assign(e.currentTarget.style, COMPONENT_STYLES.button.hover)}
+                onMouseLeave={(e) => Object.assign(e.currentTarget.style, COMPONENT_STYLES.button.success)}
               >
-                <Play className="w-4 h-4" />
+                <Play style={{ width: '16px', height: '16px' }} />
                 Start Visualization
               </button>
             ) : (
@@ -261,16 +264,27 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
                 <button
                   onClick={simulateTabPress}
                   disabled={focusableElements.length === 0}
-                  className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  style={mergeStyles(
+                    COMPONENT_STYLES.button.base,
+                    COMPONENT_STYLES.button.primary,
+                    focusableElements.length === 0 ? COMPONENT_STYLES.button.disabled : {}
+                  )}
+                  onMouseEnter={(e) => focusableElements.length > 0 && Object.assign(e.currentTarget.style, COMPONENT_STYLES.button.hover)}
+                  onMouseLeave={(e) => focusableElements.length > 0 && Object.assign(e.currentTarget.style, COMPONENT_STYLES.button.primary)}
                 >
-                  <SkipForward className="w-4 h-4" />
+                  <SkipForward style={{ width: '16px', height: '16px' }} />
                   Tab ({currentFocusIndex + 1}/{focusableElements.length})
                 </button>
                 <button
                   onClick={stopVisualization}
-                  className="flex items-center gap-2 px-3 py-2 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+                  style={mergeStyles(
+                    COMPONENT_STYLES.button.base,
+                    COMPONENT_STYLES.button.danger
+                  )}
+                  onMouseEnter={(e) => Object.assign(e.currentTarget.style, COMPONENT_STYLES.button.hover)}
+                  onMouseLeave={(e) => Object.assign(e.currentTarget.style, COMPONENT_STYLES.button.danger)}
                 >
-                  <Square className="w-4 h-4" />
+                  <Square style={{ width: '16px', height: '16px' }} />
                   Stop
                 </button>
               </>
@@ -279,86 +293,220 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+          gap: SPACING['3xl']
+        }}>
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: COLORS.background.secondary,
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.border.primary}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.text.primary
+            }}>
               {stats.total}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Total Elements</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.secondary
+            }}>Total Elements</div>
           </div>
-          <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: 'rgba(52, 152, 219, 0.1)',
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.status.info}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.info
+            }}>
               {stats.focusable}
             </div>
-            <div className="text-sm text-blue-700 dark:text-blue-300">Focusable</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.status.info
+            }}>Focusable</div>
           </div>
-          <div className="text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: 'rgba(231, 76, 60, 0.1)',
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.status.error}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.error
+            }}>
               {stats.errors}
             </div>
-            <div className="text-sm text-red-700 dark:text-red-300">Errors</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.status.error
+            }}>Errors</div>
           </div>
-          <div className="text-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: 'rgba(243, 156, 18, 0.1)',
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.status.warning}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.warning
+            }}>
               {stats.warnings}
             </div>
-            <div className="text-sm text-yellow-700 dark:text-yellow-300">Warnings</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.status.warning
+            }}>Warnings</div>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        overflow: 'hidden'
+      }}>
         {/* Tab Order List */}
-        <div className="w-1/2 border-r border-gray-200 dark:border-gray-700 overflow-auto">
-          <div className="p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-            <h3 className="font-medium text-gray-900 dark:text-white">Tab Order</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+        <div style={{
+          width: '50%',
+          borderRight: `1px solid ${COLORS.border.primary}`,
+          overflow: 'auto'
+        }}>
+          <div style={{
+            padding: SPACING['2xl'],
+            background: COLORS.background.secondary,
+            borderBottom: `1px solid ${COLORS.border.primary}`
+          }}>
+            <h3 style={{
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.primary,
+              margin: 0,
+              marginBottom: SPACING.xs
+            }}>Tab Order</h3>
+            <p style={{
+              fontSize: TYPOGRAPHY.fontSize.base,
+              color: COLORS.text.secondary,
+              margin: 0
+            }}>
               Click any element to focus it
             </p>
           </div>
 
           {focusableElements.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-              <div className="text-center">
-                <Keyboard className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
-                <p className="font-medium">No Focusable Elements</p>
-                <p className="text-sm">Start visualization to analyze keyboard navigation</p>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              color: COLORS.text.muted
+            }}>
+              <div style={{ textAlign: 'center' }}>
+                <Keyboard style={{
+                  width: '48px',
+                  height: '48px',
+                  margin: `0 auto ${SPACING['4xl']}`,
+                  color: COLORS.text.muted
+                }} />
+                <p style={{
+                  fontWeight: TYPOGRAPHY.fontWeight.medium,
+                  color: COLORS.text.primary,
+                  marginBottom: SPACING.lg
+                }}>No Focusable Elements</p>
+                <p style={{
+                  fontSize: TYPOGRAPHY.fontSize.base,
+                  color: COLORS.text.secondary
+                }}>Start visualization to analyze keyboard navigation</p>
               </div>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            <div>
               {focusableElements.map((element, index) => (
                 <div
                   key={index}
-                  className={clsx(
-                    'p-3 cursor-pointer transition-colors',
-                    currentFocusIndex === index
-                      ? 'bg-blue-100 dark:bg-blue-900/30 border-l-4 border-blue-500'
-                      : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
-                  )}
+                  style={{
+                    padding: SPACING['2xl'],
+                    cursor: 'pointer',
+                    transition: 'background-color 0.15s ease',
+                    borderBottom: `1px solid ${COLORS.border.primary}`,
+                    ...(currentFocusIndex === index ? {
+                      background: COLORS.background.selected,
+                      borderLeft: `4px solid ${COLORS.border.focus}`
+                    } : {})
+                  }}
                   onClick={() => jumpToElement(index)}
+                  onMouseEnter={(e) => {
+                    if (currentFocusIndex !== index) {
+                      e.currentTarget.style.backgroundColor = COLORS.background.hover;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (currentFocusIndex !== index) {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }
+                  }}
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded text-xs font-bold flex items-center justify-center">
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: SPACING['2xl'] }}>
+                    <div style={{
+                      flexShrink: 0,
+                      width: '24px',
+                      height: '24px',
+                      background: COLORS.background.tertiary,
+                      color: COLORS.text.secondary,
+                      borderRadius: RADIUS.md,
+                      fontSize: TYPOGRAPHY.fontSize.sm,
+                      fontWeight: TYPOGRAPHY.fontWeight.bold,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}>
                       {index + 1}
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{
+                        fontSize: TYPOGRAPHY.fontSize.base,
+                        fontWeight: TYPOGRAPHY.fontWeight.medium,
+                        color: COLORS.text.primary,
+                        marginBottom: SPACING.xs
+                      }}>
                         {element.tagName.toLowerCase()}
-                        {element.id && <span className="text-blue-600 dark:text-blue-400">#{element.id}</span>}
+                        {element.id && <span style={{ color: COLORS.text.accent }}>#{element.id}</span>}
                         {element.className && (
-                          <span className="text-green-600 dark:text-green-400">
+                          <span style={{ color: COLORS.status.success }}>
                             .{element.className.split(' ')[0]}
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      <div style={{
+                        fontSize: TYPOGRAPHY.fontSize.sm,
+                        color: COLORS.text.muted,
+                        marginBottom: SPACING.xs
+                      }}>
                         {element.getAttribute('aria-label') || 
                          element.textContent?.trim().substring(0, 50) || 
                          'No text content'}
                       </div>
                       {element.getAttribute('tabindex') && (
-                        <div className="text-xs text-purple-600 dark:text-purple-400 mt-1">
+                        <div style={{
+                          fontSize: TYPOGRAPHY.fontSize.sm,
+                          color: COLORS.severity.moderate,
+                          marginTop: SPACING.xs
+                        }}>
                           tabindex: {element.getAttribute('tabindex')}
                         </div>
                       )}
@@ -368,10 +516,20 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
                         e.stopPropagation();
                         highlightElement(element, index + 1);
                       }}
-                      className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                      style={{
+                        color: COLORS.text.muted,
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: SPACING.sm,
+                        borderRadius: RADIUS.md,
+                        transition: 'color 0.15s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = COLORS.text.secondary}
+                      onMouseLeave={(e) => e.currentTarget.style.color = COLORS.text.muted}
                       title="Highlight element"
                     >
-                      <Eye className="w-4 h-4" />
+                      <Eye style={{ width: '16px', height: '16px' }} />
                     </button>
                   </div>
                 </div>
@@ -381,42 +539,94 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
         </div>
 
         {/* Issues List */}
-        <div className="w-1/2 overflow-auto">
-          <div className="p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-            <h3 className="font-medium text-gray-900 dark:text-white">Keyboard Issues</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+        <div style={{
+          width: '50%',
+          overflow: 'auto'
+        }}>
+          <div style={{
+            padding: SPACING['2xl'],
+            background: COLORS.background.secondary,
+            borderBottom: `1px solid ${COLORS.border.primary}`
+          }}>
+            <h3 style={{
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.primary,
+              margin: 0,
+              marginBottom: SPACING.xs
+            }}>Keyboard Issues</h3>
+            <p style={{
+              fontSize: TYPOGRAPHY.fontSize.base,
+              color: COLORS.text.secondary,
+              margin: 0
+            }}>
               {issues.length} issues found
             </p>
           </div>
 
           {issues.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-              <div className="text-center">
-                <CheckCircle className="w-12 h-12 mx-auto mb-4 text-green-500" />
-                <p className="font-medium">No Issues Found</p>
-                <p className="text-sm">Keyboard navigation looks good!</p>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              color: COLORS.text.muted
+            }}>
+              <div style={{ textAlign: 'center' }}>
+                <CheckCircle style={{
+                  width: '48px',
+                  height: '48px',
+                  margin: `0 auto ${SPACING['4xl']}`,
+                  color: COLORS.status.success
+                }} />
+                <p style={{
+                  fontWeight: TYPOGRAPHY.fontWeight.medium,
+                  color: COLORS.text.primary,
+                  marginBottom: SPACING.lg
+                }}>No Issues Found</p>
+                <p style={{
+                  fontSize: TYPOGRAPHY.fontSize.base,
+                  color: COLORS.text.secondary
+                }}>Keyboard navigation looks good!</p>
               </div>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            <div>
               {issues.map((issue, index) => (
                 <div
                   key={index}
-                  className={clsx(
-                    'p-4 border-l-4',
-                    getIssueColor(issue.severity)
-                  )}
+                  style={{
+                    padding: SPACING['4xl'],
+                    borderBottom: `1px solid ${COLORS.border.primary}`,
+                    borderLeft: `4px solid ${issue.severity === 'error' ? COLORS.status.error : COLORS.status.warning}`
+                  }}
                 >
-                  <div className="flex items-start gap-3">
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: SPACING['2xl'] }}>
                     {getIssueIcon(issue.severity)}
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white text-sm">
+                    <div style={{ flex: 1 }}>
+                      <h4 style={{
+                        fontWeight: TYPOGRAPHY.fontWeight.medium,
+                        color: COLORS.text.primary,
+                        fontSize: TYPOGRAPHY.fontSize.base,
+                        marginBottom: SPACING.xs
+                      }}>
                         {issue.description}
                       </h4>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      <p style={{
+                        fontSize: TYPOGRAPHY.fontSize.sm,
+                        color: COLORS.text.secondary,
+                        marginBottom: SPACING.lg
+                      }}>
                         Issue: {issue.issue}
                       </p>
-                      <code className="text-xs text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 px-1 rounded mt-2 block">
+                      <code style={{
+                        fontSize: TYPOGRAPHY.fontSize.sm,
+                        color: COLORS.text.primary,
+                        background: COLORS.background.tertiary,
+                        padding: `${SPACING.xs} ${SPACING.sm}`,
+                        borderRadius: RADIUS.sm,
+                        display: 'block',
+                        fontFamily: TYPOGRAPHY.fontFamily.mono
+                      }}>
                         {issue.element.tagName.toLowerCase()}
                         {issue.element.id && `#${issue.element.id}`}
                         {issue.element.className && `.${issue.element.className.split(' ')[0]}`}
@@ -431,10 +641,20 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
                           highlightElement(issue.element, 0);
                         }
                       }}
-                      className="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
+                      style={{
+                        color: COLORS.status.info,
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: SPACING.sm,
+                        borderRadius: RADIUS.md,
+                        transition: 'color 0.15s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = COLORS.text.accent}
+                      onMouseLeave={(e) => e.currentTarget.style.color = COLORS.status.info}
                       title="Focus element"
                     >
-                      <Eye className="w-4 h-4" />
+                      <Eye style={{ width: '16px', height: '16px' }} />
                     </button>
                   </div>
                 </div>

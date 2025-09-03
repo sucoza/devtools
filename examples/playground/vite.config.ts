@@ -8,14 +8,14 @@ export default defineConfig({
     tanstackDevtoolsImporter({
       plugins: [
         '@sucoza/logger-devtools-plugin',
-        // '@sucoza/zustand-devtools-plugin',
-        // '@sucoza/design-system-inspector-devtools-plugin',
-        // '@sucoza/router-devtools-plugin',
-        // '@sucoza/error-boundary-visualizer-devtools-plugin',
-        // '@sucoza/websocket-signalr-devtools-plugin',
-        // '@sucoza/memory-performance-profiler-devtools-plugin',
-        // '@sucoza/render-waste-detector-devtools-plugin',
-        // '@sucoza/accessibility-devtools-plugin',
+        '@sucoza/zustand-devtools-plugin',
+        '@sucoza/design-system-inspector-devtools-plugin',
+        '@sucoza/router-devtools-plugin',
+        '@sucoza/error-boundary-visualizer-devtools-plugin',
+        '@sucoza/websocket-signalr-devtools-plugin',
+        '@sucoza/memory-performance-profiler-devtools-plugin',
+        '@sucoza/render-waste-detector-devtools-plugin',
+        '@sucoza/accessibility-devtools-plugin',
       ],
       config: {
         defaultOpen: false,

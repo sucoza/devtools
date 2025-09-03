@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { COLORS, COMPONENT_STYLES, mergeStyles } from '@sucoza/shared-components';
-
-// Simple clsx replacement
-const clsx = (...classes: (string | undefined | boolean)[]): string => {
-  return classes.filter(Boolean).join(' ');
-};
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles, ScrollableContainer, Badge, EmptyState } from '@sucoza/shared-components';
 
 import { 
   Shield, 
@@ -418,37 +413,42 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
   const getSeverityIcon = (severity: ARIAValidationIssue['severity']) => {
     switch (severity) {
       case 'critical':
-        return <XCircle className="w-4 h-4 text-red-500" />;
+        return <XCircle style={{ width: '16px', height: '16px', color: COLORS.severity.critical }} />;
       case 'serious':
-        return <AlertTriangle className="w-4 h-4 text-red-500" />;
+        return <AlertTriangle style={{ width: '16px', height: '16px', color: COLORS.status.error }} />;
       case 'moderate':
-        return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+        return <AlertTriangle style={{ width: '16px', height: '16px', color: COLORS.severity.moderate }} />;
       case 'minor':
-        return <Info className="w-4 h-4 text-blue-500" />;
+        return <Info style={{ width: '16px', height: '16px', color: COLORS.severity.minor }} />;
     }
   };
 
   const getSeverityColor = (severity: ARIAValidationIssue['severity']) => {
     switch (severity) {
       case 'critical':
-        return 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20';
+        return COLORS.severity.critical;
       case 'serious':
-        return 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20';
+        return COLORS.status.error;
       case 'moderate':
-        return 'border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-900/20';
+        return COLORS.severity.moderate;
       case 'minor':
-        return 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/20';
+        return COLORS.severity.minor;
     }
   };
 
   return (
-    <div className={clsx('flex flex-col h-full', className)}>
+    <div style={mergeStyles(COMPONENT_STYLES.container.base, className ? {} : {})}>
       {/* Header */}
-      <div className="p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Shield className="w-5 h-5 text-purple-500" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div style={mergeStyles(COMPONENT_STYLES.header.base, { borderBottom: `1px solid ${COLORS.border.primary}` })}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: SPACING['3xl']
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.lg }}>
+            <Shield style={{ width: '20px', height: '20px', color: COLORS.severity.moderate }} />
+            <h2 style={COMPONENT_STYLES.header.title}>
               ARIA Validator
             </h2>
           </div>
@@ -456,59 +456,146 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
           <button
             onClick={runAnalysis}
             disabled={isAnalyzing}
-            className="flex items-center gap-2 px-3 py-2 text-sm bg-purple-500 text-white rounded hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            style={mergeStyles(
+              COMPONENT_STYLES.button.base,
+              { backgroundColor: COLORS.severity.moderate, borderColor: COLORS.severity.moderate, color: '#ffffff' },
+              isAnalyzing ? COMPONENT_STYLES.button.disabled : {}
+            )}
+            onMouseEnter={(e) => !isAnalyzing && Object.assign(e.currentTarget.style, COMPONENT_STYLES.button.hover)}
+            onMouseLeave={(e) => !isAnalyzing && Object.assign(e.currentTarget.style, { backgroundColor: COLORS.severity.moderate })}
           >
-            <RotateCw className={clsx('w-4 h-4', isAnalyzing && 'animate-spin')} />
+            <RotateCw style={{
+              width: '16px',
+              height: '16px',
+              animation: isAnalyzing ? 'spin 1s linear infinite' : 'none'
+            }} />
             {isAnalyzing ? 'Validating...' : 'Validate'}
           </button>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <div className="text-center p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(100px, 1fr))',
+          gap: SPACING['3xl']
+        }}>
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: COLORS.background.secondary,
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.border.primary}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.text.primary
+            }}>
               {stats.total}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Total</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.secondary
+            }}>Total</div>
           </div>
-          <div className="text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: 'rgba(231, 76, 60, 0.1)',
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.severity.critical}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.severity.critical
+            }}>
               {stats.critical}
             </div>
-            <div className="text-sm text-red-700 dark:text-red-300">Critical</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.severity.critical
+            }}>Critical</div>
           </div>
-          <div className="text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: 'rgba(231, 76, 60, 0.1)',
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.status.error}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.error
+            }}>
               {stats.serious}
             </div>
-            <div className="text-sm text-red-700 dark:text-red-300">Serious</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.status.error
+            }}>Serious</div>
           </div>
-          <div className="text-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: 'rgba(243, 156, 18, 0.1)',
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.severity.moderate}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.severity.moderate
+            }}>
               {stats.moderate}
             </div>
-            <div className="text-sm text-yellow-700 dark:text-yellow-300">Moderate</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.severity.moderate
+            }}>Moderate</div>
           </div>
-          <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: 'rgba(52, 152, 219, 0.1)',
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.severity.minor}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.severity.minor
+            }}>
               {stats.minor}
             </div>
-            <div className="text-sm text-blue-700 dark:text-blue-300">Minor</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.severity.minor
+            }}>Minor</div>
           </div>
         </div>
       </div>
 
       {/* Filter Controls */}
-      <div className="p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+      <div style={{
+        padding: SPACING['2xl'],
+        background: COLORS.background.secondary,
+        borderBottom: `1px solid ${COLORS.border.primary}`
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.lg }}>
+            <label style={{
+              fontSize: TYPOGRAPHY.fontSize.base,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.secondary
+            }}>
               Filter by severity:
             </label>
             <select
               value={filterBy}
               onChange={(e) => setFilterBy(e.target.value as typeof filterBy)}
-              className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              style={COMPONENT_STYLES.input.base}
             >
               <option value="all">All Issues</option>
               <option value="critical">Critical Only</option>
@@ -518,83 +605,175 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
             </select>
           </div>
 
-          <div className="text-sm text-gray-600 dark:text-gray-400">
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.base,
+            color: COLORS.text.secondary
+          }}>
             {filteredIssues.length} of {issues.length} issues
           </div>
         </div>
       </div>
 
       {/* Issues List */}
-      <div className="flex-1 overflow-auto">
+      <ScrollableContainer>
         {isAnalyzing ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <RotateCw className="w-8 h-8 mx-auto mb-2 animate-spin text-purple-500" />
-              <p className="text-gray-600 dark:text-gray-400">Validating ARIA attributes...</p>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%'
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <RotateCw style={{
+                width: '32px',
+                height: '32px',
+                margin: `0 auto ${SPACING.lg}`,
+                animation: 'spin 1s linear infinite',
+                color: COLORS.severity.moderate
+              }} />
+              <p style={{
+                color: COLORS.text.secondary,
+                fontSize: TYPOGRAPHY.fontSize.base
+              }}>Validating ARIA attributes...</p>
             </div>
           </div>
         ) : filteredIssues.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-            <div className="text-center">
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            color: COLORS.text.muted
+          }}>
+            <div style={{ textAlign: 'center' }}>
               {issues.length === 0 ? (
                 <>
-                  <CheckCircle className="w-12 h-12 mx-auto mb-4 text-green-500" />
-                  <p className="text-lg font-medium mb-2">No ARIA Issues Found</p>
-                  <p className="text-sm">Great job! Your ARIA usage looks good.</p>
+                  <CheckCircle style={{
+                    width: '48px',
+                    height: '48px',
+                    margin: `0 auto ${SPACING['4xl']}`,
+                    color: COLORS.status.success
+                  }} />
+                  <p style={{
+                    fontSize: TYPOGRAPHY.fontSize.lg,
+                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                    marginBottom: SPACING.lg,
+                    color: COLORS.text.primary
+                  }}>No ARIA Issues Found</p>
+                  <p style={{
+                    fontSize: TYPOGRAPHY.fontSize.base,
+                    color: COLORS.text.secondary
+                  }}>Great job! Your ARIA usage looks good.</p>
                 </>
               ) : (
                 <>
-                  <Shield className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
-                  <p className="text-lg font-medium mb-2">No Issues Match Filter</p>
-                  <p className="text-sm">Try adjusting your filter settings.</p>
+                  <Shield style={{
+                    width: '48px',
+                    height: '48px',
+                    margin: `0 auto ${SPACING['4xl']}`,
+                    color: COLORS.text.muted
+                  }} />
+                  <p style={{
+                    fontSize: TYPOGRAPHY.fontSize.lg,
+                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                    marginBottom: SPACING.lg,
+                    color: COLORS.text.primary
+                  }}>No Issues Match Filter</p>
+                  <p style={{
+                    fontSize: TYPOGRAPHY.fontSize.base,
+                    color: COLORS.text.secondary
+                  }}>Try adjusting your filter settings.</p>
                 </>
               )}
             </div>
           </div>
         ) : (
-          <div className="divide-y divide-gray-200 dark:divide-gray-700">
+          <div>
             {filteredIssues.map((issue, index) => (
               <div
                 key={index}
-                className={clsx(
-                  'p-4 border-l-4',
-                  getSeverityColor(issue.severity)
-                )}
+                style={{
+                  padding: SPACING['4xl'],
+                  borderBottom: `1px solid ${COLORS.border.primary}`,
+                  borderLeft: `4px solid ${getSeverityColor(issue.severity)}`
+                }}
               >
-                <div className="flex items-start gap-3">
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: SPACING['2xl'] }}>
                   {getSeverityIcon(issue.severity)}
-                  <div className="flex-1">
-                    <h4 className="font-medium text-gray-900 dark:text-white text-sm">
+                  <div style={{ flex: 1 }}>
+                    <h4 style={{
+                      fontWeight: TYPOGRAPHY.fontWeight.medium,
+                      color: COLORS.text.primary,
+                      fontSize: TYPOGRAPHY.fontSize.base,
+                      marginBottom: SPACING.xs
+                    }}>
                       {issue.message}
                     </h4>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                    <p style={{
+                      fontSize: TYPOGRAPHY.fontSize.sm,
+                      color: COLORS.text.secondary,
+                      marginBottom: SPACING.xs
+                    }}>
                       Rule: {issue.rule} • Attribute: {issue.attribute}
                     </p>
                     {issue.actualValue && (
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                        Current value: <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">{issue.actualValue}</code>
+                      <p style={{
+                        fontSize: TYPOGRAPHY.fontSize.sm,
+                        color: COLORS.text.secondary,
+                        marginBottom: SPACING.xs
+                      }}>
+                        Current value: <code style={{
+                          background: COLORS.background.tertiary,
+                          padding: `${SPACING.xs} ${SPACING.sm}`,
+                          borderRadius: RADIUS.sm,
+                          fontFamily: TYPOGRAPHY.fontFamily.mono
+                        }}>{issue.actualValue}</code>
                         {issue.expectedValue && (
-                          <> • Expected: <code className="bg-gray-100 dark:bg-gray-700 px-1 rounded">{issue.expectedValue}</code></>
+                          <> • Expected: <code style={{
+                            background: COLORS.background.tertiary,
+                            padding: `${SPACING.xs} ${SPACING.sm}`,
+                            borderRadius: RADIUS.sm,
+                            fontFamily: TYPOGRAPHY.fontFamily.mono
+                          }}>{issue.expectedValue}</code></>
                         )}
                       </p>
                     )}
-                    <code className="text-xs text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 px-1 rounded mt-2 block">
+                    <code style={{
+                      fontSize: TYPOGRAPHY.fontSize.sm,
+                      color: COLORS.text.primary,
+                      background: COLORS.background.tertiary,
+                      padding: `${SPACING.xs} ${SPACING.sm}`,
+                      borderRadius: RADIUS.sm,
+                      marginTop: SPACING.lg,
+                      display: 'block',
+                      fontFamily: TYPOGRAPHY.fontFamily.mono
+                    }}>
                       {issue.selector}
                     </code>
                   </div>
                   <button
                     onClick={() => highlightElement(issue.element)}
-                    className="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
+                    style={{
+                      color: COLORS.status.info,
+                      background: 'transparent',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: SPACING.sm,
+                      borderRadius: RADIUS.md,
+                      transition: 'color 0.15s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = COLORS.text.accent}
+                    onMouseLeave={(e) => e.currentTarget.style.color = COLORS.status.info}
                     title="Highlight element"
                   >
-                    <Eye className="w-4 h-4" />
+                    <Eye style={{ width: '16px', height: '16px' }} />
                   </button>
                 </div>
               </div>
             ))}
           </div>
         )}
-      </div>
+      </ScrollableContainer>
     </div>
   );
 }

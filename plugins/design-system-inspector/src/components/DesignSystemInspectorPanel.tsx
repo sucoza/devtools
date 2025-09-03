@@ -1,17 +1,12 @@
 import React from 'react';
 import { 
-  Play, 
-  Pause, 
-  RotateCcw, 
-  AlertTriangle,
   BarChart3,
   Palette,
   Type,
   Ruler,
-  AlertCircle,
-  Settings as SettingsIcon
+  AlertCircle
 } from 'lucide-react';
-import { PluginPanel, PluginTab, PluginAction, PluginMetric } from '@sucoza/shared-components';
+import { PluginPanel, PluginTab, PluginMetric, ConfigMenu, ConfigMenuItem } from '@sucoza/shared-components';
 import { useDesignSystemInspector } from '../hooks';
 import { DashboardTab } from './tabs/DashboardTab';
 import { ComponentsTab } from './tabs/ComponentsTab';
@@ -98,31 +93,48 @@ export function DesignSystemInspectorPanel() {
     },
   ];
 
-  // Configure plugin actions
-  const pluginActions: PluginAction[] = [
+  // Configure config menu items
+  const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'toggle-analysis',
       label: isAnalysisEnabled ? 'Stop Analysis' : 'Start Analysis',
-      icon: isAnalysisEnabled ? Pause : Play,
+      icon: isAnalysisEnabled ? '⏸️' : '▶️',
       onClick: handleToggleAnalysis,
-      variant: isAnalysisEnabled ? 'danger' : 'success'
+      shortcut: 'Ctrl+R'
     },
     {
       id: 'toggle-realtime',
-      label: 'Real-time',
-      icon: RotateCcw,
+      label: isRealTimeMode ? 'Disable Real-time' : 'Enable Real-time',
+      icon: '🔄',
       onClick: handleToggleRealTime,
-      variant: isRealTimeMode ? 'primary' : 'default',
-      disabled: !isAnalysisEnabled,
-      tooltip: isRealTimeMode ? 'Disable real-time monitoring' : 'Enable real-time monitoring'
+      disabled: !isAnalysisEnabled
     },
     {
       id: 'issues-only',
-      label: 'Issues Only',
-      icon: AlertTriangle,
-      onClick: actions.toggleShowOnlyIssues,
-      variant: showOnlyIssues ? 'warning' : 'default',
-      tooltip: 'Toggle to show only items with issues'
+      label: showOnlyIssues ? 'Show All Items' : 'Show Issues Only',
+      icon: '⚠️',
+      onClick: actions.toggleShowOnlyIssues
+    },
+    {
+      id: 'export-report',
+      label: 'Export Analysis Report',
+      icon: '💾',
+      onClick: () => console.log('Export report clicked'),
+      shortcut: 'Ctrl+E',
+      separator: true
+    },
+    {
+      id: 'clear-data',
+      label: 'Clear Analysis Data',
+      icon: '🗑️',
+      onClick: () => console.log('Clear data clicked')
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => console.log('Settings clicked'),
+      separator: true
     }
   ];
 
@@ -152,25 +164,28 @@ export function DesignSystemInspectorPanel() {
   ];
 
   return (
-    <PluginPanel
-      title="Design System Inspector"
-      icon={Palette}
-      subtitle="Monitor your design system's health and consistency"
-      tabs={tabs}
-      activeTabId={activeTab}
-      onTabChange={actions.selectTab}
-      actions={pluginActions}
-      searchValue={searchQuery}
-      onSearchChange={actions.setSearchQuery}
-      searchPlaceholder="Search components, tokens, issues..."
-      metrics={metrics}
-      showMetrics={true}
-      status={{
-        isActive: isAnalysisEnabled,
-        label: isAnalysisEnabled ? (isRealTimeMode ? 'Real-time Active' : 'Analysis Active') : 'Analysis Inactive'
-      }}
-      showSettings={true}
-      onSettingsClick={() => console.log('Settings clicked')}
-    />
+    <div style={{ position: 'relative', height: '100%' }}>
+      <PluginPanel
+        title="Design System Inspector"
+        icon={Palette}
+        subtitle="Monitor your design system's health and consistency"
+        tabs={tabs}
+        activeTabId={activeTab}
+        onTabChange={actions.selectTab}
+        searchValue={searchQuery}
+        onSearchChange={actions.setSearchQuery}
+        searchPlaceholder="Search components, tokens, issues..."
+        metrics={metrics}
+        showMetrics={true}
+        status={{
+          isActive: isAnalysisEnabled,
+          label: isAnalysisEnabled ? (isRealTimeMode ? 'Real-time Active' : 'Analysis Active') : 'Analysis Inactive'
+        }}
+      />
+      
+      <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
+    </div>
   );
 }

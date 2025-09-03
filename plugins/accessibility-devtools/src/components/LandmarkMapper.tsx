@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { COLORS, COMPONENT_STYLES, mergeStyles } from '@sucoza/shared-components';
-
-// Simple clsx replacement
-const clsx = (...classes: (string | undefined | boolean)[]): string => {
-  return classes.filter(Boolean).join(' ');
-};
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles, ScrollableContainer, Badge, Alert } from '@sucoza/shared-components';
 
 import { 
   MapPin, 
@@ -315,92 +310,237 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
   }
 
   return (
-    <div className={clsx('flex flex-col h-full', className)}>
+    <div style={mergeStyles(COMPONENT_STYLES.container.base, className ? {} : {})}>
       {/* Header */}
-      <div className="p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-indigo-500" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div style={mergeStyles(COMPONENT_STYLES.header.base, { borderBottom: `1px solid ${COLORS.border.primary}` })}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: SPACING.lg }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.sm }}>
+            <MapPin style={{ width: '20px', height: '20px', color: COLORS.status.info }} />
+            <h2 style={{
+              fontSize: TYPOGRAPHY.fontSize.lg,
+              fontWeight: TYPOGRAPHY.fontWeight.semibold,
+              color: COLORS.text.primary
+            }}>
               Landmark Structure
             </h2>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.sm }}>
             <button
               onClick={toggleOverlay}
-              className={clsx(
-                'flex items-center gap-2 px-3 py-2 text-sm rounded transition-colors',
-                showOverlay
-                  ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400'
-                  : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-              )}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: SPACING.sm,
+                padding: `${SPACING.sm} ${SPACING.md}`,
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                backgroundColor: showOverlay ? COLORS.background.tertiary : COLORS.background.secondary,
+                color: showOverlay ? COLORS.status.info : COLORS.text.secondary,
+                border: 'none',
+                borderRadius: RADIUS.md,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                if (!showOverlay) {
+                  e.currentTarget.style.backgroundColor = COLORS.background.tertiary;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!showOverlay) {
+                  e.currentTarget.style.backgroundColor = COLORS.background.secondary;
+                }
+              }}
             >
-              <Eye className="w-4 h-4" />
+              <Eye style={{ width: '16px', height: '16px' }} />
               {showOverlay ? 'Hide Overlay' : 'Show Overlay'}
             </button>
             
             <button
               onClick={runAnalysis}
               disabled={isAnalyzing}
-              className="flex items-center gap-2 px-3 py-2 text-sm bg-indigo-500 text-white rounded hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: SPACING.sm,
+                padding: `${SPACING.sm} ${SPACING.md}`,
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                backgroundColor: isAnalyzing ? COLORS.background.tertiary : COLORS.status.info,
+                color: COLORS.text.primary,
+                border: 'none',
+                borderRadius: RADIUS.md,
+                cursor: isAnalyzing ? 'not-allowed' : 'pointer',
+                opacity: isAnalyzing ? 0.5 : 1,
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                if (!isAnalyzing) {
+                  e.currentTarget.style.backgroundColor = COLORS.background.hover;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isAnalyzing) {
+                  e.currentTarget.style.backgroundColor = COLORS.status.info;
+                }
+              }}
             >
-              <RotateCw className={clsx('w-4 h-4', isAnalyzing && 'animate-spin')} />
+              <RotateCw style={{
+                width: '16px',
+                height: '16px',
+                animation: isAnalyzing ? 'spin 1s linear infinite' : 'none'
+              }} />
               {isAnalyzing ? 'Analyzing...' : 'Analyze'}
             </button>
           </div>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-          <div className="text-center p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-            <div className="text-xl font-bold text-gray-900 dark:text-white">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+          gap: SPACING.md
+        }}>
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING.md,
+            backgroundColor: COLORS.background.secondary,
+            borderRadius: RADIUS.lg
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.text.primary
+            }}>
               {stats.total}
             </div>
-            <div className="text-xs text-gray-600 dark:text-gray-400">Total</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: COLORS.text.secondary
+            }}>Total</div>
           </div>
-          <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING.md,
+            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+            borderRadius: RADIUS.lg
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.info
+            }}>
               {stats.main}
             </div>
-            <div className="text-xs text-blue-700 dark:text-blue-300">Main</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: COLORS.status.info
+            }}>Main</div>
           </div>
-          <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-            <div className="text-xl font-bold text-green-600 dark:text-green-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING.md,
+            backgroundColor: 'rgba(78, 201, 176, 0.1)',
+            borderRadius: RADIUS.lg
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.success
+            }}>
               {stats.navigation}
             </div>
-            <div className="text-xs text-green-700 dark:text-green-300">Nav</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: COLORS.status.success
+            }}>Nav</div>
           </div>
-          <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-            <div className="text-xl font-bold text-purple-600 dark:text-purple-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING.md,
+            backgroundColor: 'rgba(155, 89, 182, 0.1)',
+            borderRadius: RADIUS.lg
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: '#9b59b6'
+            }}>
               {stats.complementary}
             </div>
-            <div className="text-xs text-purple-700 dark:text-purple-300">Aside</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: '#9b59b6'
+            }}>Aside</div>
           </div>
-          <div className="text-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-            <div className="text-xl font-bold text-yellow-600 dark:text-yellow-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING.md,
+            backgroundColor: 'rgba(241, 196, 15, 0.1)',
+            borderRadius: RADIUS.lg
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.warning
+            }}>
               {stats.banner}
             </div>
-            <div className="text-xs text-yellow-700 dark:text-yellow-300">Header</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: COLORS.status.warning
+            }}>Header</div>
           </div>
-          <div className="text-center p-3 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
-            <div className="text-xl font-bold text-indigo-600 dark:text-indigo-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING.md,
+            backgroundColor: 'rgba(102, 51, 153, 0.1)',
+            borderRadius: RADIUS.lg
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.info
+            }}>
               {stats.contentinfo}
             </div>
-            <div className="text-xs text-indigo-700 dark:text-indigo-300">Footer</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xs,
+              color: COLORS.status.info
+            }}>Footer</div>
           </div>
         </div>
 
         {/* Issues */}
         {issues.length > 0 && (
-          <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-            <div className="flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+          <div style={{
+            marginTop: SPACING.lg,
+            padding: SPACING.md,
+            backgroundColor: 'rgba(241, 196, 15, 0.1)',
+            border: `1px solid ${COLORS.status.warning}`,
+            borderRadius: RADIUS.lg
+          }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: SPACING.sm }}>
+              <AlertTriangle style={{
+                width: '16px',
+                height: '16px',
+                color: COLORS.status.warning,
+                marginTop: '2px'
+              }} />
               <div>
-                <h4 className="text-sm font-medium text-yellow-800 dark:text-yellow-300">
+                <h4 style={{
+                  fontSize: TYPOGRAPHY.fontSize.sm,
+                  fontWeight: TYPOGRAPHY.fontWeight.medium,
+                  color: COLORS.status.warning
+                }}>
                   Landmark Issues Detected
                 </h4>
-                <ul className="text-sm text-yellow-700 dark:text-yellow-400 mt-1 list-disc list-inside">
+                <ul style={{
+                  fontSize: TYPOGRAPHY.fontSize.sm,
+                  color: COLORS.status.warning,
+                  marginTop: SPACING.xs,
+                  listStyle: 'disc',
+                  paddingLeft: SPACING.lg
+                }}>
                   {issues.map((issue, index) => (
                     <li key={index}>{issue}</li>
                   ))}
@@ -412,25 +552,53 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
       </div>
 
       {/* Landmark Tree */}
-      <div className="flex-1 overflow-auto">
+      <ScrollableContainer>
         {isAnalyzing ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <RotateCw className="w-8 h-8 mx-auto mb-2 animate-spin text-indigo-500" />
-              <p className="text-gray-600 dark:text-gray-400">Analyzing landmark structure...</p>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%'
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <RotateCw style={{
+                width: '32px',
+                height: '32px',
+                margin: '0 auto 8px auto',
+                animation: 'spin 1s linear infinite',
+                color: COLORS.status.info
+              }} />
+              <p style={{ color: COLORS.text.secondary }}>Analyzing landmark structure...</p>
             </div>
           </div>
         ) : landmarks.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-            <div className="text-center">
-              <MapPin className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
-              <p className="text-lg font-medium mb-2">No Landmarks Found</p>
-              <p className="text-sm">Consider adding landmark roles for better navigation</p>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            color: COLORS.text.secondary
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <MapPin style={{
+                width: '48px',
+                height: '48px',
+                margin: '0 auto 16px auto',
+                color: COLORS.text.muted
+              }} />
+              <p style={{
+                fontSize: TYPOGRAPHY.fontSize.lg,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                marginBottom: SPACING.sm
+              }}>No Landmarks Found</p>
+              <p style={{
+                fontSize: TYPOGRAPHY.fontSize.sm
+              }}>Consider adding landmark roles for better navigation</p>
             </div>
           </div>
         ) : (
-          <div className="p-4">
-            <div className="space-y-2">
+          <div style={{ padding: SPACING.lg }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.sm }}>
               {landmarks.map((landmark, index) => (
                 <LandmarkItem
                   key={`${landmark.selector}-${index}`}
@@ -443,7 +611,7 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
             </div>
           </div>
         )}
-      </div>
+      </ScrollableContainer>
     </div>
   );
 }
@@ -456,66 +624,110 @@ interface LandmarkItemProps {
 }
 
 function LandmarkItem({ landmark, isExpanded, onToggleExpanded, onHighlight }: LandmarkItemProps) {
-  const getRoleColor = (role: string) => {
-    const colors = {
-      'main': 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/30',
-      'navigation': 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/30',
-      'complementary': 'text-purple-600 bg-purple-100 dark:text-purple-400 dark:bg-purple-900/30',
-      'banner': 'text-yellow-600 bg-yellow-100 dark:text-yellow-400 dark:bg-yellow-900/30',
-      'contentinfo': 'text-indigo-600 bg-indigo-100 dark:text-indigo-400 dark:bg-indigo-900/30',
-      'region': 'text-gray-600 bg-gray-100 dark:text-gray-400 dark:bg-gray-900/30',
-      'article': 'text-orange-600 bg-orange-100 dark:text-orange-400 dark:bg-orange-900/30',
-      'form': 'text-pink-600 bg-pink-100 dark:text-pink-400 dark:bg-pink-900/30',
-      'search': 'text-teal-600 bg-teal-100 dark:text-teal-400 dark:bg-teal-900/30',
+  const getRoleStyle = (role: string) => {
+    const styles = {
+      'main': { color: COLORS.status.info, backgroundColor: 'rgba(52, 152, 219, 0.1)' },
+      'navigation': { color: COLORS.status.success, backgroundColor: 'rgba(78, 201, 176, 0.1)' },
+      'complementary': { color: '#8b5cf6', backgroundColor: 'rgba(139, 92, 246, 0.1)' },
+      'banner': { color: COLORS.status.warning, backgroundColor: 'rgba(243, 156, 18, 0.1)' },
+      'contentinfo': { color: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)' },
+      'region': { color: COLORS.text.secondary, backgroundColor: COLORS.background.tertiary },
+      'article': { color: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)' },
+      'form': { color: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.1)' },
+      'search': { color: '#14b8a6', backgroundColor: 'rgba(20, 184, 166, 0.1)' },
     };
-    return colors[role as keyof typeof colors] || 'text-gray-600 bg-gray-100 dark:text-gray-400 dark:bg-gray-900/30';
+    return styles[role as keyof typeof styles] || { color: COLORS.text.secondary, backgroundColor: COLORS.background.tertiary };
   };
 
   return (
     <div style={{ marginLeft: `${landmark.level * 20}px` }}>
-      <div className="flex items-center gap-2 p-2 rounded hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: SPACING.lg,
+        padding: SPACING.lg,
+        borderRadius: RADIUS.md,
+        transition: 'background-color 0.15s ease'
+      }}
+      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = COLORS.background.hover}
+      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+      >
         {landmark.children.length > 0 ? (
           <button
             onClick={onToggleExpanded}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            style={{
+              color: COLORS.text.muted,
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              padding: SPACING.xs,
+              borderRadius: RADIUS.sm,
+              transition: 'color 0.15s ease'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.color = COLORS.text.secondary}
+            onMouseLeave={(e) => e.currentTarget.style.color = COLORS.text.muted}
           >
             {isExpanded ? (
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown style={{ width: '16px', height: '16px' }} />
             ) : (
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight style={{ width: '16px', height: '16px' }} />
             )}
           </button>
         ) : (
-          <div className="w-4" />
+          <div style={{ width: '16px' }} />
         )}
         
-        <span className={clsx(
-          'px-2 py-0.5 text-xs font-medium rounded-full',
-          getRoleColor(landmark.role)
+        <Badge style={mergeStyles(
+          COMPONENT_STYLES.tag.base,
+          {
+            padding: `${SPACING.xs} ${SPACING.lg}`,
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            fontWeight: TYPOGRAPHY.fontWeight.medium,
+            borderRadius: RADIUS.full,
+            ...getRoleStyle(landmark.role)
+          }
         )}>
           {landmark.role}
-        </span>
+        </Badge>
         
-        <div className="flex-1 min-w-0">
-          <div className="text-sm text-gray-900 dark:text-white">
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.base,
+            color: COLORS.text.primary,
+            marginBottom: SPACING.xs
+          }}>
             {landmark.label || 'Unlabeled landmark'}
           </div>
-          <code className="text-xs text-gray-500 dark:text-gray-400">
+          <code style={{
+            fontSize: TYPOGRAPHY.fontSize.sm,
+            color: COLORS.text.muted,
+            fontFamily: TYPOGRAPHY.fontFamily.mono
+          }}>
             {landmark.selector}
           </code>
         </div>
         
         <button
           onClick={onHighlight}
-          className="text-indigo-500 hover:text-indigo-700 dark:hover:text-indigo-400 transition-colors"
+          style={{
+            color: '#6366f1',
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            padding: SPACING.sm,
+            borderRadius: RADIUS.md,
+            transition: 'color 0.15s ease'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.color = COLORS.text.accent}
+          onMouseLeave={(e) => e.currentTarget.style.color = '#6366f1'}
           title="Highlight landmark"
         >
-          <Eye className="w-4 h-4" />
+          <Eye style={{ width: '16px', height: '16px' }} />
         </button>
       </div>
       
       {isExpanded && landmark.children.length > 0 && (
-        <div className="mt-1">
+        <div style={{ marginTop: SPACING.xs }}>
           {landmark.children.map((child, index) => (
             <LandmarkItem
               key={`${child.selector}-${index}`}

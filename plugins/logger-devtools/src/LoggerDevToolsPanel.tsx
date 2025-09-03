@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { loggingEventClient } from './loggingEventClient';
 import type { LogEntry, LogLevel, LoggerConfig, LogMetrics } from './loggingEventClient';
-import { Footer, type FooterStat } from '@sucoza/shared-components';
+import { Footer, type FooterStat, ConfigMenu, type ConfigMenuItem } from '@sucoza/shared-components';
 
 const LOG_COLORS: Record<LogLevel, string> = {
   trace: '#7f8c8d',
@@ -781,16 +781,106 @@ export function LoggerDevToolsPanel() {
     );
   };
 
+  // Helper functions for ConfigMenu
+  const handleClearLogs = useCallback(() => {
+    if (confirm('Are you sure you want to clear all logs?')) {
+      setLogs([]);
+      loggingEventClient.emit('logs-clear', undefined);
+    }
+  }, []);
+
+  const handleExportLogs = useCallback(() => {
+    const exportData = {
+      logs: filteredLogs,
+      config,
+      metrics,
+      timestamp: Date.now()
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `logger-export-${Date.now()}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }, [filteredLogs, config, metrics]);
+
+  const handleToggleLogging = useCallback(() => {
+    const newConfig = { ...config, enabled: !config.enabled };
+    setConfig(newConfig);
+    loggingEventClient.emit('config-update', newConfig);
+  }, [config]);
+
+  const handleRefreshLogs = useCallback(() => {
+    loggingEventClient.emit('logs-request', undefined);
+  }, []);
+
+  // Convert actions into config menu items
+  const configMenuItems: ConfigMenuItem[] = [
+    {
+      id: 'toggle-logging',
+      label: config.enabled ? 'Pause Logging' : 'Resume Logging',
+      icon: config.enabled ? '⏸️' : '▶️',
+      onClick: handleToggleLogging,
+      shortcut: 'Ctrl+P'
+    },
+    {
+      id: 'refresh-logs',
+      label: 'Refresh Logs',
+      icon: '🔄',
+      onClick: handleRefreshLogs,
+      shortcut: 'Ctrl+R'
+    },
+    {
+      id: 'clear-logs',
+      label: 'Clear Logs',
+      icon: '🗑️',
+      onClick: handleClearLogs,
+      disabled: logs.length === 0,
+      shortcut: 'Ctrl+K'
+    },
+    {
+      id: 'export-logs',
+      label: 'Export Logs',
+      icon: '💾',
+      onClick: handleExportLogs,
+      disabled: filteredLogs.length === 0,
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'toggle-auto-scroll',
+      label: autoScroll ? 'Disable Auto-Scroll' : 'Enable Auto-Scroll',
+      icon: autoScroll ? '🔒' : '🔓',
+      onClick: () => setAutoScroll(!autoScroll),
+      separator: true,
+      shortcut: 'Ctrl+A'
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => {
+        // Settings functionality could be expanded
+        alert('Settings functionality to be implemented');
+      }
+    }
+  ];
+
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%',
-      background: '#1e1e1e',
-      color: '#d4d4d4',
-      fontFamily: '"SF Mono", Monaco, Consolas, monospace',
-      fontSize: '12px',
-    }}>
+    <div style={{ position: 'relative', height: '100%' }}>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        background: '#1e1e1e',
+        color: '#d4d4d4',
+        fontFamily: '"SF Mono", Monaco, Consolas, monospace',
+        fontSize: '12px',
+      }}>
       {/* Header with controls */}
       <div style={{
         padding: '8px',
@@ -1509,6 +1599,11 @@ export function LoggerDevToolsPanel() {
           ]}
         />
       )}
+      </div>
+
+      <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
     </div>
   );
 }

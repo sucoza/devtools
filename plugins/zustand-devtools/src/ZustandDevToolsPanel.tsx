@@ -9,7 +9,9 @@ import {
   SearchInput,
   Badge,
   StatusIndicator,
-  EmptyState
+  EmptyState,
+  ConfigMenu,
+  type ConfigMenuItem
 } from '@sucoza/shared-components';
 import { zustandEventClient } from './zustandEventClient';
 import type { ZustandStoreState } from './zustandEventClient';
@@ -433,6 +435,48 @@ export function ZustandDevToolsPanel() {
     name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Helper functions for ConfigMenu
+  const handleToggleRecording = useCallback(() => {
+    setAutoRefresh(!autoRefresh);
+  }, [autoRefresh]);
+
+  const handleTakeSnapshot = useCallback(() => {
+    // Force a state request to capture current snapshot
+    zustandEventClient.emit('zustand-state-request', undefined);
+  }, []);
+
+  const handleClearHistory = useCallback(() => {
+    if (confirm('Are you sure you want to clear all store history?')) {
+      setActionHistory([]);
+    }
+  }, []);
+
+  const handleExportState = useCallback(() => {
+    const exportData = {
+      stores,
+      actionHistory,
+      timestamp: Date.now()
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `zustand-state-export-${Date.now()}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }, [stores, actionHistory]);
+
+  const handleResetStore = useCallback(() => {
+    if (selectedStore && confirm(`Are you sure you want to reset the "${selectedStore}" store?`)) {
+      // Emit a reset request for the selected store
+      zustandEventClient.emit('zustand-store-reset', { storeName: selectedStore });
+    }
+  }, [selectedStore]);
+
   const toolbarActions = [
     {
       id: 'auto-refresh',
@@ -450,8 +494,60 @@ export function ZustandDevToolsPanel() {
     },
   ];
 
+  // Convert actions into config menu items
+  const configMenuItems: ConfigMenuItem[] = [
+    {
+      id: 'toggle-recording',
+      label: autoRefresh ? 'Stop Recording' : 'Start Recording',
+      icon: '🔄',
+      onClick: handleToggleRecording,
+      shortcut: 'Ctrl+R'
+    },
+    {
+      id: 'take-snapshot',
+      label: 'Take Snapshot',
+      icon: '📸',
+      onClick: handleTakeSnapshot,
+      shortcut: 'Ctrl+T'
+    },
+    {
+      id: 'clear-history',
+      label: 'Clear State History',
+      icon: '🗑️',
+      onClick: handleClearHistory,
+      disabled: actionHistory.length === 0,
+      shortcut: 'Ctrl+K'
+    },
+    {
+      id: 'export-state',
+      label: 'Export State',
+      icon: '💾',
+      onClick: handleExportState,
+      disabled: Object.keys(stores).length === 0,
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'reset-store',
+      label: 'Reset Store',
+      icon: '🔄',
+      onClick: handleResetStore,
+      disabled: !selectedStore,
+      separator: true
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => {
+        // Open settings - could expand to a settings modal/tab
+        alert('Settings functionality to be implemented');
+      }
+    }
+  ];
+
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ position: 'relative', height: '100%' }}>
+      <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Toolbar
         title="🔍 Zustand Store Inspector"
         showSearch={true}
@@ -731,6 +827,11 @@ export function ZustandDevToolsPanel() {
         size="sm"
         variant="compact"
       />
+      </div>
+
+      <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
     </div>
   );
 }

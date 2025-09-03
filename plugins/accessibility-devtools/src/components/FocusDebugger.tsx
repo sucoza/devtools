@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { COLORS, COMPONENT_STYLES, mergeStyles } from '@sucoza/shared-components';
-
-// Simple clsx replacement
-const clsx = (...classes: (string | undefined | boolean)[]): string => {
-  return classes.filter(Boolean).join(' ');
-};
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles, ScrollableContainer, Badge } from '@sucoza/shared-components';
 
 import { 
   Focus, 
@@ -306,28 +301,28 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
   const getIssueIcon = (issue: FocusIssue['issue']) => {
     switch (issue) {
       case 'invisible-focus':
-        return <Eye className="w-4 h-4 text-red-500" />;
+        return <Eye style={{ width: '16px', height: '16px', color: COLORS.status.error }} />;
       case 'no-focus-indicator':
-        return <Target className="w-4 h-4 text-red-500" />;
+        return <Target style={{ width: '16px', height: '16px', color: COLORS.status.error }} />;
       case 'poor-contrast':
-        return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+        return <AlertTriangle style={{ width: '16px', height: '16px', color: COLORS.status.warning }} />;
       case 'focus-trap-broken':
-        return <AlertTriangle className="w-4 h-4 text-orange-500" />;
+        return <AlertTriangle style={{ width: '16px', height: '16px', color: '#f97316' }} />;
       default:
-        return <AlertTriangle className="w-4 h-4 text-gray-500" />;
+        return <AlertTriangle style={{ width: '16px', height: '16px', color: COLORS.text.muted }} />;
     }
   };
 
   const getIssueColor = (severity: FocusIssue['severity']) => {
     switch (severity) {
       case 'critical':
-        return 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20';
+        return COLORS.status.error;
       case 'serious':
-        return 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20';
+        return COLORS.status.error;
       case 'moderate':
-        return 'border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-900/20';
+        return COLORS.status.warning;
       case 'minor':
-        return 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-900/20';
+        return COLORS.status.info;
     }
   };
 
@@ -339,77 +334,165 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
   };
 
   return (
-    <div className={clsx('flex flex-col h-full', className)}>
+    <div style={mergeStyles(COMPONENT_STYLES.container.base, className ? {} : {})}>
       {/* Header */}
-      <div className="p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Focus className="w-5 h-5 text-amber-500" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div style={mergeStyles(COMPONENT_STYLES.header.base, { borderBottom: `1px solid ${COLORS.border.primary}` })}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: SPACING['3xl']
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.lg }}>
+            <Focus style={{ width: '20px', height: '20px', color: '#f59e0b' }} />
+            <h2 style={COMPONENT_STYLES.header.title}>
               Focus Debugger
             </h2>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.lg }}>
             <button
               onClick={() => setIsDebugging(!isDebugging)}
-              className={clsx(
-                'flex items-center gap-2 px-3 py-2 text-sm rounded transition-colors',
+              style={mergeStyles(
+                COMPONENT_STYLES.button.base,
                 isDebugging
-                  ? 'bg-red-500 text-white hover:bg-red-600'
-                  : 'bg-green-500 text-white hover:bg-green-600'
+                  ? COMPONENT_STYLES.button.danger
+                  : COMPONENT_STYLES.button.success
               )}
+              onMouseEnter={(e) => Object.assign(e.currentTarget.style, COMPONENT_STYLES.button.hover)}
+              onMouseLeave={(e) => Object.assign(e.currentTarget.style, isDebugging ? COMPONENT_STYLES.button.danger : COMPONENT_STYLES.button.success)}
             >
-              {isDebugging ? <Square className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+              {isDebugging ? <Square style={{ width: '16px', height: '16px' }} /> : <Play style={{ width: '16px', height: '16px' }} />}
               {isDebugging ? 'Stop Debugging' : 'Start Debugging'}
             </button>
           </div>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+          gap: SPACING['3xl']
+        }}>
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: COLORS.background.secondary,
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.border.primary}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.text.primary
+            }}>
               {stats.total}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Issues Found</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.secondary
+            }}>Issues Found</div>
           </div>
-          <div className="text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: 'rgba(231, 76, 60, 0.1)',
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.status.error}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.error
+            }}>
               {stats.serious}
             </div>
-            <div className="text-sm text-red-700 dark:text-red-300">Serious</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.status.error
+            }}>Serious</div>
           </div>
-          <div className="text-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: 'rgba(243, 156, 18, 0.1)',
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.status.warning}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.warning
+            }}>
               {stats.moderate}
             </div>
-            <div className="text-sm text-yellow-700 dark:text-yellow-300">Moderate</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.status.warning
+            }}>Moderate</div>
           </div>
-          <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: 'rgba(52, 152, 219, 0.1)',
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.status.info}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.lg,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.info
+            }}>
               {stats.currentFocused}
             </div>
-            <div className="text-sm text-blue-700 dark:text-blue-300">Focused</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.status.info
+            }}>Focused</div>
           </div>
         </div>
 
         {/* Current Focus Info */}
         {isDebugging && currentFocusedElement && (
-          <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-            <h4 className="text-sm font-medium text-amber-800 dark:text-amber-300 mb-2">
+          <div style={{
+            marginTop: SPACING['4xl'],
+            padding: SPACING['2xl'],
+            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+            border: '1px solid #f59e0b',
+            borderRadius: RADIUS.lg
+          }}>
+            <h4 style={{
+              fontSize: TYPOGRAPHY.fontSize.base,
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: '#f59e0b',
+              marginBottom: SPACING.lg
+            }}>
               Currently Focused Element
             </h4>
-            <div className="space-y-1">
-              <p className="text-sm text-amber-700 dark:text-amber-400">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.xs }}>
+              <p style={{
+                fontSize: TYPOGRAPHY.fontSize.base,
+                color: '#f59e0b'
+              }}>
                 <strong>Tag:</strong> {currentFocusedElement.tagName.toLowerCase()}
               </p>
               {currentFocusedElement.id && (
-                <p className="text-sm text-amber-700 dark:text-amber-400">
+                <p style={{
+                  fontSize: TYPOGRAPHY.fontSize.base,
+                  color: '#f59e0b'
+                }}>
                   <strong>ID:</strong> {currentFocusedElement.id}
                 </p>
               )}
-              <code className="text-xs text-amber-800 dark:text-amber-200 bg-amber-100 dark:bg-amber-900/40 px-1 rounded block">
+              <code style={{
+                fontSize: TYPOGRAPHY.fontSize.sm,
+                color: '#f59e0b',
+                backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                padding: `${SPACING.xs} ${SPACING.sm}`,
+                borderRadius: RADIUS.sm,
+                display: 'block',
+                fontFamily: TYPOGRAPHY.fontFamily.mono
+              }}>
                 {generateSelector(currentFocusedElement)}
               </code>
             </div>
@@ -418,87 +501,205 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
       </div>
 
       {/* Settings */}
-      <div className="p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center gap-2 mb-2">
-          <Settings className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Settings</span>
+      <div style={{
+        padding: SPACING['2xl'],
+        background: COLORS.background.secondary,
+        borderBottom: `1px solid ${COLORS.border.primary}`
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: SPACING.lg,
+          marginBottom: SPACING.lg
+        }}>
+          <Settings style={{
+            width: '16px',
+            height: '16px',
+            color: COLORS.text.secondary
+          }} />
+          <span style={{
+            fontSize: TYPOGRAPHY.fontSize.base,
+            fontWeight: TYPOGRAPHY.fontWeight.medium,
+            color: COLORS.text.secondary
+          }}>Settings</span>
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: SPACING['2xl']
+        }}>
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: SPACING.lg,
+            fontSize: TYPOGRAPHY.fontSize.base,
+            color: COLORS.text.secondary,
+            cursor: 'pointer'
+          }}>
             <input
               type="checkbox"
               checked={settings.highlightFocusRings}
               onChange={(e) => setSettings(s => ({ ...s, highlightFocusRings: e.target.checked }))}
-              className="rounded"
+              style={{
+                borderRadius: RADIUS.sm,
+                cursor: 'pointer'
+              }}
             />
             Highlight Focus Rings
           </label>
-          <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: SPACING.lg,
+            fontSize: TYPOGRAPHY.fontSize.base,
+            color: COLORS.text.secondary,
+            cursor: 'pointer'
+          }}>
             <input
               type="checkbox"
               checked={settings.trackFocusHistory}
               onChange={(e) => setSettings(s => ({ ...s, trackFocusHistory: e.target.checked }))}
-              className="rounded"
+              style={{
+                borderRadius: RADIUS.sm,
+                cursor: 'pointer'
+              }}
             />
             Track Focus History
           </label>
-          <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: SPACING.lg,
+            fontSize: TYPOGRAPHY.fontSize.base,
+            color: COLORS.text.secondary,
+            cursor: 'pointer'
+          }}>
             <input
               type="checkbox"
               checked={settings.detectInvisibleFocus}
               onChange={(e) => setSettings(s => ({ ...s, detectInvisibleFocus: e.target.checked }))}
-              className="rounded"
+              style={{
+                borderRadius: RADIUS.sm,
+                cursor: 'pointer'
+              }}
             />
             Detect Invisible Focus
           </label>
-          <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: SPACING.lg,
+            fontSize: TYPOGRAPHY.fontSize.base,
+            color: COLORS.text.secondary,
+            cursor: 'pointer'
+          }}>
             <input
               type="checkbox"
               checked={settings.detectPoorContrast}
               onChange={(e) => setSettings(s => ({ ...s, detectPoorContrast: e.target.checked }))}
-              className="rounded"
+              style={{
+                borderRadius: RADIUS.sm,
+                cursor: 'pointer'
+              }}
             />
             Detect Poor Contrast
           </label>
         </div>
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        overflow: 'hidden'
+      }}>
         {/* Focus Issues */}
-        <div className="w-1/2 border-r border-gray-200 dark:border-gray-700 overflow-auto">
-          <div className="p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-            <h3 className="font-medium text-gray-900 dark:text-white">Focus Issues</h3>
+        <div style={{
+          width: '50%',
+          borderRight: `1px solid ${COLORS.border.primary}`,
+          overflow: 'auto'
+        }}>
+          <div style={{
+            padding: SPACING['2xl'],
+            background: COLORS.background.secondary,
+            borderBottom: `1px solid ${COLORS.border.primary}`
+          }}>
+            <h3 style={{
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.primary,
+              margin: 0
+            }}>Focus Issues</h3>
           </div>
 
           {focusIssues.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-              <div className="text-center">
-                <CheckCircle className="w-12 h-12 mx-auto mb-4 text-green-500" />
-                <p className="font-medium">No Focus Issues</p>
-                <p className="text-sm">Focus management looks good!</p>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              color: COLORS.text.muted
+            }}>
+              <div style={{ textAlign: 'center' }}>
+                <CheckCircle style={{
+                  width: '48px',
+                  height: '48px',
+                  margin: `0 auto ${SPACING['4xl']}`,
+                  color: COLORS.status.success
+                }} />
+                <p style={{
+                  fontWeight: TYPOGRAPHY.fontWeight.medium,
+                  color: COLORS.text.primary,
+                  marginBottom: SPACING.lg
+                }}>No Focus Issues</p>
+                <p style={{
+                  fontSize: TYPOGRAPHY.fontSize.base,
+                  color: COLORS.text.secondary
+                }}>Focus management looks good!</p>
               </div>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            <div>
               {focusIssues.map((issue, index) => (
                 <div
                   key={index}
-                  className={clsx(
-                    'p-4 border-l-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors',
-                    getIssueColor(issue.severity)
-                  )}
+                  style={{
+                    padding: SPACING['4xl'],
+                    borderLeft: `4px solid ${getIssueColor(issue.severity)}`,
+                    borderBottom: `1px solid ${COLORS.border.primary}`,
+                    cursor: 'pointer',
+                    transition: 'background-color 0.15s ease'
+                  }}
                   onClick={() => highlightElement(issue.element)}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = COLORS.background.hover}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
-                  <div className="flex items-start gap-3">
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: SPACING['2xl'] }}>
                     {getIssueIcon(issue.issue)}
-                    <div className="flex-1">
-                      <h4 className="font-medium text-gray-900 dark:text-white text-sm">
+                    <div style={{ flex: 1 }}>
+                      <h4 style={{
+                        fontWeight: TYPOGRAPHY.fontWeight.medium,
+                        color: COLORS.text.primary,
+                        fontSize: TYPOGRAPHY.fontSize.base,
+                        marginBottom: SPACING.xs
+                      }}>
                         {issue.description}
                       </h4>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      <p style={{
+                        fontSize: TYPOGRAPHY.fontSize.sm,
+                        color: COLORS.text.secondary,
+                        marginBottom: SPACING.lg
+                      }}>
                         Issue: {issue.issue} • Severity: {issue.severity}
                       </p>
-                      <code className="text-xs text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 px-1 rounded mt-2 block">
+                      <code style={{
+                        fontSize: TYPOGRAPHY.fontSize.sm,
+                        color: COLORS.text.primary,
+                        background: COLORS.background.tertiary,
+                        padding: `${SPACING.xs} ${SPACING.sm}`,
+                        borderRadius: RADIUS.sm,
+                        marginTop: SPACING.lg,
+                        display: 'block',
+                        fontFamily: TYPOGRAPHY.fontFamily.mono
+                      }}>
                         {issue.selector}
                       </code>
                     </div>
@@ -507,10 +708,20 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
                         e.stopPropagation();
                         highlightElement(issue.element);
                       }}
-                      className="text-amber-500 hover:text-amber-700 dark:hover:text-amber-400 transition-colors"
+                      style={{
+                        color: '#f59e0b',
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: SPACING.sm,
+                        borderRadius: RADIUS.md,
+                        transition: 'color 0.15s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = COLORS.text.accent}
+                      onMouseLeave={(e) => e.currentTarget.style.color = '#f59e0b'}
                       title="Focus element"
                     >
-                      <Eye className="w-4 h-4" />
+                      <Eye style={{ width: '16px', height: '16px' }} />
                     </button>
                   </div>
                 </div>
@@ -520,39 +731,92 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
         </div>
 
         {/* Focus History */}
-        <div className="w-1/2 overflow-auto">
-          <div className="p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-            <h3 className="font-medium text-gray-900 dark:text-white">Focus History</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+        <div style={{
+          width: '50%',
+          overflow: 'auto'
+        }}>
+          <div style={{
+            padding: SPACING['2xl'],
+            background: COLORS.background.secondary,
+            borderBottom: `1px solid ${COLORS.border.primary}`
+          }}>
+            <h3 style={{
+              fontWeight: TYPOGRAPHY.fontWeight.medium,
+              color: COLORS.text.primary,
+              margin: 0,
+              marginBottom: SPACING.xs
+            }}>Focus History</h3>
+            <p style={{
+              fontSize: TYPOGRAPHY.fontSize.base,
+              color: COLORS.text.secondary,
+              margin: 0
+            }}>
               {focusHistory.length} focus events tracked
             </p>
           </div>
 
           {focusHistory.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-              <div className="text-center">
-                <Focus className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
-                <p className="font-medium">No Focus History</p>
-                <p className="text-sm">Start debugging to track focus events</p>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              color: COLORS.text.muted
+            }}>
+              <div style={{ textAlign: 'center' }}>
+                <Focus style={{
+                  width: '48px',
+                  height: '48px',
+                  margin: `0 auto ${SPACING['4xl']}`,
+                  color: COLORS.text.muted
+                }} />
+                <p style={{
+                  fontWeight: TYPOGRAPHY.fontWeight.medium,
+                  color: COLORS.text.primary,
+                  marginBottom: SPACING.lg
+                }}>No Focus History</p>
+                <p style={{
+                  fontSize: TYPOGRAPHY.fontSize.base,
+                  color: COLORS.text.secondary
+                }}>Start debugging to track focus events</p>
               </div>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
+            <div>
               {focusHistory.slice().reverse().map((entry, index) => (
                 <div
                   key={index}
-                  className="p-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                  style={{
+                    padding: SPACING['2xl'],
+                    cursor: 'pointer',
+                    borderBottom: `1px solid ${COLORS.border.primary}`,
+                    transition: 'background-color 0.15s ease'
+                  }}
                   onClick={() => highlightElement(entry.element)}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = COLORS.background.hover}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
-                  <div className="flex items-center justify-between">
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}>
                     <div>
-                      <div className="text-sm font-medium text-gray-900 dark:text-white">
+                      <div style={{
+                        fontSize: TYPOGRAPHY.fontSize.base,
+                        fontWeight: TYPOGRAPHY.fontWeight.medium,
+                        color: COLORS.text.primary,
+                        marginBottom: SPACING.xs
+                      }}>
                         {entry.element.tagName.toLowerCase()}
                         {entry.element.id && (
-                          <span className="text-blue-600 dark:text-blue-400">#{entry.element.id}</span>
+                          <span style={{ color: COLORS.text.accent }}>#{entry.element.id}</span>
                         )}
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                      <div style={{
+                        fontSize: TYPOGRAPHY.fontSize.sm,
+                        color: COLORS.text.muted
+                      }}>
                         {new Date(entry.timestamp).toLocaleTimeString()}
                       </div>
                     </div>
@@ -561,10 +825,20 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
                         e.stopPropagation();
                         highlightElement(entry.element);
                       }}
-                      className="text-amber-500 hover:text-amber-700 dark:hover:text-amber-400 transition-colors"
+                      style={{
+                        color: '#f59e0b',
+                        background: 'transparent',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: SPACING.sm,
+                        borderRadius: RADIUS.md,
+                        transition: 'color 0.15s ease'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = COLORS.text.accent}
+                      onMouseLeave={(e) => e.currentTarget.style.color = '#f59e0b'}
                       title="Focus element"
                     >
-                      <Target className="w-3 h-3" />
+                      <Target style={{ width: '12px', height: '12px' }} />
                     </button>
                   </div>
                 </div>

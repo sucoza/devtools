@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { COLORS, COMPONENT_STYLES, mergeStyles } from '@sucoza/shared-components';
-
-// Simple clsx replacement
-const clsx = (...classes: (string | undefined | boolean)[]): string => {
-  return classes.filter(Boolean).join(' ');
-};
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, SHADOWS, mergeStyles, ScrollableContainer, Badge, Alert } from '@sucoza/shared-components';
 import { 
   Palette, 
   Eye, 
@@ -110,33 +105,48 @@ export function ColorContrastAnalyzer({ className }: ColorContrastAnalyzerProps)
   };
 
   return (
-    <div style={mergeStyles({ display: 'flex', flexDirection: 'column', height: '100%' }, className ? {} : {})}>
+    <div style={mergeStyles(COMPONENT_STYLES.container.base)}>
       {/* Header */}
-      <div className="p-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Palette className="w-5 h-5 text-purple-500" />
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div style={mergeStyles(COMPONENT_STYLES.header.base, { borderBottom: `1px solid ${COLORS.border.primary}` })}>
+        <div style={mergeStyles(
+          { display: 'flex', alignItems: 'center', justifyContent: 'space-between' },
+          { marginBottom: SPACING['3xl'] }
+        )}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.lg }}>
+            <Palette style={{ width: '20px', height: '20px', color: COLORS.status.info }} />
+            <h2 style={COMPONENT_STYLES.header.title}>
               Color Contrast Analysis
             </h2>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.lg }}>
             <button
               onClick={runAnalysis}
               disabled={isAnalyzing}
-              className="flex items-center gap-2 px-3 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              style={mergeStyles(
+                COMPONENT_STYLES.button.base,
+                COMPONENT_STYLES.button.primary,
+                isAnalyzing ? COMPONENT_STYLES.button.disabled : {}
+              )}
+              onMouseEnter={(e) => !isAnalyzing && Object.assign(e.currentTarget.style, COMPONENT_STYLES.button.hover)}
+              onMouseLeave={(e) => !isAnalyzing && Object.assign(e.currentTarget.style, COMPONENT_STYLES.button.primary)}
             >
-              <RotateCw className={clsx('w-4 h-4', isAnalyzing && 'animate-spin')} />
+              <RotateCw style={{
+                width: '16px',
+                height: '16px',
+                animation: isAnalyzing ? 'spin 1s linear infinite' : 'none'
+              }} />
               {isAnalyzing ? 'Analyzing...' : 'Analyze'}
             </button>
             
             {colorContrastResults.length > 0 && (
               <button
                 onClick={exportResults}
-                className="flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                style={COMPONENT_STYLES.button.base}
+                onMouseEnter={(e) => Object.assign(e.currentTarget.style, COMPONENT_STYLES.button.hover)}
+                onMouseLeave={(e) => Object.assign(e.currentTarget.style, COMPONENT_STYLES.button.base)}
               >
-                <Download className="w-4 h-4" />
+                <Download style={{ width: '16px', height: '16px' }} />
                 Export
               </button>
             )}
@@ -144,46 +154,110 @@ export function ColorContrastAnalyzer({ className }: ColorContrastAnalyzerProps)
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-3 bg-gray-50 dark:bg-gray-900/50 rounded-lg">
-            <div className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+          gap: SPACING['3xl']
+        }}>
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: COLORS.background.secondary,
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.border.primary}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.text.primary
+            }}>
               {stats.total}
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Total</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.secondary
+            }}>Total</div>
           </div>
-          <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: 'rgba(78, 201, 176, 0.1)',
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.status.success}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.success
+            }}>
               {stats.passing}
             </div>
-            <div className="text-sm text-green-700 dark:text-green-300">Passing AA</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.status.success
+            }}>Passing AA</div>
           </div>
-          <div className="text-center p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: 'rgba(231, 76, 60, 0.1)',
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.status.error}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.error
+            }}>
               {stats.failing}
             </div>
-            <div className="text-sm text-red-700 dark:text-red-300">Failing AA</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.status.error
+            }}>Failing AA</div>
           </div>
-          <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+          <div style={{
+            textAlign: 'center',
+            padding: SPACING['2xl'],
+            background: 'rgba(52, 152, 219, 0.1)',
+            borderRadius: RADIUS.lg,
+            border: `1px solid ${COLORS.status.info}`
+          }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.xl,
+              fontWeight: TYPOGRAPHY.fontWeight.bold,
+              color: COLORS.status.info
+            }}>
               {stats.aaa}
             </div>
-            <div className="text-sm text-blue-700 dark:text-blue-300">AAA Level</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.status.info
+            }}>AAA Level</div>
           </div>
         </div>
       </div>
 
       {/* Controls */}
-      <div className="p-3 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+      <div style={{
+        padding: SPACING['2xl'],
+        background: COLORS.background.secondary,
+        borderBottom: `1px solid ${COLORS.border.primary}`
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING['4xl'] }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.lg }}>
+              <label style={{
+                fontSize: TYPOGRAPHY.fontSize.base,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                color: COLORS.text.secondary
+              }}>
                 Filter:
               </label>
               <select
                 value={filterBy}
                 onChange={(e) => setFilterBy(e.target.value as typeof filterBy)}
-                className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                style={COMPONENT_STYLES.input.base}
               >
                 <option value="all">All Results</option>
                 <option value="fail">Failing Only</option>
@@ -191,14 +265,18 @@ export function ColorContrastAnalyzer({ className }: ColorContrastAnalyzerProps)
               </select>
             </div>
             
-            <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.lg }}>
+              <label style={{
+                fontSize: TYPOGRAPHY.fontSize.base,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                color: COLORS.text.secondary
+              }}>
                 Sort by:
               </label>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-                className="text-sm border border-gray-300 dark:border-gray-600 rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                style={COMPONENT_STYLES.input.base}
               >
                 <option value="ratio">Contrast Ratio</option>
                 <option value="compliance">Compliance Level</option>
@@ -206,29 +284,65 @@ export function ColorContrastAnalyzer({ className }: ColorContrastAnalyzerProps)
             </div>
           </div>
 
-          <div className="text-sm text-gray-600 dark:text-gray-400">
+          <div style={{
+            fontSize: TYPOGRAPHY.fontSize.base,
+            color: COLORS.text.secondary
+          }}>
             {filteredResults.length} of {colorContrastResults.length} results
           </div>
         </div>
       </div>
 
       {/* Results */}
-      <div className="flex-1 overflow-auto">
+      <ScrollableContainer>
         {isAnalyzing ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <RotateCw className="w-8 h-8 mx-auto mb-2 animate-spin text-blue-500" />
-              <p className="text-gray-600 dark:text-gray-400">Analyzing color contrast...</p>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%'
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <RotateCw style={{
+                width: '32px',
+                height: '32px',
+                margin: `0 auto ${SPACING.lg}`,
+                animation: 'spin 1s linear infinite',
+                color: COLORS.status.info
+              }} />
+              <p style={{
+                color: COLORS.text.secondary,
+                fontSize: TYPOGRAPHY.fontSize.base
+              }}>Analyzing color contrast...</p>
             </div>
           </div>
         ) : sortedResults.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-            <div className="text-center">
-              <Palette className="w-12 h-12 mx-auto mb-4 text-gray-300 dark:text-gray-600" />
-              <p className="text-lg font-medium mb-2">
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            color: COLORS.text.muted
+          }}>
+            <div style={{ textAlign: 'center' }}>
+              <Palette style={{
+                width: '48px',
+                height: '48px',
+                margin: `0 auto ${SPACING['4xl']}`,
+                color: COLORS.text.muted
+              }} />
+              <p style={{
+                fontSize: TYPOGRAPHY.fontSize.lg,
+                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                marginBottom: SPACING.lg,
+                color: COLORS.text.primary
+              }}>
                 {colorContrastResults.length === 0 ? 'No Analysis Results' : 'No Results Match Filter'}
               </p>
-              <p className="text-sm">
+              <p style={{
+                fontSize: TYPOGRAPHY.fontSize.base,
+                color: COLORS.text.secondary
+              }}>
                 {colorContrastResults.length === 0 
                   ? 'Click "Analyze" to check color contrast compliance'
                   : 'Try adjusting your filter settings'
@@ -237,7 +351,7 @@ export function ColorContrastAnalyzer({ className }: ColorContrastAnalyzerProps)
             </div>
           </div>
         ) : (
-          <div className="divide-y divide-gray-200 dark:divide-gray-700">
+          <div>
             {sortedResults.map((result, index) => (
               <ContrastResultItem
                 key={`${result.selector}-${index}`}
@@ -250,7 +364,7 @@ export function ColorContrastAnalyzer({ className }: ColorContrastAnalyzerProps)
             ))}
           </div>
         )}
-      </div>
+      </ScrollableContainer>
     </div>
   );
 }
@@ -263,13 +377,13 @@ interface ContrastResultItemProps {
 function ContrastResultItem({ result, onHighlight }: ContrastResultItemProps) {
   const getComplianceIcon = () => {
     if (result.wcagAAA) {
-      return <CheckCircle className="w-5 h-5 text-green-500" />;
+      return <CheckCircle style={{ width: '20px', height: '20px', color: COLORS.status.success }} />;
     } else if (result.wcagAA) {
-      return <CheckCircle className="w-5 h-5 text-yellow-500" />;
+      return <CheckCircle style={{ width: '20px', height: '20px', color: COLORS.status.warning }} />;
     } else if (result.largeTextAA) {
-      return <AlertTriangle className="w-5 h-5 text-orange-500" />;
+      return <AlertTriangle style={{ width: '20px', height: '20px', color: '#f97316' }} />;
     } else {
-      return <XCircle className="w-5 h-5 text-red-500" />;
+      return <XCircle style={{ width: '20px', height: '20px', color: COLORS.status.error }} />;
     }
   };
 
@@ -280,93 +394,171 @@ function ContrastResultItem({ result, onHighlight }: ContrastResultItemProps) {
     return 'Fail';
   };
 
-  const getComplianceColor = () => {
-    if (result.wcagAAA) return 'text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/30';
-    if (result.wcagAA) return 'text-yellow-700 bg-yellow-100 dark:text-yellow-400 dark:bg-yellow-900/30';
-    if (result.largeTextAA) return 'text-orange-700 bg-orange-100 dark:text-orange-400 dark:bg-orange-900/30';
-    return 'text-red-700 bg-red-100 dark:text-red-400 dark:bg-red-900/30';
+  const getComplianceStyle = () => {
+    if (result.wcagAAA) return COMPONENT_STYLES.tag.success;
+    if (result.wcagAA) return COMPONENT_STYLES.tag.warning;
+    if (result.largeTextAA) return { ...COMPONENT_STYLES.tag.base, backgroundColor: 'rgba(249, 115, 22, 0.2)', color: '#f97316' };
+    return COMPONENT_STYLES.tag.error;
   };
 
   return (
-    <div className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2">
+    <div style={{
+      padding: SPACING['4xl'],
+      borderBottom: `1px solid ${COLORS.border.primary}`,
+      transition: 'background-color 0.15s ease'
+    }}
+    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = COLORS.background.hover}
+    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+    >
+      <div style={{
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        gap: SPACING['4xl']
+      }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: SPACING.lg,
+            marginBottom: SPACING.lg
+          }}>
             {getComplianceIcon()}
-            <span className={clsx(
-              'px-2 py-0.5 text-xs font-medium rounded-full',
-              getComplianceColor()
-            )}>
+            <Badge style={mergeStyles(COMPONENT_STYLES.tag.base, getComplianceStyle())}>
               {getComplianceText()}
-            </span>
-            <span className="text-sm font-mono text-gray-600 dark:text-gray-400">
+            </Badge>
+            <span style={{
+              fontSize: TYPOGRAPHY.fontSize.base,
+              fontFamily: TYPOGRAPHY.fontFamily.mono,
+              color: COLORS.text.secondary
+            }}>
               {formatContrastRatio(result.contrastRatio)}
             </span>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
+            <span style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.muted
+            }}>
               {getContrastLevelDescription(result.contrastRatio)}
             </span>
           </div>
           
-          <code className="text-sm text-gray-800 dark:text-gray-200 break-all">
+          <code style={{
+            fontSize: TYPOGRAPHY.fontSize.base,
+            color: COLORS.text.primary,
+            wordBreak: 'break-all',
+            fontFamily: TYPOGRAPHY.fontFamily.mono
+          }}>
             {result.selector}
           </code>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div style={{ display: 'flex', alignItems: 'center', gap: SPACING['2xl'] }}>
           {/* Color Swatches */}
-          <div className="flex items-center gap-2">
-            <div className="text-xs text-gray-500 dark:text-gray-400">Colors:</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.lg }}>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.muted
+            }}>Colors:</div>
             <div 
-              className="w-6 h-6 rounded border border-gray-300 dark:border-gray-600"
-              style={{ backgroundColor: result.foregroundColor }}
+              style={{
+                width: '24px',
+                height: '24px',
+                borderRadius: RADIUS.md,
+                border: `1px solid ${COLORS.border.primary}`,
+                backgroundColor: result.foregroundColor
+              }}
               title={`Foreground: ${result.foregroundColor}`}
             />
-            <div className="text-xs text-gray-400">on</div>
+            <div style={{
+              fontSize: TYPOGRAPHY.fontSize.sm,
+              color: COLORS.text.muted
+            }}>on</div>
             <div 
-              className="w-6 h-6 rounded border border-gray-300 dark:border-gray-600"
-              style={{ backgroundColor: result.backgroundColor }}
+              style={{
+                width: '24px',
+                height: '24px',
+                borderRadius: RADIUS.md,
+                border: `1px solid ${COLORS.border.primary}`,
+                backgroundColor: result.backgroundColor
+              }}
               title={`Background: ${result.backgroundColor}`}
             />
           </div>
 
           <button
             onClick={onHighlight}
-            className="text-blue-500 hover:text-blue-700 dark:hover:text-blue-400 transition-colors"
+            style={{
+              color: COLORS.status.info,
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              padding: SPACING.sm,
+              borderRadius: RADIUS.md,
+              transition: 'color 0.15s ease'
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.color = COLORS.text.accent}
+            onMouseLeave={(e) => e.currentTarget.style.color = COLORS.status.info}
             title="Highlight element"
           >
-            <Eye className="w-4 h-4" />
+            <Eye style={{ width: '16px', height: '16px' }} />
           </button>
         </div>
       </div>
 
       {/* Compliance Details */}
-      <div className="mt-3 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-        <div className={clsx(
-          'flex items-center gap-1',
-          result.wcagAA ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-        )}>
-          {result.wcagAA ? <CheckCircle className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
+      <div style={{
+        marginTop: SPACING['2xl'],
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(80px, 1fr))',
+        gap: SPACING['2xl'],
+        fontSize: TYPOGRAPHY.fontSize.sm
+      }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: SPACING.xs,
+          color: result.wcagAA ? COLORS.status.success : COLORS.status.error
+        }}>
+          {result.wcagAA ? 
+            <CheckCircle style={{ width: '12px', height: '12px' }} /> : 
+            <XCircle style={{ width: '12px', height: '12px' }} />
+          }
           WCAG AA
         </div>
-        <div className={clsx(
-          'flex items-center gap-1',
-          result.wcagAAA ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-        )}>
-          {result.wcagAAA ? <CheckCircle className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: SPACING.xs,
+          color: result.wcagAAA ? COLORS.status.success : COLORS.status.error
+        }}>
+          {result.wcagAAA ? 
+            <CheckCircle style={{ width: '12px', height: '12px' }} /> : 
+            <XCircle style={{ width: '12px', height: '12px' }} />
+          }
           WCAG AAA
         </div>
-        <div className={clsx(
-          'flex items-center gap-1',
-          result.largeTextAA ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-        )}>
-          {result.largeTextAA ? <CheckCircle className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: SPACING.xs,
+          color: result.largeTextAA ? COLORS.status.success : COLORS.status.error
+        }}>
+          {result.largeTextAA ? 
+            <CheckCircle style={{ width: '12px', height: '12px' }} /> : 
+            <XCircle style={{ width: '12px', height: '12px' }} />
+          }
           Large AA
         </div>
-        <div className={clsx(
-          'flex items-center gap-1',
-          result.largeTextAAA ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-        )}>
-          {result.largeTextAAA ? <CheckCircle className="w-3 h-3" /> : <XCircle className="w-3 h-3" />}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: SPACING.xs,
+          color: result.largeTextAAA ? COLORS.status.success : COLORS.status.error
+        }}>
+          {result.largeTextAAA ? 
+            <CheckCircle style={{ width: '12px', height: '12px' }} /> : 
+            <XCircle style={{ width: '12px', height: '12px' }} />
+          }
           Large AAA
         </div>
       </div>

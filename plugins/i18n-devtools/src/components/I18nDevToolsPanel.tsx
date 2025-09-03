@@ -13,10 +13,7 @@ import {
   Palette, 
   Package, 
   FlaskConical, 
-  Zap,
-  RefreshCw,
-  Search,
-  Bug
+  Zap
 } from 'lucide-react';
 import {
   PluginPanel,
@@ -27,7 +24,9 @@ import {
   Alert,
   StatusIndicator,
   EmptyState,
-  Skeleton
+  Skeleton,
+  ConfigMenu,
+  type ConfigMenuItem
 } from '@sucoza/shared-components';
 import { i18nEventClient } from '../core/i18n-event-client';
 import type { 
@@ -446,24 +445,56 @@ export function I18nDevToolsPanel() {
     }
   ];
 
-  const actions = [
+  const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'refresh',
-      label: 'Refresh',
-      icon: RefreshCw,
+      label: 'Refresh Data',
+      icon: '🔄',
       onClick: () => i18nEventClient.emit('i18n-state-request', undefined),
-      variant: 'default' as const
+      shortcut: 'Ctrl+R'
     },
     {
       id: 'debug-mode',
-      label: debugMode ? 'Disable Debug' : 'Enable Debug',
-      icon: Bug,
+      label: debugMode ? 'Disable Debug Mode' : 'Enable Debug Mode',
+      icon: '🐛',
       onClick: () => {
         const newDebugMode = !debugMode;
         setDebugMode(newDebugMode);
         i18nEventClient.setDebugMode(newDebugMode);
-      },
-      variant: debugMode ? 'danger' as const : 'default' as const
+      }
+    },
+    {
+      id: 'auto-refresh',
+      label: autoRefresh ? 'Disable Auto Refresh' : 'Enable Auto Refresh',
+      icon: autoRefresh ? '⏸️' : '🔄',
+      onClick: () => setAutoRefresh(!autoRefresh)
+    },
+    {
+      id: 'show-missing',
+      label: showOnlyMissing ? 'Show All Keys' : 'Show Only Missing Keys',
+      icon: '⚠️',
+      onClick: () => setShowOnlyMissing(!showOnlyMissing),
+      separator: true
+    },
+    {
+      id: 'export-translations',
+      label: 'Export Translations',
+      icon: '💾',
+      onClick: () => console.log('Export translations clicked'),
+      shortcut: 'Ctrl+E'
+    },
+    {
+      id: 'import-translations',
+      label: 'Import Translations',
+      icon: '📥',
+      onClick: () => console.log('Import translations clicked')
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      onClick: () => console.log('Settings clicked'),
+      separator: true
     }
   ];
 
@@ -485,20 +516,25 @@ export function I18nDevToolsPanel() {
   ];
 
   return (
-    <PluginPanel
-      title="i18n DevTools"
-      icon={Globe}
-      subtitle="Internationalization debugging and management"
-      tabs={tabs}
-      activeTabId={activeTab}
-      onTabChange={setActiveTab}
-      actions={actions}
-      metrics={metrics}
-      showMetrics={true}
-      showSearch={true}
-      searchValue={searchQuery}
-      onSearchChange={handleSearch}
-      searchPlaceholder="Search keys and translations..."
-    />
+    <div style={{ position: 'relative', height: '100%' }}>
+      <PluginPanel
+        title="i18n DevTools"
+        icon={Globe}
+        subtitle="Internationalization debugging and management"
+        tabs={tabs}
+        activeTabId={activeTab}
+        onTabChange={setActiveTab}
+        metrics={metrics}
+        showMetrics={true}
+        showSearch={true}
+        searchValue={searchQuery}
+        onSearchChange={handleSearch}
+        searchPlaceholder="Search keys and translations..."
+      />
+      
+      <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
+    </div>
   );
 }

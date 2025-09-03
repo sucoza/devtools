@@ -21,6 +21,7 @@ import {
   StatusIndicator,
   Toolbar,
   Footer,
+  ConfigMenu,
   COLORS,
   SPACING,
   TYPOGRAPHY,
@@ -156,16 +157,17 @@ export function PluginPanel({
   const isPaused = state.recording.isPaused;
   const hasData = state.renderEvents.length > 0 || state.components.size > 0;
 
-  // Prepare toolbar actions
-  const toolbarActions = [
+  // ConfigMenu items
+  const configMenuItems = [
     {
-      id: 'record-control',
-      icon: isRecording && !isPaused ? Pause : Activity,
+      id: 'start-detection',
       label: isRecording
         ? isPaused
-          ? "Resume Recording"
-          : "Pause Recording"
-        : "Start Recording",
+          ? 'Resume Detection'
+          : 'Pause Detection'
+        : 'Start Detection',
+      icon: '▶️',
+      shortcut: 'Ctrl+R',
       onClick: () => {
         if (isRecording) {
           if (isPaused) {
@@ -177,38 +179,39 @@ export function PluginPanel({
           eventClient.startRecording();
         }
       },
-      variant: (isRecording && !isPaused ? 'primary' : 'default') as 'primary' | 'default' | 'danger',
     },
     {
-      id: 'stop',
-      icon: Square,
-      label: "Stop Recording",
+      id: 'stop-detection',
+      label: 'Stop Detection',
+      icon: '⏹️',
       onClick: () => eventClient.stopRecording(),
       disabled: !isRecording,
     },
     {
-      id: 'clear',
-      icon: RotateCcw,
-      label: "Clear Data",
+      id: 'clear-results',
+      label: 'Clear Results',
+      icon: '🗑️',
+      shortcut: 'Ctrl+K',
       onClick: () => eventClient.clearRecording(),
       disabled: !hasData,
     },
     {
-      id: 'analyze',
-      icon: Lightbulb,
-      label: "Analyze Render Waste",
+      id: 'generate-report',
+      label: 'Generate Report',
+      icon: '📊',
+      shortcut: 'Ctrl+G',
       onClick: async () => {
         if (!state.performance.isAnalyzing) {
           await eventClient.startAnalysis();
         }
       },
       disabled: !hasData || state.performance.isAnalyzing,
-      variant: 'primary' as 'primary' | 'default' | 'danger',
     },
     {
-      id: 'export',
-      icon: Download,
-      label: "Export Session",
+      id: 'export-session',
+      label: 'Export Session',
+      icon: '💾',
+      shortcut: 'Ctrl+E',
       onClick: () => {
         const session = eventClient.exportSession();
         if (session) {
@@ -224,31 +227,14 @@ export function PluginPanel({
         }
       },
       disabled: !hasData,
+      separator: true,
     },
     {
-      icon: Upload,
-      label: "Import Session",
-      onClick: () => {
-        const input = document.createElement("input");
-        input.type = "file";
-        input.accept = ".json";
-        input.onchange = (e) => {
-          const file = (e.target as HTMLInputElement).files?.[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              try {
-                const session = JSON.parse(e.target?.result as string);
-                eventClient.importSession(session);
-              } catch (error) {
-                console.error("Failed to import session:", error);
-              }
-            };
-            reader.readAsText(file);
-          }
-        };
-        input.click();
-      },
+      id: 'settings',
+      label: 'Settings',
+      icon: '⚙️',
+      shortcut: 'Ctrl+S',
+      onClick: () => handleTabChange('settings'),
     },
   ];
 
@@ -278,98 +264,112 @@ export function PluginPanel({
     value: state.recording.activeSession?.name || 'None',
   });
 
+  const pluginTabs = tabs.map(tab => ({
+    id: tab.id,
+    label: tab.label,
+    icon: tab.icon,
+    badge: tab.badge ? { count: tab.badge } : undefined,
+    content: (
+      <ScrollableContainer style={{ height: '100%' }}>
+        {tab.id === "overview" && (
+          <OverviewTab
+            state={state}
+            eventClient={eventClient}
+            dispatch={handleEvent}
+            compact={compact}
+            onComponentSelect={handleComponentSelect}
+            onSuggestionApply={handleSuggestionApply}
+          />
+        )}
+        {tab.id === "components" && (
+          <ComponentsTab
+            state={state}
+            eventClient={eventClient}
+            dispatch={handleEvent}
+            compact={compact}
+            onComponentSelect={handleComponentSelect}
+            onSuggestionApply={handleSuggestionApply}
+          />
+        )}
+        {tab.id === "heatmap" && (
+          <HeatMapTab
+            state={state}
+            eventClient={eventClient}
+            dispatch={handleEvent}
+            compact={compact}
+            onComponentSelect={handleComponentSelect}
+            onSuggestionApply={handleSuggestionApply}
+          />
+        )}
+        {tab.id === "suggestions" && (
+          <SuggestionsTab
+            state={state}
+            eventClient={eventClient}
+            dispatch={handleEvent}
+            compact={compact}
+            onComponentSelect={handleComponentSelect}
+            onSuggestionApply={handleSuggestionApply}
+          />
+        )}
+        {tab.id === "timeline" && (
+          <TimelineTab
+            state={state}
+            eventClient={eventClient}
+            dispatch={handleEvent}
+            compact={compact}
+            onComponentSelect={handleComponentSelect}
+            onSuggestionApply={handleSuggestionApply}
+          />
+        )}
+        {tab.id === "settings" && (
+          <SettingsTab
+            state={state}
+            eventClient={eventClient}
+            dispatch={handleEvent}
+            compact={compact}
+            onComponentSelect={handleComponentSelect}
+            onSuggestionApply={handleSuggestionApply}
+          />
+        )}
+      </ScrollableContainer>
+    )
+  }));
+
   return (
-    <BasePluginPanel
-      title="Render Waste Detector"
-      icon={Flame}
-      className={className}
-    >
-      <Toolbar actions={toolbarActions} />
-
-      <div>
-        <Tabs
-          activeTab={activeTab}
-          onTabChange={(tabId) => handleTabChange(tabId as DevToolsTab)}
-          tabs={tabs.map(tab => ({
-            id: tab.id,
-            label: tab.label,
-            icon: tab.icon,
-            badge: tab.badge,
-          }))}
-        />
-        <ScrollableContainer>
-          {activeTab === "overview" && (
-            <OverviewTab
-              state={state}
-              eventClient={eventClient}
-              dispatch={handleEvent}
-              compact={compact}
-              onComponentSelect={handleComponentSelect}
-              onSuggestionApply={handleSuggestionApply}
-            />
-          )}
-          {activeTab === "components" && (
-            <ComponentsTab
-              state={state}
-              eventClient={eventClient}
-              dispatch={handleEvent}
-              compact={compact}
-              onComponentSelect={handleComponentSelect}
-              onSuggestionApply={handleSuggestionApply}
-            />
-          )}
-          {activeTab === "heatmap" && (
-            <HeatMapTab
-              state={state}
-              eventClient={eventClient}
-              dispatch={handleEvent}
-              compact={compact}
-              onComponentSelect={handleComponentSelect}
-              onSuggestionApply={handleSuggestionApply}
-            />
-          )}
-          {activeTab === "suggestions" && (
-            <SuggestionsTab
-              state={state}
-              eventClient={eventClient}
-              dispatch={handleEvent}
-              compact={compact}
-              onComponentSelect={handleComponentSelect}
-              onSuggestionApply={handleSuggestionApply}
-            />
-          )}
-          {activeTab === "timeline" && (
-            <TimelineTab
-              state={state}
-              eventClient={eventClient}
-              dispatch={handleEvent}
-              compact={compact}
-              onComponentSelect={handleComponentSelect}
-              onSuggestionApply={handleSuggestionApply}
-            />
-          )}
-          {activeTab === "settings" && (
-            <SettingsTab
-              state={state}
-              eventClient={eventClient}
-              dispatch={handleEvent}
-              compact={compact}
-              onComponentSelect={handleComponentSelect}
-              onSuggestionApply={handleSuggestionApply}
-            />
-          )}
-        </ScrollableContainer>
-      </div>
-
-      <Footer
-        stats={footerStats.map((stat, index) => ({
-          id: `stat-${index}`,
-          ...stat
-        }))}
+    <div className={className} style={{ position: 'relative' }}>
+      <BasePluginPanel
+        title="Render Waste Detector"
+        icon={Flame}
+        subtitle={
+          isRecording 
+            ? isPaused 
+              ? 'Paused'
+              : 'Recording'
+            : 'Idle'
+        }
+        status={{
+          isActive: isRecording,
+          label: isRecording ? 'Recording' : 'Idle'
+        }}
+        tabs={pluginTabs}
+        activeTabId={activeTab}
+        onTabChange={(tabId) => handleTabChange(tabId as DevToolsTab)}
+        metrics={footerStats}
+        showMetrics={true}
       />
-
+      
+      {/* ConfigMenu overlay */}
+      <div style={{
+        position: 'absolute',
+        top: '12px',
+        right: '12px',
+        zIndex: 10
+      }}>
+        <ConfigMenu items={configMenuItems} size="sm" />
+      </div>
+      
       {children}
-    </BasePluginPanel>
+    </div>
   );
 }
 
