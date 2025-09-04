@@ -23,7 +23,7 @@
     "clean:modules": "find . -name 'node_modules' -type d -not -path './node_modules' -exec rm -rf {} + 2>/dev/null || true",
     "clean:all": "pnpm run clean:dist && pnpm run clean:modules && rm -rf node_modules",
     "prepare": "nx run-many --target=build --projects=tag:scope:shared",
-    "prerelease": "nx run-many --target=test --all && nx run-many --target=lint --all && nx run-many --target=typecheck --all",
+    "prerelease": "nx run-many -t test,lint,typecheck,build --all --parallel=3",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "nx run-many --target=build --all && changeset publish",
@@ -34,7 +34,14 @@
     "graph": "nx graph",
     "affected:build": "nx affected --target=build",
     "affected:test": "nx affected --target=test",
-    "affected:lint": "nx affected --target=lint"
+    "affected:lint": "nx affected --target=lint",
+    "affected:typecheck": "nx affected --target=typecheck",
+    "affected:format": "nx affected --target=format",
+    "ci:affected": "nx affected -t lint,typecheck,test,build --parallel=3",
+    "ci:all": "nx run-many -t lint,typecheck,test,build --all --parallel=3",
+    "cloud:status": "nx-cloud status",
+    "graph:affected": "nx affected:dep-graph",
+    "reset": "nx reset"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",
@@ -53,6 +60,7 @@
     "eslint-plugin-react": "catalog:",
     "eslint-plugin-react-hooks": "catalog:",
     "nx": "21.4.1",
+    "nx-cloud": "^19.1.0",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
