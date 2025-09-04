@@ -1,7 +1,10 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
@@ -14,45 +17,40 @@
       "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
       "!{projectRoot}/**/*.test.*",
       "!{projectRoot}/**/*.spec.*",
-      "!{projectRoot}/example/**/*",
-      "!{projectRoot}/coverage/**/*",
-      "!{projectRoot}/.nx/**/*"
+      "!{projectRoot}/example/**/*"
     ],
-    "sharedGlobals": [
-      "{workspaceRoot}/package.json",
-      "{workspaceRoot}/pnpm-lock.yaml",
-      "{workspaceRoot}/nx.json",
-      "{workspaceRoot}/tsconfig.base.json",
-      "{workspaceRoot}/.prettierrc",
-      "{workspaceRoot}/.prettierignore",
-      "{workspaceRoot}/.eslintrc.json",
-      "{workspaceRoot}/.eslintignore",
-      "{workspaceRoot}/pnpm-workspace.yaml"
-    ]
+    "sharedGlobals": []
   },
   "targetDefaults": {
     "build": {
       "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"],
-      "outputs": ["{projectRoot}/dist"],
-      "metadata": {
-        "description": "Build the project",
-        "technologies": ["rollup"]
-      }
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "production",
+        "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
     },
     "dev": {
       "cache": false,
-      "dependsOn": ["^build"]
+      "dependsOn": [
+        "^build"
+      ]
     },
     "test": {
       "cache": true,
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "metadata": {
-        "description": "Run unit tests",
-        "technologies": ["vitest", "jest"]
-      }
+      "inputs": [
+        "default",
+        "^production",
+        "{workspaceRoot}/jest.preset.js"
+      ],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ]
     },
     "lint": {
       "cache": true,
@@ -62,20 +60,17 @@
         "{workspaceRoot}/.eslintignore",
         "{workspaceRoot}/eslint.config.js"
       ],
-      "outputs": ["{workspaceRoot}/dist/.eslintcache"],
-      "metadata": {
-        "description": "Lint the project",
-        "technologies": ["eslint"]
-      }
+      "outputs": [
+        "{workspaceRoot}/dist/.eslintcache"
+      ]
     },
     "typecheck": {
       "cache": true,
-      "inputs": ["production", "^production"],
-      "outputs": [],
-      "metadata": {
-        "description": "Type check the project",
-        "technologies": ["typescript"]
-      }
+      "inputs": [
+        "production",
+        "^production"
+      ],
+      "outputs": []
     },
     "format": {
       "cache": true,
@@ -84,11 +79,7 @@
         "{workspaceRoot}/.prettierrc",
         "{workspaceRoot}/.prettierignore"
       ],
-      "outputs": [],
-      "metadata": {
-        "description": "Format the project",
-        "technologies": ["prettier"]
-      }
+      "outputs": []
     }
   },
   "plugins": [
@@ -130,15 +121,19 @@
   },
   "tasksRunnerOptions": {
     "default": {
-      "runner": "nx-cloud",
+      "runner": "nx/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "typecheck", "format"],
-        "parallel": 4,
-        "useDaemonProcess": true,
-        "cacheDirectory": ".nx/cache",
-        "accessToken": "${process.env.NX_CLOUD_ACCESS_TOKEN || ''}"
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "typecheck"
+        ],
+        "parallel": 3,
+        "useDaemonProcess": true
       }
     }
   },
-  "nxCloudAccessToken": "${process.env.NX_CLOUD_ACCESS_TOKEN || ''}"
+  "nxCloudAccessToken": null,
+  "nxCloudId": "68b8d31d31ff1dab0058ece5"
 }
