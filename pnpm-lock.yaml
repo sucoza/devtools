@@ -79,8 +79,8 @@ catalogs:
       specifier: ^0.2.3
       version: 0.2.3
     '@tanstack/react-devtools':
-      specifier: ^0.6.2
-      version: 0.6.2
+      specifier: ^0.6.5
+      version: 0.6.5
     '@testing-library/jest-dom':
       specifier: ^6.8.0
       version: 6.8.0
@@ -592,7 +592,7 @@ importers:
         version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@tanstack/react-devtools':
         specifier: 'catalog:'
-        version: 0.6.2(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.6.5(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@types/react':
         specifier: 'catalog:'
         version: 19.1.12
@@ -696,7 +696,7 @@ importers:
         version: link:../../plugins/i18n-devtools
       '@tanstack/react-devtools':
         specifier: 'catalog:'
-        version: 0.6.2(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.6.5(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       i18next:
         specifier: ^23.0.0
         version: 23.16.8
@@ -730,7 +730,7 @@ importers:
     dependencies:
       '@tanstack/react-devtools':
         specifier: 'catalog:'
-        version: 0.6.2(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.6.5(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       react:
         specifier: 'catalog:'
         version: 19.1.1
@@ -5064,6 +5064,10 @@ packages:
     resolution: {integrity: sha512-w2jZY/V8DB9yFY6Dnor5CirSnqwEhcaY9wFGjUIkN5hMVCGqBA2mueErKPCZ+6sQvkLN+pQS/eszrjdgCPsVCw==}
     engines: {node: '>=18'}
 
+  '@tanstack/devtools-event-bus@0.3.2':
+    resolution: {integrity: sha512-yJT2As/drc+Epu0nsqCsJaKaLcaNGufiNxSlp/+/oeTD0jsBxF9/PJBfh66XVpYXkKr97b8689mSu7QMef0Rrw==}
+    engines: {node: '>=18'}
+
   '@tanstack/devtools-event-client@0.2.3':
     resolution: {integrity: sha512-4IXWGklnrtMf/qaxUbc4kYZP+4pxDYdaz7rjHn6lrsL7UoeQ/KQZi0ojzClQ36BRcnG2Bn/6BcLwTPRd6yyc4w==}
     engines: {node: '>=18'}
@@ -5099,6 +5103,13 @@ packages:
       '@tanstack/devtools-ui': 0.3.4
       solid-js: '>=1.9.7'
 
+  '@tanstack/devtools@0.6.9':
+    resolution: {integrity: sha512-4ru99+62LpUJ7uxRwSHHJc6Udgi/4sys+w3QTZO8vs+/H0YnfbfBooYcnptWNBaqM+uoquhdVwAbf64Pv+6s2A==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@tanstack/devtools-ui': 0.3.4
+      solid-js: '>=1.9.7'
+
   '@tanstack/react-devtools@0.5.5':
     resolution: {integrity: sha512-iyLgwMtVzPEhKcFIzh4bc+mw8yCqK1qjyNtHh7CYL5SAa6cXwo3wqc2ZNKn7IB/izjhf+FzSaqM7+5OhLk44Kw==}
     engines: {node: '>=18'}
@@ -5108,8 +5119,8 @@ packages:
       react: '>=16.8'
       react-dom: '>=16.8'
 
-  '@tanstack/react-devtools@0.6.2':
-    resolution: {integrity: sha512-tqn5oB6bQKUtLEIpA4pFNFUQMS22Sp0mmYTrnGzMUXh0C7sdPCmwAVh/TATVdw3ybEOs8RUJ9jy27bRd7K5tSg==}
+  '@tanstack/react-devtools@0.6.5':
+    resolution: {integrity: sha512-n+WZghnGi+t4ncRb7zasH5CZnqspGvJk8XC1/DzOlpTZPt4rSqxphZwsREjE8aX1by8TNnMld0YeIrT4wdhj9A==}
     engines: {node: '>=18'}
     peerDependencies:
       '@types/react': '>=16.8'
@@ -11128,6 +11139,13 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  '@tanstack/devtools-event-bus@0.3.2':
+    dependencies:
+      ws: 8.18.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   '@tanstack/devtools-event-client@0.2.3': {}
 
   '@tanstack/devtools-ui@0.3.3(csstype@3.1.3)(solid-js@1.9.9)':
@@ -11187,6 +11205,19 @@ snapshots:
       - csstype
       - utf-8-validate
 
+  '@tanstack/devtools@0.6.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)':
+    dependencies:
+      '@solid-primitives/keyboard': 1.3.3(solid-js@1.9.9)
+      '@tanstack/devtools-event-bus': 0.3.2
+      '@tanstack/devtools-ui': 0.3.4(csstype@3.1.3)(solid-js@1.9.9)
+      clsx: 2.1.1
+      goober: 2.1.16(csstype@3.1.3)
+      solid-js: 1.9.9
+    transitivePeerDependencies:
+      - bufferutil
+      - csstype
+      - utf-8-validate
+
   '@tanstack/react-devtools@0.5.5(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
       '@tanstack/devtools': 0.6.3(csstype@3.1.3)(solid-js@1.9.9)
@@ -11200,9 +11231,9 @@ snapshots:
       - solid-js
       - utf-8-validate
 
-  '@tanstack/react-devtools@0.6.2(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
+  '@tanstack/react-devtools@0.6.5(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
       '@types/react': 19.1.12
       '@types/react-dom': 19.1.9(@types/react@19.1.12)
       react: 19.1.1
