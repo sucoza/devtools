@@ -12,7 +12,7 @@
   "dependencies": {
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-i18next": "^13.0.0",
+    "react-i18next": "^16.0.0",
     "i18next": "^23.0.0",
     "@sucoza/i18n": "workspace:*",
     "@sucoza/i18n-devtools-plugin": "workspace:*",
