@@ -247,8 +247,8 @@ catalogs:
       specifier: ^0.1.11
       version: 0.1.11
     tailwindcss:
-      specifier: ^4.1.12
-      version: 4.1.12
+      specifier: ^4.1.14
+      version: 4.1.14
     ts-jest:
       specifier: ^29.4.1
       version: 29.4.1
@@ -644,7 +644,7 @@ importers:
         version: 8.5.6
       tailwindcss:
         specifier: 'catalog:'
-        version: 4.1.12
+        version: 4.1.14
       typescript:
         specifier: 'catalog:'
         version: 5.9.2
@@ -8513,8 +8513,8 @@ packages:
     resolution: {integrity: sha512-MeQTA1r0litLUf0Rp/iisCaL8761lKAZHaimlbGK4j0HysC4PLfqygQj9srcs0m2RdtDYnF8UuYyKpbjHYp7Jw==}
     engines: {node: ^14.18.0 || >=16.0.0}
 
-  tailwindcss@4.1.12:
-    resolution: {integrity: sha512-DzFtxOi+7NsFf7DBtI3BJsynR+0Yp6etH+nRPTbpWnS2pZBaSksv/JGctNwSWzbFjp0vxSqknaUylseZqMDGrA==}
+  tailwindcss@4.1.14:
+    resolution: {integrity: sha512-b7pCxjGO98LnxVkKjaZSDeNuljC4ueKUddjENJOADtubtdo8llTaJy7HwBMeLNSSo2N5QIAgklslK1+Ir8r6CA==}
 
   tar-stream@2.2.0:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==}
@@ -15137,7 +15137,7 @@ snapshots:
     dependencies:
       '@pkgr/core': 0.2.9
 
-  tailwindcss@4.1.12: {}
+  tailwindcss@4.1.14: {}
 
   tar-stream@2.2.0:
     dependencies:
