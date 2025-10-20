@@ -70,8 +70,8 @@ catalogs:
       specifier: ^0.1.9
       version: 0.1.9
     '@tanstack/devtools':
-      specifier: ^0.6.6
-      version: 0.6.6
+      specifier: ^0.6.21
+      version: 0.6.21
     '@tanstack/devtools-event-bus':
       specifier: ^0.3.1
       version: 0.3.1
@@ -351,7 +351,7 @@ importers:
     devDependencies:
       '@sucoza/accessibility-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@types/react':
         specifier: 'catalog:'
         version: 19.1.12
@@ -379,7 +379,7 @@ importers:
     devDependencies:
       '@sucoza/auth-permissions-mock-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@types/react':
         specifier: 'catalog:'
         version: 19.1.12
@@ -407,7 +407,7 @@ importers:
     devDependencies:
       '@sucoza/browser-automation-test-recorder-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@types/react':
         specifier: 'catalog:'
         version: 19.1.12
@@ -444,7 +444,7 @@ importers:
     devDependencies:
       '@sucoza/bundle-impact-analyzer-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@types/lodash':
         specifier: 'catalog:'
         version: 4.17.20
@@ -468,7 +468,7 @@ importers:
     dependencies:
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       clsx:
         specifier: 'catalog:'
         version: 2.1.1
@@ -484,7 +484,7 @@ importers:
     devDependencies:
       '@sucoza/design-system-inspector-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@types/react':
         specifier: 'catalog:'
         version: 19.1.12
@@ -561,7 +561,7 @@ importers:
     devDependencies:
       '@sucoza/feature-flag-manager-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@types/react':
         specifier: 'catalog:'
         version: 19.1.12
@@ -589,10 +589,10 @@ importers:
     devDependencies:
       '@sucoza/form-state-inspector-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@tanstack/react-devtools':
         specifier: 'catalog:'
-        version: 0.6.2(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.6.2(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@types/react':
         specifier: 'catalog:'
         version: 19.1.12
@@ -613,7 +613,7 @@ importers:
     dependencies:
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       graphql:
         specifier: ^16.8.1
         version: 16.11.0
@@ -662,7 +662,7 @@ importers:
         version: link:../../plugins/i18n-devtools
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       react:
         specifier: 'catalog:'
         version: 19.1.1
@@ -696,7 +696,7 @@ importers:
         version: link:../../plugins/i18n-devtools
       '@tanstack/react-devtools':
         specifier: 'catalog:'
-        version: 0.6.2(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.6.2(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       i18next:
         specifier: ^23.0.0
         version: 23.16.8
@@ -730,7 +730,7 @@ importers:
     dependencies:
       '@tanstack/react-devtools':
         specifier: 'catalog:'
-        version: 0.6.2(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.6.2(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       react:
         specifier: 'catalog:'
         version: 19.1.1
@@ -740,7 +740,7 @@ importers:
     devDependencies:
       '@sucoza/memory-performance-profiler-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@types/react':
         specifier: 'catalog:'
         version: 19.1.12
@@ -777,10 +777,10 @@ importers:
         version: 9.34.0
       '@sucoza/accessibility-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@sucoza/design-system-inspector-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@sucoza/devtools-importer':
         specifier: workspace:*
         version: link:../../packages/devtools-importer
@@ -792,10 +792,10 @@ importers:
         version: link:../../plugins/logger-devtools
       '@sucoza/memory-performance-profiler-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@sucoza/render-waste-detector-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@sucoza/router-devtools-plugin':
         specifier: workspace:*
         version: link:../../plugins/router-devtools
@@ -850,7 +850,7 @@ importers:
     devDependencies:
       '@sucoza/render-waste-detector-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@types/react':
         specifier: 'catalog:'
         version: 19.1.12
@@ -871,7 +871,7 @@ importers:
     dependencies:
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       react:
         specifier: 'catalog:'
         version: 19.1.1
@@ -881,7 +881,7 @@ importers:
     devDependencies:
       '@sucoza/security-audit-panel-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@types/react':
         specifier: 'catalog:'
         version: 19.1.12
@@ -915,7 +915,7 @@ importers:
     devDependencies:
       '@sucoza/visual-regression-monitor-devtools-plugin':
         specifier: 'catalog:'
-        version: 0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
+        version: 0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)
       '@types/react':
         specifier: 'catalog:'
         version: 19.1.12
@@ -987,7 +987,7 @@ importers:
         version: link:../logger
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-bus':
         specifier: 'catalog:'
         version: 0.3.1
@@ -1238,7 +1238,7 @@ importers:
         version: 12.1.4(rollup@4.50.0)(tslib@2.8.1)(typescript@5.9.2)
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@types/node':
         specifier: 'catalog:'
         version: 24.3.0
@@ -1371,7 +1371,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -1483,7 +1483,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -1586,7 +1586,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -1692,7 +1692,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -1846,7 +1846,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -1964,7 +1964,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -2070,7 +2070,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -2188,7 +2188,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -2291,7 +2291,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -2394,7 +2394,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -2500,7 +2500,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -2612,7 +2612,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -2715,7 +2715,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -2821,7 +2821,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -2927,7 +2927,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -3030,7 +3030,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -3133,7 +3133,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -3236,7 +3236,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -3339,7 +3339,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -3442,7 +3442,7 @@ importers:
         version: link:../../packages/shared-components
       '@tanstack/devtools':
         specifier: 'catalog:'
-        version: 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+        version: 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client':
         specifier: 'catalog:'
         version: 0.2.3
@@ -4966,8 +4966,18 @@ packages:
     peerDependencies:
       solid-js: ^1.6.12
 
+  '@solid-primitives/resize-observer@2.1.3':
+    resolution: {integrity: sha512-zBLje5E06TgOg93S7rGPldmhDnouNGhvfZVKOp+oG2XU8snA+GoCSSCz1M+jpNAg5Ek2EakU5UVQqL152WmdXQ==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
   '@solid-primitives/rootless@1.5.2':
     resolution: {integrity: sha512-9HULb0QAzL2r47CCad0M+NKFtQ+LrGGNHZfteX/ThdGvKIg2o2GYhBooZubTCd/RTu2l2+Nw4s+dEfiDGvdrrQ==}
+    peerDependencies:
+      solid-js: ^1.6.12
+
+  '@solid-primitives/static-store@0.1.2':
+    resolution: {integrity: sha512-ReK+5O38lJ7fT+L6mUFvUr6igFwHBESZF+2Ug842s7fvlVeBdIVEdTCErygff6w7uR6+jrr7J8jQo+cYrEq4Iw==}
     peerDependencies:
       solid-js: ^1.6.12
 
@@ -5060,12 +5070,24 @@ packages:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
 
+  '@tanstack/devtools-client@0.0.3':
+    resolution: {integrity: sha512-kl0r6N5iIL3t9gGDRAv55VRM3UIyMKVH83esRGq7xBjYsRLe/BeCIN2HqrlJkObUXQMKhy7i8ejuGOn+bDqDBw==}
+    engines: {node: '>=18'}
+
   '@tanstack/devtools-event-bus@0.3.1':
     resolution: {integrity: sha512-w2jZY/V8DB9yFY6Dnor5CirSnqwEhcaY9wFGjUIkN5hMVCGqBA2mueErKPCZ+6sQvkLN+pQS/eszrjdgCPsVCw==}
     engines: {node: '>=18'}
 
+  '@tanstack/devtools-event-bus@0.3.2':
+    resolution: {integrity: sha512-yJT2As/drc+Epu0nsqCsJaKaLcaNGufiNxSlp/+/oeTD0jsBxF9/PJBfh66XVpYXkKr97b8689mSu7QMef0Rrw==}
+    engines: {node: '>=18'}
+
   '@tanstack/devtools-event-client@0.2.3':
     resolution: {integrity: sha512-4IXWGklnrtMf/qaxUbc4kYZP+4pxDYdaz7rjHn6lrsL7UoeQ/KQZi0ojzClQ36BRcnG2Bn/6BcLwTPRd6yyc4w==}
+    engines: {node: '>=18'}
+
+  '@tanstack/devtools-event-client@0.3.3':
+    resolution: {integrity: sha512-RfV+OPV/M3CGryYqTue684u10jUt55PEqeBOnOtCe6tAmHI9Iqyc8nHeDhWPEV9715gShuauFVaMc9RiUVNdwg==}
     engines: {node: '>=18'}
 
   '@tanstack/devtools-ui@0.3.3':
@@ -5074,8 +5096,8 @@ packages:
     peerDependencies:
       solid-js: '>=1.9.7'
 
-  '@tanstack/devtools-ui@0.3.4':
-    resolution: {integrity: sha512-W3FnFhot91c30I/DyZUKSCd5gan5FRe35EvxUrZTxMN3qQ4kOtZSmYi8N8cAP4rmAp54ivv6pvT3LXlpjEeE0w==}
+  '@tanstack/devtools-ui@0.4.3':
+    resolution: {integrity: sha512-7QshnQIHifURyMwl/qmYm4KDpsf8UJrJ8BUu+YvPx35RJBe2EO5qHPsefzWh6MlG/dUdVMBxP9nPqchESyuNFg==}
     engines: {node: '>=18'}
     peerDependencies:
       solid-js: '>=1.9.7'
@@ -5085,6 +5107,12 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       vite: ^7.0.0
+
+  '@tanstack/devtools@0.6.21':
+    resolution: {integrity: sha512-j8cCmrOz7wu4G4jJ2ZZCo3fIGGDMygSQVPZDtyFylKtKC5i88Hnu6YioODP6I+0mbn9Qvr4eWgPHEONXAViXeA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      solid-js: '>=1.9.7'
 
   '@tanstack/devtools@0.6.3':
     resolution: {integrity: sha512-NqVVHQClw1f49YtVUd75vZKq3PJT8CePxXK5l10AEVPmT27z67HB532PU1xNTKkWftES0gntjIo/ERTNWI9bRQ==}
@@ -10817,7 +10845,20 @@ snapshots:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
       solid-js: 1.9.9
 
+  '@solid-primitives/resize-observer@2.1.3(solid-js@1.9.9)':
+    dependencies:
+      '@solid-primitives/event-listener': 2.4.3(solid-js@1.9.9)
+      '@solid-primitives/rootless': 1.5.2(solid-js@1.9.9)
+      '@solid-primitives/static-store': 0.1.2(solid-js@1.9.9)
+      '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
+      solid-js: 1.9.9
+
   '@solid-primitives/rootless@1.5.2(solid-js@1.9.9)':
+    dependencies:
+      '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
+      solid-js: 1.9.9
+
+  '@solid-primitives/static-store@0.1.2(solid-js@1.9.9)':
     dependencies:
       '@solid-primitives/utils': 6.3.2(solid-js@1.9.9)
       solid-js: 1.9.9
@@ -10826,12 +10867,12 @@ snapshots:
     dependencies:
       solid-js: 1.9.9
 
-  '@sucoza/accessibility-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
+  '@sucoza/accessibility-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
       '@sucoza/devtools-common': 0.1.9
-      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@sucoza/shared-components': 0.1.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client': 0.2.3
       axe-core: 4.10.3
       clsx: 2.1.1
@@ -10852,12 +10893,12 @@ snapshots:
       - solid-js
       - utf-8-validate
 
-  '@sucoza/auth-permissions-mock-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
+  '@sucoza/auth-permissions-mock-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
       '@sucoza/devtools-common': 0.1.9
-      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@sucoza/shared-components': 0.1.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client': 0.2.3
       clsx: 2.1.1
       jose: 6.1.0
@@ -10876,12 +10917,12 @@ snapshots:
       - solid-js
       - utf-8-validate
 
-  '@sucoza/browser-automation-test-recorder-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
+  '@sucoza/browser-automation-test-recorder-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
       '@sucoza/devtools-common': 0.1.9
-      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@sucoza/shared-components': 0.1.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client': 0.2.3
       chrome-remote-interface: 0.33.3
       clsx: 2.1.1
@@ -10904,12 +10945,12 @@ snapshots:
       - solid-js
       - utf-8-validate
 
-  '@sucoza/bundle-impact-analyzer-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
+  '@sucoza/bundle-impact-analyzer-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
       '@sucoza/devtools-common': 0.1.9
-      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@sucoza/shared-components': 0.1.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client': 0.2.3
       chart.js: 4.5.0
       clsx: 2.1.1
@@ -10931,12 +10972,12 @@ snapshots:
       - solid-js
       - utf-8-validate
 
-  '@sucoza/design-system-inspector-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
+  '@sucoza/design-system-inspector-devtools-plugin@0.1.9(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
       '@sucoza/devtools-common': 0.1.9
-      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.21(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@sucoza/shared-components': 0.1.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client': 0.2.3
       clsx: 2.1.1
       lucide-react: 0.542.0(react@19.1.1)
@@ -10945,7 +10986,6 @@ snapshots:
       use-sync-external-store: 1.5.0(react@19.1.1)
       zustand: 5.0.8(@types/react@19.1.12)(react@19.1.1)(use-sync-external-store@1.5.0(react@19.1.1))
     transitivePeerDependencies:
-      - '@tanstack/devtools-ui'
       - '@testing-library/dom'
       - '@types/react'
       - '@types/react-dom'
@@ -10957,13 +10997,13 @@ snapshots:
 
   '@sucoza/devtools-common@0.1.9': {}
 
-  '@sucoza/feature-flag-manager-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
+  '@sucoza/feature-flag-manager-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
       '@sucoza/devtools-common': 0.1.9
       '@sucoza/feature-flags': 0.1.9
-      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@sucoza/shared-components': 0.1.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client': 0.2.3
       clsx: 2.1.1
       lucide-react: 0.542.0(react@19.1.1)
@@ -10983,12 +11023,12 @@ snapshots:
 
   '@sucoza/feature-flags@0.1.9': {}
 
-  '@sucoza/form-state-inspector-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
+  '@sucoza/form-state-inspector-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
       '@sucoza/devtools-common': 0.1.9
-      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@sucoza/shared-components': 0.1.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client': 0.2.3
       clsx: 2.1.1
       lucide-react: 0.542.0(react@19.1.1)
@@ -11006,12 +11046,12 @@ snapshots:
       - solid-js
       - utf-8-validate
 
-  '@sucoza/memory-performance-profiler-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
+  '@sucoza/memory-performance-profiler-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
       '@sucoza/devtools-common': 0.1.9
-      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@sucoza/shared-components': 0.1.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client': 0.2.3
       clsx: 2.1.1
       lucide-react: 0.542.0(react@19.1.1)
@@ -11030,9 +11070,9 @@ snapshots:
       - solid-js
       - utf-8-validate
 
-  '@sucoza/plugin-core@0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@sucoza/plugin-core@0.1.9(@tanstack/devtools@0.6.21(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
     dependencies:
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@testing-library/react': 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react: 19.1.1
       use-sync-external-store: 1.5.0(react@19.1.1)
@@ -11044,12 +11084,26 @@ snapshots:
       - immer
       - react-dom
 
-  '@sucoza/render-waste-detector-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
+  '@sucoza/plugin-core@0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+    dependencies:
+      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@testing-library/react': 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      react: 19.1.1
+      use-sync-external-store: 1.5.0(react@19.1.1)
+      zustand: 5.0.8(@types/react@19.1.12)(react@19.1.1)(use-sync-external-store@1.5.0(react@19.1.1))
+    transitivePeerDependencies:
+      - '@testing-library/dom'
+      - '@types/react'
+      - '@types/react-dom'
+      - immer
+      - react-dom
+
+  '@sucoza/render-waste-detector-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
       '@sucoza/devtools-common': 0.1.9
-      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@sucoza/shared-components': 0.1.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client': 0.2.3
       clsx: 2.1.1
       lucide-react: 0.542.0(react@19.1.1)
@@ -11068,12 +11122,12 @@ snapshots:
       - solid-js
       - utf-8-validate
 
-  '@sucoza/security-audit-panel-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
+  '@sucoza/security-audit-panel-devtools-plugin@0.1.9(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
       '@sucoza/devtools-common': 0.1.9
-      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.21(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@sucoza/shared-components': 0.1.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.21(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client': 0.2.3
       clsx: 2.1.1
       lucide-react: 0.542.0(react@19.1.1)
@@ -11081,7 +11135,6 @@ snapshots:
       react-dom: 19.1.1(react@19.1.1)
       use-sync-external-store: 1.5.0(react@19.1.1)
     transitivePeerDependencies:
-      - '@tanstack/devtools-ui'
       - '@testing-library/dom'
       - '@types/react'
       - '@types/react-dom'
@@ -11098,12 +11151,12 @@ snapshots:
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
 
-  '@sucoza/visual-regression-monitor-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
+  '@sucoza/visual-regression-monitor-devtools-plugin@0.1.9(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
       '@sucoza/devtools-common': 0.1.9
-      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      '@sucoza/plugin-core': 0.1.9(@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9))(@testing-library/dom@10.4.1)(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@sucoza/shared-components': 0.1.9(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
       '@tanstack/devtools-event-client': 0.2.3
       clsx: 2.1.1
       lucide-react: 0.542.0(react@19.1.1)
@@ -11121,6 +11174,10 @@ snapshots:
       - solid-js
       - utf-8-validate
 
+  '@tanstack/devtools-client@0.0.3':
+    dependencies:
+      '@tanstack/devtools-event-client': 0.3.3
+
   '@tanstack/devtools-event-bus@0.3.1':
     dependencies:
       ws: 8.18.3
@@ -11128,7 +11185,16 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  '@tanstack/devtools-event-bus@0.3.2':
+    dependencies:
+      ws: 8.18.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   '@tanstack/devtools-event-client@0.2.3': {}
+
+  '@tanstack/devtools-event-client@0.3.3': {}
 
   '@tanstack/devtools-ui@0.3.3(csstype@3.1.3)(solid-js@1.9.9)':
     dependencies:
@@ -11138,7 +11204,7 @@ snapshots:
     transitivePeerDependencies:
       - csstype
 
-  '@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9)':
+  '@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9)':
     dependencies:
       clsx: 2.1.1
       goober: 2.1.16(csstype@3.1.3)
@@ -11161,6 +11227,22 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  '@tanstack/devtools@0.6.21(csstype@3.1.3)(solid-js@1.9.9)':
+    dependencies:
+      '@solid-primitives/event-listener': 2.4.3(solid-js@1.9.9)
+      '@solid-primitives/keyboard': 1.3.3(solid-js@1.9.9)
+      '@solid-primitives/resize-observer': 2.1.3(solid-js@1.9.9)
+      '@tanstack/devtools-client': 0.0.3
+      '@tanstack/devtools-event-bus': 0.3.2
+      '@tanstack/devtools-ui': 0.4.3(csstype@3.1.3)(solid-js@1.9.9)
+      clsx: 2.1.1
+      goober: 2.1.16(csstype@3.1.3)
+      solid-js: 1.9.9
+    transitivePeerDependencies:
+      - bufferutil
+      - csstype
+      - utf-8-validate
+
   '@tanstack/devtools@0.6.3(csstype@3.1.3)(solid-js@1.9.9)':
     dependencies:
       '@solid-primitives/keyboard': 1.3.3(solid-js@1.9.9)
@@ -11174,11 +11256,11 @@ snapshots:
       - csstype
       - utf-8-validate
 
-  '@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)':
+  '@tanstack/devtools@0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)':
     dependencies:
       '@solid-primitives/keyboard': 1.3.3(solid-js@1.9.9)
       '@tanstack/devtools-event-bus': 0.3.1
-      '@tanstack/devtools-ui': 0.3.4(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools-ui': 0.4.3(csstype@3.1.3)(solid-js@1.9.9)
       clsx: 2.1.1
       goober: 2.1.16(csstype@3.1.3)
       solid-js: 1.9.9
@@ -11200,9 +11282,9 @@ snapshots:
       - solid-js
       - utf-8-validate
 
-  '@tanstack/react-devtools@0.6.2(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
+  '@tanstack/react-devtools@0.6.2(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(@types/react-dom@19.1.9(@types/react@19.1.12))(@types/react@19.1.12)(csstype@3.1.3)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(solid-js@1.9.9)':
     dependencies:
-      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.3.4(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
+      '@tanstack/devtools': 0.6.6(@tanstack/devtools-ui@0.4.3(csstype@3.1.3)(solid-js@1.9.9))(csstype@3.1.3)(solid-js@1.9.9)
       '@types/react': 19.1.12
       '@types/react-dom': 19.1.9(@types/react@19.1.12)
       react: 19.1.1
