@@ -30,7 +30,7 @@ catalog:
   "@sucoza/render-waste-detector-devtools-plugin": ^0.1.9
   "@sucoza/security-audit-panel-devtools-plugin": ^0.1.9
   "@sucoza/visual-regression-monitor-devtools-plugin": ^0.1.9
-  "@tanstack/devtools-event-bus": ^0.3.1
+  "@tanstack/devtools-event-bus": ^0.3.3
   "@tanstack/devtools-event-client": ^0.2.3
   "@tanstack/react-devtools": ^0.6.2
   "@testing-library/jest-dom": ^6.8.0
