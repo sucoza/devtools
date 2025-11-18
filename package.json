@@ -80,10 +80,6 @@
     "graphql": "^16.11.0"
   },
   "overrides": {
-    "@tanstack/devtools": "link:D:/source/thirdparty/tanstack/devtools/packages/devtools",
-    "@tanstack/devtools-event-client": "link:D:/source/thirdparty/tanstack/devtools/packages/event-bus-client",
-    "@tanstack/devtools-vite": "link:D:/source/thirdparty/tanstack/devtools/packages/devtools-vite",
-    "@tanstack/react-devtools": "link:D:/source/thirdparty/tanstack/devtools/packages/react-devtools",
     "@sucoza/devtools-common": "workspace:*",
     "@sucoza/devtools-importer": "workspace:*",
     "@sucoza/feature-flags": "workspace:*",

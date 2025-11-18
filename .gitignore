@@ -147,5 +147,6 @@ $RECYCLE.BIN/
 
 .nx/cache
 .nx/workspace-data
+nx-native-file-cache-*/
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
