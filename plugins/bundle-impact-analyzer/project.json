@@ -1,7 +1,12 @@
 {
   "name": "bundle-impact-analyzer",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "plugins/bundle-impact-analyzer/src",
   "projectType": "library",
+  "tags": [
+    "type:plugin",
+    "scope:devtools"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -74,9 +79,5 @@
         "command": "prettier --write plugins/bundle-impact-analyzer/src/**/*.{ts,tsx}"
       }
     }
-  },
-  "tags": [
-    "type:plugin",
-    "scope:devtools"
-  ]
+  }
 }

@@ -1,7 +1,12 @@
 {
   "name": "websocket-signalr-devtools",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "plugins/websocket-signalr-devtools/src",
   "projectType": "library",
+  "tags": [
+    "type:plugin",
+    "scope:devtools"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -74,9 +79,5 @@
         "command": "prettier --write plugins/websocket-signalr-devtools/src/**/*.{ts,tsx}"
       }
     }
-  },
-  "tags": [
-    "type:plugin",
-    "scope:devtools"
-  ]
+  }
 }

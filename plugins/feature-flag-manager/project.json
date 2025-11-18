@@ -1,7 +1,12 @@
 {
   "name": "feature-flag-manager",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "plugins/feature-flag-manager/src",
   "projectType": "library",
+  "tags": [
+    "type:plugin",
+    "scope:devtools"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -76,9 +81,5 @@
         "command": "prettier --write plugins/feature-flag-manager/src/**/*.{ts,tsx}"
       }
     }
-  },
-  "tags": [
-    "type:plugin",
-    "scope:devtools"
-  ]
+  }
 }
