@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/i18n",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Lightweight, framework-agnostic internationalization utility with built-in DevTools integration",
   "type": "module",
   "main": "dist/index.js",

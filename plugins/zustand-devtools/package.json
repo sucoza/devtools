@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/zustand-devtools-plugin",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Zustand store inspector plugin for TanStack DevTools",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

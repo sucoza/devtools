@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/accessibility-devtools-plugin",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "DevTools plugin for real-time accessibility auditing and WCAG compliance testing",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

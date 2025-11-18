@@ -1,6 +1,6 @@
 {
   "name": "i18n-example",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Example application demonstrating the @sucoza/i18n utility",
   "private": true,
   "type": "module",
