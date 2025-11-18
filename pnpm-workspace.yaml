@@ -10,7 +10,7 @@ catalog:
   "@nx/rollup": ^22.0.4
   "@nx/vite": ^22.0.4
   "@playwright/test": ^1.55.0
-  "@rollup/plugin-commonjs": ^28.0.6
+  "@rollup/plugin-commonjs": ^29.0.0
   "@rollup/plugin-node-resolve": ^16.0.1
   "@rollup/plugin-typescript": ^12.1.4
   "@tanstack/devtools": ^0.8.1
