@@ -1,12 +1,16 @@
 version: 2
 
+# Dependabot configuration for pnpm workspace
+# Dependabot automatically detects pnpm from pnpm-lock.yaml and uses pnpm for updates
+
 updates:
-  # Root package.json
+  # Root package.json - workspace dependencies
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
+    versioning-strategy: increase
     open-pull-requests-limit: 10
     reviewers:
       - "tyevco"
@@ -16,12 +20,25 @@ updates:
     commit-message:
       prefix: "chore(deps)"
       include: "scope"
+    groups:
+      tanstack:
+        patterns:
+          - "@tanstack/*"
+      sucoza-plugins:
+        patterns:
+          - "@sucoza/*"
+      dev-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
 
   # Shared packages
   - package-ecosystem: "npm"
     directory: "/packages/devtools-common"
     schedule:
       interval: "weekly"
+    versioning-strategy: increase
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
@@ -31,6 +48,7 @@ updates:
     directory: "/packages/plugin-core"
     schedule:
       interval: "weekly"
+    versioning-strategy: increase
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
@@ -40,6 +58,7 @@ updates:
     directory: "/packages/shared-components"
     schedule:
       interval: "weekly"
+    versioning-strategy: increase
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
@@ -49,6 +68,7 @@ updates:
     directory: "/packages/devtools-importer"
     schedule:
       interval: "weekly"
+    versioning-strategy: increase
     open-pull-requests-limit: 5
     labels:
       - "dependencies"
