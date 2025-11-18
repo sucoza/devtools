@@ -28,7 +28,7 @@
   "author": "tyevco",
   "license": "MIT",
   "peerDependencies": {
-    "@tanstack/devtools": "^0.6.2",
+    "@tanstack/devtools": "^0.8.1",
     "react": ">=18.0.0"
   },
   "dependencies": {
