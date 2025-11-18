@@ -119,21 +119,8 @@
       "serveTargetName": "dev"
     }
   },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx/tasks-runners/default",
-      "options": {
-        "cacheableOperations": [
-          "build",
-          "lint",
-          "test",
-          "typecheck"
-        ],
-        "parallel": 3,
-        "useDaemonProcess": true
-      }
-    }
-  },
   "nxCloudAccessToken": null,
-  "nxCloudId": "68b8d31d31ff1dab0058ece5"
+  "nxCloudId": "68b8d31d31ff1dab0058ece5",
+  "useDaemonProcess": true,
+  "parallel": 3
 }

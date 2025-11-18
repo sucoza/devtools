@@ -1,7 +1,12 @@
 {
   "name": "logger",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/logger/src",
   "projectType": "library",
+  "tags": [
+    "type:util",
+    "scope:shared"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -56,9 +61,5 @@
         "command": "prettier --write packages/logger/src/**/*.{ts,tsx}"
       }
     }
-  },
-  "tags": [
-    "type:util",
-    "scope:shared"
-  ]
+  }
 }

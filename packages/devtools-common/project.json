@@ -1,7 +1,12 @@
 {
   "name": "devtools-common",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/devtools-common/src",
   "projectType": "library",
+  "tags": [
+    "type:util",
+    "scope:shared"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -56,9 +61,5 @@
         "command": "prettier --write packages/devtools-common/src/**/*.{ts,tsx}"
       }
     }
-  },
-  "tags": [
-    "type:util",
-    "scope:shared"
-  ]
+  }
 }

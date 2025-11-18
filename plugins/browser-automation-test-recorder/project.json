@@ -1,7 +1,12 @@
 {
   "name": "browser-automation-test-recorder",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "plugins/browser-automation-test-recorder/src",
   "projectType": "library",
+  "tags": [
+    "type:plugin",
+    "scope:devtools"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -74,9 +79,5 @@
         "command": "prettier --write plugins/browser-automation-test-recorder/src/**/*.{ts,tsx}"
       }
     }
-  },
-  "tags": [
-    "type:plugin",
-    "scope:devtools"
-  ]
+  }
 }

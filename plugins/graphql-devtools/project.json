@@ -1,7 +1,12 @@
 {
   "name": "graphql-devtools",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "plugins/graphql-devtools/src",
   "projectType": "library",
+  "tags": [
+    "type:plugin",
+    "scope:devtools"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -74,9 +79,5 @@
         "command": "prettier --write plugins/graphql-devtools/src/**/*.{ts,tsx}"
       }
     }
-  },
-  "tags": [
-    "type:plugin",
-    "scope:devtools"
-  ]
+  }
 }

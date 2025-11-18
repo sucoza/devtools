@@ -1,7 +1,12 @@
 {
   "name": "shared-components",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/shared-components/src",
   "projectType": "library",
+  "tags": [
+    "type:ui",
+    "scope:shared"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -60,9 +65,5 @@
         "command": "prettier --write packages/shared-components/src/**/*.{ts,tsx}"
       }
     }
-  },
-  "tags": [
-    "type:ui",
-    "scope:shared"
-  ]
+  }
 }

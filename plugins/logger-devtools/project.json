@@ -1,7 +1,13 @@
 {
   "name": "logger-devtools",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "plugins/logger-devtools/src",
   "projectType": "library",
+  "tags": [
+    "type:plugin",
+    "scope:devtools",
+    "feature:logging"
+  ],
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -76,10 +82,5 @@
         "command": "prettier --write plugins/logger-devtools/src/**/*.{ts,tsx}"
       }
     }
-  },
-  "tags": [
-    "type:plugin",
-    "scope:devtools",
-    "feature:logging"
-  ]
+  }
 }
