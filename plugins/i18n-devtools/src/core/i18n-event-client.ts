@@ -1,8 +1,10 @@
 /**
  * I18n DevTools Event Client
  * Handles communication between the i18n adapter and DevTools panel
+ * Uses the official TanStack EventClient for event management
  */
 
+import { EventClient } from '@tanstack/devtools-event-client';
 import type { I18nDevToolsEvents as _I18nDevToolsEvents, I18nEventType, I18nEventPayload, I18nDevToolsConfig } from '../types/devtools';
 
 /**
@@ -15,20 +17,29 @@ export interface I18nEventClientInterface {
     callback: (event: { type: T; payload: I18nEventPayload<T>; timestamp: number }) => void
   ) => () => void;
   onAll: (
-    callback: (event: { 
-      type: I18nEventType; 
-      payload: I18nEventPayload<I18nEventType>; 
-      timestamp: number 
+    callback: (event: {
+      type: I18nEventType;
+      payload: I18nEventPayload<I18nEventType>;
+      timestamp: number
     }) => void
   ) => () => void;
   destroy: () => void;
+  setEnabled: (enabled: boolean) => void;
+  setDebugMode: (enabled: boolean) => void;
+  updateConfig: (config: Partial<I18nDevToolsConfig>) => void;
+  getConfig: () => I18nDevToolsConfig;
+  isConnected: () => boolean;
+  ping: () => void;
 }
 
+/**
+ * I18n DevTools Event Client
+ * Wraps the official TanStack EventClient to provide i18n-specific functionality
+ */
 export class I18nEventClient implements I18nEventClientInterface {
+  private eventClient: InstanceType<typeof EventClient>;
   private config: I18nDevToolsConfig;
   private isEnabled: boolean = true;
-  private subscribers = new Map<string, Set<(...args: any[]) => void>>();
-  private allSubscribers = new Set<(...args: any[]) => void>();
 
   constructor(config: Partial<I18nDevToolsConfig> = {}) {
     this.config = {
@@ -45,6 +56,7 @@ export class I18nEventClient implements I18nEventClientInterface {
     };
 
     this.isEnabled = this.config.enabled;
+    this.eventClient = new EventClient({ pluginId: this.config.pluginId });
   }
 
   /**
@@ -54,33 +66,8 @@ export class I18nEventClient implements I18nEventClientInterface {
     if (!this.isEnabled) return;
 
     try {
-      const event = {
-        type,
-        payload,
-        timestamp: Date.now()
-      };
+      this.eventClient.emit(type, payload);
 
-      // Notify specific subscribers
-      const typeSubscribers = this.subscribers.get(type);
-      if (typeSubscribers) {
-        typeSubscribers.forEach(callback => {
-          try {
-            callback(event);
-          } catch (error) {
-            console.error(`[I18n DevTools] Error in subscriber for ${type}:`, error);
-          }
-        });
-      }
-
-      // Notify all subscribers
-      this.allSubscribers.forEach(callback => {
-        try {
-          callback(event);
-        } catch (error) {
-          console.error('[I18n DevTools] Error in all subscriber:', error);
-        }
-      });
-      
       if (this.config.debugMode) {
         // console.debug(`[I18n DevTools] Event emitted: ${type}`, payload);
       }
@@ -90,43 +77,39 @@ export class I18nEventClient implements I18nEventClientInterface {
   }
 
   /**
-   * Subscribe to events from the DevTools panel
+   * Subscribe to specific event types
    */
   on<T extends I18nEventType>(
     type: T,
     callback: (event: { type: T; payload: I18nEventPayload<T>; timestamp: number }) => void
   ): () => void {
-    if (!this.subscribers.has(type)) {
-      this.subscribers.set(type, new Set());
-    }
-    
-    const typeSubscribers = this.subscribers.get(type)!;
-    typeSubscribers.add(callback);
-
-    // Return unsubscribe function
-    return () => {
-      typeSubscribers.delete(callback);
-      if (typeSubscribers.size === 0) {
-        this.subscribers.delete(type);
-      }
-    };
+    return this.eventClient.on(type, (event) => {
+      callback({
+        type,
+        payload: event.payload,
+        timestamp: Date.now()
+      });
+    });
   }
 
   /**
    * Subscribe to all events
    */
   onAll(
-    callback: (event: { 
-      type: I18nEventType; 
-      payload: I18nEventPayload<I18nEventType>; 
-      timestamp: number 
+    callback: (event: {
+      type: I18nEventType;
+      payload: I18nEventPayload<I18nEventType>;
+      timestamp: number
     }) => void
   ): () => void {
-    this.allSubscribers.add(callback);
-    
-    return () => {
-      this.allSubscribers.delete(callback);
-    };
+    return this.eventClient.onAll((event) => {
+      const eventType = event.type.split(':')[1] as I18nEventType;
+      callback({
+        type: eventType,
+        payload: event.payload,
+        timestamp: Date.now()
+      });
+    });
   }
 
   /**
@@ -163,8 +146,8 @@ export class I18nEventClient implements I18nEventClientInterface {
    * Remove all listeners and cleanup
    */
   destroy(): void {
-    this.subscribers.clear();
-    this.allSubscribers.clear();
+    // EventClient doesn't have a destroy method, but unsubscribe functions handle cleanup
+    // The unsubscribe functions from on() calls handle cleanup
   }
 
   /**
