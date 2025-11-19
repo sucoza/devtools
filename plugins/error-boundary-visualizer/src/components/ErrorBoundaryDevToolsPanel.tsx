@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Trans } from '@lingui/macro'
 import {
   PluginPanel,
   ConfigMenu,
+  ThemeProvider,
   type ConfigMenuItem
 } from '@sucoza/shared-components'
+import '@sucoza/shared-components/dist/styles/theme.css'
 import type { PluginTab } from '@sucoza/shared-components'
 import { Play, Settings, AlertTriangle } from 'lucide-react'
 import { useErrorBoundaryDevTools } from '../core/store'
@@ -15,7 +17,11 @@ import { ErrorSimulator } from './ErrorSimulator'
 import { RecoveryStrategyEditor } from './RecoveryStrategyEditor'
 
 
-export const ErrorBoundaryDevToolsPanel: React.FC = () => {
+interface ErrorBoundaryDevToolsPanelProps {
+  theme?: 'light' | 'dark' | 'auto'
+}
+
+function ErrorBoundaryDevToolsPanelInner() {
   const { 
     errorBoundaries, 
     isRecording, 
@@ -127,11 +133,28 @@ export const ErrorBoundaryDevToolsPanel: React.FC = () => {
           activeTabId={activeTab}
           onTabChange={setActiveTab}
         />
-        
+
         <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
           <ConfigMenu items={configMenuItems} size="sm" />
         </div>
       </div>
     </>
+  )
+}
+
+export function ErrorBoundaryDevToolsPanel(props: ErrorBoundaryDevToolsPanelProps = {}) {
+  const { theme = 'auto' } = props
+
+  const resolvedTheme = useMemo(() => {
+    if (theme === 'auto') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+    return theme
+  }, [theme])
+
+  return (
+    <ThemeProvider defaultTheme={resolvedTheme}>
+      <ErrorBoundaryDevToolsPanelInner />
+    </ThemeProvider>
   )
 }

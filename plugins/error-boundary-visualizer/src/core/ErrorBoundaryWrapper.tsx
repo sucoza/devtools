@@ -211,12 +211,12 @@ export class ErrorBoundaryWrapper extends Component<Props, State> {
       return (
         <div style={{
           padding: '20px',
-          background: '#fee',
-          border: '1px solid #fcc',
+          background: "var(--dt-status-error-bg)",
+          border: "1px solid var(--dt-status-error)",
           borderRadius: '4px',
           margin: '10px',
         }}>
-          <h2 style={{ color: '#c00', margin: '0 0 10px' }}>Something went wrong</h2>
+          <h2 style={{ color: "var(--dt-status-error)", margin: '0 0 10px' }}>Something went wrong</h2>
           <details style={{ whiteSpace: 'pre-wrap' }}>
             <summary>Error details</summary>
             <p>{error.message}</p>
@@ -229,7 +229,7 @@ export class ErrorBoundaryWrapper extends Component<Props, State> {
             style={{
               marginTop: '10px',
               padding: '5px 10px',
-              background: '#c00',
+              background: "var(--dt-status-error)",
               color: 'white',
               border: 'none',
               borderRadius: '4px',

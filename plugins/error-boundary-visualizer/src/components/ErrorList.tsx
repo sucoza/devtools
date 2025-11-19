@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react'
-import { Trans } from '@lingui/macro'
 import { useErrorBoundaryDevTools } from '../core/store'
 import type { ErrorInfo } from '../types'
 import { ErrorCategory, ErrorSeverity } from '../types'
@@ -36,10 +35,10 @@ export const ErrorList: React.FC = () => {
 
   const getSeverityColor = (severity: ErrorSeverity) => {
     const colors = {
-      low: '#4caf50',
-      medium: '#ff9800', 
-      high: '#ff5722',
-      critical: '#f44336'
+      low: 'var(--dt-status-success)',
+      medium: 'var(--dt-status-warning)', 
+      high: 'var(--dt-status-error)',
+      critical: 'var(--dt-status-error)'
     }
     return colors[severity]
   }
@@ -66,10 +65,10 @@ export const ErrorList: React.FC = () => {
 
   const inputStyles: React.CSSProperties = {
     padding: '6px 10px',
-    border: `1px solid ${theme === 'dark' ? '#444' : '#ccc'}`,
+    border: "1px solid var(--dt-border-primary)",
     borderRadius: '4px',
-    backgroundColor: theme === 'dark' ? '#2d2d2d' : '#ffffff',
-    color: theme === 'dark' ? '#ffffff' : '#333333',
+    backgroundColor: "var(--dt-bg-primary)",
+    color: "var(--dt-text-primary)",
     fontSize: '13px',
     flex: 1,
     minWidth: '200px',
@@ -85,8 +84,8 @@ export const ErrorList: React.FC = () => {
     padding: '6px 12px',
     border: 'none',
     borderRadius: '4px',
-    backgroundColor: theme === 'dark' ? '#007acc' : '#007acc',
-    color: '#ffffff',
+    backgroundColor: "var(--dt-border-focus)",
+    color: "var(--dt-text-secondary)",
     fontSize: '13px',
     cursor: 'pointer',
     transition: 'background-color 0.2s',
@@ -95,17 +94,17 @@ export const ErrorList: React.FC = () => {
   const listStyles: React.CSSProperties = {
     flex: 1,
     overflow: 'auto',
-    border: `1px solid ${theme === 'dark' ? '#444' : '#ccc'}`,
+    border: "1px solid var(--dt-border-primary)",
     borderRadius: '4px',
-    backgroundColor: theme === 'dark' ? '#1a1a1a' : '#ffffff',
+    backgroundColor: "var(--dt-bg-primary)",
   }
 
   const errorItemStyles = (error: ErrorInfo): React.CSSProperties => ({
     padding: '12px',
-    borderBottom: `1px solid ${theme === 'dark' ? '#333' : '#eee'}`,
+    borderBottom: "1px solid var(--dt-border-primary)",
     cursor: 'pointer',
     backgroundColor: selectedError?.id === error.id
-      ? (theme === 'dark' ? '#2d5aa0' : '#e3f2fd')
+      ? "var(--dt-bg-selected)"
       : 'transparent',
   })
 
@@ -115,7 +114,7 @@ export const ErrorList: React.FC = () => {
     borderRadius: '10px',
     fontSize: '11px',
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: "var(--dt-text-secondary)",
     backgroundColor: color,
     marginRight: '8px',
   })
@@ -136,7 +135,7 @@ export const ErrorList: React.FC = () => {
             onChange={(e) => setCategoryFilter(e.target.value as any)}
             style={selectStyles}
           >
-            <option value="all"><Trans>All Categories</Trans></option>
+            <option value="all">All Categories</option>
             {Object.values(ErrorCategory).map(category => (
               <option key={category} value={category}>
                 {category.charAt(0).toUpperCase() + category.slice(1).replace('_', ' ')}
@@ -148,7 +147,7 @@ export const ErrorList: React.FC = () => {
             onChange={(e) => setSeverityFilter(e.target.value as any)}
             style={selectStyles}
           >
-            <option value="all"><Trans>All Severities</Trans></option>
+            <option value="all">All Severities</option>
             {Object.values(ErrorSeverity).map(severity => (
               <option key={severity} value={severity}>
                 {severity.charAt(0).toUpperCase() + severity.slice(1)}
@@ -156,33 +155,33 @@ export const ErrorList: React.FC = () => {
             ))}
           </select>
           <button style={buttonStyles} onClick={clearErrors}>
-            <Trans>Clear All</Trans>
+            Clear All
           </button>
         </div>
         
-        <div style={{
-          fontSize: '12px',
-          color: theme === 'dark' ? '#ccc' : '#666',
+        <div style={{ 
+          fontSize: '12px', 
+          color: "var(--dt-text-secondary)",
           padding: '8px'
         }}>
-          <Trans>Total: {filteredErrors.length}</Trans> |
-          <Trans>Critical: {filteredErrors.filter(e => e.severity === 'critical').length}</Trans> |
-          <Trans>High: {filteredErrors.filter(e => e.severity === 'high').length}</Trans> |
-          <Trans>Medium: {filteredErrors.filter(e => e.severity === 'medium').length}</Trans> |
-          <Trans>Low: {filteredErrors.filter(e => e.severity === 'low').length}</Trans>
+          Total: {filteredErrors.length} | 
+          Critical: {filteredErrors.filter(e => e.severity === 'critical').length} | 
+          High: {filteredErrors.filter(e => e.severity === 'high').length} | 
+          Medium: {filteredErrors.filter(e => e.severity === 'medium').length} | 
+          Low: {filteredErrors.filter(e => e.severity === 'low').length}
         </div>
       </div>
 
       <div style={listStyles}>
         {filteredErrors.length === 0 ? (
-          <div style={{
-            padding: '20px',
-            textAlign: 'center',
-            color: theme === 'dark' ? '#999' : '#666'
+          <div style={{ 
+            padding: '20px', 
+            textAlign: 'center', 
+            color: "var(--dt-text-tertiary)" 
           }}>
-            {errors.length === 0
-              ? <Trans>No errors recorded yet.</Trans>
-              : <Trans>No errors match the current filters.</Trans>
+            {errors.length === 0 
+              ? 'No errors recorded yet.'
+              : 'No errors match the current filters.'
             }
           </div>
         ) : (
@@ -196,30 +195,30 @@ export const ErrorList: React.FC = () => {
                 <span style={badgeStyles(getSeverityColor(error.severity))}>
                   {error.severity.toUpperCase()}
                 </span>
-                <span style={{ fontSize: '12px', color: theme === 'dark' ? '#ccc' : '#666' }}>
+                <span style={{ fontSize: '12px', color: "var(--dt-text-secondary)" }}>
                   {error.category.replace('_', ' ')} • {new Date(error.timestamp).toLocaleString()}
                 </span>
               </div>
               <div style={{ 
                 fontSize: '14px',
-                color: theme === 'dark' ? '#ffffff' : '#333333',
+                color: "var(--dt-text-primary)",
                 marginBottom: '4px'
               }}>
                 {error.message}
               </div>
               {error.occurrences > 1 && (
-                <div style={{
-                  fontSize: '11px',
-                  color: theme === 'dark' ? '#999' : '#666'
+                <div style={{ 
+                  fontSize: '11px', 
+                  color: "var(--dt-text-tertiary)" 
                 }}>
-                  <Trans>Occurred {error.occurrences} times</Trans>
+                  Occurred {error.occurrences} times
                 </div>
               )}
               {selectedError?.id === error.id && error.stack && (
                 <div style={{
                   marginTop: '12px',
                   padding: '8px',
-                  backgroundColor: theme === 'dark' ? '#252525' : '#f8f9fa',
+                  backgroundColor: "var(--dt-bg-secondary)",
                   borderRadius: '4px',
                   fontSize: '11px',
                   fontFamily: 'monaco, consolas, monospace',

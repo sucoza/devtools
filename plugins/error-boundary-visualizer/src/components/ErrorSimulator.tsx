@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Trans } from '@lingui/macro'
 import { useErrorBoundaryDevTools } from '../core/store'
 import type { ErrorSimulation } from '../types'
 import { ErrorCategory } from '../types'
@@ -147,8 +146,8 @@ export const ErrorSimulator: React.FC = () => {
     padding: '8px 16px',
     border: 'none',
     borderRadius: '4px',
-    backgroundColor: theme === 'dark' ? '#007acc' : '#007acc',
-    color: '#ffffff',
+    backgroundColor: "var(--dt-border-focus)",
+    color: "var(--dt-text-secondary)",
     fontSize: '14px',
     cursor: 'pointer',
     transition: 'background-color 0.2s',
@@ -157,16 +156,16 @@ export const ErrorSimulator: React.FC = () => {
   const secondaryButtonStyles: React.CSSProperties = {
     ...buttonStyles,
     backgroundColor: 'transparent',
-    color: theme === 'dark' ? '#ffffff' : '#333333',
-    border: `1px solid ${theme === 'dark' ? '#444' : '#ccc'}`,
+    color: "var(--dt-text-primary)",
+    border: "1px solid var(--dt-border-primary)",
   }
 
   const inputStyles: React.CSSProperties = {
     padding: '8px 12px',
-    border: `1px solid ${theme === 'dark' ? '#444' : '#ccc'}`,
+    border: "1px solid var(--dt-border-primary)",
     borderRadius: '4px',
-    backgroundColor: theme === 'dark' ? '#2d2d2d' : '#ffffff',
-    color: theme === 'dark' ? '#ffffff' : '#333333',
+    backgroundColor: "var(--dt-bg-primary)",
+    color: "var(--dt-text-primary)",
     fontSize: '14px',
     width: '100%',
   }
@@ -184,8 +183,8 @@ export const ErrorSimulator: React.FC = () => {
 
   const cardStyles: React.CSSProperties = {
     padding: '16px',
-    backgroundColor: theme === 'dark' ? '#252525' : '#f8f9fa',
-    border: `1px solid ${theme === 'dark' ? '#444' : '#ccc'}`,
+    backgroundColor: "var(--dt-bg-secondary)",
+    border: "1px solid var(--dt-border-primary)",
     borderRadius: '6px',
     marginBottom: '12px',
   }
@@ -222,34 +221,34 @@ export const ErrorSimulator: React.FC = () => {
     borderRadius: '12px',
     fontSize: '11px',
     fontWeight: 'bold',
-    backgroundColor: theme === 'dark' ? '#444' : '#e0e0e0',
-    color: theme === 'dark' ? '#fff' : '#666',
+    backgroundColor: "var(--dt-bg-secondary)",
+    color: "var(--dt-text-secondary)",
     marginRight: '8px',
   })
 
   return (
     <div style={containerStyles}>
       <div style={headerStyles}>
-        <h3 style={{ margin: 0, color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-          <Trans>Error Simulator</Trans>
+        <h3 style={{ margin: 0, color: "var(--dt-text-primary)" }}>
+          Error Simulator
         </h3>
         <button
           style={buttonStyles}
           onClick={() => setIsCreating(!isCreating)}
         >
-          {isCreating ? <Trans>Cancel</Trans> : <Trans>Create Simulation</Trans>}
+          {isCreating ? 'Cancel' : 'Create Simulation'}
         </button>
       </div>
 
       {isCreating && (
         <div style={formStyles}>
-          <h4 style={{ margin: '0 0 8px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-            <Trans>Create New Simulation</Trans>
+          <h4 style={{ margin: '0 0 8px 0', color: "var(--dt-text-primary)" }}>
+            Create New Simulation
           </h4>
-
+          
           <div>
             <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-              <Trans>Name</Trans>
+              Name
             </label>
             <input
               type="text"
@@ -262,7 +261,7 @@ export const ErrorSimulator: React.FC = () => {
 
           <div>
             <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-              <Trans>Description</Trans>
+              Description
             </label>
             <textarea
               value={newSimulation.description || ''}
@@ -275,7 +274,7 @@ export const ErrorSimulator: React.FC = () => {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-                <Trans>Error Type</Trans>
+                Error Type
               </label>
               <select
                 value={newSimulation.errorType}
@@ -292,14 +291,14 @@ export const ErrorSimulator: React.FC = () => {
 
             <div>
               <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-                <Trans>Target Component</Trans>
+                Target Component
               </label>
               <select
                 value={newSimulation.targetComponent || ''}
                 onChange={(e) => setNewSimulation({ ...newSimulation, targetComponent: e.target.value || undefined })}
                 style={selectStyles}
               >
-                <option value=""><Trans>Any Component</Trans></option>
+                <option value="">Any Component</option>
                 {availableComponents.map(component => (
                   <option key={component} value={component}>
                     {component}
@@ -311,7 +310,7 @@ export const ErrorSimulator: React.FC = () => {
 
           <div>
             <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-              <Trans>Error Message</Trans>
+              Error Message
             </label>
             <textarea
               value={newSimulation.errorMessage || ''}
@@ -324,23 +323,23 @@ export const ErrorSimulator: React.FC = () => {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-                <Trans>Trigger Condition</Trans>
+                Trigger Condition
               </label>
               <select
                 value={newSimulation.triggerCondition}
                 onChange={(e) => setNewSimulation({ ...newSimulation, triggerCondition: e.target.value as any })}
                 style={selectStyles}
               >
-                <option value="immediate"><Trans>Immediate</Trans></option>
-                <option value="delayed"><Trans>Delayed</Trans></option>
-                <option value="conditional"><Trans>Conditional</Trans></option>
+                <option value="immediate">Immediate</option>
+                <option value="delayed">Delayed</option>
+                <option value="conditional">Conditional</option>
               </select>
             </div>
 
             {newSimulation.triggerCondition === 'delayed' && (
               <div>
                 <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-                  <Trans>Delay (ms)</Trans>
+                  Delay (ms)
                 </label>
                 <input
                   type="number"
@@ -354,10 +353,10 @@ export const ErrorSimulator: React.FC = () => {
 
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
             <button style={secondaryButtonStyles} onClick={() => setIsCreating(false)}>
-              <Trans>Cancel</Trans>
+              Cancel
             </button>
             <button style={buttonStyles} onClick={handleCreateSimulation}>
-              <Trans>Create Simulation</Trans>
+              Create Simulation
             </button>
           </div>
         </div>
@@ -366,8 +365,8 @@ export const ErrorSimulator: React.FC = () => {
       {!isCreating && (
         <>
           <div>
-            <h4 style={{ margin: '0 0 12px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-              <Trans>Predefined Scenarios</Trans>
+            <h4 style={{ margin: '0 0 12px 0', color: "var(--dt-text-primary)" }}>
+              Predefined Scenarios
             </h4>
             <div style={gridStyles}>
               {predefinedScenarios.map((scenario, index) => (
@@ -376,17 +375,17 @@ export const ErrorSimulator: React.FC = () => {
                   style={scenarioCardStyles}
                   onClick={() => handleLoadScenario(scenario)}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = theme === 'dark' ? '#2d2d2d' : '#f0f0f0'
+                    e.currentTarget.style.backgroundColor = "var(--dt-bg-hover)"
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = theme === 'dark' ? '#252525' : '#f8f9fa'
+                    e.currentTarget.style.backgroundColor = "var(--dt-bg-secondary)"
                   }}
                 >
                   <div>
-                    <h5 style={{ margin: '0 0 8px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
+                    <h5 style={{ margin: '0 0 8px 0', color: "var(--dt-text-primary)" }}>
                       {scenario.name}
                     </h5>
-                    <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: theme === 'dark' ? '#ccc' : '#666' }}>
+                    <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: "var(--dt-text-secondary)" }}>
                       {scenario.description}
                     </p>
                     <div>
@@ -404,28 +403,28 @@ export const ErrorSimulator: React.FC = () => {
           </div>
 
           <div>
-            <h4 style={{ margin: '0 0 12px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-              <Trans>Active Simulations ({simulations.length})</Trans>
+            <h4 style={{ margin: '0 0 12px 0', color: "var(--dt-text-primary)" }}>
+              Active Simulations ({simulations.length})
             </h4>
             {simulations.length === 0 ? (
-              <div style={{
-                ...cardStyles,
-                textAlign: 'center',
-                color: theme === 'dark' ? '#999' : '#666'
+              <div style={{ 
+                ...cardStyles, 
+                textAlign: 'center', 
+                color: "var(--dt-text-tertiary)" 
               }}>
-                <Trans>No active simulations. Create a new simulation or load a predefined scenario.</Trans>
+                No active simulations. Create a new simulation or load a predefined scenario.
               </div>
             ) : (
               simulations.map((simulation) => (
                 <div key={simulation.id} style={simulationItemStyles}>
                   <div style={{ flex: 1 }}>
-                    <h5 style={{ margin: '0 0 8px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
+                    <h5 style={{ margin: '0 0 8px 0', color: "var(--dt-text-primary)" }}>
                       {simulation.name}
                     </h5>
-                    <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: theme === 'dark' ? '#ccc' : '#666' }}>
+                    <p style={{ margin: '0 0 8px 0', fontSize: '13px', color: "var(--dt-text-secondary)" }}>
                       {simulation.description}
                     </p>
-                    <div style={{ fontSize: '12px', color: theme === 'dark' ? '#999' : '#777' }}>
+                    <div style={{ fontSize: '12px', color: "var(--dt-text-tertiary)" }}>
                       <div>Type: {simulation.errorType.replace('_', ' ')}</div>
                       <div>Trigger: {simulation.triggerCondition}</div>
                       {simulation.targetComponent && (
@@ -438,13 +437,13 @@ export const ErrorSimulator: React.FC = () => {
                       style={buttonStyles}
                       onClick={() => handleRunSimulation(simulation.id)}
                     >
-                      <Trans>Run</Trans>
+                      Run
                     </button>
                     <button
                       style={secondaryButtonStyles}
                       onClick={() => removeSimulation(simulation.id)}
                     >
-                      <Trans>Remove</Trans>
+                      Remove
                     </button>
                   </div>
                 </div>
