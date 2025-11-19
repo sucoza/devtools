@@ -25,6 +25,23 @@ export type ZustandEventMap = {
   'zustand-state-response': {
     stores: Record<string, ZustandStoreState>;
   };
+  'zustand-restore-state': {
+    storeName: string;
+    state: unknown;
+    timestamp: number;
+  };
+  'zustand-state-restored': {
+    storeName: string;
+    state: unknown;
+    timestamp: number;
+  };
+  'zustand-save-snapshot': {
+    name: string;
+    stores: Record<string, unknown>;
+  };
+  'zustand-load-snapshot': {
+    name: string;
+  };
 };
 
 export class ZustandEventClient extends EventClient<ZustandEventMap> {

@@ -70,6 +70,9 @@ export function ZustandDevToolsPanel() {
   const [collapsedStores, setCollapsedStores] = useState<Set<string>>(new Set(savedState.collapsedStores || []));
   const [expandedTreeNodes, setExpandedTreeNodes] = useState<Set<string>>(new Set(savedState.expandedTreeNodes || []));
   const [copySuccess, setCopySuccess] = useState<string | null>(null);
+  const [isTimeTravel, setIsTimeTravel] = useState(false);
+  const [showSnapshotDialog, setShowSnapshotDialog] = useState(false);
+  const [snapshotName, setSnapshotName] = useState('');
 
   useEffect(() => {
     // Subscribe to state updates
@@ -94,6 +97,13 @@ export function ZustandDevToolsPanel() {
       }
     });
 
+    // Subscribe to state restoration confirmations
+    const unsubscribeRestored = zustandEventClient.on('zustand-state-restored', (event: any) => {
+      console.log(`State restored for ${event.payload.storeName}`);
+      setIsTimeTravel(false);
+      setSelectedHistoryIndex(null);
+    });
+
     // Request initial state when component mounts
     zustandEventClient.emit('zustand-state-request', undefined);
 
@@ -102,6 +112,7 @@ export function ZustandDevToolsPanel() {
       unsubscribeStateResponse();
       unsubscribeRegister();
       unsubscribeAction();
+      unsubscribeRestored();
     };
   }, [autoRefresh]);
 
@@ -477,6 +488,74 @@ export function ZustandDevToolsPanel() {
     }
   }, [selectedStore]);
 
+  const handleRestoreState = useCallback(() => {
+    if (!selectedStore || selectedHistoryIndex === null) return;
+
+    const action = actionHistory[selectedHistoryIndex];
+    if (!action || action.storeName !== selectedStore) return;
+
+    if (confirm(`Rewind "${selectedStore}" to this state?`)) {
+      zustandEventClient.emit('zustand-restore-state', {
+        storeName: selectedStore,
+        state: action.nextState,
+        timestamp: action.timestamp
+      });
+    }
+  }, [selectedStore, selectedHistoryIndex, actionHistory]);
+
+  const handleJumpToCurrent = useCallback(() => {
+    setSelectedHistoryIndex(null);
+    setIsTimeTravel(false);
+  }, []);
+
+  const handleNavigateHistory = useCallback((direction: 'prev' | 'next') => {
+    if (!selectedStore) return;
+
+    const storeHistory = actionHistory.filter(action => action.storeName === selectedStore);
+    if (storeHistory.length === 0) return;
+
+    if (selectedHistoryIndex === null) {
+      // Start from most recent
+      if (direction === 'prev' && storeHistory.length > 0) {
+        const lastAction = storeHistory[storeHistory.length - 1];
+        setSelectedHistoryIndex(actionHistory.indexOf(lastAction));
+        setIsTimeTravel(true);
+      }
+    } else {
+      const currentAction = actionHistory[selectedHistoryIndex];
+      const currentStoreIndex = storeHistory.indexOf(currentAction);
+
+      if (direction === 'prev' && currentStoreIndex > 0) {
+        const prevAction = storeHistory[currentStoreIndex - 1];
+        setSelectedHistoryIndex(actionHistory.indexOf(prevAction));
+      } else if (direction === 'next') {
+        if (currentStoreIndex < storeHistory.length - 1) {
+          const nextAction = storeHistory[currentStoreIndex + 1];
+          setSelectedHistoryIndex(actionHistory.indexOf(nextAction));
+        } else {
+          // Jump back to current
+          handleJumpToCurrent();
+        }
+      }
+    }
+  }, [selectedStore, selectedHistoryIndex, actionHistory, handleJumpToCurrent]);
+
+  const handleSaveSnapshot = useCallback(() => {
+    const name = snapshotName.trim() || `Snapshot ${new Date().toLocaleString()}`;
+
+    zustandEventClient.emit('zustand-save-snapshot', {
+      name,
+      stores: Object.entries(stores).reduce((acc, [storeName, storeData]) => {
+        acc[storeName] = storeData.state;
+        return acc;
+      }, {} as Record<string, unknown>)
+    });
+
+    setSnapshotName('');
+    setShowSnapshotDialog(false);
+    alert(`Snapshot "${name}" saved successfully!`);
+  }, [snapshotName, stores]);
+
   const toolbarActions = [
     {
       id: 'auto-refresh',
@@ -509,6 +588,14 @@ export function ZustandDevToolsPanel() {
       icon: '📸',
       onClick: handleTakeSnapshot,
       shortcut: 'Ctrl+T'
+    },
+    {
+      id: 'save-snapshot',
+      label: 'Save State Snapshot',
+      icon: '💾',
+      onClick: () => setShowSnapshotDialog(true),
+      disabled: Object.keys(stores).length === 0,
+      separator: true
     },
     {
       id: 'clear-history',
@@ -685,19 +772,115 @@ export function ZustandDevToolsPanel() {
               />
 
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                {/* Time-travel banner */}
+                {selectedHistoryIndex !== null && (
+                  <div style={{
+                    background: '#2d4f7c',
+                    padding: '8px 12px',
+                    borderBottom: '2px solid #007acc',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    fontSize: '12px'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#9cdcfe' }}>
+                      <span style={{ fontSize: '16px' }}>⏱️</span>
+                      <span style={{ fontWeight: 'bold' }}>Time-Travel Mode</span>
+                      <span style={{ color: '#cccccc' }}>
+                        Viewing state from {new Date(actionHistory[selectedHistoryIndex].timestamp).toLocaleTimeString()}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button
+                        onClick={() => handleNavigateHistory('prev')}
+                        disabled={(() => {
+                          const storeHistory = actionHistory.filter(a => a.storeName === selectedStore);
+                          const currentAction = actionHistory[selectedHistoryIndex];
+                          const currentIndex = storeHistory.indexOf(currentAction);
+                          return currentIndex === 0;
+                        })()}
+                        style={{
+                          padding: '4px 8px',
+                          fontSize: '11px',
+                          border: '1px solid #3c3c3c',
+                          background: '#2d2d30',
+                          color: '#cccccc',
+                          cursor: 'pointer',
+                          borderRadius: '3px',
+                          opacity: (() => {
+                            const storeHistory = actionHistory.filter(a => a.storeName === selectedStore);
+                            const currentAction = actionHistory[selectedHistoryIndex];
+                            const currentIndex = storeHistory.indexOf(currentAction);
+                            return currentIndex === 0 ? 0.5 : 1;
+                          })()
+                        }}
+                        title="Navigate to previous state"
+                      >
+                        ◀ Prev
+                      </button>
+                      <button
+                        onClick={() => handleNavigateHistory('next')}
+                        style={{
+                          padding: '4px 8px',
+                          fontSize: '11px',
+                          border: '1px solid #3c3c3c',
+                          background: '#2d2d30',
+                          color: '#cccccc',
+                          cursor: 'pointer',
+                          borderRadius: '3px'
+                        }}
+                        title="Navigate to next state or return to current"
+                      >
+                        Next ▶
+                      </button>
+                      <button
+                        onClick={handleRestoreState}
+                        style={{
+                          padding: '4px 12px',
+                          fontSize: '11px',
+                          border: '1px solid #3c3c3c',
+                          background: '#1e5f1e',
+                          color: '#4ec9b0',
+                          cursor: 'pointer',
+                          borderRadius: '3px',
+                          fontWeight: 'bold'
+                        }}
+                        title="Rewind store to this state"
+                      >
+                        🔄 Rewind to Here
+                      </button>
+                      <button
+                        onClick={handleJumpToCurrent}
+                        style={{
+                          padding: '4px 8px',
+                          fontSize: '11px',
+                          border: '1px solid #3c3c3c',
+                          background: '#2d2d30',
+                          color: '#cccccc',
+                          cursor: 'pointer',
+                          borderRadius: '3px'
+                        }}
+                        title="Return to current state"
+                      >
+                        ✕ Exit
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px' }}>
                   <div style={{ fontSize: '12px', color: '#9cdcfe' }}>
                     {activeTab === 'state' ? (
-                      selectedHistoryIndex !== null 
+                      selectedHistoryIndex !== null
                         ? `Historical State - ${new Date(actionHistory[selectedHistoryIndex].timestamp).toLocaleTimeString()}`
                         : 'Current State'
                     ) : (
-                      selectedHistoryIndex !== null 
+                      selectedHistoryIndex !== null
                         ? `Changes at ${new Date(actionHistory[selectedHistoryIndex].timestamp).toLocaleTimeString()}`
                         : 'Changes since last action'
                     )}
                   </div>
-                  
+
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
                       onClick={() => {
@@ -832,6 +1015,95 @@ export function ZustandDevToolsPanel() {
       <div style={{ position: 'absolute', top: '12px', right: '12px', zIndex: 10 }}>
         <ConfigMenu items={configMenuItems} size="sm" />
       </div>
+
+      {/* Snapshot Dialog */}
+      {showSnapshotDialog && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.7)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 100
+        }}>
+          <div style={{
+            background: '#2d2d30',
+            padding: '24px',
+            borderRadius: '8px',
+            border: '1px solid #3c3c3c',
+            minWidth: '400px',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)'
+          }}>
+            <h3 style={{ margin: '0 0 16px 0', color: '#9cdcfe', fontSize: '16px' }}>
+              Save State Snapshot
+            </h3>
+            <p style={{ margin: '0 0 12px 0', color: '#cccccc', fontSize: '12px' }}>
+              Create a snapshot of all store states that you can restore later.
+            </p>
+            <input
+              type="text"
+              value={snapshotName}
+              onChange={(e) => setSnapshotName(e.target.value)}
+              placeholder="Snapshot name (optional)"
+              style={{
+                width: '100%',
+                padding: '8px',
+                background: '#1e1e1e',
+                border: '1px solid #3c3c3c',
+                color: '#cccccc',
+                borderRadius: '4px',
+                fontSize: '12px',
+                marginBottom: '16px',
+                boxSizing: 'border-box'
+              }}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleSaveSnapshot();
+                }
+              }}
+              autoFocus
+            />
+            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => {
+                  setShowSnapshotDialog(false);
+                  setSnapshotName('');
+                }}
+                style={{
+                  padding: '8px 16px',
+                  background: '#2d2d30',
+                  border: '1px solid #3c3c3c',
+                  color: '#cccccc',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '12px'
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveSnapshot}
+                style={{
+                  padding: '8px 16px',
+                  background: '#007acc',
+                  border: '1px solid #007acc',
+                  color: '#ffffff',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  fontWeight: 'bold'
+                }}
+              >
+                Save Snapshot
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
