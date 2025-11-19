@@ -1,11 +1,11 @@
 import React from 'react';
 import { ToggleLeft, ToggleRight } from 'lucide-react';
 import type { BundleAnalyzerState } from '../../types';
-import type { BundleAnalyzerEventClient } from '../../core/devtools-client';
+import type { BundleAnalyzerDevToolsClient } from '../../core/devtools-client';
 
 interface SettingsTabProps {
   state: BundleAnalyzerState;
-  eventClient: BundleAnalyzerEventClient;
+  eventClient: BundleAnalyzerDevToolsClient;
 }
 
 export function SettingsTab({ state, eventClient }: SettingsTabProps) {
