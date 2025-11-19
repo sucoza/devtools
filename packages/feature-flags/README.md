@@ -331,6 +331,178 @@ const evaluator = new FlagEvaluator({
 const result = await evaluator.evaluate('my-flag', context);
 ```
 
+## Error Handling
+
+The library provides custom error types for better debugging:
+
+```typescript
+import {
+  FeatureFlagManager,
+  FlagNotFoundError,
+  InvalidVariantError,
+  DependencyNotSatisfiedError,
+  StorageError
+} from '@sucoza/feature-flags';
+
+const flags = new FeatureFlagManager();
+
+try {
+  const result = await flags.evaluate('my-flag');
+  console.log('Flag value:', result.value);
+} catch (error) {
+  if (error instanceof FlagNotFoundError) {
+    console.error(`Flag "${error.flagId}" not found`);
+  } else if (error instanceof InvalidVariantError) {
+    console.error(`Invalid variant configuration for "${error.flagId}"`);
+  } else if (error instanceof DependencyNotSatisfiedError) {
+    console.error(
+      `Dependency "${error.dependencyFlagId}" not satisfied for "${error.flagId}"`
+    );
+  } else if (error instanceof StorageError) {
+    console.error(`Storage ${error.operation} failed:`, error.originalError);
+  }
+}
+```
+
+### Available Error Types
+
+- `FlagNotFoundError` - Flag does not exist
+- `InvalidVariantError` - Multivariate flag has no variants
+- `DependencyNotSatisfiedError` - Flag dependency not met
+- `TargetingNotMatchedError` - User doesn't match targeting rules
+- `StorageError` - Storage operation failed
+- `InvalidFlagConfigError` - Invalid flag configuration
+
+## Best Practices
+
+### 1. Use Type-Safe Flag Evaluations
+
+```typescript
+// Define your flags as constants
+const FLAGS = {
+  NEW_DASHBOARD: 'new-dashboard',
+  PREMIUM_FEATURES: 'premium-features',
+  DARK_MODE: 'dark-mode'
+} as const;
+
+// Use them in evaluations
+const isDarkMode = await flags.evaluate(FLAGS.DARK_MODE);
+```
+
+### 2. Handle Evaluation Errors Gracefully
+
+```typescript
+async function checkFeature(flagId: string, fallback: boolean = false): Promise<boolean> {
+  try {
+    const result = await flags.evaluate(flagId);
+    return !!result.value;
+  } catch (error) {
+    console.warn(`Failed to evaluate flag "${flagId}":`, error);
+    return fallback;
+  }
+}
+```
+
+### 3. Set Context Early
+
+```typescript
+// Set user context when user logs in
+function onUserLogin(user: User) {
+  flags.setContext({
+    userId: user.id,
+    userSegment: user.subscription,
+    attributes: {
+      plan: user.plan,
+      region: user.region,
+      accountAge: getDaysSinceRegistration(user.createdAt)
+    }
+  });
+}
+```
+
+### 4. Subscribe to Flag Changes
+
+```typescript
+// React to flag updates in real-time
+flags.on('flag-updated', (flag) => {
+  console.log(`Flag ${flag.name} was updated`);
+  // Re-render UI or refresh data
+});
+
+flags.on('override-set', (override) => {
+  console.log(`Override set for ${override.flagId}`);
+  // Show notification to user
+});
+```
+
+### 5. Use Overrides for Testing
+
+```typescript
+// In test environment
+if (process.env.NODE_ENV === 'test') {
+  flags.setOverride({
+    flagId: 'premium-features',
+    value: true,
+    reason: 'Testing premium flow',
+    userId: 'test-user'
+  });
+}
+
+// Don't forget to clean up
+afterEach(() => {
+  flags.clearAllOverrides();
+});
+```
+
+### 6. Implement Feature Flag Cleanup
+
+```typescript
+// Track flag usage
+const flagUsage = new Map<string, number>();
+
+flags.on('flag-evaluated', ({ flagId }) => {
+  flagUsage.set(flagId, (flagUsage.get(flagId) || 0) + 1);
+});
+
+// Identify unused flags
+function getUnusedFlags(): string[] {
+  return flags.getAllFlags()
+    .filter(flag => !flagUsage.has(flag.id))
+    .map(flag => flag.id);
+}
+```
+
+### 7. Progressive Rollouts
+
+```typescript
+// Start with 10% rollout
+flags.addFlag({
+  id: 'new-search',
+  name: 'New Search Algorithm',
+  type: 'boolean',
+  value: true,
+  enabled: true,
+  rollout: {
+    percentage: 10,
+    stickiness: 'userId'
+  }
+});
+
+// Gradually increase based on metrics
+function increaseRollout(flagId: string, newPercentage: number) {
+  const flag = flags.getFlag(flagId);
+  if (flag && flag.rollout) {
+    flags.updateFlag({
+      ...flag,
+      rollout: {
+        ...flag.rollout,
+        percentage: newPercentage
+      }
+    });
+  }
+}
+```
+
 ## TypeScript Support
 
 The library is written in TypeScript and provides comprehensive type definitions:
@@ -342,7 +514,11 @@ import type {
   EvaluationContext,
   FlagOverride,
   UserSegment,
-  Experiment
+  Experiment,
+  // Error types
+  FlagNotFoundError,
+  InvalidVariantError,
+  DependencyNotSatisfiedError
 } from '@sucoza/feature-flags';
 ```
 

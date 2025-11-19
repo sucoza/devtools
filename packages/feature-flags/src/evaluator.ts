@@ -8,6 +8,7 @@ import {
   UserSegment,
   FlagOverride
 } from './types';
+import { InvalidVariantError } from './errors';
 
 export interface EvaluatorOptions {
   getFlag: (id: string) => FeatureFlag | null;
@@ -270,7 +271,7 @@ export class FlagEvaluator {
 
   private selectVariant(flag: FeatureFlag, context: EvaluationContext): FlagVariant {
     if (!flag.variants || flag.variants.length === 0) {
-      throw new Error('No variants available for multivariate flag');
+      throw new InvalidVariantError(flag.id);
     }
 
     // Generate consistent hash for variant selection

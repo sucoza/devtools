@@ -26,7 +26,7 @@ export class FeatureFlagManager {
   private evaluator: FlagEvaluator;
   private storage: StorageAdapter;
   private options: FeatureFlagManagerOptions;
-  private refreshTimer?: NodeJS.Timeout;
+  private refreshTimer?: ReturnType<typeof setInterval>;
   private listeners = new Map<string, Set<(data: any) => void>>();
 
   constructor(options: FeatureFlagManagerOptions = {}) {

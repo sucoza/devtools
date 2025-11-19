@@ -3,6 +3,17 @@ export { FeatureFlagManager } from './manager';
 export { FlagEvaluator } from './evaluator';
 export { LocalStorageAdapter, MemoryStorageAdapter } from './storage';
 
+// Error exports
+export {
+  FeatureFlagError,
+  FlagNotFoundError,
+  DependencyNotSatisfiedError,
+  TargetingNotMatchedError,
+  InvalidVariantError,
+  StorageError,
+  InvalidFlagConfigError
+} from './errors';
+
 // Type exports
 export type {
   // Flag types
