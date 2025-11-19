@@ -52,26 +52,26 @@ export function PluginPanel({ className }: PluginPanelProps) {
 
   // Tab configuration
   const tabs = [
-    { 
-      id: 'screenshots', 
-      label: 'Screenshots', 
-      icon: Camera, 
-      badge: state.stats.totalScreenshots 
+    {
+      id: 'screenshots',
+      label: 'Screenshots',
+      icon: <Camera size={16} />,
+      badge: state.stats.totalScreenshots
     },
-    { 
-      id: 'comparisons', 
-      label: 'Comparisons', 
-      icon: GitCompare, 
-      badge: state.stats.totalDiffs 
+    {
+      id: 'comparisons',
+      label: 'Comparisons',
+      icon: <GitCompare size={16} />,
+      badge: state.stats.totalDiffs
     },
-    { id: 'timeline', label: 'Timeline', icon: History },
-    { 
-      id: 'animations', 
-      label: 'Animations', 
-      icon: Play, 
-      badge: Object.keys(state.animationSequences).length 
+    { id: 'timeline', label: 'Timeline', icon: <History size={16} /> },
+    {
+      id: 'animations',
+      label: 'Animations',
+      icon: <Play size={16} />,
+      badge: Object.keys(state.animationSequences).length
     },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'settings', label: 'Settings', icon: <Settings size={16} /> },
   ];
 
   // Toolbar actions
@@ -142,7 +142,7 @@ export function PluginPanel({ className }: PluginPanelProps) {
       onClick: () => {
         client.selectTab('screenshots');
         // Trigger baseline capture
-        client.captureBaseline();
+        client.startCapture();
       },
       disabled: state.isCapturing || !state.isPlaywrightConnected,
       shortcut: 'Ctrl+C'
@@ -154,7 +154,7 @@ export function PluginPanel({ className }: PluginPanelProps) {
       onClick: () => {
         client.selectTab('comparisons');
         // Trigger comparison
-        client.runComparison();
+        client.startAnalysis();
       },
       disabled: state.isAnalyzing || !state.isPlaywrightConnected,
       shortcut: 'Ctrl+R'
@@ -174,11 +174,11 @@ export function PluginPanel({ className }: PluginPanelProps) {
       onClick: () => {
         const data = {
           screenshots: state.screenshots,
-          comparisons: state.comparisons,
+          visualDiffs: state.visualDiffs,
           stats: state.stats,
           timestamp: Date.now()
         };
-        
+
         const dataStr = JSON.stringify(data, null, 2);
         const blob = new Blob([dataStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -199,7 +199,7 @@ export function PluginPanel({ className }: PluginPanelProps) {
       icon: '🗑️',
       onClick: () => {
         if (confirm('Are you sure you want to clear all visual regression data?')) {
-          client.clearData();
+          client.clearAllData();
         }
       },
       disabled: state.stats.totalScreenshots === 0,
@@ -231,7 +231,7 @@ export function PluginPanel({ className }: PluginPanelProps) {
         <Alert
           variant="default"
           icon={<Activity />}
-          message={state.isCapturing ? 'Capturing screenshots...' : 'Analyzing visual differences...'}
+          title={state.isCapturing ? 'Capturing screenshots...' : 'Analyzing visual differences...'}
         />
       )}
 
@@ -240,17 +240,17 @@ export function PluginPanel({ className }: PluginPanelProps) {
         onTabChange={(tabId) => client.selectTab(tabId as typeof state.ui.activeTab)}
         tabs={tabs.map(tab => ({
           ...tab,
-          icon: tab.icon ? <tab.icon /> : undefined
+          content: (
+            <ScrollableContainer>
+              {tab.id === 'screenshots' && <ScreenshotCapture />}
+              {tab.id === 'comparisons' && <VisualDiff />}
+              {tab.id === 'timeline' && <TimelineView />}
+              {tab.id === 'animations' && <ComparisonView />}
+              {tab.id === 'settings' && <SettingsView />}
+            </ScrollableContainer>
+          )
         }))}
-      >
-        <ScrollableContainer>
-          {state.ui.activeTab === 'screenshots' && <ScreenshotCapture />}
-          {state.ui.activeTab === 'comparisons' && <VisualDiff />}
-          {state.ui.activeTab === 'timeline' && <TimelineView />}
-          {state.ui.activeTab === 'animations' && <ComparisonView />}
-          {state.ui.activeTab === 'settings' && <SettingsView />}
-        </ScrollableContainer>
-      </Tabs>
+      />
 
         <Footer stats={footerStats.map((stat, index) => ({
           id: `stat-${index}`,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Search, Type, Database, Settings, Zap, List, Square } from 'lucide-react';
-import { COLORS, TYPOGRAPHY, SPACING, RADIUS, ScrollableContainer, Badge } from '@sucoza/shared-components';
+import { COLORS, TYPOGRAPHY, SPACING, RADIUS, ScrollableContainer, Badge, COMPONENT_STYLES } from '@sucoza/shared-components';
 import type { GraphQLTypeInfo } from '../../types';
 
 interface TypeListProps {
@@ -104,8 +104,8 @@ export const TypeList: React.FC<TypeListProps> = ({
                   borderRadius: RADIUS.md,
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  backgroundColor: isSelected ? COLORS.background.accent : 'transparent',
-                  border: `1px solid ${isSelected ? COLORS.border.accent : 'transparent'}`
+                  backgroundColor: isSelected ? COLORS.background.selected : 'transparent',
+                  border: `1px solid ${isSelected ? COLORS.border.focus : 'transparent'}`
                 }}
                 onMouseEnter={(e) => {
                   if (!isSelected) {

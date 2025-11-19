@@ -302,9 +302,11 @@ export function MemoryProfilerPanel() {
           {alerts.slice(0, 3).map(alert => (
             <Alert
               key={alert.id}
+              type={alert.severity as 'info' | 'warning' | 'error'}
               variant="default"
               title={alert.message}
-              onDismiss={() => dismissAlert(alert.id)}
+              closable={true}
+              onClose={() => dismissAlert(alert.id)}
               style={{ marginBottom: '4px' }}
             />
           ))}
@@ -533,7 +535,7 @@ function ComponentsTab({ components }: { components: ComponentMemoryInfo[] }) {
       key: 'name',
       header: 'Component',
       flex: 2,
-      render: (component: ComponentMemoryInfo) => (
+      render: (_value: any, component: ComponentMemoryInfo) => (
         <span style={{ fontWeight: '500' }}>{component.name}</span>
       )
     },
@@ -542,7 +544,7 @@ function ComponentsTab({ components }: { components: ComponentMemoryInfo[] }) {
       header: 'Instances',
       width: 100,
       align: 'center' as const,
-      render: (component: ComponentMemoryInfo) => (
+      render: (_value: any, component: ComponentMemoryInfo) => (
         <Badge variant="default" size="xs">{component.instanceCount}</Badge>
       )
     },
@@ -551,7 +553,7 @@ function ComponentsTab({ components }: { components: ComponentMemoryInfo[] }) {
       header: 'Total Memory',
       width: 120,
       align: 'right' as const,
-      render: (component: ComponentMemoryInfo) => (
+      render: (_value: any, component: ComponentMemoryInfo) => (
         <span style={{ fontFamily: 'monospace' }}>{formatBytes(component.totalMemory)}</span>
       )
     },
@@ -560,7 +562,7 @@ function ComponentsTab({ components }: { components: ComponentMemoryInfo[] }) {
       header: 'Avg/Instance',
       width: 120,
       align: 'right' as const,
-      render: (component: ComponentMemoryInfo) => (
+      render: (_value: any, component: ComponentMemoryInfo) => (
         <span style={{ fontFamily: 'monospace' }}>{formatBytes(component.averageMemoryPerInstance)}</span>
       )
     },
@@ -569,13 +571,13 @@ function ComponentsTab({ components }: { components: ComponentMemoryInfo[] }) {
       header: 'Trend',
       width: 80,
       align: 'center' as const,
-      render: (component: ComponentMemoryInfo) => getTrendIcon(component.trend)
+      render: (_value: any, component: ComponentMemoryInfo) => getTrendIcon(component.trend)
     },
     {
       key: 'status',
       header: 'Status',
       width: 100,
-      render: (component: ComponentMemoryInfo) => (
+      render: (_value: any, component: ComponentMemoryInfo) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
           {component.suspiciousGrowth ? (
             <>
@@ -607,9 +609,9 @@ function ComponentsTab({ components }: { components: ComponentMemoryInfo[] }) {
     <DataTable
       data={sortedComponents}
       columns={columns}
-      size="sm"
+      compact
       striped
-      hoverable
+      hover
       stickyHeader
     />
   );

@@ -20,16 +20,23 @@ export interface I18nDevToolsEvents {
   'i18n-state-update': {
     state: I18nState;
   };
-  
+
   'i18n-state-request': void;
-  
+
   'i18n-state-response': {
     state: I18nState;
   };
 
+  'i18n:state': I18nState;
+
   // Translation events
   'i18n-translation-used': {
     usage: TranslationUsage;
+  };
+
+  'i18n:key-usage': {
+    key: TranslationKey;
+    component: string;
   };
 
   'i18n-missing-key': {
@@ -38,6 +45,11 @@ export interface I18nDevToolsEvents {
     language: string;
     componentPath?: string;
     fallbackUsed?: string;
+  };
+
+  'i18n:missing-key': {
+    key: TranslationKey;
+    component: string;
   };
 
   'i18n-key-added': {
@@ -55,8 +67,20 @@ export interface I18nDevToolsEvents {
     newValue: string;
   };
 
+  'i18n:translation-updated': {
+    namespace: string;
+    key: string;
+    value: string;
+  };
+
   // Language switching
   'i18n-language-changed': {
+    from: string;
+    to: string;
+    timestamp: number;
+  };
+
+  'i18n:language-change': {
     from: string;
     to: string;
     timestamp: number;
@@ -71,6 +95,12 @@ export interface I18nDevToolsEvents {
     namespace: string;
     language: string;
     keys: number;
+    loadTime: number;
+  };
+
+  'i18n:bundle-loaded': {
+    namespace: string;
+    size: number;
     loadTime: number;
   };
 
@@ -147,6 +177,11 @@ export interface I18nDevToolsEvents {
 
   'i18n-layout-test-response': {
     result: LayoutTestResult;
+  };
+
+  'i18n:layout-test': {
+    language: string;
+    results: any[];
   };
 
   // Formatting and preview

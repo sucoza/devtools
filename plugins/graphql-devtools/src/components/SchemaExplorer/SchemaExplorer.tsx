@@ -111,13 +111,13 @@ export const SchemaExplorer: React.FC<SchemaExplorerProps> = ({
         padding: SPACING['4xl'],
         textAlign: 'center'
       }}>
-        <Loader 
-          size={48} 
-          style={{ 
-            color: COLORS.accent.blue, 
+        <Loader
+          size={48}
+          style={{
+            color: COLORS.status.info,
             marginBottom: SPACING['2xl'],
             animation: 'spin 1s linear infinite'
-          }} 
+          }}
         />
         <h3 style={{
           fontSize: TYPOGRAPHY.fontSize.lg,
@@ -244,13 +244,13 @@ export const SchemaExplorer: React.FC<SchemaExplorerProps> = ({
               fontSize: TYPOGRAPHY.fontSize.sm
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
-                <TrendingUp size={14} style={{ color: COLORS.accent.blue }} />
+                <TrendingUp size={14} style={{ color: COLORS.status.info }} />
                 <span style={{ color: COLORS.text.secondary }}>
                   {schemaStats.totalTypes} types
                 </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
-                <Database size={14} style={{ color: COLORS.accent.green }} />
+                <Database size={14} style={{ color: COLORS.status.success }} />
                 <span style={{ color: COLORS.text.secondary }}>
                   {schemaStats.totalQueries} queries
                 </span>
@@ -259,7 +259,7 @@ export const SchemaExplorer: React.FC<SchemaExplorerProps> = ({
                 <span style={{
                   width: '14px',
                   height: '14px',
-                  backgroundColor: COLORS.accent.purple,
+                  backgroundColor: COLORS.text.accent,
                   borderRadius: '50%',
                   flexShrink: 0
                 }} />
@@ -271,7 +271,7 @@ export const SchemaExplorer: React.FC<SchemaExplorerProps> = ({
                 <span style={{
                   width: '14px',
                   height: '14px',
-                  backgroundColor: COLORS.accent.orange,
+                  backgroundColor: COLORS.status.warning,
                   borderRadius: '50%',
                   flexShrink: 0
                 }} />

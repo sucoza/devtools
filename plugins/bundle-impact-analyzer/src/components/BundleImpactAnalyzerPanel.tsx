@@ -280,13 +280,13 @@ export function BundleImpactAnalyzerPanel({
         }}>
           <div style={{ display: 'flex', gap: SPACING.lg, alignItems: 'center' }}>
             {footerStats.map(stat => (
-              <div key={stat.label} style={{ 
-                display: 'flex', 
+              <div key={stat.label} style={{
+                display: 'flex',
                 alignItems: 'center',
                 gap: SPACING.xs,
               }}>
-                <span style={{ 
-                  fontSize: TYPOGRAPHY.fontSize.small, 
+                <span style={{
+                  fontSize: TYPOGRAPHY.fontSize.sm,
                   color: COLORS.text.secondary,
                 }}>
                   {stat.label}:
@@ -330,7 +330,7 @@ export function BundleImpactAnalyzerPanel({
                 gap: SPACING.xs,
                 cursor: 'pointer',
                 color: COLORS.text.secondary,
-                fontSize: TYPOGRAPHY.fontSize.small,
+                fontSize: TYPOGRAPHY.fontSize.sm,
               }}>
                 <input
                   type="checkbox"

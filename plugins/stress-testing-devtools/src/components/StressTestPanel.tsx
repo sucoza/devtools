@@ -23,7 +23,7 @@ import { stressTestStore } from '../store'
 import { StressTestRunner } from '../stress-runner'
 import { TestRun, StressTestConfig } from '../types'
 
-interface StressTestPanelProps {
+export interface StressTestPanelProps {
   theme?: 'light' | 'dark' | 'auto';
 }
 
@@ -156,16 +156,19 @@ const StressTestPanelInner: React.FC<StressTestPanelProps> = () => {
     }
   }, [state.testRuns])
 
+  const isRunning = testRunner !== null
+  const activeMetrics = state.activeTestId ? state.metrics[state.activeTestId] : null
+
   const handleExportResults = useCallback(() => {
     if (!state.activeTestId || !activeMetrics) return
-    
+
     const testRun = state.testRuns.find(run => run.id === state.activeTestId)
     const exportData = {
       testRun,
       metrics: activeMetrics,
       results: state.results[state.activeTestId] || []
     }
-    
+
     const dataStr = JSON.stringify(exportData, null, 2)
     const blob = new Blob([dataStr], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
@@ -192,27 +195,110 @@ const StressTestPanelInner: React.FC<StressTestPanelProps> = () => {
     stressTestStore.setActiveTest(null)
   }, [testRunner, state.activeTestId])
 
-  const isRunning = testRunner !== null
-  const activeMetrics = state.activeTestId ? state.metrics[state.activeTestId] : null
-
-  // Tab configuration
+  // Tab configuration with content
   const tabs = [
-    { id: 'runner', label: 'Test Runner', icon: Play },
-    { id: 'config', label: 'Configuration', icon: Settings },
-    { id: 'history', label: 'History', icon: History, badge: state.testRuns.length },
+    {
+      id: 'runner',
+      label: 'Test Runner',
+      icon: <Play size={16} />,
+      content: (
+        <ScrollableContainer>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: SPACING.lg,
+            padding: SPACING.md,
+          }}>
+            <div>
+              <TestRunner
+                configs={state.configs}
+                onRunFixedTest={handleRunFixedTest}
+                onRunTimedTest={handleRunTimedTest}
+                onStop={handleStopTest}
+                isRunning={isRunning}
+              />
+            </div>
+
+            <div>
+              <div style={{
+                marginBottom: SPACING.md,
+                display: 'flex',
+                alignItems: 'center',
+                gap: SPACING.sm,
+              }}>
+                <h3 style={{
+                  fontSize: TYPOGRAPHY.fontSize.lg,
+                  fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                  color: COLORS.text.primary,
+                  margin: 0,
+                }}>
+                  Live Metrics
+                </h3>
+                {state.activeTestId && isRunning && (
+                  <Badge variant="success" size="sm">
+                    Running
+                  </Badge>
+                )}
+              </div>
+              <MetricsDisplay
+                metrics={activeMetrics}
+                isActive={isRunning}
+              />
+            </div>
+          </div>
+        </ScrollableContainer>
+      ),
+    },
+    {
+      id: 'config',
+      label: 'Configuration',
+      icon: <Settings size={16} />,
+      content: (
+        <ScrollableContainer>
+          <div style={{ padding: SPACING.md }}>
+            <ConfigEditor
+              configs={state.configs}
+              onSave={handleSaveConfigs}
+            />
+          </div>
+        </ScrollableContainer>
+      ),
+    },
+    {
+      id: 'history',
+      label: 'History',
+      icon: <History size={16} />,
+      badge: state.testRuns.length,
+      content: (
+        <ScrollableContainer>
+          <div style={{ padding: SPACING.md }}>
+            <TestHistory
+              testRuns={state.testRuns}
+              metrics={state.metrics}
+              onSelectTest={handleSelectTest}
+              onClearTest={handleClearTest}
+              activeTestId={state.activeTestId}
+            />
+          </div>
+        </ScrollableContainer>
+      ),
+    },
   ];
 
   // Footer stats
   const footerStats = [
-    { label: 'Configs', value: state.configs.length.toString() },
-    { label: 'Test Runs', value: state.testRuns.length.toString() },
+    { id: 'configs', label: 'Configs', value: state.configs.length.toString() },
+    { id: 'test-runs', label: 'Test Runs', value: state.testRuns.length.toString() },
   ];
 
   if (state.activeTestId && activeMetrics) {
+    const successRate = activeMetrics.totalRequests > 0
+      ? (activeMetrics.successfulRequests / activeMetrics.totalRequests)
+      : 0;
     footerStats.push(
-      { label: 'Requests', value: activeMetrics.totalRequests.toString() },
-      { label: 'Success Rate', value: `${(activeMetrics.successRate * 100).toFixed(1)}%` },
-      { label: 'Avg Response Time', value: `${activeMetrics.avgResponseTime.toFixed(1)}ms` },
+      { id: 'requests', label: 'Requests', value: activeMetrics.totalRequests.toString() },
+      { id: 'success-rate', label: 'Success Rate', value: `${(successRate * 100).toFixed(1)}%` },
+      { id: 'avg-response-time', label: 'Avg Response Time', value: `${activeMetrics.averageResponseTime.toFixed(1)}ms` },
     );
   }
 
@@ -283,89 +369,12 @@ const StressTestPanelInner: React.FC<StressTestPanelProps> = () => {
       <PluginPanel
         title="Stress Testing"
         icon={Flame}
-        headerContent={(
-          state.activeTestId && isRunning && (
-            <StatusIndicator
-              status="loading"
-              label="Running"
-              size="sm"
-            />
-          )
-        )}
       >
-      <Tabs
-        activeTab={activeTab}
-        onTabChange={(tabId) => setActiveTab(tabId as 'runner' | 'config' | 'history')}
-        tabs={tabs}
-      >
-        <ScrollableContainer>
-          {activeTab === 'runner' && (
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: SPACING.lg,
-              padding: SPACING.md,
-            }}>
-              <div>
-                <TestRunner
-                  configs={state.configs}
-                  onRunFixedTest={handleRunFixedTest}
-                  onRunTimedTest={handleRunTimedTest}
-                  onStop={handleStopTest}
-                  isRunning={isRunning}
-                />
-              </div>
-              
-              <div>
-                <div style={{
-                  marginBottom: SPACING.md,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: SPACING.sm,
-                }}>
-                  <h3 style={{
-                    ...TYPOGRAPHY.heading.h3,
-                    color: COLORS.text.primary,
-                    margin: 0,
-                  }}>
-                    Live Metrics
-                  </h3>
-                  {state.activeTestId && isRunning && (
-                    <Badge variant="success" size="sm">
-                      Running
-                    </Badge>
-                  )}
-                </div>
-                <MetricsDisplay 
-                  metrics={activeMetrics} 
-                  isActive={isRunning}
-                />
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'config' && (
-            <div style={{ padding: SPACING.md }}>
-              <ConfigEditor
-                configs={state.configs}
-                onSave={handleSaveConfigs}
-              />
-            </div>
-          )}
-
-          {activeTab === 'history' && (
-            <div style={{ padding: SPACING.md }}>
-              <TestHistory
-                testRuns={state.testRuns}
-                metrics={state.metrics}
-                onSelectTest={handleSelectTest}
-                onClearTest={handleClearTest}
-                activeTestId={state.activeTestId}
-              />
-            </div>
-          )}
-        </ScrollableContainer>
-      </Tabs>
+        <Tabs
+          activeTab={activeTab}
+          onTabChange={(tabId) => setActiveTab(tabId as 'runner' | 'config' | 'history')}
+          tabs={tabs}
+        />
 
         <Footer stats={footerStats} />
       </PluginPanel>

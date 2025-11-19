@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@sucoza/devtools-common": "workspace:*",
+    "@sucoza/i18n": "workspace:*",
     "@sucoza/plugin-core": "workspace:*",
     "@sucoza/shared-components": "workspace:*",
     "@tanstack/devtools": "catalog:",

@@ -24,11 +24,11 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
   const [copiedField, setCopiedField] = React.useState<string | null>(null);
 
   const getTypeIcon = (kind: string) => {
-    if (kind.includes('OBJECT')) return <Type size={20} style={{ color: COLORS.accent.blue }} />;
-    if (kind.includes('SCALAR')) return <Database size={20} style={{ color: COLORS.accent.green }} />;
-    if (kind.includes('ENUM')) return <List size={20} style={{ color: COLORS.accent.yellow }} />;
-    if (kind.includes('INTERFACE')) return <Settings size={20} style={{ color: COLORS.accent.purple }} />;
-    if (kind.includes('UNION')) return <Zap size={20} style={{ color: COLORS.accent.red }} />;
+    if (kind.includes('OBJECT')) return <Type size={20} style={{ color: COLORS.status.info }} />;
+    if (kind.includes('SCALAR')) return <Database size={20} style={{ color: COLORS.status.success }} />;
+    if (kind.includes('ENUM')) return <List size={20} style={{ color: COLORS.status.warning }} />;
+    if (kind.includes('INTERFACE')) return <Settings size={20} style={{ color: COLORS.text.accent }} />;
+    if (kind.includes('UNION')) return <Zap size={20} style={{ color: COLORS.status.error }} />;
     if (kind.includes('INPUT')) return <Square size={20} style={{ color: COLORS.text.secondary }} />;
     return <Type size={20} style={{ color: COLORS.text.muted }} />;
   };
@@ -69,19 +69,19 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
     if (isBuiltinType(coreType)) {
       return (
         <span style={{
-          color: COLORS.accent.green,
+          color: COLORS.status.success,
           fontFamily: TYPOGRAPHY.fontFamily.mono
         }}>
           {typeString}
         </span>
       );
     }
-    
+
     return (
       <button
         onClick={() => onTypeSelect(coreType)}
         style={{
-          color: COLORS.accent.blue,
+          color: COLORS.status.info,
           fontFamily: TYPOGRAPHY.fontFamily.mono,
           textDecoration: 'none',
           border: 'none',
@@ -146,7 +146,7 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
                 {field.name}
               </span>
               {copiedField === field.name ? (
-                <Check size={14} style={{ color: COLORS.accent.green }} />
+                <Check size={14} style={{ color: COLORS.status.success }} />
               ) : (
                 <Copy size={14} style={{ color: COLORS.text.muted }} />
               )}
@@ -172,15 +172,15 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
             <div style={{
               marginTop: SPACING.md,
               padding: SPACING.md,
-              backgroundColor: COLORS.background.warning,
-              border: `1px solid ${COLORS.border.warning}`,
+              backgroundColor: `${COLORS.status.warning}10`,
+              border: `1px solid ${COLORS.status.warning}50`,
               borderRadius: RADIUS.md
             }}>
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
                 gap: SPACING.md,
-                color: COLORS.text.warning
+                color: COLORS.status.warning
               }}>
                 <AlertTriangle size={14} />
                 <span style={{
@@ -190,7 +190,7 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
               </div>
               <p style={{
                 fontSize: TYPOGRAPHY.fontSize.sm,
-                color: COLORS.text.warning,
+                color: COLORS.status.warning,
                 marginTop: SPACING.sm
               }}>
                 {field.deprecationReason}
@@ -267,7 +267,7 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
         {type.description && (
           <Alert
             type="info"
-            message={type.description}
+            description={type.description}
             style={{ marginTop: SPACING.lg }}
           />
         )}
@@ -351,7 +351,7 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
                     <div style={{
                       marginTop: SPACING.md,
                       fontSize: TYPOGRAPHY.fontSize.sm,
-                      color: COLORS.text.warning
+                      color: COLORS.status.warning
                     }}>
                       Deprecated: {enumValue.deprecationReason}
                     </div>
@@ -432,7 +432,6 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
                   key={possibleType.name}
                   variant="primary"
                   size="md"
-                  interactive
                   onClick={() => onTypeSelect(possibleType.name)}
                 >
                   {possibleType.name}
@@ -457,11 +456,10 @@ export const TypeDetails: React.FC<TypeDetailsProps> = ({ type, onTypeSelect }) 
               {type.interfaces.map((interfaceType) => (
                 <Badge
                   key={interfaceType.name}
-                  variant="secondary"
+                  variant="default"
                   size="md"
-                  interactive
                   onClick={() => onTypeSelect(interfaceType.name)}
-                  style={{ backgroundColor: COLORS.accent.purple + '20', color: COLORS.accent.purple }}
+                  style={{ backgroundColor: COLORS.text.accent + '20', color: COLORS.text.accent }}
                 >
                   {interfaceType.name}
                 </Badge>

@@ -110,6 +110,28 @@ export class SecurityAuditDevToolsClient implements DevToolsEventClient<Security
     return this.scanEngine?.exportResults(scanResults, format) || '';
   };
 
+  quickScan = async (): Promise<SecurityScanResult[] | undefined> => {
+    // Quick scan runs only critical scanners
+    const criticalScanners = ['xss-scanner', 'csrf-validator', 'secret-detector'];
+    return this.startScan(criticalScanners);
+  };
+
+  generateReport = (): void => {
+    // Generate and download a comprehensive security report
+    const data = this.exportResults('html');
+    const filename = `security-report-${Date.now()}.html`;
+
+    const blob = new Blob([data], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   // UI control methods
   selectTab = (tab: DevToolsState['ui']['activeTab']) => {
     this.store.dispatch({ type: 'ui/tab/select', payload: tab });

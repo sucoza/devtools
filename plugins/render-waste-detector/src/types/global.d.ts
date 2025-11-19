@@ -6,10 +6,15 @@ declare module "*.css" {
   export default content;
 }
 
-// Styled-jsx module augmentation
+// React module augmentation
+import * as React from "react";
+
 declare module "react" {
-  interface HTMLAttributes<_T> {
-    jsx?: boolean;
+  namespace JSX {
+    interface IntrinsicElements {
+      // Ensure all intrinsic elements support children
+      [elemName: string]: any;
+    }
   }
 }
 

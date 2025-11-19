@@ -2631,6 +2631,9 @@ importers:
       '@sucoza/devtools-common':
         specifier: workspace:*
         version: link:../../packages/devtools-common
+      '@sucoza/i18n':
+        specifier: workspace:*
+        version: link:../../packages/i18n
       '@sucoza/plugin-core':
         specifier: workspace:*
         version: link:../../packages/plugin-core

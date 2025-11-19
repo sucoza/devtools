@@ -53,10 +53,10 @@
       }
     },
     "typecheck": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "tsConfig": "packages/shared-components/tsconfig.json",
-        "noEmit": true
+        "command": "tsc --noEmit",
+        "cwd": "packages/shared-components"
       }
     },
     "format": {

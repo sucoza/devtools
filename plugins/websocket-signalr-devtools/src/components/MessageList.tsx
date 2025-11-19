@@ -10,13 +10,13 @@ interface MessageListProps {
 }
 
 export function MessageList({ messages, onMessageSelect, type }: MessageListProps) {
-  const [selectedRows, setSelectedRows] = React.useState<string[]>([]);
+  const [selectedRowIndices, setSelectedRowIndices] = React.useState<Set<number>>(new Set());
 
   const formatTimestamp = (timestamp: number) => {
-    return new Date(timestamp).toLocaleTimeString(undefined, { 
-      hour12: false, 
-      hour: '2-digit', 
-      minute: '2-digit', 
+    return new Date(timestamp).toLocaleTimeString(undefined, {
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit',
       second: '2-digit'
     } as Intl.DateTimeFormatOptions);
   };
@@ -147,10 +147,9 @@ export function MessageList({ messages, onMessageSelect, type }: MessageListProp
     {
       key: 'preview',
       header: 'Preview',
-      flex: 1,
       render: (message: WebSocketMessage | SignalRMessage) => (
-        <span style={{ 
-          fontSize: '11px', 
+        <span style={{
+          fontSize: '11px',
           opacity: 0.9,
           fontFamily: 'monospace'
         }}>
@@ -160,10 +159,11 @@ export function MessageList({ messages, onMessageSelect, type }: MessageListProp
     }
   ];
 
-  const handleRowSelect = (messageIds: string[]) => {
-    setSelectedRows(messageIds);
-    const selectedMessage = messageIds.length > 0 
-      ? messages.find(m => m.id === messageIds[0]) || null
+  const handleSelectionChange = (indices: Set<number>) => {
+    setSelectedRowIndices(indices);
+    const selectedIndex = indices.size > 0 ? Array.from(indices)[0] : null;
+    const selectedMessage = selectedIndex !== null && messages[selectedIndex]
+      ? messages[selectedIndex]
       : null;
     onMessageSelect(selectedMessage);
   };
@@ -182,14 +182,15 @@ export function MessageList({ messages, onMessageSelect, type }: MessageListProp
     <DataTable
       data={messages}
       columns={columns}
-      selectedRows={new Set(selectedRows.map((id, idx) => idx))}
-      onRowSelect={handleRowSelect}
-      selectionMode="single"
-      size="sm"
+      selectable
+      selectedRows={selectedRowIndices}
+      onSelectionChange={handleSelectionChange}
+      compact
       striped
-      hoverable
+      hover
       stickyHeader
-      virtualScrolling={messages.length > 500}
+      virtualized={messages.length > 500}
+      getRowKey={(row) => row.id}
     />
   );
 }
