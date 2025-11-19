@@ -1,47 +1,31 @@
 import type {
   AccessibilityDevToolsState,
-  AccessibilityDevToolsAction,
-  AccessibilityDevToolsEvents,
-  AccessibilityAuditResult,
 } from '../types';
 import { useAccessibilityDevToolsStore } from './devtools-store';
 
 /**
- * Event client interface following TanStack DevTools patterns
+ * DevTools event client interface following TanStack patterns
  */
-export interface AccessibilityEventClient {
-  subscribe: (
-    callback: (
-      event: AccessibilityDevToolsEvents[keyof AccessibilityDevToolsEvents],
-      type: keyof AccessibilityDevToolsEvents
-    ) => void
-  ) => () => void;
-  emit: <TEventType extends keyof AccessibilityDevToolsEvents>(
-    type: TEventType,
-    event: AccessibilityDevToolsEvents[TEventType]
-  ) => void;
+export interface DevToolsEventClient<TEvents extends Record<string, any>> {
+  subscribe: (callback: (event: TEvents[keyof TEvents], type: keyof TEvents) => void) => () => void;
   getState: () => AccessibilityDevToolsState;
-  dispatch: (action: AccessibilityDevToolsAction) => void;
+}
+
+export interface AccessibilityDevToolsEvents {
+  'accessibility:state': AccessibilityDevToolsState;
+  'accessibility:error': { message: string; stack?: string };
 }
 
 /**
- * Accessibility DevTools event client implementation
+ * Accessibility DevTools event client
+ * Follows the simplified TanStack DevTools pattern
  */
-export class AccessibilityDevToolsEventClient implements AccessibilityEventClient {
-  private unsubscribe?: () => void;
+export class AccessibilityDevToolsClient implements DevToolsEventClient<AccessibilityDevToolsEvents> {
+  private unsubscribeStore?: () => void;
   private store = useAccessibilityDevToolsStore;
-  private subscribers = new Set<(
-    event: AccessibilityDevToolsEvents[keyof AccessibilityDevToolsEvents],
-    type: keyof AccessibilityDevToolsEvents
-  ) => void>();
-  
-  constructor() {
-    // Skip auto-start in constructor to avoid hook issues
-    // Let the UI components handle auto-start
-  }
-  
+
   /**
-   * Subscribe to store changes and emit events
+   * Subscribe to store changes
    */
   subscribe = (
     callback: (
@@ -49,235 +33,112 @@ export class AccessibilityDevToolsEventClient implements AccessibilityEventClien
       type: keyof AccessibilityDevToolsEvents
     ) => void
   ) => {
-    this.subscribers.add(callback);
-    
     // Subscribe to store changes
-    this.unsubscribe = this.store.subscribe((state) => {
+    this.unsubscribeStore = this.store.subscribe((state) => {
       callback(state, 'accessibility:state');
     });
-    
+
     // Send initial state
     const initialState = this.store.getState();
     callback(initialState, 'accessibility:state');
-    
+
     return () => {
-      this.subscribers.delete(callback);
-      if (this.subscribers.size === 0) {
-        this.unsubscribe?.();
-        const currentState = this.store.getState();
-        currentState.stopScanning();
-      }
+      this.unsubscribeStore?.();
+      // Stop scanning when last subscriber disconnects
+      const currentState = this.store.getState();
+      currentState.stopScanning();
     };
   };
-  
-  /**
-   * Emit event to all subscribers
-   */
-  emit = <TEventType extends keyof AccessibilityDevToolsEvents>(
-    type: TEventType,
-    event: AccessibilityDevToolsEvents[TEventType]
-  ): void => {
-    this.subscribers.forEach(callback => {
-      callback(event, type);
-    });
-  };
-  
+
   /**
    * Get current state from store
    */
   getState = (): AccessibilityDevToolsState => {
     return this.store.getState();
   };
-  
-  /**
-   * Dispatch action to store
-   */
-  dispatch = (action: AccessibilityDevToolsAction): void => {
-    const state = this.store.getState();
-    state.dispatch(action);
-    
-    // Emit action event
-    this.emit('accessibility:action', action);
+
+  // Scanning control methods
+  startScanning = (): void => {
+    this.store.getState().startScanning();
   };
-  
-  // Convenience methods for common actions
-  
-  /**
-   * Start accessibility scan
-   */
-  startScan = (elementSelector?: string): void => {
-    this.dispatch({ type: 'scan/start', payload: { elementSelector } });
+
+  stopScanning = (): void => {
+    this.store.getState().stopScanning();
   };
-  
-  /**
-   * Pause scanning
-   */
-  pauseScan = (): void => {
-    this.dispatch({ type: 'scan/pause' });
+
+  toggleScanning = (): void => {
+    this.store.getState().toggleScanning();
   };
-  
-  /**
-   * Resume scanning
-   */
-  resumeScan = (): void => {
-    this.dispatch({ type: 'scan/resume' });
+
+  // Audit management methods
+  runAudit = (): void => {
+    this.store.getState().runAudit();
   };
-  
-  /**
-   * Stop scanning
-   */
-  stopScan = (): void => {
-    this.dispatch({ type: 'scan/stop' });
+
+  selectAuditResult = (id: string | null): void => {
+    this.store.getState().selectAuditResult(id);
   };
-  
-  /**
-   * Update scan options
-   */
-  updateScanOptions = (options: unknown): void => {
-    this.dispatch({ type: 'options/update', payload: options });
+
+  dismissViolation = (id: string): void => {
+    this.store.getState().dismissViolation(id);
   };
-  
-  /**
-   * Select tab in DevTools panel
-   */
-  selectTab = (tab: AccessibilityDevToolsState['ui']['activeTab']): void => {
-    this.dispatch({ type: 'ui/tab/select', payload: tab });
+
+  // Filters methods
+  updateFilters = (filters: Partial<AccessibilityDevToolsState['filters']>): void => {
+    this.store.getState().updateFilters(filters);
   };
-  
-  /**
-   * Select accessibility issue for inspection
-   */
-  selectIssue = (issue: AccessibilityDevToolsState['ui']['selectedIssue']): void => {
-    this.dispatch({ type: 'ui/issue/select', payload: issue });
-  };
-  
-  /**
-   * Highlight element on page
-   */
-  highlightElement = (selector: string | null): void => {
-    this.dispatch({ type: 'ui/element/highlight', payload: selector });
-    this.emit('accessibility:element-highlight', { selector });
-  };
-  
-  /**
-   * Toggle overlay visibility
-   */
-  toggleOverlay = (): void => {
-    this.dispatch({ type: 'ui/overlay/toggle' });
-    const state = this.store.getState();
-    this.emit('accessibility:overlay-toggle', {
-      enabled: state.overlayState.enabled,
-      state: state.overlayState,
-    });
-  };
-  
-  /**
-   * Update accessibility settings
-   */
+
+  // Settings methods
   updateSettings = (settings: Partial<AccessibilityDevToolsState['settings']>): void => {
-    this.dispatch({ type: 'settings/update', payload: settings });
+    this.store.getState().updateSettings(settings);
   };
-  
-  /**
-   * Clear audit history
-   */
-  clearHistory = (): void => {
-    this.dispatch({ type: 'history/clear' });
+
+  // UI control methods
+  selectTab = (tab: AccessibilityDevToolsState['ui']['activeTab']): void => {
+    this.store.getState().selectTab(tab);
   };
-  
-  /**
-   * Export audit data
-   */
-  exportData = (): void => {
-    this.dispatch({ type: 'history/export' });
-  };
-  
-  /**
-   * Import audit data
-   */
-  importData = (data: AccessibilityAuditResult[]): void => {
-    this.dispatch({ type: 'history/import', payload: data });
-  };
-  
-  /**
-   * Toggle severity filter
-   */
-  toggleSeverityFilter = (severity: 'critical' | 'serious' | 'moderate' | 'minor'): void => {
-    this.dispatch({ type: 'filters/severity/toggle', payload: severity });
-  };
-  
-  /**
-   * Toggle rule filter
-   */
-  toggleRuleFilter = (ruleId: string): void => {
-    this.dispatch({ type: 'filters/rule/toggle', payload: ruleId });
-  };
-  
-  /**
-   * Update search filter
-   */
-  updateSearch = (query: string): void => {
-    this.dispatch({ type: 'filters/search/update', payload: query });
-  };
-  
-  /**
-   * Reset all filters
-   */
-  resetFilters = (): void => {
-    this.dispatch({ type: 'filters/reset' });
-  };
-  
-  /**
-   * Set theme
-   */
+
   setTheme = (theme: 'light' | 'dark' | 'auto'): void => {
-    this.dispatch({ type: 'ui/theme/set', payload: theme });
+    this.store.getState().setTheme(theme);
   };
-  
-  /**
-   * Toggle compact mode
-   */
+
   toggleCompactMode = (): void => {
-    this.dispatch({ type: 'ui/compact-mode/toggle' });
+    this.store.getState().toggleCompactMode();
   };
-  
+
   /**
    * Cleanup resources
    */
   destroy = (): void => {
-    this.unsubscribe?.();
+    this.unsubscribeStore?.();
     const state = this.store.getState();
     state.stopScanning();
-    this.subscribers.clear();
   };
 }
 
 // Singleton instance
-let eventClientInstance: AccessibilityDevToolsEventClient | null = null;
+let clientInstance: AccessibilityDevToolsClient | null = null;
 
 /**
  * Create or get accessibility DevTools event client
  */
-export function createAccessibilityDevToolsEventClient(): AccessibilityDevToolsEventClient {
-  if (!eventClientInstance) {
-    eventClientInstance = new AccessibilityDevToolsEventClient();
+export function createAccessibilityDevToolsEventClient(): AccessibilityDevToolsClient {
+  if (!clientInstance) {
+    clientInstance = new AccessibilityDevToolsClient();
   }
-  return eventClientInstance;
+  return clientInstance;
 }
 
 /**
  * Get existing accessibility DevTools event client
  */
-export function getAccessibilityDevToolsEventClient(): AccessibilityDevToolsEventClient | null {
-  return eventClientInstance;
+export function getAccessibilityDevToolsEventClient(): AccessibilityDevToolsClient | null {
+  return clientInstance;
 }
 
 /**
  * Reset event client instance (useful for testing)
  */
 export function resetAccessibilityDevToolsEventClient(): void {
-  if (eventClientInstance) {
-    eventClientInstance.destroy();
-    eventClientInstance = null;
-  }
+  clientInstance = null;
 }
