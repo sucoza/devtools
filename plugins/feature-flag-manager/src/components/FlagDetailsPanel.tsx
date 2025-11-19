@@ -561,7 +561,7 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
           justify-content: space-between;
           align-items: center;
           padding: 8px 0;
-          border-bottom: 1px solid #f3f4f6;
+          border-bottom: 1px solid var(--dt-border-primary);
         }
         
         .current-indicator {
@@ -638,7 +638,7 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
           display: flex;
           justify-content: space-between;
           padding: 8px 0;
-          border-bottom: 1px solid #f3f4f6;
+          border-bottom: 1px solid var(--dt-border-primary);
         }
         
         .variants-list {

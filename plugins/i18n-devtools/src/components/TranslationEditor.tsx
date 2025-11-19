@@ -107,9 +107,9 @@ export function TranslationEditor({
       <div style={{
         padding: '40px',
         textAlign: 'center',
-        color: '#969696',
+        color: 'var(--dt-text-secondary)',
         fontSize: '12px',
-        background: '#1e1e1e',
+        background: 'var(--dt-bg-primary)',
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -132,9 +132,9 @@ export function TranslationEditor({
       <div style={{
         padding: '20px',
         textAlign: 'center',
-        color: '#f48771',
+        color: 'var(--dt-status-error)',
         fontSize: '12px',
-        background: '#1e1e1e'
+        background: 'var(--dt-bg-primary)'
       }}>
         No translations found for key: {selectedKey}
       </div>
@@ -146,26 +146,26 @@ export function TranslationEditor({
       padding: '15px',
       height: '100%',
       overflowY: 'auto',
-      background: '#1e1e1e'
+      background: 'var(--dt-bg-primary)'
     }}>
       {/* Header */}
       <div style={{ marginBottom: '20px' }}>
-        <h4 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '14px', fontWeight: '600' }}>
+        <h4 style={{ margin: '0 0 10px 0', color: 'var(--dt-border-focus)', fontSize: '14px', fontWeight: '600' }}>
           ✏️ Translation Editor
         </h4>
         
         <div style={{
-          background: '#252526',
+          background: 'var(--dt-bg-tertiary)',
           padding: '12px',
           borderRadius: '4px',
-          border: '1px solid #3c3c3c'
+          border: '1px solid var(--dt-border-primary)'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
             <div>
-              <div style={{ fontSize: '12px', fontWeight: '600', color: '#cccccc' }}>
+              <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--dt-text-primary)' }}>
                 {selectedKey}
               </div>
-              <div style={{ fontSize: '10px', color: '#969696' }}>
+              <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)' }}>
                 {selectedNamespace}
               </div>
             </div>
@@ -176,7 +176,7 @@ export function TranslationEditor({
                 style={{
                   padding: '4px 8px',
                   fontSize: '10px',
-                  border: '1px solid #3c3c3c',
+                  border: '1px solid var(--dt-border-primary)',
                   background: copySuccess === 'Key' ? '#1e5f1e' : '#2d2d30',
                   color: copySuccess === 'Key' ? '#4ec9b0' : '#cccccc',
                   cursor: 'pointer',
@@ -191,7 +191,7 @@ export function TranslationEditor({
                 style={{
                   padding: '4px 8px',
                   fontSize: '10px',
-                  border: '1px solid #3c3c3c',
+                  border: '1px solid var(--dt-border-primary)',
                   background: showAllLanguages ? '#007acc' : '#2d2d30',
                   color: showAllLanguages ? '#ffffff' : '#cccccc',
                   cursor: 'pointer',
@@ -204,7 +204,7 @@ export function TranslationEditor({
           </div>
           
           <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <span style={{ fontSize: '10px', color: '#969696' }}>
+            <span style={{ fontSize: '10px', color: 'var(--dt-text-secondary)' }}>
               {keyTranslations.length} language{keyTranslations.length !== 1 ? 's' : ''}
             </span>
             
@@ -214,9 +214,9 @@ export function TranslationEditor({
                 style={{
                   padding: '2px 6px',
                   fontSize: '9px',
-                  border: '1px solid #3c3c3c',
+                  border: '1px solid var(--dt-border-primary)',
                   background: '#2d2d30',
-                  color: '#cccccc',
+                  color: 'var(--dt-text-primary)',
                   cursor: 'pointer',
                   borderRadius: '2px'
                 }}
@@ -270,7 +270,7 @@ export function TranslationEditor({
                     {isCurrentLanguage && (
                       <span style={{
                         background: '#4ec9b0',
-                        color: '#ffffff',
+                        color: 'var(--dt-text-on-primary)',
                         padding: '2px 6px',
                         borderRadius: '2px',
                         fontSize: '8px',
@@ -283,7 +283,7 @@ export function TranslationEditor({
                     {isMissing && (
                       <span style={{
                         background: '#f48771',
-                        color: '#ffffff',
+                        color: 'var(--dt-text-on-primary)',
                         padding: '2px 6px',
                         borderRadius: '2px',
                         fontSize: '8px',
@@ -296,7 +296,7 @@ export function TranslationEditor({
                     {hasChanged && (
                       <span style={{
                         background: '#d19a66',
-                        color: '#ffffff',
+                        color: 'var(--dt-text-on-primary)',
                         padding: '2px 6px',
                         borderRadius: '2px',
                         fontSize: '8px',
@@ -313,7 +313,7 @@ export function TranslationEditor({
                       style={{
                         padding: '2px 6px',
                         fontSize: '9px',
-                        border: '1px solid #3c3c3c',
+                        border: '1px solid var(--dt-border-primary)',
                         background: copySuccess === translation.language ? '#1e5f1e' : '#2d2d30',
                         color: copySuccess === translation.language ? '#4ec9b0' : '#cccccc',
                         cursor: 'pointer',
@@ -345,9 +345,9 @@ export function TranslationEditor({
                       maxHeight: '200px',
                       resize: 'vertical',
                       padding: '8px',
-                      border: '1px solid #3c3c3c',
+                      border: '1px solid var(--dt-border-primary)',
                       borderRadius: '3px',
-                      background: '#1e1e1e',
+                      background: 'var(--dt-bg-primary)',
                       color: isMissing ? '#f48771' : '#cccccc',
                       fontSize: '11px',
                       fontFamily: 'monospace',
@@ -360,16 +360,16 @@ export function TranslationEditor({
                     <div style={{
                       marginTop: '8px',
                       padding: '8px',
-                      background: '#2a2a2a',
+                      background: 'var(--dt-bg-secondary)',
                       borderRadius: '3px',
-                      border: '1px solid #3c3c3c'
+                      border: '1px solid var(--dt-border-primary)'
                     }}>
-                      <div style={{ fontSize: '9px', color: '#9cdcfe', marginBottom: '4px' }}>
+                      <div style={{ fontSize: '9px', color: 'var(--dt-border-focus)', marginBottom: '4px' }}>
                         Preview:
                       </div>
                       <div style={{
                         fontSize: '11px',
-                        color: '#cccccc',
+                        color: 'var(--dt-text-primary)',
                         fontStyle: 'italic',
                         lineHeight: '1.4'
                       }}>
@@ -385,11 +385,11 @@ export function TranslationEditor({
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     fontSize: '9px',
-                    color: '#969696'
+                    color: 'var(--dt-text-secondary)'
                   }}>
                     <span>{currentValue.length} characters</span>
                     {hasChanged && (
-                      <span style={{ color: '#d19a66' }}>
+                      <span style={{ color: 'var(--dt-status-warning)' }}>
                         Modified
                       </span>
                     )}
@@ -405,15 +405,15 @@ export function TranslationEditor({
         <div style={{
           position: 'sticky',
           bottom: '0',
-          background: '#252526',
-          border: '1px solid #3c3c3c',
+          background: 'var(--dt-bg-tertiary)',
+          border: '1px solid var(--dt-border-primary)',
           borderRadius: '4px',
           padding: '12px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-          <div style={{ fontSize: '11px', color: '#969696' }}>
+          <div style={{ fontSize: '11px', color: 'var(--dt-text-secondary)' }}>
             {hasChanges ? 'You have unsaved changes' : 'No changes to save'}
           </div>
           
@@ -423,9 +423,9 @@ export function TranslationEditor({
               style={{
                 padding: '6px 12px',
                 fontSize: '11px',
-                border: '1px solid #3c3c3c',
+                border: '1px solid var(--dt-border-primary)',
                 background: '#2d2d30',
-                color: '#cccccc',
+                color: 'var(--dt-text-primary)',
                 cursor: 'pointer',
                 borderRadius: '3px'
               }}
@@ -439,7 +439,7 @@ export function TranslationEditor({
               style={{
                 padding: '6px 12px',
                 fontSize: '11px',
-                border: '1px solid #3c3c3c',
+                border: '1px solid var(--dt-border-primary)',
                 background: hasChanges ? '#1e5f1e' : '#2d2d30',
                 color: hasChanges ? '#ffffff' : '#969696',
                 cursor: hasChanges ? 'pointer' : 'not-allowed',
@@ -456,13 +456,13 @@ export function TranslationEditor({
       <div style={{
         marginTop: '20px',
         padding: '12px',
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c',
+        border: '1px solid var(--dt-border-primary)',
         fontSize: '10px',
-        color: '#969696'
+        color: 'var(--dt-text-secondary)'
       }}>
-        <div style={{ marginBottom: '6px', color: '#9cdcfe', fontWeight: '600' }}>
+        <div style={{ marginBottom: '6px', color: 'var(--dt-border-focus)', fontWeight: '600' }}>
           💡 Tips:
         </div>
         <ul style={{ margin: 0, paddingLeft: '16px' }}>

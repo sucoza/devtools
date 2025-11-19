@@ -68,10 +68,10 @@ export function KeyExplorer({
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'missing': return { icon: '❌', color: '#f48771' };
-      case 'partial': return { icon: '⚠️', color: '#d19a66' };
-      case 'complete': return { icon: '✅', color: '#4ec9b0' };
-      default: return { icon: '🔑', color: '#cccccc' };
+      case 'missing': return { icon: '❌', color: 'var(--dt-status-error)' };
+      case 'partial': return { icon: '⚠️', color: 'var(--dt-status-warning)' };
+      case 'complete': return { icon: '✅', color: 'var(--dt-status-success)' };
+      default: return { icon: '🔑', color: 'var(--dt-text-primary)' };
     }
   };
 
@@ -80,7 +80,7 @@ export function KeyExplorer({
       <div style={{ 
         padding: '20px', 
         textAlign: 'center', 
-        color: '#969696',
+        color: 'var(--dt-text-secondary)',
         fontSize: '12px'
       }}>
         {searchResults.length > 0 ? 'No translations match your search criteria' : 'No translations available'}
@@ -93,17 +93,17 @@ export function KeyExplorer({
       padding: '15px', 
       height: '100%', 
       overflowY: 'auto',
-      background: '#1e1e1e'
+      background: 'var(--dt-bg-primary)'
     }}>
       <div style={{ marginBottom: '15px' }}>
-        <h4 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '13px' }}>
+        <h4 style={{ margin: '0 0 10px 0', color: 'var(--dt-border-focus)', fontSize: '13px' }}>
           Translation Keys {translations.length > 0 && `(${translations.length})`}
         </h4>
         
         {Object.keys(groupedTranslations).length > 1 && (
           <div style={{ 
             fontSize: '11px', 
-            color: '#969696',
+            color: 'var(--dt-text-secondary)',
             marginBottom: '10px'
           }}>
             Showing keys from {Object.keys(groupedTranslations).length} namespace(s)
@@ -116,10 +116,10 @@ export function KeyExplorer({
           <div style={{ 
             fontSize: '12px',
             fontWeight: '600',
-            color: '#4ec9b0',
+            color: 'var(--dt-status-success)',
             marginBottom: '10px',
             padding: '6px 0',
-            borderBottom: '1px solid #3c3c3c'
+            borderBottom: '1px solid var(--dt-border-primary)'
           }}>
             {namespace} ({Object.keys(keys).length} keys)
           </div>
@@ -161,7 +161,7 @@ export function KeyExplorer({
                     transition: 'all 0.2s ease'
                   }}
                 >
-                  <span style={{ fontSize: '10px', color: '#969696', minWidth: '12px' }}>
+                  <span style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', minWidth: '12px' }}>
                     {Object.keys(translationsByKey).length > 1 ? (isExpanded ? '▾' : '▸') : '•'}
                   </span>
                   
@@ -178,7 +178,7 @@ export function KeyExplorer({
                   
                   <span style={{ 
                     fontSize: '10px', 
-                    color: '#969696',
+                    color: 'var(--dt-text-secondary)',
                     background: '#2d2d30',
                     padding: '2px 6px',
                     borderRadius: '2px'
@@ -230,7 +230,7 @@ export function KeyExplorer({
                           </span>
                         </div>
                         
-                        <div style={{ color: '#969696', fontSize: '9px' }}>
+                        <div style={{ color: 'var(--dt-text-secondary)', fontSize: '9px' }}>
                           {translations.map(t => (
                             <div key={t.language} style={{ 
                               display: 'flex', 
@@ -263,7 +263,7 @@ export function KeyExplorer({
                       marginTop: '4px',
                       marginLeft: '32px',
                       fontSize: '10px',
-                      color: '#969696'
+                      color: 'var(--dt-text-secondary)'
                     }}
                   >
                     {Object.values(translationsByKey)[0].map(t => (
@@ -299,9 +299,9 @@ export function KeyExplorer({
           padding: '10px',
           background: '#2d2d30',
           borderRadius: '4px',
-          border: '1px solid #3c3c3c'
+          border: '1px solid var(--dt-border-primary)'
         }}>
-          <h5 style={{ margin: '0 0 8px 0', color: '#9cdcfe', fontSize: '11px' }}>
+          <h5 style={{ margin: '0 0 8px 0', color: 'var(--dt-border-focus)', fontSize: '11px' }}>
             Search Results ({searchResults.length})
           </h5>
           {searchResults.slice(0, 50).map(key => (
@@ -322,10 +322,10 @@ export function KeyExplorer({
                 alignItems: 'center'
               }}
             >
-              <span style={{ color: '#cccccc' }}>
+              <span style={{ color: 'var(--dt-text-primary)' }}>
                 {key.namespace}.{key.key}
               </span>
-              <span style={{ color: '#969696' }}>
+              <span style={{ color: 'var(--dt-text-secondary)' }}>
                 {key.usedAt.length} usage{key.usedAt.length !== 1 ? 's' : ''}
               </span>
             </div>
@@ -334,7 +334,7 @@ export function KeyExplorer({
           {searchResults.length > 50 && (
             <div style={{ 
               fontSize: '9px', 
-              color: '#969696', 
+              color: 'var(--dt-text-secondary)', 
               textAlign: 'center',
               marginTop: '6px'
             }}>

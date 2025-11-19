@@ -135,10 +135,10 @@ export function BundleAnalyzer({
     const maxSize = Math.max(...analysisData.map(d => d.size));
     const ratio = size / maxSize;
     
-    if (ratio > 0.8) return '#f48771';
-    if (ratio > 0.6) return '#d19a66';
-    if (ratio > 0.4) return '#e5c07b';
-    return '#4ec9b0';
+    if (ratio > 0.8) return 'var(--dt-status-error)';
+    if (ratio > 0.6) return 'var(--dt-status-warning)';
+    if (ratio > 0.4) return 'var(--dt-status-warning)';
+    return 'var(--dt-status-success)';
   };
 
   const renderTableView = () => (
@@ -149,26 +149,26 @@ export function BundleAnalyzer({
         fontSize: '11px'
       }}>
         <thead>
-          <tr style={{ background: '#252526' }}>
-            <th style={{ padding: '10px', textAlign: 'left', borderBottom: '1px solid #3c3c3c', color: '#9cdcfe', fontWeight: '600' }}>
+          <tr style={{ background: 'var(--dt-bg-tertiary)' }}>
+            <th style={{ padding: '10px', textAlign: 'left', borderBottom: '1px solid var(--dt-border-primary)', color: 'var(--dt-border-focus)', fontWeight: '600' }}>
               Namespace
             </th>
-            <th style={{ padding: '10px', textAlign: 'left', borderBottom: '1px solid #3c3c3c', color: '#9cdcfe', fontWeight: '600' }}>
+            <th style={{ padding: '10px', textAlign: 'left', borderBottom: '1px solid var(--dt-border-primary)', color: 'var(--dt-border-focus)', fontWeight: '600' }}>
               Language
             </th>
-            <th style={{ padding: '10px', textAlign: 'right', borderBottom: '1px solid #3c3c3c', color: '#9cdcfe', fontWeight: '600' }}>
+            <th style={{ padding: '10px', textAlign: 'right', borderBottom: '1px solid var(--dt-border-primary)', color: 'var(--dt-border-focus)', fontWeight: '600' }}>
               Size
             </th>
-            <th style={{ padding: '10px', textAlign: 'right', borderBottom: '1px solid #3c3c3c', color: '#9cdcfe', fontWeight: '600' }}>
+            <th style={{ padding: '10px', textAlign: 'right', borderBottom: '1px solid var(--dt-border-primary)', color: 'var(--dt-border-focus)', fontWeight: '600' }}>
               Keys
             </th>
-            <th style={{ padding: '10px', textAlign: 'right', borderBottom: '1px solid #3c3c3c', color: '#9cdcfe', fontWeight: '600' }}>
+            <th style={{ padding: '10px', textAlign: 'right', borderBottom: '1px solid var(--dt-border-primary)', color: 'var(--dt-border-focus)', fontWeight: '600' }}>
               Duplicates
             </th>
-            <th style={{ padding: '10px', textAlign: 'right', borderBottom: '1px solid #3c3c3c', color: '#9cdcfe', fontWeight: '600' }}>
+            <th style={{ padding: '10px', textAlign: 'right', borderBottom: '1px solid var(--dt-border-primary)', color: 'var(--dt-border-focus)', fontWeight: '600' }}>
               Unused
             </th>
-            <th style={{ padding: '10px', textAlign: 'right', borderBottom: '1px solid #3c3c3c', color: '#9cdcfe', fontWeight: '600' }}>
+            <th style={{ padding: '10px', textAlign: 'right', borderBottom: '1px solid var(--dt-border-primary)', color: 'var(--dt-border-focus)', fontWeight: '600' }}>
               Efficiency
             </th>
           </tr>
@@ -181,28 +181,28 @@ export function BundleAnalyzer({
               <tr key={`${item.namespace}-${item.language}`} style={{
                 background: index % 2 === 0 ? '#2a2a2a' : 'transparent'
               }}>
-                <td style={{ padding: '10px', borderBottom: '1px solid #3c3c3c', color: '#4ec9b0', fontWeight: '500' }}>
+                <td style={{ padding: '10px', borderBottom: '1px solid var(--dt-border-primary)', color: 'var(--dt-status-success)', fontWeight: '500' }}>
                   {item.namespace}
                 </td>
-                <td style={{ padding: '10px', borderBottom: '1px solid #3c3c3c', color: '#cccccc' }}>
+                <td style={{ padding: '10px', borderBottom: '1px solid var(--dt-border-primary)', color: 'var(--dt-text-primary)' }}>
                   {item.language.toUpperCase()}
                 </td>
                 <td style={{ 
                   padding: '10px', 
                   textAlign: 'right', 
-                  borderBottom: '1px solid #3c3c3c', 
+                  borderBottom: '1px solid var(--dt-border-primary)', 
                   color: getSizeColor(item.size),
                   fontWeight: '600'
                 }}>
                   {formatSize(item.size)}
                 </td>
-                <td style={{ padding: '10px', textAlign: 'right', borderBottom: '1px solid #3c3c3c', color: '#cccccc' }}>
+                <td style={{ padding: '10px', textAlign: 'right', borderBottom: '1px solid var(--dt-border-primary)', color: 'var(--dt-text-primary)' }}>
                   {item.keys.toLocaleString()}
                 </td>
                 <td style={{ 
                   padding: '10px', 
                   textAlign: 'right', 
-                  borderBottom: '1px solid #3c3c3c', 
+                  borderBottom: '1px solid var(--dt-border-primary)', 
                   color: (item.duplicates?.length || 0) > 0 ? '#d19a66' : '#969696'
                 }}>
                   {item.duplicates?.length || 0}
@@ -210,7 +210,7 @@ export function BundleAnalyzer({
                 <td style={{ 
                   padding: '10px', 
                   textAlign: 'right', 
-                  borderBottom: '1px solid #3c3c3c', 
+                  borderBottom: '1px solid var(--dt-border-primary)', 
                   color: (item.unusedKeys?.length || 0) > 0 ? '#f48771' : '#969696'
                 }}>
                   {item.unusedKeys?.length || 0}
@@ -218,7 +218,7 @@ export function BundleAnalyzer({
                 <td style={{ 
                   padding: '10px', 
                   textAlign: 'right', 
-                  borderBottom: '1px solid #3c3c3c', 
+                  borderBottom: '1px solid var(--dt-border-primary)', 
                   color: efficiency >= 90 ? '#4ec9b0' : efficiency >= 70 ? '#d19a66' : '#f48771',
                   fontWeight: '600'
                 }}>
@@ -236,12 +236,12 @@ export function BundleAnalyzer({
     <div style={{ display: 'grid', gap: '20px' }}>
       {/* Size comparison chart */}
       <div style={{
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         padding: '15px',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c'
+        border: '1px solid var(--dt-border-primary)'
       }}>
-        <h5 style={{ margin: '0 0 15px 0', color: '#9cdcfe', fontSize: '12px' }}>
+        <h5 style={{ margin: '0 0 15px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
           Bundle Size Comparison
         </h5>
         
@@ -259,7 +259,7 @@ export function BundleAnalyzer({
                 <div style={{ 
                   minWidth: '120px', 
                   fontSize: '10px', 
-                  color: '#cccccc'
+                  color: 'var(--dt-text-primary)'
                 }}>
                   {item.namespace}.{item.language}
                 </div>
@@ -294,7 +294,7 @@ export function BundleAnalyzer({
                 <div style={{ 
                   minWidth: '60px', 
                   fontSize: '9px', 
-                  color: '#969696',
+                  color: 'var(--dt-text-secondary)',
                   textAlign: 'right'
                 }}>
                   {item.keys} keys
@@ -307,12 +307,12 @@ export function BundleAnalyzer({
 
       {/* Issues breakdown */}
       <div style={{
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         padding: '15px',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c'
+        border: '1px solid var(--dt-border-primary)'
       }}>
-        <h5 style={{ margin: '0 0 15px 0', color: '#9cdcfe', fontSize: '12px' }}>
+        <h5 style={{ margin: '0 0 15px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
           Optimization Opportunities
         </h5>
         
@@ -321,15 +321,15 @@ export function BundleAnalyzer({
             background: '#2d2d30',
             padding: '12px',
             borderRadius: '3px',
-            border: '1px solid #3c3c3c'
+            border: '1px solid var(--dt-border-primary)'
           }}>
-            <div style={{ color: '#d19a66', fontSize: '11px', fontWeight: '600', marginBottom: '6px' }}>
+            <div style={{ color: 'var(--dt-status-warning)', fontSize: '11px', fontWeight: '600', marginBottom: '6px' }}>
               Duplicate Keys
             </div>
-            <div style={{ fontSize: '18px', fontWeight: '700', color: '#d19a66', marginBottom: '4px' }}>
+            <div style={{ fontSize: '18px', fontWeight: '700', color: 'var(--dt-status-warning)', marginBottom: '4px' }}>
               {totals.totalDuplicates}
             </div>
-            <div style={{ fontSize: '9px', color: '#969696' }}>
+            <div style={{ fontSize: '9px', color: 'var(--dt-text-secondary)' }}>
               Keys appearing in multiple bundles
             </div>
           </div>
@@ -338,15 +338,15 @@ export function BundleAnalyzer({
             background: '#2d2d30',
             padding: '12px',
             borderRadius: '3px',
-            border: '1px solid #3c3c3c'
+            border: '1px solid var(--dt-border-primary)'
           }}>
-            <div style={{ color: '#f48771', fontSize: '11px', fontWeight: '600', marginBottom: '6px' }}>
+            <div style={{ color: 'var(--dt-status-error)', fontSize: '11px', fontWeight: '600', marginBottom: '6px' }}>
               Unused Keys
             </div>
-            <div style={{ fontSize: '18px', fontWeight: '700', color: '#f48771', marginBottom: '4px' }}>
+            <div style={{ fontSize: '18px', fontWeight: '700', color: 'var(--dt-status-error)', marginBottom: '4px' }}>
               {totals.totalUnused}
             </div>
-            <div style={{ fontSize: '9px', color: '#969696' }}>
+            <div style={{ fontSize: '9px', color: 'var(--dt-text-secondary)' }}>
               Keys not referenced in code
             </div>
           </div>
@@ -355,15 +355,15 @@ export function BundleAnalyzer({
             background: '#2d2d30',
             padding: '12px',
             borderRadius: '3px',
-            border: '1px solid #3c3c3c'
+            border: '1px solid var(--dt-border-primary)'
           }}>
-            <div style={{ color: '#4ec9b0', fontSize: '11px', fontWeight: '600', marginBottom: '6px' }}>
+            <div style={{ color: 'var(--dt-status-success)', fontSize: '11px', fontWeight: '600', marginBottom: '6px' }}>
               Potential Savings
             </div>
-            <div style={{ fontSize: '18px', fontWeight: '700', color: '#4ec9b0', marginBottom: '4px' }}>
+            <div style={{ fontSize: '18px', fontWeight: '700', color: 'var(--dt-status-success)', marginBottom: '4px' }}>
               {formatSize((totals.totalDuplicates + totals.totalUnused) * 50)} {/* Rough estimate */}
             </div>
-            <div style={{ fontSize: '9px', color: '#969696' }}>
+            <div style={{ fontSize: '9px', color: 'var(--dt-text-secondary)' }}>
               Estimated reduction possible
             </div>
           </div>
@@ -374,13 +374,13 @@ export function BundleAnalyzer({
 
   const renderTreemapView = () => (
     <div style={{
-      background: '#252526',
+      background: 'var(--dt-bg-tertiary)',
       padding: '15px',
       borderRadius: '4px',
-      border: '1px solid #3c3c3c',
+      border: '1px solid var(--dt-border-primary)',
       minHeight: '400px'
     }}>
-      <h5 style={{ margin: '0 0 15px 0', color: '#9cdcfe', fontSize: '12px' }}>
+      <h5 style={{ margin: '0 0 15px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
         Bundle Size Treemap
       </h5>
       
@@ -421,13 +421,13 @@ export function BundleAnalyzer({
               }}
               title={`${item.namespace} - ${item.language}: ${formatSize(item.size)}`}
             >
-              <div style={{ fontSize: '10px', fontWeight: '600', color: '#ffffff', marginBottom: '2px' }}>
+              <div style={{ fontSize: '10px', fontWeight: '600', color: 'var(--dt-text-on-primary)', marginBottom: '2px' }}>
                 {item.namespace}
               </div>
-              <div style={{ fontSize: '8px', color: '#ffffff', opacity: 0.8, marginBottom: '4px' }}>
+              <div style={{ fontSize: '8px', color: 'var(--dt-text-on-primary)', opacity: 0.8, marginBottom: '4px' }}>
                 {item.language.toUpperCase()}
               </div>
-              <div style={{ fontSize: '9px', fontWeight: '700', color: '#ffffff' }}>
+              <div style={{ fontSize: '9px', fontWeight: '700', color: 'var(--dt-text-on-primary)' }}>
                 {formatSize(item.size)}
               </div>
               
@@ -455,11 +455,11 @@ export function BundleAnalyzer({
       padding: '15px',
       height: '100%',
       overflowY: 'auto',
-      background: '#1e1e1e'
+      background: 'var(--dt-bg-primary)'
     }}>
       {/* Header */}
       <div style={{ marginBottom: '20px' }}>
-        <h4 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '14px', fontWeight: '600' }}>
+        <h4 style={{ margin: '0 0 10px 0', color: 'var(--dt-border-focus)', fontSize: '14px', fontWeight: '600' }}>
           📦 Bundle Analysis
         </h4>
         
@@ -470,49 +470,49 @@ export function BundleAnalyzer({
           marginBottom: '15px'
         }}>
           <div style={{
-            background: '#252526',
+            background: 'var(--dt-bg-tertiary)',
             padding: '10px',
             borderRadius: '4px',
-            border: '1px solid #3c3c3c'
+            border: '1px solid var(--dt-border-primary)'
           }}>
-            <div style={{ fontSize: '10px', color: '#969696', marginBottom: '4px' }}>Total Size</div>
-            <div style={{ fontSize: '18px', fontWeight: '600', color: '#4ec9b0' }}>
+            <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginBottom: '4px' }}>Total Size</div>
+            <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--dt-status-success)' }}>
               {formatSize(totals.totalSize)}
             </div>
           </div>
           
           <div style={{
-            background: '#252526',
+            background: 'var(--dt-bg-tertiary)',
             padding: '10px',
             borderRadius: '4px',
-            border: '1px solid #3c3c3c'
+            border: '1px solid var(--dt-border-primary)'
           }}>
-            <div style={{ fontSize: '10px', color: '#969696', marginBottom: '4px' }}>Total Keys</div>
-            <div style={{ fontSize: '18px', fontWeight: '600', color: '#cccccc' }}>
+            <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginBottom: '4px' }}>Total Keys</div>
+            <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--dt-text-primary)' }}>
               {totals.totalKeys.toLocaleString()}
             </div>
           </div>
           
           <div style={{
-            background: '#252526',
+            background: 'var(--dt-bg-tertiary)',
             padding: '10px',
             borderRadius: '4px',
-            border: '1px solid #3c3c3c'
+            border: '1px solid var(--dt-border-primary)'
           }}>
-            <div style={{ fontSize: '10px', color: '#969696', marginBottom: '4px' }}>Issues</div>
-            <div style={{ fontSize: '18px', fontWeight: '600', color: '#f48771' }}>
+            <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginBottom: '4px' }}>Issues</div>
+            <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--dt-status-error)' }}>
               {totals.totalDuplicates + totals.totalUnused}
             </div>
           </div>
           
           <div style={{
-            background: '#252526',
+            background: 'var(--dt-bg-tertiary)',
             padding: '10px',
             borderRadius: '4px',
-            border: '1px solid #3c3c3c'
+            border: '1px solid var(--dt-border-primary)'
           }}>
-            <div style={{ fontSize: '10px', color: '#969696', marginBottom: '4px' }}>Bundles</div>
-            <div style={{ fontSize: '18px', fontWeight: '600', color: '#cccccc' }}>
+            <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginBottom: '4px' }}>Bundles</div>
+            <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--dt-text-primary)' }}>
               {analysisData.length}
             </div>
           </div>
@@ -523,9 +523,9 @@ export function BundleAnalyzer({
       <div style={{
         marginBottom: '20px',
         padding: '15px',
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c'
+        border: '1px solid var(--dt-border-primary)'
       }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '15px' }}>
           {/* Analysis button */}
@@ -536,7 +536,7 @@ export function BundleAnalyzer({
               style={{
                 padding: '10px 20px',
                 fontSize: '12px',
-                border: '1px solid #3c3c3c',
+                border: '1px solid var(--dt-border-primary)',
                 background: isLoading ? '#2d2d30' : '#007acc',
                 color: isLoading ? '#969696' : '#ffffff',
                 cursor: isLoading ? 'not-allowed' : 'pointer',
@@ -551,7 +551,7 @@ export function BundleAnalyzer({
           
           {/* View mode */}
           <div>
-            <div style={{ fontSize: '11px', color: '#9cdcfe', marginBottom: '6px' }}>View Mode:</div>
+            <div style={{ fontSize: '11px', color: 'var(--dt-border-focus)', marginBottom: '6px' }}>View Mode:</div>
             <div style={{ display: 'flex', gap: '6px' }}>
               {[
                 { id: 'table', label: 'Table', icon: '📋' },
@@ -564,7 +564,7 @@ export function BundleAnalyzer({
                   style={{
                     padding: '4px 8px',
                     fontSize: '10px',
-                    border: '1px solid #3c3c3c',
+                    border: '1px solid var(--dt-border-primary)',
                     background: viewMode === mode.id ? '#007acc' : '#2d2d30',
                     color: viewMode === mode.id ? '#ffffff' : '#cccccc',
                     cursor: 'pointer',
@@ -583,16 +583,16 @@ export function BundleAnalyzer({
           
           {/* Sort options */}
           <div>
-            <div style={{ fontSize: '11px', color: '#9cdcfe', marginBottom: '6px' }}>Sort By:</div>
+            <div style={{ fontSize: '11px', color: 'var(--dt-border-focus)', marginBottom: '6px' }}>Sort By:</div>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
               style={{
                 padding: '6px 10px',
                 borderRadius: '4px',
-                border: '1px solid #3c3c3c',
-                background: '#1e1e1e',
-                color: '#cccccc',
+                border: '1px solid var(--dt-border-primary)',
+                background: 'var(--dt-bg-primary)',
+                color: 'var(--dt-text-primary)',
                 fontSize: '11px',
                 width: '100%'
               }}
@@ -618,13 +618,13 @@ export function BundleAnalyzer({
       {/* Optimization suggestions */}
       {analysisData.length > 0 && (totals.totalDuplicates > 0 || totals.totalUnused > 0) && (
         <div style={{
-          background: '#252526',
+          background: 'var(--dt-bg-tertiary)',
           padding: '15px',
           borderRadius: '4px',
-          border: '1px solid #3c3c3c'
+          border: '1px solid var(--dt-border-primary)'
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <h5 style={{ margin: 0, color: '#9cdcfe', fontSize: '12px' }}>
+            <h5 style={{ margin: 0, color: 'var(--dt-border-focus)', fontSize: '12px' }}>
               💡 Optimization Recommendations
             </h5>
             <button
@@ -632,9 +632,9 @@ export function BundleAnalyzer({
               style={{
                 padding: '4px 8px',
                 fontSize: '10px',
-                border: '1px solid #3c3c3c',
+                border: '1px solid var(--dt-border-primary)',
                 background: '#2d2d30',
-                color: '#cccccc',
+                color: 'var(--dt-text-primary)',
                 cursor: 'pointer',
                 borderRadius: '2px'
               }}
@@ -652,10 +652,10 @@ export function BundleAnalyzer({
                   borderRadius: '3px',
                   border: '1px solid #d19a66'
                 }}>
-                  <div style={{ color: '#d19a66', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
+                  <div style={{ color: 'var(--dt-status-warning)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                     🔄 Remove Duplicate Keys ({totals.totalDuplicates})
                   </div>
-                  <div style={{ fontSize: '10px', color: '#cccccc', marginBottom: '6px' }}>
+                  <div style={{ fontSize: '10px', color: 'var(--dt-text-primary)', marginBottom: '6px' }}>
                     Consider consolidating duplicate translation keys across bundles to reduce redundancy.
                   </div>
                 </div>
@@ -668,10 +668,10 @@ export function BundleAnalyzer({
                   borderRadius: '3px',
                   border: '1px solid #f48771'
                 }}>
-                  <div style={{ color: '#f48771', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
+                  <div style={{ color: 'var(--dt-status-error)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                     🗑️ Remove Unused Keys ({totals.totalUnused})
                   </div>
-                  <div style={{ fontSize: '10px', color: '#cccccc', marginBottom: '6px' }}>
+                  <div style={{ fontSize: '10px', color: 'var(--dt-text-primary)', marginBottom: '6px' }}>
                     These keys are not referenced in your codebase and can be safely removed.
                   </div>
                 </div>
@@ -683,10 +683,10 @@ export function BundleAnalyzer({
                 borderRadius: '3px',
                 border: '1px solid #4ec9b0'
               }}>
-                <div style={{ color: '#4ec9b0', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
+                <div style={{ color: 'var(--dt-status-success)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                   ⚡ Enable Tree Shaking
                 </div>
-                <div style={{ fontSize: '10px', color: '#cccccc', marginBottom: '6px' }}>
+                <div style={{ fontSize: '10px', color: 'var(--dt-text-primary)', marginBottom: '6px' }}>
                   Configure your build process to only include translations that are actually used.
                 </div>
               </div>
@@ -698,7 +698,7 @@ export function BundleAnalyzer({
       {analysisData.length === 0 && !isLoading && (
         <div style={{
           textAlign: 'center',
-          color: '#969696',
+          color: 'var(--dt-text-secondary)',
           fontSize: '12px',
           marginTop: '40px'
         }}>

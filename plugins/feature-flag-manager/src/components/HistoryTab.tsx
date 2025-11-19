@@ -33,14 +33,14 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
 
   const getReasonColor = (reason: string) => {
     switch (reason) {
-      case 'default': return '#6b7280';
-      case 'override': return '#f59e0b';
-      case 'targeting': return '#8b5cf6';
-      case 'rollout': return '#3b82f6';
-      case 'variant': return '#ec4899';
-      case 'dependency': return '#ef4444';
-      case 'error': return '#dc2626';
-      default: return '#6b7280';
+      case 'default': return 'var(--dt-text-secondary)';
+      case 'override': return 'var(--dt-status-warning)';
+      case 'targeting': return 'var(--dt-text-accent)';
+      case 'rollout': return 'var(--dt-border-focus)';
+      case 'variant': return 'var(--dt-status-error)';
+      case 'dependency': return 'var(--dt-status-error)';
+      case 'error': return 'var(--dt-status-error)';
+      default: return 'var(--dt-text-secondary)';
     }
   };
 

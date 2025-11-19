@@ -65,27 +65,27 @@ export function PerformanceMetrics({
   const getPerformanceStatus = (metric: string, value: number): { status: 'good' | 'warning' | 'critical', color: string } => {
     switch (metric) {
       case 'initTime':
-        if (value < 50) return { status: 'good', color: '#4ec9b0' };
-        if (value < 200) return { status: 'warning', color: '#d19a66' };
-        return { status: 'critical', color: '#f48771' };
+        if (value < 50) return { status: 'good', color: 'var(--dt-status-success)' };
+        if (value < 200) return { status: 'warning', color: 'var(--dt-status-warning)' };
+        return { status: 'critical', color: 'var(--dt-status-error)' };
       
       case 'averageKeyLookupTime':
-        if (value < 1) return { status: 'good', color: '#4ec9b0' };
-        if (value < 5) return { status: 'warning', color: '#d19a66' };
-        return { status: 'critical', color: '#f48771' };
+        if (value < 1) return { status: 'good', color: 'var(--dt-status-success)' };
+        if (value < 5) return { status: 'warning', color: 'var(--dt-status-warning)' };
+        return { status: 'critical', color: 'var(--dt-status-error)' };
       
       case 'cacheHitRate':
-        if (value > 0.9) return { status: 'good', color: '#4ec9b0' };
-        if (value > 0.7) return { status: 'warning', color: '#d19a66' };
-        return { status: 'critical', color: '#f48771' };
+        if (value > 0.9) return { status: 'good', color: 'var(--dt-status-success)' };
+        if (value > 0.7) return { status: 'warning', color: 'var(--dt-status-warning)' };
+        return { status: 'critical', color: 'var(--dt-status-error)' };
       
       case 'memoryUsage':
-        if (value < 5 * 1024 * 1024) return { status: 'good', color: '#4ec9b0' };
-        if (value < 20 * 1024 * 1024) return { status: 'warning', color: '#d19a66' };
-        return { status: 'critical', color: '#f48771' };
+        if (value < 5 * 1024 * 1024) return { status: 'good', color: 'var(--dt-status-success)' };
+        if (value < 20 * 1024 * 1024) return { status: 'warning', color: 'var(--dt-status-warning)' };
+        return { status: 'critical', color: 'var(--dt-status-error)' };
       
       default:
-        return { status: 'good', color: '#cccccc' };
+        return { status: 'good', color: 'var(--dt-text-primary)' };
     }
   };
 
@@ -94,9 +94,9 @@ export function PerformanceMetrics({
       <div style={{
         padding: '40px',
         textAlign: 'center',
-        color: '#969696',
+        color: 'var(--dt-text-secondary)',
         fontSize: '12px',
-        background: '#1e1e1e',
+        background: 'var(--dt-bg-primary)',
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -116,7 +116,7 @@ export function PerformanceMetrics({
           style={{
             padding: '8px 16px',
             fontSize: '11px',
-            border: '1px solid #3c3c3c',
+            border: '1px solid var(--dt-border-primary)',
             background: isRefreshing ? '#2d2d30' : '#007acc',
             color: isRefreshing ? '#969696' : '#ffffff',
             cursor: isRefreshing ? 'not-allowed' : 'pointer',
@@ -135,12 +135,12 @@ export function PerformanceMetrics({
       padding: '15px',
       height: '100%',
       overflowY: 'auto',
-      background: '#1e1e1e'
+      background: 'var(--dt-bg-primary)'
     }}>
       {/* Header */}
       <div style={{ marginBottom: '20px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-          <h4 style={{ margin: 0, color: '#9cdcfe', fontSize: '14px', fontWeight: '600' }}>
+          <h4 style={{ margin: 0, color: 'var(--dt-border-focus)', fontSize: '14px', fontWeight: '600' }}>
             ⚡ Performance Metrics
           </h4>
           
@@ -151,9 +151,9 @@ export function PerformanceMetrics({
               style={{
                 padding: '4px 8px',
                 fontSize: '10px',
-                border: '1px solid #3c3c3c',
+                border: '1px solid var(--dt-border-primary)',
                 background: '#2d2d30',
-                color: '#cccccc',
+                color: 'var(--dt-text-primary)',
                 cursor: 'pointer',
                 borderRadius: '2px'
               }}
@@ -170,7 +170,7 @@ export function PerformanceMetrics({
               style={{
                 padding: '4px 8px',
                 fontSize: '10px',
-                border: '1px solid #3c3c3c',
+                border: '1px solid var(--dt-border-primary)',
                 background: isRefreshing ? '#2d2d30' : '#007acc',
                 color: isRefreshing ? '#969696' : '#ffffff',
                 cursor: isRefreshing ? 'not-allowed' : 'pointer',
@@ -182,7 +182,7 @@ export function PerformanceMetrics({
           </div>
         </div>
         
-        <div style={{ fontSize: '11px', color: '#969696' }}>
+        <div style={{ fontSize: '11px', color: 'var(--dt-text-secondary)' }}>
           Monitor i18n performance and identify optimization opportunities
         </div>
       </div>
@@ -231,7 +231,7 @@ export function PerformanceMetrics({
             <div
               key={metric.key}
               style={{
-                background: '#252526',
+                background: 'var(--dt-bg-tertiary)',
                 padding: '12px',
                 borderRadius: '4px',
                 border: '1px solid',
@@ -242,7 +242,7 @@ export function PerformanceMetrics({
               onClick={() => setShowDetails(showDetails === metric.key ? null : metric.key)}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                <div style={{ fontSize: '10px', color: '#9cdcfe', fontWeight: '600' }}>
+                <div style={{ fontSize: '10px', color: 'var(--dt-border-focus)', fontWeight: '600' }}>
                   {metric.label}
                 </div>
                 <div style={{
@@ -257,7 +257,7 @@ export function PerformanceMetrics({
                 {metric.value}
               </div>
               
-              <div style={{ fontSize: '9px', color: '#969696' }}>
+              <div style={{ fontSize: '9px', color: 'var(--dt-text-secondary)' }}>
                 {metric.description}
               </div>
               
@@ -268,7 +268,7 @@ export function PerformanceMetrics({
                   background: '#2d2d30', 
                   borderRadius: '2px',
                   fontSize: '9px',
-                  color: '#cccccc'
+                  color: 'var(--dt-text-primary)'
                 }}>
                   <div>Status: <span style={{ color: status.color, fontWeight: '600' }}>
                     {status.status.toUpperCase()}
@@ -290,13 +290,13 @@ export function PerformanceMetrics({
 
       {/* Translation activity */}
       <div style={{
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         padding: '15px',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c',
+        border: '1px solid var(--dt-border-primary)',
         marginBottom: '20px'
       }}>
-        <h5 style={{ margin: '0 0 15px 0', color: '#9cdcfe', fontSize: '12px' }}>
+        <h5 style={{ margin: '0 0 15px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
           Translation Activity
         </h5>
         
@@ -307,10 +307,10 @@ export function PerformanceMetrics({
             borderRadius: '3px',
             textAlign: 'center'
           }}>
-            <div style={{ fontSize: '16px', fontWeight: '700', color: '#4ec9b0', marginBottom: '4px' }}>
+            <div style={{ fontSize: '16px', fontWeight: '700', color: 'var(--dt-status-success)', marginBottom: '4px' }}>
               {formatTime(metrics.translationTime)}
             </div>
-            <div style={{ fontSize: '9px', color: '#969696' }}>
+            <div style={{ fontSize: '9px', color: 'var(--dt-text-secondary)' }}>
               Total Translation Time
             </div>
           </div>
@@ -321,10 +321,10 @@ export function PerformanceMetrics({
             borderRadius: '3px',
             textAlign: 'center'
           }}>
-            <div style={{ fontSize: '16px', fontWeight: '700', color: '#f48771', marginBottom: '4px' }}>
+            <div style={{ fontSize: '16px', fontWeight: '700', color: 'var(--dt-status-error)', marginBottom: '4px' }}>
               {metrics.missedTranslationsCount.toLocaleString()}
             </div>
-            <div style={{ fontSize: '9px', color: '#969696' }}>
+            <div style={{ fontSize: '9px', color: 'var(--dt-text-secondary)' }}>
               Missed Translations
             </div>
           </div>
@@ -333,13 +333,13 @@ export function PerformanceMetrics({
 
       {/* Bundle load times */}
       <div style={{
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         padding: '15px',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c',
+        border: '1px solid var(--dt-border-primary)',
         marginBottom: '20px'
       }}>
-        <h5 style={{ margin: '0 0 15px 0', color: '#9cdcfe', fontSize: '12px' }}>
+        <h5 style={{ margin: '0 0 15px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
           Bundle Load Performance
         </h5>
         
@@ -355,7 +355,7 @@ export function PerformanceMetrics({
                 
                 return (
                   <div key={namespace} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div style={{ minWidth: '80px', fontSize: '10px', color: '#4ec9b0', fontWeight: '500' }}>
+                    <div style={{ minWidth: '80px', fontSize: '10px', color: 'var(--dt-status-success)', fontWeight: '500' }}>
                       {namespace}
                     </div>
                     
@@ -390,7 +390,7 @@ export function PerformanceMetrics({
               })}
           </div>
         ) : (
-          <div style={{ textAlign: 'center', color: '#969696', fontSize: '10px', padding: '20px' }}>
+          <div style={{ textAlign: 'center', color: 'var(--dt-text-secondary)', fontSize: '10px', padding: '20px' }}>
             No bundle load time data available
           </div>
         )}
@@ -398,12 +398,12 @@ export function PerformanceMetrics({
 
       {/* Performance recommendations */}
       <div style={{
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         padding: '15px',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c'
+        border: '1px solid var(--dt-border-primary)'
       }}>
-        <h5 style={{ margin: '0 0 15px 0', color: '#9cdcfe', fontSize: '12px' }}>
+        <h5 style={{ margin: '0 0 15px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
           💡 Performance Recommendations
         </h5>
         
@@ -416,10 +416,10 @@ export function PerformanceMetrics({
               borderRadius: '3px',
               border: '1px solid #f48771'
             }}>
-              <div style={{ color: '#f48771', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
+              <div style={{ color: 'var(--dt-status-error)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                 🐌 Slow Initialization ({formatTime(metrics.initTime)})
               </div>
-              <div style={{ fontSize: '10px', color: '#cccccc' }}>
+              <div style={{ fontSize: '10px', color: 'var(--dt-text-primary)' }}>
                 Consider lazy loading translations or reducing the initial bundle size.
               </div>
             </div>
@@ -433,10 +433,10 @@ export function PerformanceMetrics({
               borderRadius: '3px',
               border: '1px solid #d19a66'
             }}>
-              <div style={{ color: '#d19a66', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
+              <div style={{ color: 'var(--dt-status-warning)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                 📦 Low Cache Hit Rate ({formatPercentage(metrics.cacheHitRate)})
               </div>
-              <div style={{ fontSize: '10px', color: '#cccccc' }}>
+              <div style={{ fontSize: '10px', color: 'var(--dt-text-primary)' }}>
                 Optimize caching strategy or increase cache size to improve performance.
               </div>
             </div>
@@ -450,10 +450,10 @@ export function PerformanceMetrics({
               borderRadius: '3px',
               border: '1px solid #d19a66'
             }}>
-              <div style={{ color: '#d19a66', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
+              <div style={{ color: 'var(--dt-status-warning)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                 🧠 High Memory Usage ({formatBytes(metrics.memoryUsage)})
               </div>
-              <div style={{ fontSize: '10px', color: '#cccccc' }}>
+              <div style={{ fontSize: '10px', color: 'var(--dt-text-primary)' }}>
                 Consider implementing more aggressive garbage collection or reducing bundle sizes.
               </div>
             </div>
@@ -467,10 +467,10 @@ export function PerformanceMetrics({
               borderRadius: '3px',
               border: '1px solid #f48771'
             }}>
-              <div style={{ color: '#f48771', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
+              <div style={{ color: 'var(--dt-status-error)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                 ❌ High Miss Rate ({metrics.missedTranslationsCount} misses)
               </div>
-              <div style={{ fontSize: '10px', color: '#cccccc' }}>
+              <div style={{ fontSize: '10px', color: 'var(--dt-text-primary)' }}>
                 Review missing translation keys to improve user experience and reduce fallbacks.
               </div>
             </div>
@@ -484,10 +484,10 @@ export function PerformanceMetrics({
               borderRadius: '3px',
               border: '1px solid #4ec9b0'
             }}>
-              <div style={{ color: '#4ec9b0', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
+              <div style={{ color: 'var(--dt-status-success)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                 ✅ Excellent Performance
               </div>
-              <div style={{ fontSize: '10px', color: '#cccccc' }}>
+              <div style={{ fontSize: '10px', color: 'var(--dt-text-primary)' }}>
                 Your i18n system is performing optimally across all key metrics.
               </div>
             </div>
@@ -499,13 +499,13 @@ export function PerformanceMetrics({
       <div style={{
         marginTop: '20px',
         padding: '12px',
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c',
+        border: '1px solid var(--dt-border-primary)',
         fontSize: '9px',
-        color: '#969696'
+        color: 'var(--dt-text-secondary)'
       }}>
-        <div style={{ marginBottom: '6px', color: '#9cdcfe', fontWeight: '600' }}>
+        <div style={{ marginBottom: '6px', color: 'var(--dt-border-focus)', fontWeight: '600' }}>
           Technical Details:
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px' }}>

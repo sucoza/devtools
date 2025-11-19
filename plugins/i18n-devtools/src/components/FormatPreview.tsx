@@ -322,14 +322,14 @@ export function FormatPreview({
       padding: '15px',
       height: '100%',
       overflowY: 'auto',
-      background: '#1e1e1e'
+      background: 'var(--dt-bg-primary)'
     }}>
       {/* Header */}
       <div style={{ marginBottom: '20px' }}>
-        <h4 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '14px', fontWeight: '600' }}>
+        <h4 style={{ margin: '0 0 10px 0', color: 'var(--dt-border-focus)', fontSize: '14px', fontWeight: '600' }}>
           🎨 Format Preview
         </h4>
-        <div style={{ fontSize: '11px', color: '#969696' }}>
+        <div style={{ fontSize: '11px', color: 'var(--dt-text-secondary)' }}>
           Test how dates, numbers, currency, and pluralization are formatted across different languages
         </div>
       </div>
@@ -343,12 +343,12 @@ export function FormatPreview({
       }}>
         {/* Format Type Selection */}
         <div style={{
-          background: '#252526',
+          background: 'var(--dt-bg-tertiary)',
           padding: '15px',
           borderRadius: '4px',
-          border: '1px solid #3c3c3c'
+          border: '1px solid var(--dt-border-primary)'
         }}>
-          <h5 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '12px' }}>
+          <h5 style={{ margin: '0 0 10px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
             Format Type
           </h5>
           
@@ -366,7 +366,7 @@ export function FormatPreview({
                 style={{
                   padding: '8px 10px',
                   fontSize: '11px',
-                  border: '1px solid #3c3c3c',
+                  border: '1px solid var(--dt-border-primary)',
                   background: formatType === item.type ? '#007acc' : '#2d2d30',
                   color: formatType === item.type ? '#ffffff' : '#cccccc',
                   cursor: 'pointer',
@@ -385,12 +385,12 @@ export function FormatPreview({
 
         {/* Language Selection */}
         <div style={{
-          background: '#252526',
+          background: 'var(--dt-bg-tertiary)',
           padding: '15px',
           borderRadius: '4px',
-          border: '1px solid #3c3c3c'
+          border: '1px solid var(--dt-border-primary)'
         }}>
-          <h5 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '12px' }}>
+          <h5 style={{ margin: '0 0 10px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
             Languages ({selectedLanguages.length})
           </h5>
           
@@ -408,7 +408,7 @@ export function FormatPreview({
                 style={{
                   padding: '4px 8px',
                   fontSize: '10px',
-                  border: '1px solid #3c3c3c',
+                  border: '1px solid var(--dt-border-primary)',
                   background: selectedLanguages.includes(lang.code) ? '#007acc' : '#2d2d30',
                   color: selectedLanguages.includes(lang.code) ? '#ffffff' : '#cccccc',
                   cursor: 'pointer',
@@ -427,9 +427,9 @@ export function FormatPreview({
               style={{
                 padding: '4px 8px',
                 fontSize: '10px',
-                border: '1px solid #3c3c3c',
+                border: '1px solid var(--dt-border-primary)',
                 background: '#2d2d30',
-                color: '#cccccc',
+                color: 'var(--dt-text-primary)',
                 cursor: 'pointer',
                 borderRadius: '2px'
               }}
@@ -441,9 +441,9 @@ export function FormatPreview({
               style={{
                 padding: '4px 8px',
                 fontSize: '10px',
-                border: '1px solid #3c3c3c',
+                border: '1px solid var(--dt-border-primary)',
                 background: '#2d2d30',
-                color: '#cccccc',
+                color: 'var(--dt-text-primary)',
                 cursor: 'pointer',
                 borderRadius: '2px'
               }}
@@ -463,12 +463,12 @@ export function FormatPreview({
       }}>
         {/* Custom Value Input */}
         <div style={{
-          background: '#252526',
+          background: 'var(--dt-bg-tertiary)',
           padding: '15px',
           borderRadius: '4px',
-          border: '1px solid #3c3c3c'
+          border: '1px solid var(--dt-border-primary)'
         }}>
-          <h5 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '12px' }}>
+          <h5 style={{ margin: '0 0 10px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
             Input Value
           </h5>
           
@@ -481,15 +481,15 @@ export function FormatPreview({
               width: '100%',
               padding: '8px 10px',
               borderRadius: '3px',
-              border: '1px solid #3c3c3c',
-              background: '#1e1e1e',
-              color: '#cccccc',
+              border: '1px solid var(--dt-border-primary)',
+              background: 'var(--dt-bg-primary)',
+              color: 'var(--dt-text-primary)',
               fontSize: '11px',
               marginBottom: '10px'
             }}
           />
           
-          <div style={{ fontSize: '10px', color: '#969696', marginBottom: '8px' }}>
+          <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginBottom: '8px' }}>
             Presets:
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
@@ -500,9 +500,9 @@ export function FormatPreview({
                 style={{
                   padding: '3px 6px',
                   fontSize: '9px',
-                  border: '1px solid #3c3c3c',
+                  border: '1px solid var(--dt-border-primary)',
                   background: '#2d2d30',
-                  color: '#cccccc',
+                  color: 'var(--dt-text-primary)',
                   cursor: 'pointer',
                   borderRadius: '2px'
                 }}
@@ -515,12 +515,12 @@ export function FormatPreview({
 
         {/* Format Options */}
         <div style={{
-          background: '#252526',
+          background: 'var(--dt-bg-tertiary)',
           padding: '15px',
           borderRadius: '4px',
-          border: '1px solid #3c3c3c'
+          border: '1px solid var(--dt-border-primary)'
         }}>
-          <h5 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '12px' }}>
+          <h5 style={{ margin: '0 0 10px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
             Format Options (JSON)
           </h5>
           
@@ -534,16 +534,16 @@ export function FormatPreview({
               resize: 'vertical',
               padding: '8px',
               borderRadius: '3px',
-              border: '1px solid #3c3c3c',
-              background: '#1e1e1e',
-              color: '#cccccc',
+              border: '1px solid var(--dt-border-primary)',
+              background: 'var(--dt-bg-primary)',
+              color: 'var(--dt-text-primary)',
               fontSize: '10px',
               fontFamily: 'monospace',
               lineHeight: '1.4'
             }}
           />
           
-          <div style={{ fontSize: '9px', color: '#969696', marginTop: '6px' }}>
+          <div style={{ fontSize: '9px', color: 'var(--dt-text-secondary)', marginTop: '6px' }}>
             See Intl.{formatType === 'date' ? 'DateTimeFormat' : formatType === 'currency' || formatType === 'number' ? 'NumberFormat' : 'PluralRules'} options
           </div>
         </div>
@@ -561,7 +561,7 @@ export function FormatPreview({
           style={{
             padding: '10px 20px',
             fontSize: '12px',
-            border: '1px solid #3c3c3c',
+            border: '1px solid var(--dt-border-primary)',
             background: isLoading ? '#2d2d30' : '#007acc',
             color: isLoading ? '#969696' : '#ffffff',
             cursor: isLoading ? 'not-allowed' : 'pointer',
@@ -577,12 +577,12 @@ export function FormatPreview({
       {/* Results */}
       {examples.length > 0 && (
         <div style={{
-          background: '#252526',
+          background: 'var(--dt-bg-tertiary)',
           padding: '15px',
           borderRadius: '4px',
-          border: '1px solid #3c3c3c'
+          border: '1px solid var(--dt-border-primary)'
         }}>
-          <h5 style={{ margin: '0 0 15px 0', color: '#9cdcfe', fontSize: '12px' }}>
+          <h5 style={{ margin: '0 0 15px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
             Format Results
           </h5>
           
@@ -598,13 +598,13 @@ export function FormatPreview({
                   padding: '10px',
                   background: '#2d2d30',
                   borderRadius: '3px',
-                  border: '1px solid #3c3c3c'
+                  border: '1px solid var(--dt-border-primary)'
                 }}
               >
                 <div style={{
                   fontSize: '11px',
                   fontWeight: '600',
-                  color: '#4ec9b0',
+                  color: 'var(--dt-status-success)',
                   textTransform: 'uppercase'
                 }}>
                   {example.locale}
@@ -612,7 +612,7 @@ export function FormatPreview({
                 
                 <div style={{
                   fontSize: '12px',
-                  color: '#cccccc',
+                  color: 'var(--dt-text-primary)',
                   fontFamily: formatType === 'date' || formatType === 'number' || formatType === 'currency' ? 'inherit' : 'monospace',
                   wordBreak: 'break-all'
                 }}>
@@ -621,7 +621,7 @@ export function FormatPreview({
                 
                 <div style={{
                   fontSize: '10px',
-                  color: '#969696',
+                  color: 'var(--dt-text-secondary)',
                   textAlign: 'right'
                 }}>
                   {typeof example.input === 'string' ? example.input.substring(0, 20) : String(example.input).substring(0, 20)}
@@ -640,9 +640,9 @@ export function FormatPreview({
               style={{
                 padding: '6px 12px',
                 fontSize: '10px',
-                border: '1px solid #3c3c3c',
+                border: '1px solid var(--dt-border-primary)',
                 background: '#2d2d30',
-                color: '#cccccc',
+                color: 'var(--dt-text-primary)',
                 cursor: 'pointer',
                 borderRadius: '2px'
               }}
@@ -657,21 +657,21 @@ export function FormatPreview({
       <div style={{
         marginTop: '20px',
         padding: '15px',
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c',
+        border: '1px solid var(--dt-border-primary)',
         fontSize: '10px',
-        color: '#969696'
+        color: 'var(--dt-text-secondary)'
       }}>
-        <div style={{ marginBottom: '8px', color: '#9cdcfe', fontWeight: '600' }}>
+        <div style={{ marginBottom: '8px', color: 'var(--dt-border-focus)', fontWeight: '600' }}>
           💡 Format Type Guide:
         </div>
         <div style={{ display: 'grid', gap: '6px' }}>
-          <div><strong style={{ color: '#d19a66' }}>Date:</strong> ISO strings or timestamps (e.g., &ldquo;2024-03-15T14:30:00.000Z&rdquo;)</div>
-          <div><strong style={{ color: '#d19a66' }}>Number:</strong> Decimal numbers (e.g., &ldquo;1234567.89&rdquo;)</div>
-          <div><strong style={{ color: '#d19a66' }}>Currency:</strong> Numeric amounts (e.g., &ldquo;1234.56&rdquo;)</div>
-          <div><strong style={{ color: '#d19a66' }}>Plural:</strong> Integer counts (e.g., &ldquo;0&rdquo;, &ldquo;1&rdquo;, &ldquo;5&rdquo;)</div>
-          <div><strong style={{ color: '#d19a66' }}>Ordinal:</strong> Position numbers (e.g., &ldquo;1&rdquo;, &ldquo;22&rdquo;, &ldquo;103&rdquo;)</div>
+          <div><strong style={{ color: 'var(--dt-status-warning)' }}>Date:</strong> ISO strings or timestamps (e.g., &ldquo;2024-03-15T14:30:00.000Z&rdquo;)</div>
+          <div><strong style={{ color: 'var(--dt-status-warning)' }}>Number:</strong> Decimal numbers (e.g., &ldquo;1234567.89&rdquo;)</div>
+          <div><strong style={{ color: 'var(--dt-status-warning)' }}>Currency:</strong> Numeric amounts (e.g., &ldquo;1234.56&rdquo;)</div>
+          <div><strong style={{ color: 'var(--dt-status-warning)' }}>Plural:</strong> Integer counts (e.g., &ldquo;0&rdquo;, &ldquo;1&rdquo;, &ldquo;5&rdquo;)</div>
+          <div><strong style={{ color: 'var(--dt-status-warning)' }}>Ordinal:</strong> Position numbers (e.g., &ldquo;1&rdquo;, &ldquo;22&rdquo;, &ldquo;103&rdquo;)</div>
         </div>
       </div>
     </div>

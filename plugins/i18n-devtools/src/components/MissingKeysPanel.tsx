@@ -79,9 +79,9 @@ export function MissingKeysPanel({
   };
 
   const getUsagePriorityColor = (usageCount: number): string => {
-    if (usageCount >= 10) return '#f48771'; // High priority - red
-    if (usageCount >= 5) return '#d19a66';  // Medium priority - orange
-    if (usageCount >= 1) return '#e5c07b';  // Low priority - yellow
+    if (usageCount >= 10) return 'var(--dt-status-error)'; // High priority - red
+    if (usageCount >= 5) return 'var(--dt-status-warning)';  // Medium priority - orange
+    if (usageCount >= 1) return 'var(--dt-status-warning)';  // Low priority - yellow
     return '#969696'; // Never used - gray
   };
 
@@ -113,9 +113,9 @@ export function MissingKeysPanel({
       <div style={{
         padding: '40px',
         textAlign: 'center',
-        color: '#4ec9b0',
+        color: 'var(--dt-status-success)',
         fontSize: '14px',
-        background: '#1e1e1e',
+        background: 'var(--dt-bg-primary)',
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -126,7 +126,7 @@ export function MissingKeysPanel({
         <div style={{ fontWeight: '600', marginBottom: '10px' }}>
           All translations complete!
         </div>
-        <div style={{ color: '#969696', fontSize: '12px' }}>
+        <div style={{ color: 'var(--dt-text-secondary)', fontSize: '12px' }}>
           No missing translation keys detected
         </div>
       </div>
@@ -138,11 +138,11 @@ export function MissingKeysPanel({
       padding: '15px',
       height: '100%',
       overflowY: 'auto',
-      background: '#1e1e1e'
+      background: 'var(--dt-bg-primary)'
     }}>
       {/* Header with stats */}
       <div style={{ marginBottom: '20px' }}>
-        <h4 style={{ margin: '0 0 10px 0', color: '#f48771', fontSize: '14px', fontWeight: '600' }}>
+        <h4 style={{ margin: '0 0 10px 0', color: 'var(--dt-status-error)', fontSize: '14px', fontWeight: '600' }}>
           ❌ Missing Translation Keys
         </h4>
         
@@ -158,40 +158,40 @@ export function MissingKeysPanel({
             padding: '10px',
             borderRadius: '4px'
           }}>
-            <div style={{ fontSize: '10px', color: '#f48771', marginBottom: '4px' }}>Total Missing</div>
-            <div style={{ fontSize: '18px', fontWeight: '600', color: '#ffffff' }}>{missingKeys.length}</div>
+            <div style={{ fontSize: '10px', color: 'var(--dt-status-error)', marginBottom: '4px' }}>Total Missing</div>
+            <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--dt-text-on-primary)' }}>{missingKeys.length}</div>
           </div>
           
           <div style={{
-            background: '#252526',
-            border: '1px solid #3c3c3c',
+            background: 'var(--dt-bg-tertiary)',
+            border: '1px solid var(--dt-border-primary)',
             padding: '10px',
             borderRadius: '4px'
           }}>
-            <div style={{ fontSize: '10px', color: '#969696', marginBottom: '4px' }}>Namespaces</div>
-            <div style={{ fontSize: '18px', fontWeight: '600', color: '#cccccc' }}>{namespaces.length}</div>
+            <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginBottom: '4px' }}>Namespaces</div>
+            <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--dt-text-primary)' }}>{namespaces.length}</div>
           </div>
           
           <div style={{
-            background: '#252526',
-            border: '1px solid #3c3c3c',
+            background: 'var(--dt-bg-tertiary)',
+            border: '1px solid var(--dt-border-primary)',
             padding: '10px',
             borderRadius: '4px'
           }}>
-            <div style={{ fontSize: '10px', color: '#969696', marginBottom: '4px' }}>High Priority</div>
-            <div style={{ fontSize: '18px', fontWeight: '600', color: '#f48771' }}>
+            <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginBottom: '4px' }}>High Priority</div>
+            <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--dt-status-error)' }}>
               {missingKeys.filter(k => k.usedAt.length >= 10).length}
             </div>
           </div>
           
           <div style={{
-            background: '#252526',
-            border: '1px solid #3c3c3c',
+            background: 'var(--dt-bg-tertiary)',
+            border: '1px solid var(--dt-border-primary)',
             padding: '10px',
             borderRadius: '4px'
           }}>
-            <div style={{ fontSize: '10px', color: '#969696', marginBottom: '4px' }}>Never Used</div>
-            <div style={{ fontSize: '18px', fontWeight: '600', color: '#969696' }}>
+            <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginBottom: '4px' }}>Never Used</div>
+            <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--dt-text-secondary)' }}>
               {missingKeys.filter(k => k.usedAt.length === 0).length}
             </div>
           </div>
@@ -202,9 +202,9 @@ export function MissingKeysPanel({
       <div style={{
         marginBottom: '20px',
         padding: '15px',
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c'
+        border: '1px solid var(--dt-border-primary)'
       }}>
         <div style={{
           display: 'flex',
@@ -223,9 +223,9 @@ export function MissingKeysPanel({
               minWidth: '150px',
               padding: '6px 10px',
               borderRadius: '4px',
-              border: '1px solid #3c3c3c',
-              background: '#1e1e1e',
-              color: '#cccccc',
+              border: '1px solid var(--dt-border-primary)',
+              background: 'var(--dt-bg-primary)',
+              color: 'var(--dt-text-primary)',
               fontSize: '12px'
             }}
           />
@@ -236,9 +236,9 @@ export function MissingKeysPanel({
             style={{
               padding: '6px 10px',
               borderRadius: '4px',
-              border: '1px solid #3c3c3c',
-              background: '#1e1e1e',
-              color: '#cccccc',
+              border: '1px solid var(--dt-border-primary)',
+              background: 'var(--dt-bg-primary)',
+              color: 'var(--dt-text-primary)',
               fontSize: '11px'
             }}
           >
@@ -256,9 +256,9 @@ export function MissingKeysPanel({
             style={{
               padding: '6px 10px',
               borderRadius: '4px',
-              border: '1px solid #3c3c3c',
-              background: '#1e1e1e',
-              color: '#cccccc',
+              border: '1px solid var(--dt-border-primary)',
+              background: 'var(--dt-bg-primary)',
+              color: 'var(--dt-text-primary)',
               fontSize: '11px'
             }}
           >
@@ -269,7 +269,7 @@ export function MissingKeysPanel({
           </select>
         </div>
         
-        <div style={{ fontSize: '10px', color: '#969696' }}>
+        <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)' }}>
           Showing {processedMissingKeys.length} of {missingKeys.length} missing keys
         </div>
       </div>
@@ -278,11 +278,11 @@ export function MissingKeysPanel({
       <div style={{
         marginBottom: '20px',
         padding: '15px',
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c'
+        border: '1px solid var(--dt-border-primary)'
       }}>
-        <h5 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '12px' }}>
+        <h5 style={{ margin: '0 0 10px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
           Missing Keys by Namespace
         </h5>
         
@@ -308,10 +308,10 @@ export function MissingKeysPanel({
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#4ec9b0', fontWeight: '500', fontSize: '11px' }}>
+                  <span style={{ color: 'var(--dt-status-success)', fontWeight: '500', fontSize: '11px' }}>
                     {namespace}
                   </span>
-                  <span style={{ color: '#f48771', fontWeight: '600', fontSize: '11px' }}>
+                  <span style={{ color: 'var(--dt-status-error)', fontWeight: '600', fontSize: '11px' }}>
                     {keys.length}
                   </span>
                 </div>
@@ -323,16 +323,16 @@ export function MissingKeysPanel({
                   fontSize: '9px'
                 }}>
                   {highPriorityCount > 0 && (
-                    <span style={{ color: '#f48771' }}>🔴 {highPriorityCount}</span>
+                    <span style={{ color: 'var(--dt-status-error)' }}>🔴 {highPriorityCount}</span>
                   )}
                   {mediumPriorityCount > 0 && (
-                    <span style={{ color: '#d19a66' }}>🟡 {mediumPriorityCount}</span>
+                    <span style={{ color: 'var(--dt-status-warning)' }}>🟡 {mediumPriorityCount}</span>
                   )}
                   {lowPriorityCount > 0 && (
-                    <span style={{ color: '#e5c07b' }}>🟢 {lowPriorityCount}</span>
+                    <span style={{ color: 'var(--dt-status-warning)' }}>🟢 {lowPriorityCount}</span>
                   )}
                   {unusedCount > 0 && (
-                    <span style={{ color: '#969696' }}>⚫ {unusedCount}</span>
+                    <span style={{ color: 'var(--dt-text-secondary)' }}>⚫ {unusedCount}</span>
                   )}
                 </div>
               </div>
@@ -343,7 +343,7 @@ export function MissingKeysPanel({
 
       {/* Missing keys list */}
       <div style={{ marginBottom: '20px' }}>
-        <h5 style={{ margin: '0 0 15px 0', color: '#9cdcfe', fontSize: '12px' }}>
+        <h5 style={{ margin: '0 0 15px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
           Missing Keys ({processedMissingKeys.length})
         </h5>
         
@@ -358,8 +358,8 @@ export function MissingKeysPanel({
               key={keyId}
               style={{
                 marginBottom: '8px',
-                background: '#252526',
-                border: '1px solid #3c3c3c',
+                background: 'var(--dt-bg-tertiary)',
+                border: '1px solid var(--dt-border-primary)',
                 borderRadius: '4px',
                 overflow: 'hidden'
               }}
@@ -377,7 +377,7 @@ export function MissingKeysPanel({
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
-                  <span style={{ fontSize: '10px', color: '#969696', minWidth: '12px' }}>
+                  <span style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', minWidth: '12px' }}>
                     {isExpanded ? '▾' : '▸'}
                   </span>
                   
@@ -385,7 +385,7 @@ export function MissingKeysPanel({
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
                       <span style={{
                         background: priorityColor,
-                        color: '#ffffff',
+                        color: 'var(--dt-text-on-primary)',
                         padding: '1px 4px',
                         borderRadius: '2px',
                         fontSize: '8px',
@@ -394,23 +394,23 @@ export function MissingKeysPanel({
                         {priorityLabel}
                       </span>
                       
-                      <span style={{ color: '#f48771', fontWeight: '600', fontSize: '11px' }}>
+                      <span style={{ color: 'var(--dt-status-error)', fontWeight: '600', fontSize: '11px' }}>
                         {key.key}
                       </span>
                     </div>
                     
-                    <div style={{ fontSize: '9px', color: '#969696' }}>
+                    <div style={{ fontSize: '9px', color: 'var(--dt-text-secondary)' }}>
                       {key.namespace}
                     </div>
                   </div>
                 </div>
                 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', fontSize: '10px' }}>
-                  <span style={{ color: '#969696' }}>
+                  <span style={{ color: 'var(--dt-text-secondary)' }}>
                     {key.usedAt.length} usage{key.usedAt.length !== 1 ? 's' : ''}
                   </span>
                   
-                  <span style={{ color: '#969696' }}>
+                  <span style={{ color: 'var(--dt-text-secondary)' }}>
                     {formatLastUsed(key.lastUsed || 0)}
                   </span>
                   
@@ -422,7 +422,7 @@ export function MissingKeysPanel({
                     style={{
                       background: '#007acc',
                       border: 'none',
-                      color: '#ffffff',
+                      color: 'var(--dt-text-on-primary)',
                       padding: '3px 8px',
                       borderRadius: '2px',
                       fontSize: '9px',
@@ -436,21 +436,21 @@ export function MissingKeysPanel({
               
               {/* Expanded details */}
               {isExpanded && (
-                <div style={{ padding: '12px', borderTop: '1px solid #3c3c3c' }}>
+                <div style={{ padding: '12px', borderTop: '1px solid var(--dt-border-primary)' }}>
                   {/* Default value */}
                   {key.defaultValue && (
                     <div style={{ marginBottom: '10px' }}>
-                      <div style={{ fontSize: '10px', color: '#9cdcfe', marginBottom: '4px' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--dt-border-focus)', marginBottom: '4px' }}>
                         Default Value:
                       </div>
                       <div style={{
-                        background: '#1e1e1e',
+                        background: 'var(--dt-bg-primary)',
                         padding: '6px 8px',
                         borderRadius: '2px',
                         fontSize: '11px',
-                        color: '#cccccc',
+                        color: 'var(--dt-text-primary)',
                         fontFamily: 'monospace',
-                        border: '1px solid #3c3c3c'
+                        border: '1px solid var(--dt-border-primary)'
                       }}>
                         &ldquo;{key.defaultValue}&rdquo;
                       </div>
@@ -460,10 +460,10 @@ export function MissingKeysPanel({
                   {/* Interpolation values */}
                   {key.interpolation && Object.keys(key.interpolation).length > 0 && (
                     <div style={{ marginBottom: '10px' }}>
-                      <div style={{ fontSize: '10px', color: '#9cdcfe', marginBottom: '4px' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--dt-border-focus)', marginBottom: '4px' }}>
                         Expected Variables:
                       </div>
-                      <div style={{ fontSize: '10px', color: '#d19a66' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--dt-status-warning)' }}>
                         {Object.keys(key.interpolation).map(varName => `{{${varName}}}`).join(', ')}
                       </div>
                     </div>
@@ -472,10 +472,10 @@ export function MissingKeysPanel({
                   {/* Context */}
                   {key.context && (
                     <div style={{ marginBottom: '10px' }}>
-                      <div style={{ fontSize: '10px', color: '#9cdcfe', marginBottom: '4px' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--dt-border-focus)', marginBottom: '4px' }}>
                         Context:
                       </div>
-                      <div style={{ fontSize: '10px', color: '#e5c07b' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--dt-status-warning)' }}>
                         {key.context}
                       </div>
                     </div>
@@ -484,7 +484,7 @@ export function MissingKeysPanel({
                   {/* Count (for pluralization) */}
                   {key.count !== undefined && (
                     <div style={{ marginBottom: '10px' }}>
-                      <div style={{ fontSize: '10px', color: '#9cdcfe', marginBottom: '4px' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--dt-border-focus)', marginBottom: '4px' }}>
                         Pluralization Count:
                       </div>
                       <div style={{ fontSize: '10px', color: '#3498db' }}>
@@ -496,7 +496,7 @@ export function MissingKeysPanel({
                   {/* Usage locations */}
                   {key.usedAt.length > 0 && (
                     <div>
-                      <div style={{ fontSize: '10px', color: '#9cdcfe', marginBottom: '4px' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--dt-border-focus)', marginBottom: '4px' }}>
                         Used in Components:
                       </div>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
@@ -508,7 +508,7 @@ export function MissingKeysPanel({
                               padding: '2px 6px',
                               borderRadius: '2px',
                               fontSize: '9px',
-                              color: '#cccccc'
+                              color: 'var(--dt-text-primary)'
                             }}
                           >
                             {location}
@@ -520,7 +520,7 @@ export function MissingKeysPanel({
                             padding: '2px 6px',
                             borderRadius: '2px',
                             fontSize: '9px',
-                            color: '#969696'
+                            color: 'var(--dt-text-secondary)'
                           }}>
                             +{key.usedAt.length - 5} more
                           </span>
@@ -538,7 +538,7 @@ export function MissingKeysPanel({
       {processedMissingKeys.length === 0 && searchQuery.trim() && (
         <div style={{
           textAlign: 'center',
-          color: '#969696',
+          color: 'var(--dt-text-secondary)',
           fontSize: '12px',
           marginTop: '40px'
         }}>
@@ -550,11 +550,11 @@ export function MissingKeysPanel({
       <div style={{
         marginTop: '30px',
         padding: '15px',
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c'
+        border: '1px solid var(--dt-border-primary)'
       }}>
-        <h5 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '12px' }}>
+        <h5 style={{ margin: '0 0 10px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
           Quick Actions
         </h5>
         
@@ -570,9 +570,9 @@ export function MissingKeysPanel({
             style={{
               padding: '6px 12px',
               fontSize: '11px',
-              border: '1px solid #3c3c3c',
+              border: '1px solid var(--dt-border-primary)',
               background: '#5a1d1d',
-              color: '#f48771',
+              color: 'var(--dt-status-error)',
               cursor: 'pointer',
               borderRadius: '3px'
             }}
@@ -589,9 +589,9 @@ export function MissingKeysPanel({
             style={{
               padding: '6px 12px',
               fontSize: '11px',
-              border: '1px solid #3c3c3c',
+              border: '1px solid var(--dt-border-primary)',
               background: '#2d2d30',
-              color: '#cccccc',
+              color: 'var(--dt-text-primary)',
               cursor: 'pointer',
               borderRadius: '3px'
             }}

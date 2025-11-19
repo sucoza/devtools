@@ -134,9 +134,9 @@ export function LayoutTester({
 
   const getSeverityColor = (severity: string): string => {
     switch (severity) {
-      case 'high': return '#f48771';
-      case 'medium': return '#d19a66';
-      case 'low': return '#e5c07b';
+      case 'high': return 'var(--dt-status-error)';
+      case 'medium': return 'var(--dt-status-warning)';
+      case 'low': return 'var(--dt-status-warning)';
       default: return '#969696';
     }
   };
@@ -167,14 +167,14 @@ export function LayoutTester({
       padding: '15px',
       height: '100%',
       overflowY: 'auto',
-      background: '#1e1e1e'
+      background: 'var(--dt-bg-primary)'
     }}>
       {/* Header */}
       <div style={{ marginBottom: '20px' }}>
-        <h4 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '14px', fontWeight: '600' }}>
+        <h4 style={{ margin: '0 0 10px 0', color: 'var(--dt-border-focus)', fontSize: '14px', fontWeight: '600' }}>
           🧪 Layout Testing
         </h4>
-        <div style={{ fontSize: '11px', color: '#969696' }}>
+        <div style={{ fontSize: '11px', color: 'var(--dt-text-secondary)' }}>
           Test your application layout across different languages and text directions
         </div>
       </div>
@@ -187,61 +187,61 @@ export function LayoutTester({
         marginBottom: '20px'
       }}>
         <div style={{
-          background: '#252526',
+          background: 'var(--dt-bg-tertiary)',
           padding: '12px',
           borderRadius: '4px',
-          border: '1px solid #3c3c3c'
+          border: '1px solid var(--dt-border-primary)'
         }}>
-          <div style={{ fontSize: '10px', color: '#9cdcfe', marginBottom: '6px' }}>RTL Languages</div>
-          <div style={{ fontSize: '16px', fontWeight: '600', color: '#d19a66', marginBottom: '4px' }}>
+          <div style={{ fontSize: '10px', color: 'var(--dt-border-focus)', marginBottom: '6px' }}>RTL Languages</div>
+          <div style={{ fontSize: '16px', fontWeight: '600', color: 'var(--dt-status-warning)', marginBottom: '4px' }}>
             {rtlLanguages.length}
           </div>
-          <div style={{ fontSize: '9px', color: '#969696' }}>
+          <div style={{ fontSize: '9px', color: 'var(--dt-text-secondary)' }}>
             {rtlLanguages.map(l => l.code.toUpperCase()).join(', ') || 'None'}
           </div>
         </div>
         
         <div style={{
-          background: '#252526',
+          background: 'var(--dt-bg-tertiary)',
           padding: '12px',
           borderRadius: '4px',
-          border: '1px solid #3c3c3c'
+          border: '1px solid var(--dt-border-primary)'
         }}>
-          <div style={{ fontSize: '10px', color: '#9cdcfe', marginBottom: '6px' }}>LTR Languages</div>
-          <div style={{ fontSize: '16px', fontWeight: '600', color: '#4ec9b0', marginBottom: '4px' }}>
+          <div style={{ fontSize: '10px', color: 'var(--dt-border-focus)', marginBottom: '6px' }}>LTR Languages</div>
+          <div style={{ fontSize: '16px', fontWeight: '600', color: 'var(--dt-status-success)', marginBottom: '4px' }}>
             {ltrLanguages.length}
           </div>
-          <div style={{ fontSize: '9px', color: '#969696' }}>
+          <div style={{ fontSize: '9px', color: 'var(--dt-text-secondary)' }}>
             Most common layout direction
           </div>
         </div>
         
         <div style={{
-          background: '#252526',
+          background: 'var(--dt-bg-tertiary)',
           padding: '12px',
           borderRadius: '4px',
-          border: '1px solid #3c3c3c'
+          border: '1px solid var(--dt-border-primary)'
         }}>
-          <div style={{ fontSize: '10px', color: '#9cdcfe', marginBottom: '6px' }}>Tests Run</div>
-          <div style={{ fontSize: '16px', fontWeight: '600', color: '#cccccc', marginBottom: '4px' }}>
+          <div style={{ fontSize: '10px', color: 'var(--dt-border-focus)', marginBottom: '6px' }}>Tests Run</div>
+          <div style={{ fontSize: '16px', fontWeight: '600', color: 'var(--dt-text-primary)', marginBottom: '4px' }}>
             {testResults.length}
           </div>
-          <div style={{ fontSize: '9px', color: '#969696' }}>
+          <div style={{ fontSize: '9px', color: 'var(--dt-text-secondary)' }}>
             Layout compatibility tests
           </div>
         </div>
         
         <div style={{
-          background: '#252526',
+          background: 'var(--dt-bg-tertiary)',
           padding: '12px',
           borderRadius: '4px',
-          border: '1px solid #3c3c3c'
+          border: '1px solid var(--dt-border-primary)'
         }}>
-          <div style={{ fontSize: '10px', color: '#9cdcfe', marginBottom: '6px' }}>Issues Found</div>
-          <div style={{ fontSize: '16px', fontWeight: '600', color: '#f48771', marginBottom: '4px' }}>
+          <div style={{ fontSize: '10px', color: 'var(--dt-border-focus)', marginBottom: '6px' }}>Issues Found</div>
+          <div style={{ fontSize: '16px', fontWeight: '600', color: 'var(--dt-status-error)', marginBottom: '4px' }}>
             {testResults.reduce((sum, result) => sum + result.issues.length, 0)}
           </div>
-          <div style={{ fontSize: '9px', color: '#969696' }}>
+          <div style={{ fontSize: '9px', color: 'var(--dt-text-secondary)' }}>
             Across all tested languages
           </div>
         </div>
@@ -249,13 +249,13 @@ export function LayoutTester({
 
       {/* Test controls */}
       <div style={{
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         padding: '15px',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c',
+        border: '1px solid var(--dt-border-primary)',
         marginBottom: '20px'
       }}>
-        <h5 style={{ margin: '0 0 15px 0', color: '#9cdcfe', fontSize: '12px' }}>
+        <h5 style={{ margin: '0 0 15px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
           Test Configuration
         </h5>
         
@@ -266,7 +266,7 @@ export function LayoutTester({
           marginBottom: '15px'
         }}>
           <div>
-            <div style={{ fontSize: '11px', color: '#969696', marginBottom: '6px' }}>
+            <div style={{ fontSize: '11px', color: 'var(--dt-text-secondary)', marginBottom: '6px' }}>
               Target Language:
             </div>
             <select
@@ -276,9 +276,9 @@ export function LayoutTester({
                 width: '100%',
                 padding: '6px 10px',
                 borderRadius: '4px',
-                border: '1px solid #3c3c3c',
-                background: '#1e1e1e',
-                color: '#cccccc',
+                border: '1px solid var(--dt-border-primary)',
+                background: 'var(--dt-bg-primary)',
+                color: 'var(--dt-text-primary)',
                 fontSize: '11px'
               }}
             >
@@ -291,7 +291,7 @@ export function LayoutTester({
           </div>
           
           <div>
-            <div style={{ fontSize: '11px', color: '#969696', marginBottom: '6px' }}>
+            <div style={{ fontSize: '11px', color: 'var(--dt-text-secondary)', marginBottom: '6px' }}>
               CSS Selector (optional):
             </div>
             <input
@@ -303,9 +303,9 @@ export function LayoutTester({
                 width: '100%',
                 padding: '6px 10px',
                 borderRadius: '4px',
-                border: '1px solid #3c3c3c',
-                background: '#1e1e1e',
-                color: '#cccccc',
+                border: '1px solid var(--dt-border-primary)',
+                background: 'var(--dt-bg-primary)',
+                color: 'var(--dt-text-primary)',
                 fontSize: '11px'
               }}
             />
@@ -319,7 +319,7 @@ export function LayoutTester({
             style={{
               padding: '8px 16px',
               fontSize: '11px',
-              border: '1px solid #3c3c3c',
+              border: '1px solid var(--dt-border-primary)',
               background: isTestingInProgress ? '#2d2d30' : '#007acc',
               color: isTestingInProgress ? '#969696' : '#ffffff',
               cursor: isTestingInProgress ? 'not-allowed' : 'pointer',
@@ -336,7 +336,7 @@ export function LayoutTester({
             style={{
               padding: '8px 16px',
               fontSize: '11px',
-              border: '1px solid #3c3c3c',
+              border: '1px solid var(--dt-border-primary)',
               background: isTestingInProgress ? '#2d2d30' : '#1e5f1e',
               color: isTestingInProgress ? '#969696' : '#ffffff',
               cursor: isTestingInProgress ? 'not-allowed' : 'pointer',
@@ -352,9 +352,9 @@ export function LayoutTester({
             style={{
               padding: '8px 16px',
               fontSize: '11px',
-              border: '1px solid #3c3c3c',
+              border: '1px solid var(--dt-border-primary)',
               background: '#2d2d30',
-              color: '#cccccc',
+              color: 'var(--dt-text-primary)',
               cursor: 'pointer',
               borderRadius: '3px'
             }}
@@ -369,13 +369,13 @@ export function LayoutTester({
         <div style={{ marginBottom: '20px' }}>
           {/* Results overview */}
           <div style={{
-            background: '#252526',
+            background: 'var(--dt-bg-tertiary)',
             padding: '15px',
             borderRadius: '4px',
-            border: '1px solid #3c3c3c',
+            border: '1px solid var(--dt-border-primary)',
             marginBottom: '15px'
           }}>
-            <h5 style={{ margin: '0 0 15px 0', color: '#9cdcfe', fontSize: '12px' }}>
+            <h5 style={{ margin: '0 0 15px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
               Test Results Overview
             </h5>
             
@@ -415,22 +415,22 @@ export function LayoutTester({
                       {result.language.toUpperCase()}
                     </div>
                     
-                    <div style={{ fontSize: '10px', color: '#969696' }}>
+                    <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)' }}>
                       {result.direction.toUpperCase()} layout test completed
                     </div>
                     
                     <div style={{ display: 'flex', gap: '6px', fontSize: '9px' }}>
                       {highIssues > 0 && (
-                        <span style={{ color: '#f48771' }}>🔴 {highIssues}</span>
+                        <span style={{ color: 'var(--dt-status-error)' }}>🔴 {highIssues}</span>
                       )}
                       {mediumIssues > 0 && (
-                        <span style={{ color: '#d19a66' }}>🟡 {mediumIssues}</span>
+                        <span style={{ color: 'var(--dt-status-warning)' }}>🟡 {mediumIssues}</span>
                       )}
                       {lowIssues > 0 && (
-                        <span style={{ color: '#e5c07b' }}>🟢 {lowIssues}</span>
+                        <span style={{ color: 'var(--dt-status-warning)' }}>🟢 {lowIssues}</span>
                       )}
                       {totalIssues === 0 && (
-                        <span style={{ color: '#4ec9b0' }}>✅ No issues</span>
+                        <span style={{ color: 'var(--dt-status-success)' }}>✅ No issues</span>
                       )}
                     </div>
                     
@@ -451,19 +451,19 @@ export function LayoutTester({
           {/* Detailed results for selected language */}
           {currentResult && (
             <div style={{
-              background: '#252526',
+              background: 'var(--dt-bg-tertiary)',
               padding: '15px',
               borderRadius: '4px',
-              border: '1px solid #3c3c3c'
+              border: '1px solid var(--dt-border-primary)'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                <h5 style={{ margin: 0, color: '#9cdcfe', fontSize: '12px' }}>
+                <h5 style={{ margin: 0, color: 'var(--dt-border-focus)', fontSize: '12px' }}>
                   {currentResult.language.toUpperCase()} Layout Test Results
                 </h5>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{
                     background: currentResult.direction === 'rtl' ? '#d19a66' : '#4ec9b0',
-                    color: '#ffffff',
+                    color: 'var(--dt-text-on-primary)',
                     padding: '2px 8px',
                     borderRadius: '2px',
                     fontSize: '9px',
@@ -471,7 +471,7 @@ export function LayoutTester({
                   }}>
                     {currentResult.direction.toUpperCase()}
                   </span>
-                  <span style={{ fontSize: '10px', color: '#969696' }}>
+                  <span style={{ fontSize: '10px', color: 'var(--dt-text-secondary)' }}>
                     {currentResult.issues.length} issue{currentResult.issues.length !== 1 ? 's' : ''} found
                   </span>
                 </div>
@@ -486,7 +486,7 @@ export function LayoutTester({
                   marginBottom: '20px'
                 }}>
                   <div>
-                    <div style={{ fontSize: '10px', color: '#9cdcfe', marginBottom: '6px' }}>
+                    <div style={{ fontSize: '10px', color: 'var(--dt-border-focus)', marginBottom: '6px' }}>
                       Before
                     </div>
                     <img
@@ -496,12 +496,12 @@ export function LayoutTester({
                         width: '100%',
                         height: 'auto',
                         borderRadius: '3px',
-                        border: '1px solid #3c3c3c'
+                        border: '1px solid var(--dt-border-primary)'
                       }}
                     />
                   </div>
                   <div>
-                    <div style={{ fontSize: '10px', color: '#9cdcfe', marginBottom: '6px' }}>
+                    <div style={{ fontSize: '10px', color: 'var(--dt-border-focus)', marginBottom: '6px' }}>
                       After (Fixed)
                     </div>
                     <img
@@ -511,7 +511,7 @@ export function LayoutTester({
                         width: '100%',
                         height: 'auto',
                         borderRadius: '3px',
-                        border: '1px solid #3c3c3c'
+                        border: '1px solid var(--dt-border-primary)'
                       }}
                     />
                   </div>
@@ -537,7 +537,7 @@ export function LayoutTester({
                           <span style={{ fontSize: '12px' }}>
                             {getTypeIcon(issue.type)}
                           </span>
-                          <span style={{ fontSize: '11px', color: '#cccccc', fontWeight: '500' }}>
+                          <span style={{ fontSize: '11px', color: 'var(--dt-text-primary)', fontWeight: '500' }}>
                             {issue.element}
                           </span>
                         </div>
@@ -557,7 +557,7 @@ export function LayoutTester({
                         </div>
                       </div>
                       
-                      <div style={{ fontSize: '10px', color: '#969696', marginLeft: '20px' }}>
+                      <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginLeft: '20px' }}>
                         {issue.description}
                       </div>
                     </div>
@@ -566,7 +566,7 @@ export function LayoutTester({
               ) : (
                 <div style={{
                   textAlign: 'center',
-                  color: '#4ec9b0',
+                  color: 'var(--dt-status-success)',
                   fontSize: '12px',
                   padding: '20px'
                 }}>
@@ -580,22 +580,22 @@ export function LayoutTester({
 
       {/* Best practices */}
       <div style={{
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         padding: '15px',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c',
+        border: '1px solid var(--dt-border-primary)',
         fontSize: '10px',
-        color: '#969696'
+        color: 'var(--dt-text-secondary)'
       }}>
-        <div style={{ marginBottom: '8px', color: '#9cdcfe', fontWeight: '600' }}>
+        <div style={{ marginBottom: '8px', color: 'var(--dt-border-focus)', fontWeight: '600' }}>
           💡 Layout Testing Best Practices:
         </div>
         <div style={{ display: 'grid', gap: '6px' }}>
-          <div><strong style={{ color: '#d19a66' }}>RTL Testing:</strong> Test Arabic, Hebrew, or Persian languages to verify right-to-left layouts</div>
-          <div><strong style={{ color: '#d19a66' }}>Text Expansion:</strong> German and Finnish translations tend to be longer - test for overflow</div>
-          <div><strong style={{ color: '#d19a66' }}>Character Sets:</strong> Test Asian languages (Chinese, Japanese) for proper font rendering</div>
-          <div><strong style={{ color: '#d19a66' }}>Responsive Design:</strong> Verify layouts work across different screen sizes and orientations</div>
-          <div><strong style={{ color: '#d19a66' }}>Interactive Elements:</strong> Ensure buttons, forms, and navigation work in all languages</div>
+          <div><strong style={{ color: 'var(--dt-status-warning)' }}>RTL Testing:</strong> Test Arabic, Hebrew, or Persian languages to verify right-to-left layouts</div>
+          <div><strong style={{ color: 'var(--dt-status-warning)' }}>Text Expansion:</strong> German and Finnish translations tend to be longer - test for overflow</div>
+          <div><strong style={{ color: 'var(--dt-status-warning)' }}>Character Sets:</strong> Test Asian languages (Chinese, Japanese) for proper font rendering</div>
+          <div><strong style={{ color: 'var(--dt-status-warning)' }}>Responsive Design:</strong> Verify layouts work across different screen sizes and orientations</div>
+          <div><strong style={{ color: 'var(--dt-status-warning)' }}>Interactive Elements:</strong> Ensure buttons, forms, and navigation work in all languages</div>
         </div>
       </div>
     </div>
