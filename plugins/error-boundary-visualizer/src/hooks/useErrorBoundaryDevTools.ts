@@ -291,70 +291,118 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
 
     // Patch React error boundaries to capture errors
     const originalConsoleError = console.error
+    let isProcessingError = false // Prevent infinite loops
 
     _reactErrorHandler = (error: Error, errorInfo: any) => {
-      const errorData: ErrorInfo = {
-        id: `react-error-${Date.now()}-${Math.random()}`,
-        timestamp: Date.now(),
-        message: error.message,
-        stack: error.stack,
-        componentStack: errorInfo.componentStack,
-        category: ErrorCategory.RENDER,
-        severity: ErrorSeverity.HIGH,
-        occurrences: 1,
-        firstSeen: Date.now(),
-        lastSeen: Date.now(),
-        metadata: {
-          error: error.name,
-          errorInfo,
-        },
-      }
+      try {
+        const errorData: ErrorInfo = {
+          id: `react-error-${Date.now()}-${Math.random()}`,
+          timestamp: Date.now(),
+          message: error.message,
+          stack: error.stack,
+          componentStack: errorInfo.componentStack,
+          category: ErrorCategory.RENDER,
+          severity: ErrorSeverity.HIGH,
+          occurrences: 1,
+          firstSeen: Date.now(),
+          lastSeen: Date.now(),
+          metadata: {
+            error: error.name,
+            errorInfo,
+          },
+        }
 
-      throttledUpdate(() => {
-        store.addError(errorData)
-        store.updateMetrics()
-      })
+        throttledUpdate(() => {
+          store.addError(errorData)
+          store.updateMetrics()
+        })
+      } catch (err) {
+        // Silently fail to prevent breaking the app
+        // Use originalConsoleError to avoid recursion
+        originalConsoleError.call(console, 'Error Boundary DevTools: Failed to process error', err)
+      }
     }
 
-    console.error = (...args: any[]) => {
+    console.error = function patchedConsoleError(...args: any[]) {
+      // Always call the original first to preserve normal error logging
       originalConsoleError.apply(console, args)
 
-      // Check if this looks like a React error
-      const firstArg = args[0]
-      if (typeof firstArg === 'string') {
-        // Look for specific React error patterns, avoid false positives like "Non-React error"
-        const isReactError = (
-          firstArg.startsWith('React') ||
-          firstArg.includes('React error') ||
-          firstArg.includes('React warning') ||
-          firstArg.includes('Error in') ||
-          firstArg.includes('componentDidCatch') ||
-          firstArg.includes('getDerivedStateFromError')
-        ) && !firstArg.includes('Non-React')
-        
-        if (isReactError) {
-          // This might be a React error, capture it
-          const error: ErrorInfo = {
-            id: `console-error-${Date.now()}-${Math.random()}`,
-            timestamp: Date.now(),
-            message: firstArg,
-            category: ErrorCategory.RENDER,
-            severity: ErrorSeverity.MEDIUM,
-            occurrences: 1,
-            firstSeen: Date.now(),
-            lastSeen: Date.now(),
-          }
+      // Prevent infinite loops if error processing itself causes an error
+      if (isProcessingError) return
 
-          throttledUpdate(() => {
-            store.addError(error)
-          })
+      try {
+        isProcessingError = true
+
+        // Check if this looks like a React error
+        const firstArg = args[0]
+        if (typeof firstArg === 'string') {
+          // More robust React error detection patterns
+          const reactErrorPatterns = [
+            /^React\s/,                              // Starts with "React "
+            /React error/i,                          // Contains "React error" (case insensitive)
+            /React warning/i,                        // Contains "React warning"
+            /Error in.*component/i,                  // "Error in ... component"
+            /componentDidCatch/,                     // Error boundary lifecycle
+            /getDerivedStateFromError/,              // Error boundary static method
+            /caught by error boundary/i,             // Explicit error boundary message
+            /uncaught error.*boundary/i,             // Uncaught error related to boundaries
+          ]
+
+          // Check against all patterns, but exclude false positives
+          const isReactError = reactErrorPatterns.some(pattern => pattern.test(firstArg)) &&
+                              !firstArg.includes('Non-React') &&
+                              !firstArg.includes('Error Boundary DevTools')
+
+          if (isReactError) {
+            // Extract component stack if available in subsequent arguments
+            let componentStack: string | undefined
+            const stackArg = args.find(arg => typeof arg === 'string' && arg.includes('in '))
+            if (stackArg) {
+              componentStack = stackArg
+            }
+
+            const error: ErrorInfo = {
+              id: `console-error-${Date.now()}-${Math.random()}`,
+              timestamp: Date.now(),
+              message: firstArg,
+              componentStack,
+              category: ErrorCategory.RENDER,
+              severity: ErrorSeverity.MEDIUM,
+              occurrences: 1,
+              firstSeen: Date.now(),
+              lastSeen: Date.now(),
+              metadata: {
+                source: 'console.error',
+                originalArgs: args.slice(1).map(arg =>
+                  typeof arg === 'object' ? '[Object]' : String(arg)
+                ),
+              },
+            }
+
+            throttledUpdate(() => {
+              store.addError(error)
+            })
+          }
         }
+      } catch (err) {
+        // Silently fail to prevent breaking other tools
+        // Use originalConsoleError to avoid recursion
+        originalConsoleError.call(console, 'Error Boundary DevTools: Failed to process console.error', err)
+      } finally {
+        isProcessingError = false
       }
     }
 
+    // Ensure cleanup runs even if component unmounts during processing
     return () => {
-      console.error = originalConsoleError
-      _reactErrorHandler = null
+      try {
+        console.error = originalConsoleError
+        _reactErrorHandler = null
+        isProcessingError = false
+      } catch (err) {
+        // Last resort error handling
+        originalConsoleError.call(console, 'Error Boundary DevTools: Failed to restore console.error', err)
+      }
     }
   }, [enabled, store, throttledUpdate])
 

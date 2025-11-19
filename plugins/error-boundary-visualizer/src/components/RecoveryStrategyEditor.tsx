@@ -373,18 +373,18 @@ export const RecoveryStrategyEditor: React.FC = () => {
 
       <div style={sectionStyles}>
         <h4 style={{ margin: '0 0 12px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-          Custom Strategies ({Array.from(recoveryStrategies.values()).length})
+          Custom Strategies ({(Array.from(recoveryStrategies.values()) as ErrorRecoveryStrategy[]).length})
         </h4>
-        {Array.from(recoveryStrategies.values()).length === 0 ? (
-          <div style={{ 
-            ...cardStyles, 
-            textAlign: 'center', 
-            color: theme === 'dark' ? '#999' : '#666' 
+        {(Array.from(recoveryStrategies.values()) as ErrorRecoveryStrategy[]).length === 0 ? (
+          <div style={{
+            ...cardStyles,
+            textAlign: 'center',
+            color: theme === 'dark' ? '#999' : '#666'
           }}>
             No custom strategies created yet. Create a new strategy or use a predefined template.
           </div>
         ) : (
-          Array.from(recoveryStrategies.values()).map((strategy) => (
+          (Array.from(recoveryStrategies.values()) as ErrorRecoveryStrategy[]).map((strategy) => (
             <div key={strategy.id} style={strategyItemStyles}>
               <div style={{ flex: 1 }}>
                 <h5 style={{ margin: '0 0 8px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
@@ -394,8 +394,8 @@ export const RecoveryStrategyEditor: React.FC = () => {
                   {strategy.description}
                 </p>
                 <div style={{ fontSize: '12px', color: theme === 'dark' ? '#999' : '#777' }}>
-                  <div>Retry Delay: {strategy.retryDelay}ms</div>
-                  <div>Max Retries: {strategy.maxRetries}</div>
+                  <div>Retry Delay: {strategy.retryDelay ?? 0}ms</div>
+                  <div>Max Retries: {strategy.maxRetries ?? 0}</div>
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -431,7 +431,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {Array.from(errorBoundaries.values()).map((boundary) => (
+            {(Array.from(errorBoundaries.values()) as import('../types').ErrorBoundaryInfo[]).map((boundary) => (
               <div key={boundary.id} style={cardStyles}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
@@ -444,8 +444,8 @@ export const RecoveryStrategyEditor: React.FC = () => {
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <select
-                      style={{ 
-                        ...inputStyles, 
+                      style={{
+                        ...inputStyles,
                         width: 'auto',
                         fontSize: '12px',
                         padding: '4px 8px',
@@ -459,7 +459,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
                       defaultValue=""
                     >
                       <option value="">Select Strategy...</option>
-                      {Array.from(recoveryStrategies.values()).map(strategy => (
+                      {(Array.from(recoveryStrategies.values()) as ErrorRecoveryStrategy[]).map(strategy => (
                         <option key={strategy.id} value={strategy.id}>
                           {strategy.name}
                         </option>
