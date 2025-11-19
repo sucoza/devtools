@@ -13,11 +13,27 @@ class ZustandStoreRegistry {
     nextState: unknown;
     timestamp: number;
   }> = [];
+  private snapshots = new Map<string, Record<string, unknown>>();
 
   constructor() {
     // Listen for state requests from the DevTools panel
     zustandEventClient.on('zustand-state-request', () => {
       this.handleStateRequest();
+    });
+
+    // Listen for state restoration requests
+    zustandEventClient.on('zustand-restore-state', (event: any) => {
+      this.handleRestoreState(event.payload);
+    });
+
+    // Listen for snapshot save requests
+    zustandEventClient.on('zustand-save-snapshot', (event: any) => {
+      this.handleSaveSnapshot(event.payload);
+    });
+
+    // Listen for snapshot load requests
+    zustandEventClient.on('zustand-load-snapshot', (event: any) => {
+      this.handleLoadSnapshot(event.payload);
     });
   }
 
@@ -150,6 +166,85 @@ class ZustandStoreRegistry {
 
   clearActionHistory() {
     this.actionHistory = [];
+  }
+
+  private handleRestoreState(payload: { storeName: string; state: unknown; timestamp: number }) {
+    const { storeName, state } = payload;
+    const store = this.stores.get(storeName);
+
+    if (!store) {
+      console.warn(`Cannot restore state: Store "${storeName}" not found`);
+      return;
+    }
+
+    try {
+      // Restore the state by calling setState with the historical state
+      store.setState(state as any, true);
+
+      // Update our tracked state
+      const cleanedState = this.cleanStateForSerialization(state);
+      this.storeStates.set(storeName, cleanedState);
+
+      // Emit confirmation event
+      zustandEventClient.emit('zustand-state-restored', {
+        storeName,
+        state: cleanedState,
+        timestamp: Date.now()
+      });
+
+      // Emit state update to refresh the UI
+      this.emitStateUpdate();
+    } catch (error) {
+      console.error(`Failed to restore state for store "${storeName}":`, error);
+    }
+  }
+
+  private handleSaveSnapshot(payload: { name: string; stores: Record<string, unknown> }) {
+    const { name, stores } = payload;
+
+    // Save current states of all stores
+    const snapshot: Record<string, unknown> = {};
+    this.storeStates.forEach((state, storeName) => {
+      snapshot[storeName] = state;
+    });
+
+    this.snapshots.set(name, snapshot);
+    console.log(`Snapshot "${name}" saved with ${Object.keys(snapshot).length} stores`);
+  }
+
+  private handleLoadSnapshot(payload: { name: string }) {
+    const { name } = payload;
+    const snapshot = this.snapshots.get(name);
+
+    if (!snapshot) {
+      console.warn(`Snapshot "${name}" not found`);
+      return;
+    }
+
+    // Restore each store from the snapshot
+    Object.entries(snapshot).forEach(([storeName, state]) => {
+      const store = this.stores.get(storeName);
+      if (store) {
+        try {
+          store.setState(state as any, true);
+          this.storeStates.set(storeName, state);
+        } catch (error) {
+          console.error(`Failed to restore store "${storeName}" from snapshot:`, error);
+        }
+      }
+    });
+
+    // Emit state update to refresh the UI
+    this.emitStateUpdate();
+    console.log(`Snapshot "${name}" loaded`);
+  }
+
+  getSnapshots() {
+    return Array.from(this.snapshots.keys());
+  }
+
+  deleteSnapshot(name: string) {
+    this.snapshots.delete(name);
   }
 }
 
