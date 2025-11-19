@@ -6,9 +6,11 @@ A comprehensive logging plugin for TanStack DevTools that provides advanced logg
 
 ### 🎯 Core Logging
 - **Multiple Log Levels**: `trace`, `debug`, `info`, `warn`, `error`, `fatal`
-- **Structured Logging**: Attach data, context, and tags to logs
+- **Structured Logging**: Full support for structured fields with standard naming (OpenTelemetry/ECS compatible)
+- **Correlation & Tracing**: Built-in support for correlation IDs and distributed tracing
+- **Global Context**: Set application-wide structured fields
 - **Category-based Filtering**: Organize logs by categories
-- **Child Loggers**: Create specialized loggers with preset context
+- **Child Loggers**: Create specialized loggers with preset context and fields
 
 ### 📊 Metrics & Monitoring
 - **Real-time Metrics**: Logs per second, error rate, warning rate
@@ -87,6 +89,213 @@ function App() {
 ```
 
 ## Advanced Usage
+
+### Structured Logging
+
+The logger supports proper structured logging with well-defined fields for better queryability and standardization. Structured fields are separate from arbitrary data and follow common patterns (OpenTelemetry, ECS compatible).
+
+#### Using Structured Fields
+
+```typescript
+import { logger } from '@sucoza/logger-devtools-plugin';
+
+// Log with structured fields
+logger.info('User login successful', undefined, {
+  fields: {
+    userId: 'user-123',
+    sessionId: 'sess-456',
+    action: 'login',
+    duration: 145,
+    environment: 'production'
+  }
+});
+
+// Structured fields are displayed prominently in the DevTools UI
+// and are fully searchable
+```
+
+#### Correlation and Tracing
+
+Track related logs across operations with correlation and trace IDs:
+
+```typescript
+// Start a correlation context
+const correlationId = logger.startCorrelation();
+
+logger.info('Processing order', undefined, {
+  fields: { action: 'start', resource: 'order' }
+});
+
+// All logs in this context will include the correlation ID
+await processOrder();
+
+logger.endCorrelation();
+
+// Or use the helper method
+await logger.withCorrelationAsync(async () => {
+  logger.info('Step 1');
+  await doWork();
+  logger.info('Step 2');
+}); // All logs will share the same correlation ID
+```
+
+#### Distributed Tracing
+
+Support for OpenTelemetry-compatible trace and span IDs:
+
+```typescript
+// Start a trace
+const traceId = logger.startTrace();
+
+logger.info('API request received', undefined, {
+  fields: {
+    traceId,
+    spanId: logger.newSpanId(),
+    action: 'http_request',
+    resource: 'api/users'
+  }
+});
+
+// Process with child span
+const childSpanId = logger.newSpanId();
+logger.info('Database query', undefined, {
+  fields: {
+    traceId,
+    spanId: childSpanId,
+    parentSpanId: logger.newSpanId(),
+    resource: 'database'
+  }
+});
+
+logger.endTrace();
+```
+
+#### Timed Operations
+
+Automatically track operation duration:
+
+```typescript
+// Wraps an async operation with timing and structured logging
+const result = await logger.timedOperation(
+  'fetchUserData',
+  async () => {
+    return await api.getUser(userId);
+  },
+  {
+    userId: 'user-123',
+    service: 'user-service',
+    environment: 'production'
+  }
+);
+
+// Automatically logs:
+// - Start: "Starting operation: fetchUserData" with action=start
+// - Success: "Completed operation: fetchUserData" with action=complete, duration=123ms
+// - Error: "Failed operation: fetchUserData" with action=error, duration=45ms
+```
+
+#### Global Structured Context
+
+Set global fields that apply to all logs:
+
+```typescript
+// Set at application startup
+logger.setGlobalFields({
+  service: 'my-app',
+  version: '1.2.3',
+  environment: 'production',
+  hostname: window.location.hostname
+});
+
+// All subsequent logs will include these fields
+logger.info('User action'); // Includes service, version, environment, hostname
+
+// Add more fields (merge with existing)
+logger.setGlobalFields({
+  userId: currentUser.id,
+  sessionId: currentSession.id
+}, true);
+
+// Clear global fields
+logger.clearGlobalFields();
+```
+
+#### Standard Structured Fields
+
+The logger supports these standard fields (following OpenTelemetry/ECS patterns):
+
+**Correlation & Tracing:**
+- `correlationId` - Link related logs across operations
+- `traceId` - Distributed tracing ID (OpenTelemetry compatible)
+- `spanId` - Current span ID
+- `parentSpanId` - Parent span ID
+
+**User & Session Context:**
+- `userId` - User identifier
+- `sessionId` - Session identifier
+- `requestId` - Request identifier
+
+**Application Context:**
+- `service` - Service name
+- `version` - Application version
+- `environment` - Environment (dev/staging/prod)
+- `hostname` - Host identifier
+
+**Performance & Timing:**
+- `duration` - Operation duration in ms
+- `latency` - Latency in ms
+
+**Business Context:**
+- `resource` - Resource being accessed (e.g., "user", "order")
+- `action` - Action being performed (e.g., "create", "update")
+- `entityId` - ID of the entity being operated on
+
+**Custom Fields:**
+Any other key-value pairs you need
+
+#### Structured Logging with Child Loggers
+
+Child loggers inherit and merge structured fields:
+
+```typescript
+// Create a child logger with preset structured fields
+const apiLogger = logger.child({
+  category: 'API',
+  fields: {
+    service: 'api-gateway',
+    version: '2.0.0'
+  }
+});
+
+// These fields are automatically included in all logs
+apiLogger.info('Request received', undefined, {
+  fields: {
+    action: 'http_request',
+    resource: 'users',
+    requestId: 'req-123'
+  }
+});
+// Result includes: service, version, action, resource, requestId
+```
+
+#### Configuration
+
+Enable/configure structured logging:
+
+```typescript
+logger.updateConfig({
+  structured: {
+    enabled: true,              // Enable structured logging
+    autoTracing: true,          // Auto-include active trace/correlation IDs
+    includeHostname: true,      // Auto-include hostname
+    includeTimestamp: true,     // High-precision timestamps
+    globalFields: {             // Default fields for all logs
+      service: 'my-service',
+      environment: 'production'
+    }
+  }
+});
+```
 
 ### Child Loggers with Context
 
@@ -279,6 +488,25 @@ Export filtered logs in multiple formats:
 - `getMetrics()` - Get current metrics
 - `forceFlush()` - Force flush pending logs
 - `exportLogs(format)` - Export logs in specified format
+
+### Structured Logging Methods
+
+- `setGlobalFields(fields, merge?)` - Set global structured fields for all logs
+- `getGlobalFields()` - Get current global structured fields
+- `clearGlobalFields()` - Clear all global structured fields
+- `startCorrelation(id?)` - Start a correlation context (returns correlation ID)
+- `endCorrelation()` - End the current correlation context
+- `getCorrelationId()` - Get the current correlation ID
+- `withCorrelation(fn, id?)` - Execute function within correlation context
+- `withCorrelationAsync(fn, id?)` - Execute async function within correlation context
+- `startTrace(id?)` - Start a trace context (returns OpenTelemetry-compatible trace ID)
+- `endTrace()` - End the current trace context
+- `getTraceId()` - Get the current trace ID
+- `withTrace(fn, id?)` - Execute function within trace context
+- `withTraceAsync(fn, id?)` - Execute async function within trace context
+- `newSpanId()` - Generate a new OpenTelemetry-compatible span ID
+- `structured(level, message, fields, data?)` - Log with structured fields (convenience method)
+- `timedOperation(operation, fn, fields?)` - Execute and time an async operation with logging
 
 ## License
 

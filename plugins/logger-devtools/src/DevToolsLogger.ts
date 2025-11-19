@@ -1,4 +1,4 @@
-import { loggingEventClient, LogLevel, LogEntry, LoggerConfig, LogMetrics } from './loggingEventClient';
+import { loggingEventClient, LogLevel, LogEntry, LoggerConfig, LogMetrics, StructuredFields } from './loggingEventClient';
 
 const LOG_LEVELS: Record<LogLevel, number> = {
   trace: 0,
@@ -13,6 +13,8 @@ export interface LoggerOptions {
   category?: string;
   context?: Record<string, any>;
   tags?: string[];
+  // Structured logging fields
+  fields?: StructuredFields;
 }
 
 class DevToolsLogger {
@@ -34,15 +36,61 @@ class DevToolsLogger {
       preserveOriginal: true,
       includeTrace: false,
     },
+    structured: {
+      enabled: true,
+      autoTracing: false,
+      includeHostname: false,
+      includeTimestamp: true,
+    },
   };
 
   private logBuffer: LogEntry[] = [];
   private logHistory: LogEntry[] = []; // Keep history for DevTools panel
   private logIdCounter: number = 0;
-  
+
+  // Structured logging context management
+  private globalContext: StructuredFields = {};
+  private scopedContext: Map<string, StructuredFields> = new Map();
+  private currentCorrelationId: string | null = null;
+  private currentTraceId: string | null = null;
+  private hostname: string | null = null;
+
   private generateUniqueId(): string {
     // Include counter and random component to ensure uniqueness
     return `${Date.now()}-${++this.logIdCounter}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  private generateCorrelationId(): string {
+    return `corr-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  private generateTraceId(): string {
+    // OpenTelemetry compatible format (16 bytes hex)
+    return Array.from({ length: 32 }, () =>
+      Math.floor(Math.random() * 16).toString(16)
+    ).join('');
+  }
+
+  private generateSpanId(): string {
+    // OpenTelemetry compatible format (8 bytes hex)
+    return Array.from({ length: 16 }, () =>
+      Math.floor(Math.random() * 16).toString(16)
+    ).join('');
+  }
+
+  private getHostname(): string {
+    if (this.hostname) return this.hostname;
+
+    // Try to get hostname from various sources
+    if (typeof window !== 'undefined') {
+      this.hostname = window.location?.hostname || 'browser';
+    } else if (typeof globalThis !== 'undefined' && globalThis.process?.env?.HOSTNAME) {
+      this.hostname = globalThis.process.env.HOSTNAME;
+    } else {
+      this.hostname = 'unknown';
+    }
+
+    return this.hostname;
   }
 
   private metrics: LogMetrics = {
@@ -447,12 +495,53 @@ class DevToolsLogger {
     return undefined;
   }
 
+  private mergeStructuredFields(options?: LoggerOptions): StructuredFields | undefined {
+    if (!this.config.structured.enabled) {
+      return options?.fields;
+    }
+
+    const fields: StructuredFields = {};
+
+    // 1. Global config fields (lowest priority)
+    if (this.config.structured.globalFields) {
+      Object.assign(fields, this.config.structured.globalFields);
+    }
+
+    // 2. Global context fields
+    Object.assign(fields, this.globalContext);
+
+    // 3. Auto-generated fields
+    if (this.config.structured.autoTracing) {
+      if (!fields.correlationId && this.currentCorrelationId) {
+        fields.correlationId = this.currentCorrelationId;
+      }
+      if (!fields.traceId && this.currentTraceId) {
+        fields.traceId = this.currentTraceId;
+      }
+    }
+
+    // 4. Hostname if enabled
+    if (this.config.structured.includeHostname && !fields.hostname) {
+      fields.hostname = this.getHostname();
+    }
+
+    // 5. Options fields (highest priority)
+    if (options?.fields) {
+      Object.assign(fields, options.fields);
+    }
+
+    return Object.keys(fields).length > 0 ? fields : undefined;
+  }
+
   private log(level: LogLevel, message: string, data?: any, options?: LoggerOptions, sourceOverride?: LogEntry['source']) {
     const category = options?.category;
-    
+
     if (!this.shouldLog(level, category)) {
       return;
     }
+
+    // Merge structured fields from all sources
+    const structuredFields = this.mergeStructuredFields(options);
 
     const entry: LogEntry = {
       id: this.generateUniqueId(),
@@ -460,6 +549,7 @@ class DevToolsLogger {
       level,
       message,
       data: data !== undefined ? this.cleanData(data) : undefined,
+      fields: structuredFields,
       context: options?.context,
       category,
       tags: options?.tags,
@@ -489,7 +579,7 @@ class DevToolsLogger {
     // Add to buffer for DevTools
     if (this.config.output.devtools) {
       this.logBuffer.push(entry);
-      
+
       // Trim buffer if it exceeds max size
       if (this.logBuffer.length > this.config.maxLogs) {
         this.logBuffer = this.logBuffer.slice(-this.config.maxLogs);
@@ -693,6 +783,214 @@ class DevToolsLogger {
     }
   }
 
+  // ============================================================================
+  // Structured Logging API
+  // ============================================================================
+
+  /**
+   * Set global structured fields that will be included in all logs
+   * @param fields - Structured fields to set globally
+   * @param merge - If true, merge with existing fields; if false, replace
+   */
+  setGlobalFields(fields: StructuredFields, merge: boolean = true): void {
+    if (merge) {
+      this.globalContext = { ...this.globalContext, ...fields };
+    } else {
+      this.globalContext = { ...fields };
+    }
+  }
+
+  /**
+   * Get current global structured fields
+   */
+  getGlobalFields(): StructuredFields {
+    return { ...this.globalContext };
+  }
+
+  /**
+   * Clear all global structured fields
+   */
+  clearGlobalFields(): void {
+    this.globalContext = {};
+  }
+
+  /**
+   * Start a new correlation context - all logs will include this correlation ID
+   * @param correlationId - Optional correlation ID; generates one if not provided
+   * @returns The correlation ID being used
+   */
+  startCorrelation(correlationId?: string): string {
+    this.currentCorrelationId = correlationId || this.generateCorrelationId();
+    return this.currentCorrelationId;
+  }
+
+  /**
+   * End the current correlation context
+   */
+  endCorrelation(): void {
+    this.currentCorrelationId = null;
+  }
+
+  /**
+   * Get the current correlation ID
+   */
+  getCorrelationId(): string | null {
+    return this.currentCorrelationId;
+  }
+
+  /**
+   * Start a new trace context - all logs will include this trace ID
+   * @param traceId - Optional trace ID; generates OpenTelemetry-compatible one if not provided
+   * @returns The trace ID being used
+   */
+  startTrace(traceId?: string): string {
+    this.currentTraceId = traceId || this.generateTraceId();
+    return this.currentTraceId;
+  }
+
+  /**
+   * End the current trace context
+   */
+  endTrace(): void {
+    this.currentTraceId = null;
+  }
+
+  /**
+   * Get the current trace ID
+   */
+  getTraceId(): string | null {
+    return this.currentTraceId;
+  }
+
+  /**
+   * Execute a function within a correlation context
+   * @param fn - Function to execute
+   * @param correlationId - Optional correlation ID
+   */
+  withCorrelation<T>(fn: () => T, correlationId?: string): T {
+    const id = this.startCorrelation(correlationId);
+    try {
+      return fn();
+    } finally {
+      this.endCorrelation();
+    }
+  }
+
+  /**
+   * Execute an async function within a correlation context
+   * @param fn - Async function to execute
+   * @param correlationId - Optional correlation ID
+   */
+  async withCorrelationAsync<T>(fn: () => Promise<T>, correlationId?: string): Promise<T> {
+    const id = this.startCorrelation(correlationId);
+    try {
+      return await fn();
+    } finally {
+      this.endCorrelation();
+    }
+  }
+
+  /**
+   * Execute a function within a trace context
+   * @param fn - Function to execute
+   * @param traceId - Optional trace ID
+   */
+  withTrace<T>(fn: () => T, traceId?: string): T {
+    const id = this.startTrace(traceId);
+    try {
+      return fn();
+    } finally {
+      this.endTrace();
+    }
+  }
+
+  /**
+   * Execute an async function within a trace context
+   * @param fn - Async function to execute
+   * @param traceId - Optional trace ID
+   */
+  async withTraceAsync<T>(fn: () => Promise<T>, traceId?: string): Promise<T> {
+    const id = this.startTrace(traceId);
+    try {
+      return await fn();
+    } finally {
+      this.endTrace();
+    }
+  }
+
+  /**
+   * Generate a new span ID for distributed tracing
+   */
+  newSpanId(): string {
+    return this.generateSpanId();
+  }
+
+  /**
+   * Log with structured fields (convenience method)
+   * @param level - Log level
+   * @param message - Log message
+   * @param fields - Structured fields
+   * @param data - Additional unstructured data
+   */
+  structured(level: LogLevel, message: string, fields: StructuredFields, data?: any): void {
+    this.log(level, message, data, { fields });
+  }
+
+  /**
+   * Log a structured operation with timing
+   * @param operation - Operation name
+   * @param fn - Function to execute and time
+   * @param fields - Additional structured fields
+   */
+  async timedOperation<T>(
+    operation: string,
+    fn: () => Promise<T>,
+    fields?: StructuredFields
+  ): Promise<T> {
+    const startTime = Date.now();
+    const spanId = this.generateSpanId();
+
+    this.info(`Starting operation: ${operation}`, undefined, {
+      fields: {
+        ...fields,
+        action: 'start',
+        operation,
+        spanId,
+      },
+    });
+
+    try {
+      const result = await fn();
+      const duration = Date.now() - startTime;
+
+      this.info(`Completed operation: ${operation}`, undefined, {
+        fields: {
+          ...fields,
+          action: 'complete',
+          operation,
+          spanId,
+          duration,
+        },
+      });
+
+      return result;
+    } catch (error) {
+      const duration = Date.now() - startTime;
+
+      this.error(`Failed operation: ${operation}`, error, {
+        fields: {
+          ...fields,
+          action: 'error',
+          operation,
+          spanId,
+          duration,
+        },
+      });
+
+      throw error;
+    }
+  }
+
   // Create a child logger with preset options
   child(options: LoggerOptions): ChildLogger {
     return new ChildLogger(this, options);
@@ -803,6 +1101,7 @@ class ChildLogger {
       category: additionalOptions?.category || this.options.category,
       context: { ...this.options.context, ...additionalOptions?.context },
       tags: [...(this.options.tags || []), ...(additionalOptions?.tags || [])],
+      fields: { ...this.options.fields, ...additionalOptions?.fields },
     };
   }
 
