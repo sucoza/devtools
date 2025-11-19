@@ -1,0 +1,119 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2025-11-19 03:07+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: zh\n"
+
+#: src/App.tsx:105
+msgid "{count, plural, zero {No files found} one {Found one file} few {Found # files} many {Found # files} other {Found # files}}"
+msgstr ""
+
+#: src/App.tsx:97
+msgid "{count, plural, zero {You have no items} one {You have # item} other {You have # items}}"
+msgstr ""
+
+#: src/App.tsx:154
+msgid "{gender, select, male {He is online} female {She is online} other {They are online}}"
+msgstr ""
+
+#: src/App.tsx:61
+msgid "1. Basic Translation"
+msgstr ""
+
+#: src/App.tsx:74
+msgid "2. Variable Interpolation"
+msgstr ""
+
+#: src/App.tsx:89
+msgid "3. Pluralization"
+msgstr ""
+
+#: src/App.tsx:119
+msgid "4. Context-based Selection"
+msgstr ""
+
+#: src/App.tsx:166
+msgid "5. Date & Time Formatting"
+msgstr ""
+
+#: src/App.tsx:183
+msgid "6. Rich Text with Components"
+msgstr ""
+
+#: src/App.tsx:201
+msgid "7. Usage Examples"
+msgstr ""
+
+#: src/App.tsx:192
+msgid "Click <0>this link</0> to learn more."
+msgstr ""
+
+#. placeholder {0}: new Date().toLocaleDateString(i18n.locale)
+#: src/App.tsx:169
+msgid "Current date: {0}"
+msgstr ""
+
+#. placeholder {0}: new Date().toLocaleTimeString(i18n.locale)
+#: src/App.tsx:174
+msgid "Current time: {0}"
+msgstr ""
+
+#: src/App.tsx:140
+msgid "Female"
+msgstr ""
+
+#: src/App.tsx:77
+msgid "Hello {userName}, welcome back!"
+msgstr ""
+
+#: src/App.tsx:210
+msgid "In JavaScript/TypeScript:"
+msgstr ""
+
+#: src/App.tsx:205
+msgid "In JSX:"
+msgstr ""
+
+#: src/App.tsx:55
+msgid "LinguiJS Examples"
+msgstr ""
+
+#: src/App.tsx:130
+msgid "Male"
+msgstr ""
+
+#: src/App.tsx:150
+msgid "Other"
+msgstr ""
+
+#: src/App.tsx:220
+msgid "Pluralization:"
+msgstr ""
+
+#: src/App.tsx:26
+msgid "Select Language:"
+msgstr ""
+
+#: src/App.tsx:67
+msgid "This demonstrates how to use LinguiJS with React."
+msgstr ""
+
+#: src/App.tsx:186
+msgid "This is <0>bold text</0> and this is <1>italic text</1>."
+msgstr ""
+
+#: src/App.tsx:64
+msgid "Welcome to the DevTools internationalization example!"
+msgstr ""
+
+#: src/App.tsx:215
+msgid "With variables:"
+msgstr ""
+
+#. placeholder {0}: count === 1 ? 'notification' : 'notifications'
+#: src/App.tsx:80
+msgid "You have {count} {0}"
+msgstr ""

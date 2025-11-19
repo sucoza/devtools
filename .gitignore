@@ -150,3 +150,9 @@ $RECYCLE.BIN/
 nx-native-file-cache-*/
 .cursor/rules/nx-rules.mdc
 .github/instructions/nx.instructions.md
+
+# LinguiJS - ignore compiled catalogs, keep source .po files
+locales/**/*.js
+locales/**/*.mjs
+locales/**/*.json
+!locales/**/*.po

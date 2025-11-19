@@ -1,0 +1,25 @@
+{
+  "locales": ["en", "es", "fr", "de", "ja", "zh"],
+  "sourceLocale": "en",
+  "catalogs": [
+    {
+      "path": "<rootDir>/locales/{locale}/messages",
+      "include": ["<rootDir>/packages/*/src", "<rootDir>/plugins/*/src"],
+      "exclude": ["**/node_modules/**", "**/dist/**", "**/*.test.ts", "**/*.test.tsx"]
+    }
+  ],
+  "format": "po",
+  "formatOptions": {
+    "origins": true,
+    "lineNumbers": true
+  },
+  "compileNamespace": "es",
+  "extractBabelOptions": {
+    "presets": ["@babel/preset-typescript", "@babel/preset-react"]
+  },
+  "orderBy": "messageId",
+  "pseudoLocale": "pseudo",
+  "fallbackLocales": {
+    "default": "en"
+  }
+}

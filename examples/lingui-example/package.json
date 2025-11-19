@@ -1,0 +1,32 @@
+{
+  "name": "@sucoza/lingui-example",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Example demonstrating LinguiJS usage in DevTools ecosystem",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "i18n:extract": "lingui extract",
+    "i18n:compile": "lingui compile",
+    "i18n:extract-compile": "lingui extract && lingui compile"
+  },
+  "dependencies": {
+    "@lingui/core": "catalog:",
+    "@lingui/detect-locale": "catalog:",
+    "@lingui/macro": "catalog:",
+    "@lingui/react": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@babel/core": "catalog:",
+    "@lingui/cli": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}
