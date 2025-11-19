@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react'
+import { Trans } from '@lingui/macro'
 import { useErrorBoundaryDevTools } from '../core/store'
 import { ErrorCategory, ErrorSeverity } from '../types'
 
@@ -140,50 +141,50 @@ export const ErrorAnalytics: React.FC = () => {
       {/* Header Controls */}
       <div style={headerStyles}>
         <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-          Error Analytics
+          <Trans>Error Analytics</Trans>
         </h3>
         <select
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value as any)}
           style={selectStyles}
         >
-          <option value="1h">Last Hour</option>
-          <option value="24h">Last 24 Hours</option>
-          <option value="7d">Last 7 Days</option>
-          <option value="30d">Last 30 Days</option>
+          <option value="1h"><Trans>Last Hour</Trans></option>
+          <option value="24h"><Trans>Last 24 Hours</Trans></option>
+          <option value="7d"><Trans>Last 7 Days</Trans></option>
+          <option value="30d"><Trans>Last 30 Days</Trans></option>
         </select>
       </div>
 
       {/* Metrics Grid */}
       <div style={metricsGridStyles}>
         <div style={metricCardStyles}>
-          <div style={metricTitleStyles}>Total Errors</div>
+          <div style={metricTitleStyles}><Trans>Total Errors</Trans></div>
           <div style={{...metricValueStyles, color: filteredErrors.length > 10 ? '#ff5722' : '#4caf50'}}>{filteredErrors.length}</div>
         </div>
         <div style={metricCardStyles}>
-          <div style={metricTitleStyles}>Error Rate</div>
+          <div style={metricTitleStyles}><Trans>Error Rate</Trans></div>
           <div style={{...metricValueStyles, color: errorRate > 1 ? '#f44336' : '#4caf50'}}>
             {errorRate.toFixed(2)}/min
           </div>
         </div>
         <div style={metricCardStyles}>
-          <div style={metricTitleStyles}>Coverage</div>
+          <div style={metricTitleStyles}><Trans>Coverage</Trans></div>
           <div style={{...metricValueStyles, color: coverage > 80 ? '#4caf50' : coverage > 50 ? '#ff9800' : '#f44336'}}>
             {coverage.toFixed(1)}%
           </div>
         </div>
         <div style={metricCardStyles}>
-          <div style={metricTitleStyles}>MTTR</div>
+          <div style={metricTitleStyles}><Trans>MTTR</Trans></div>
           <div style={{...metricValueStyles, color: calculateMTTR() < 5 ? '#4caf50' : '#ff9800'}}>
             {calculateMTTR()}m
           </div>
         </div>
         <div style={metricCardStyles}>
-          <div style={metricTitleStyles}>Error Groups</div>
+          <div style={metricTitleStyles}><Trans>Error Groups</Trans></div>
           <div style={metricValueStyles}>{errorGroups.length}</div>
         </div>
         <div style={metricCardStyles}>
-          <div style={metricTitleStyles}>Critical Errors</div>
+          <div style={metricTitleStyles}><Trans>Critical Errors</Trans></div>
           <div style={{...metricValueStyles, color: criticalErrors > 0 ? '#f44336' : '#4caf50'}}>
             {criticalErrors}
           </div>
@@ -195,7 +196,7 @@ export const ErrorAnalytics: React.FC = () => {
         <div style={breakdownStyles}>
           <div style={breakdownCardStyles}>
             <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 'bold', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-              By Severity
+              <Trans>By Severity</Trans>
             </h4>
             <div>
               {Object.values(ErrorSeverity).map(severity => {
@@ -212,7 +213,7 @@ export const ErrorAnalytics: React.FC = () => {
 
           <div style={breakdownCardStyles}>
             <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 'bold', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-              By Category
+              <Trans>By Category</Trans>
             </h4>
             <div>
               {Object.values(ErrorCategory).map(category => {
@@ -244,9 +245,9 @@ export const ErrorAnalytics: React.FC = () => {
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '48px', marginBottom: '8px' }}>📊</div>
-          <div>Error trend chart would be displayed here</div>
+          <div><Trans>Error trend chart would be displayed here</Trans></div>
           <div style={{ fontSize: '12px', marginTop: '4px' }}>
-            (Chart visualization will be implemented in future version)
+            <Trans>(Chart visualization will be implemented in future version)</Trans>
           </div>
         </div>
       </div>

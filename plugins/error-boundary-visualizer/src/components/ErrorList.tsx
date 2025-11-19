@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react'
+import { Trans } from '@lingui/macro'
 import { useErrorBoundaryDevTools } from '../core/store'
 import type { ErrorInfo } from '../types'
 import { ErrorCategory, ErrorSeverity } from '../types'
@@ -135,7 +136,7 @@ export const ErrorList: React.FC = () => {
             onChange={(e) => setCategoryFilter(e.target.value as any)}
             style={selectStyles}
           >
-            <option value="all">All Categories</option>
+            <option value="all"><Trans>All Categories</Trans></option>
             {Object.values(ErrorCategory).map(category => (
               <option key={category} value={category}>
                 {category.charAt(0).toUpperCase() + category.slice(1).replace('_', ' ')}
@@ -147,7 +148,7 @@ export const ErrorList: React.FC = () => {
             onChange={(e) => setSeverityFilter(e.target.value as any)}
             style={selectStyles}
           >
-            <option value="all">All Severities</option>
+            <option value="all"><Trans>All Severities</Trans></option>
             {Object.values(ErrorSeverity).map(severity => (
               <option key={severity} value={severity}>
                 {severity.charAt(0).toUpperCase() + severity.slice(1)}
@@ -155,33 +156,33 @@ export const ErrorList: React.FC = () => {
             ))}
           </select>
           <button style={buttonStyles} onClick={clearErrors}>
-            Clear All
+            <Trans>Clear All</Trans>
           </button>
         </div>
         
-        <div style={{ 
-          fontSize: '12px', 
+        <div style={{
+          fontSize: '12px',
           color: theme === 'dark' ? '#ccc' : '#666',
           padding: '8px'
         }}>
-          Total: {filteredErrors.length} | 
-          Critical: {filteredErrors.filter(e => e.severity === 'critical').length} | 
-          High: {filteredErrors.filter(e => e.severity === 'high').length} | 
-          Medium: {filteredErrors.filter(e => e.severity === 'medium').length} | 
-          Low: {filteredErrors.filter(e => e.severity === 'low').length}
+          <Trans>Total: {filteredErrors.length}</Trans> |
+          <Trans>Critical: {filteredErrors.filter(e => e.severity === 'critical').length}</Trans> |
+          <Trans>High: {filteredErrors.filter(e => e.severity === 'high').length}</Trans> |
+          <Trans>Medium: {filteredErrors.filter(e => e.severity === 'medium').length}</Trans> |
+          <Trans>Low: {filteredErrors.filter(e => e.severity === 'low').length}</Trans>
         </div>
       </div>
 
       <div style={listStyles}>
         {filteredErrors.length === 0 ? (
-          <div style={{ 
-            padding: '20px', 
-            textAlign: 'center', 
-            color: theme === 'dark' ? '#999' : '#666' 
+          <div style={{
+            padding: '20px',
+            textAlign: 'center',
+            color: theme === 'dark' ? '#999' : '#666'
           }}>
-            {errors.length === 0 
-              ? 'No errors recorded yet.'
-              : 'No errors match the current filters.'
+            {errors.length === 0
+              ? <Trans>No errors recorded yet.</Trans>
+              : <Trans>No errors match the current filters.</Trans>
             }
           </div>
         ) : (
@@ -207,11 +208,11 @@ export const ErrorList: React.FC = () => {
                 {error.message}
               </div>
               {error.occurrences > 1 && (
-                <div style={{ 
-                  fontSize: '11px', 
-                  color: theme === 'dark' ? '#999' : '#666' 
+                <div style={{
+                  fontSize: '11px',
+                  color: theme === 'dark' ? '#999' : '#666'
                 }}>
-                  Occurred {error.occurrences} times
+                  <Trans>Occurred {error.occurrences} times</Trans>
                 </div>
               )}
               {selectedError?.id === error.id && error.stack && (

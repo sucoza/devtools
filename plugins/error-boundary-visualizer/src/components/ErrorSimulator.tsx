@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Trans } from '@lingui/macro'
 import { useErrorBoundaryDevTools } from '../core/store'
 import type { ErrorSimulation } from '../types'
 import { ErrorCategory } from '../types'
@@ -230,25 +231,25 @@ export const ErrorSimulator: React.FC = () => {
     <div style={containerStyles}>
       <div style={headerStyles}>
         <h3 style={{ margin: 0, color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-          Error Simulator
+          <Trans>Error Simulator</Trans>
         </h3>
         <button
           style={buttonStyles}
           onClick={() => setIsCreating(!isCreating)}
         >
-          {isCreating ? 'Cancel' : 'Create Simulation'}
+          {isCreating ? <Trans>Cancel</Trans> : <Trans>Create Simulation</Trans>}
         </button>
       </div>
 
       {isCreating && (
         <div style={formStyles}>
           <h4 style={{ margin: '0 0 8px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-            Create New Simulation
+            <Trans>Create New Simulation</Trans>
           </h4>
-          
+
           <div>
             <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-              Name
+              <Trans>Name</Trans>
             </label>
             <input
               type="text"
@@ -261,7 +262,7 @@ export const ErrorSimulator: React.FC = () => {
 
           <div>
             <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-              Description
+              <Trans>Description</Trans>
             </label>
             <textarea
               value={newSimulation.description || ''}
@@ -274,7 +275,7 @@ export const ErrorSimulator: React.FC = () => {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-                Error Type
+                <Trans>Error Type</Trans>
               </label>
               <select
                 value={newSimulation.errorType}
@@ -291,14 +292,14 @@ export const ErrorSimulator: React.FC = () => {
 
             <div>
               <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-                Target Component
+                <Trans>Target Component</Trans>
               </label>
               <select
                 value={newSimulation.targetComponent || ''}
                 onChange={(e) => setNewSimulation({ ...newSimulation, targetComponent: e.target.value || undefined })}
                 style={selectStyles}
               >
-                <option value="">Any Component</option>
+                <option value=""><Trans>Any Component</Trans></option>
                 {availableComponents.map(component => (
                   <option key={component} value={component}>
                     {component}
@@ -310,7 +311,7 @@ export const ErrorSimulator: React.FC = () => {
 
           <div>
             <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-              Error Message
+              <Trans>Error Message</Trans>
             </label>
             <textarea
               value={newSimulation.errorMessage || ''}
@@ -323,23 +324,23 @@ export const ErrorSimulator: React.FC = () => {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-                Trigger Condition
+                <Trans>Trigger Condition</Trans>
               </label>
               <select
                 value={newSimulation.triggerCondition}
                 onChange={(e) => setNewSimulation({ ...newSimulation, triggerCondition: e.target.value as any })}
                 style={selectStyles}
               >
-                <option value="immediate">Immediate</option>
-                <option value="delayed">Delayed</option>
-                <option value="conditional">Conditional</option>
+                <option value="immediate"><Trans>Immediate</Trans></option>
+                <option value="delayed"><Trans>Delayed</Trans></option>
+                <option value="conditional"><Trans>Conditional</Trans></option>
               </select>
             </div>
 
             {newSimulation.triggerCondition === 'delayed' && (
               <div>
                 <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-                  Delay (ms)
+                  <Trans>Delay (ms)</Trans>
                 </label>
                 <input
                   type="number"
@@ -353,10 +354,10 @@ export const ErrorSimulator: React.FC = () => {
 
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
             <button style={secondaryButtonStyles} onClick={() => setIsCreating(false)}>
-              Cancel
+              <Trans>Cancel</Trans>
             </button>
             <button style={buttonStyles} onClick={handleCreateSimulation}>
-              Create Simulation
+              <Trans>Create Simulation</Trans>
             </button>
           </div>
         </div>
@@ -366,7 +367,7 @@ export const ErrorSimulator: React.FC = () => {
         <>
           <div>
             <h4 style={{ margin: '0 0 12px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-              Predefined Scenarios
+              <Trans>Predefined Scenarios</Trans>
             </h4>
             <div style={gridStyles}>
               {predefinedScenarios.map((scenario, index) => (
@@ -404,15 +405,15 @@ export const ErrorSimulator: React.FC = () => {
 
           <div>
             <h4 style={{ margin: '0 0 12px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-              Active Simulations ({simulations.length})
+              <Trans>Active Simulations ({simulations.length})</Trans>
             </h4>
             {simulations.length === 0 ? (
-              <div style={{ 
-                ...cardStyles, 
-                textAlign: 'center', 
-                color: theme === 'dark' ? '#999' : '#666' 
+              <div style={{
+                ...cardStyles,
+                textAlign: 'center',
+                color: theme === 'dark' ? '#999' : '#666'
               }}>
-                No active simulations. Create a new simulation or load a predefined scenario.
+                <Trans>No active simulations. Create a new simulation or load a predefined scenario.</Trans>
               </div>
             ) : (
               simulations.map((simulation) => (
@@ -437,13 +438,13 @@ export const ErrorSimulator: React.FC = () => {
                       style={buttonStyles}
                       onClick={() => handleRunSimulation(simulation.id)}
                     >
-                      Run
+                      <Trans>Run</Trans>
                     </button>
                     <button
                       style={secondaryButtonStyles}
                       onClick={() => removeSimulation(simulation.id)}
                     >
-                      Remove
+                      <Trans>Remove</Trans>
                     </button>
                   </div>
                 </div>

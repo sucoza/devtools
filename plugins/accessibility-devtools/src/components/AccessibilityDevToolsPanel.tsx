@@ -1,14 +1,15 @@
 import React from 'react';
-import { 
-  Eye, 
-  EyeOff, 
-  Play, 
-  Pause, 
-  Square, 
-  Shield, 
-  AlertTriangle, 
-  Palette, 
-  Keyboard, 
+import { Trans } from '@lingui/macro';
+import {
+  Eye,
+  EyeOff,
+  Play,
+  Pause,
+  Square,
+  Shield,
+  AlertTriangle,
+  Palette,
+  Keyboard,
   Focus,
   MapPin,
   BarChart3
@@ -59,10 +60,10 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
   const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'scan-toggle',
-      label: scanState.isScanning 
-        ? (scanState.isPaused ? 'Resume Scan' : 'Pause Scan')
-        : 'Start Scan',
-      icon: scanState.isScanning 
+      label: scanState.isScanning
+        ? (scanState.isPaused ? <Trans>Resume Scan</Trans> : <Trans>Pause Scan</Trans>)
+        : <Trans>Start Scan</Trans>,
+      icon: scanState.isScanning
         ? (scanState.isPaused ? '▶️' : '⏸️')
         : '▶️',
       onClick: () => {
@@ -80,14 +81,14 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
     },
     ...(scanState.isScanning ? [{
       id: 'stop',
-      label: 'Stop Scan',
+      label: <Trans>Stop Scan</Trans>,
       icon: '⏹️',
       onClick: stopScan,
       shortcut: 'Ctrl+S'
     }] : []),
     {
       id: 'overlay-toggle',
-      label: settings.enableOverlay ? 'Hide Overlay' : 'Show Overlay',
+      label: settings.enableOverlay ? <Trans>Hide Overlay</Trans> : <Trans>Show Overlay</Trans>,
       icon: settings.enableOverlay ? '👁️' : '👁️‍🗨️',
       onClick: () => updateSettings({ enableOverlay: !settings.enableOverlay }),
       separator: true,
@@ -95,7 +96,7 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
     },
     {
       id: 'export-report',
-      label: 'Export Report',
+      label: <Trans>Export Report</Trans>,
       icon: '💾',
       onClick: () => {
         // TODO: Implement export functionality
@@ -105,7 +106,7 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
     },
     {
       id: 'settings',
-      label: 'Settings',
+      label: <Trans>Settings</Trans>,
       icon: '⚙️',
       onClick: () => {
         // TODO: Implement settings functionality
@@ -119,16 +120,16 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
   const tabs: PluginTab[] = [
     {
       id: 'overview',
-      label: 'Overview',
+      label: <Trans>Overview</Trans>,
       icon: BarChart3,
       badge: { count: stats.total },
       content: <IssueList showOverview={true} />
     },
     {
       id: 'violations',
-      label: 'Violations',
+      label: <Trans>Violations</Trans>,
       icon: AlertTriangle,
-      badge: { 
+      badge: {
         count: stats.total,
         variant: stats.critical > 0 ? 'critical' : stats.serious > 0 ? 'serious' : 'default'
       },
@@ -136,31 +137,31 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
     },
     {
       id: 'color-contrast',
-      label: 'Color Contrast',
+      label: <Trans>Color Contrast</Trans>,
       icon: Palette,
       content: <ColorContrastAnalyzer />
     },
     {
       id: 'keyboard',
-      label: 'Keyboard Nav',
+      label: <Trans>Keyboard Nav</Trans>,
       icon: Keyboard,
       content: <KeyboardNavVisualizer />
     },
     {
       id: 'aria',
-      label: 'ARIA',
+      label: <Trans>ARIA</Trans>,
       icon: Shield,
       content: <ARIAValidator />
     },
     {
       id: 'landmarks',
-      label: 'Landmarks',
+      label: <Trans>Landmarks</Trans>,
       icon: MapPin,
       content: <LandmarkMapper />
     },
     {
       id: 'focus',
-      label: 'Focus',
+      label: <Trans>Focus</Trans>,
       icon: Focus,
       content: <FocusDebugger />
     }
@@ -168,16 +169,16 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
 
   // Configure metrics
   const metrics: PluginMetric[] = [
-    { label: 'Total Issues', value: stats.total },
-    { label: 'Critical', value: stats.critical, color: COLORS.severity.critical },
-    { label: 'Serious', value: stats.serious, color: COLORS.severity.serious },
-    { label: 'Moderate', value: stats.moderate, color: COLORS.severity.moderate },
-    { label: 'Minor', value: stats.minor, color: COLORS.severity.minor },
+    { label: <Trans>Total Issues</Trans>, value: stats.total },
+    { label: <Trans>Critical</Trans>, value: stats.critical, color: COLORS.severity.critical },
+    { label: <Trans>Serious</Trans>, value: stats.serious, color: COLORS.severity.serious },
+    { label: <Trans>Moderate</Trans>, value: stats.moderate, color: COLORS.severity.moderate },
+    { label: <Trans>Minor</Trans>, value: stats.minor, color: COLORS.severity.minor },
     ...(currentAudit ? [{
-      label: 'WCAG Level', 
+      label: <Trans>WCAG Level</Trans>,
       value: settings.wcagLevel
     }, {
-      label: 'Engine', 
+      label: <Trans>Engine</Trans>,
       value: `${currentAudit.testEngine.name} v${currentAudit.testEngine.version}`
     }] : [])
   ];
@@ -186,33 +187,33 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
   const uniqueRuleIds = getUniqueRuleIds();
   const filterSections: FilterSection[] = [
     {
-      title: 'Severity',
+      title: <Trans>Severity</Trans>,
       icon: AlertTriangle,
       items: [
         {
           id: 'critical',
-          label: 'Critical',
+          label: <Trans>Critical</Trans>,
           count: stats.critical,
           isActive: filters.severity.has('critical'),
           onClick: () => toggleSeverityFilter('critical')
         },
         {
           id: 'serious',
-          label: 'Serious',
+          label: <Trans>Serious</Trans>,
           count: stats.serious,
           isActive: filters.severity.has('serious'),
           onClick: () => toggleSeverityFilter('serious')
         },
         {
           id: 'moderate',
-          label: 'Moderate',
+          label: <Trans>Moderate</Trans>,
           count: stats.moderate,
           isActive: filters.severity.has('moderate'),
           onClick: () => toggleSeverityFilter('moderate')
         },
         {
           id: 'minor',
-          label: 'Minor',
+          label: <Trans>Minor</Trans>,
           count: stats.minor,
           isActive: filters.severity.has('minor'),
           onClick: () => toggleSeverityFilter('minor')
@@ -220,7 +221,7 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
       ]
     },
     {
-      title: 'Rules',
+      title: <Trans>Rules</Trans>,
       icon: Shield,
       items: uniqueRuleIds.map(ruleId => ({
         id: ruleId,
@@ -234,7 +235,7 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
   return (
     <div className={className} style={{ position: 'relative' }}>
       <PluginPanel
-        title="Accessibility Auditor"
+        title={<Trans>Accessibility Auditor</Trans>}
         icon={Shield}
         tabs={tabs}
         activeTabId={ui.activeTab}
@@ -245,12 +246,12 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
         showFilters={true}
         searchValue={filters.searchQuery || ''}
         onSearchChange={updateSearchFilter}
-        searchPlaceholder="Search issues..."
+        searchPlaceholder={<Trans>Search issues...</Trans>}
         status={{
           isActive: scanState.isScanning,
-          label: scanState.isScanning 
-            ? (scanState.isPaused ? 'Paused' : 'Scanning')
-            : 'Idle',
+          label: scanState.isScanning
+            ? (scanState.isPaused ? <Trans>Paused</Trans> : <Trans>Scanning</Trans>)
+            : <Trans>Idle</Trans>,
           color: scanState.isScanning ? COLORS.status.success : COLORS.text.muted
         }}
       />

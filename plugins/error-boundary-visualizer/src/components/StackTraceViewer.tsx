@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react'
+import { Trans } from '@lingui/macro'
 import { CodeBlock, Badge, Accordion, ScrollableContainer } from '@sucoza/shared-components'
 import { useErrorBoundaryDevTools } from '../core/store'
 import type { EnhancedStackFrame } from '../types'
@@ -87,12 +88,12 @@ export const StackTraceViewer: React.FC<StackTraceViewerProps> = ({
       <div style={{ padding: '8px 0' }}>
         {/* File information */}
         {frame.fileName && (
-          <div style={{ 
-            marginBottom: '12px', 
+          <div style={{
+            marginBottom: '12px',
             fontSize: '12px',
             color: 'var(--color-text-secondary)'
           }}>
-            <strong>File:</strong> {frame.fileName}
+            <strong><Trans>File:</Trans></strong> {frame.fileName}
             {frame.lineNumber && (
               <span>
                 :<span style={{ color: 'var(--color-accent)' }}>{frame.lineNumber}</span>
@@ -107,13 +108,13 @@ export const StackTraceViewer: React.FC<StackTraceViewerProps> = ({
         {/* Source context if available */}
         {frame.sourceContext && frame.sourceContext.length > 0 && (
           <div>
-            <div style={{ 
-              marginBottom: '8px', 
-              fontSize: '12px', 
+            <div style={{
+              marginBottom: '8px',
+              fontSize: '12px',
               fontWeight: 'bold',
               color: 'var(--color-text-primary)'
             }}>
-              Source Context:
+              <Trans>Source Context:</Trans>
             </div>
             <CodeBlock
               code={frame.sourceContext.map((line, lineIndex) => {
@@ -130,13 +131,13 @@ export const StackTraceViewer: React.FC<StackTraceViewerProps> = ({
 
         {/* Raw stack frame */}
         <div>
-          <div style={{ 
-            marginBottom: '8px', 
-            fontSize: '12px', 
+          <div style={{
+            marginBottom: '8px',
+            fontSize: '12px',
             fontWeight: 'bold',
             color: 'var(--color-text-primary)'
           }}>
-            Stack Frame:
+            <Trans>Stack Frame:</Trans>
           </div>
           <CodeBlock
             code={frameToCode(frame)}
@@ -152,19 +153,19 @@ export const StackTraceViewer: React.FC<StackTraceViewerProps> = ({
     <ScrollableContainer style={{ maxHeight: '400px' }}>
       <div style={{ padding: '8px 0' }}>
         {/* Header */}
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
           justifyContent: 'space-between',
           marginBottom: '12px',
           padding: '8px 0',
           borderBottom: '1px solid var(--color-border)'
         }}>
           <span style={{ fontWeight: 'bold', fontSize: '14px' }}>
-            Stack Trace ({parsedFrames.length} frames)
+            <Trans>Stack Trace ({parsedFrames.length} frames)</Trans>
           </span>
           {parsedFrames.length > maxFrames && (
-            <button 
+            <button
               onClick={() => setShowFullTrace(!showFullTrace)}
               style={{
                 background: 'none',
@@ -176,7 +177,7 @@ export const StackTraceViewer: React.FC<StackTraceViewerProps> = ({
                 color: 'var(--color-accent)'
               }}
             >
-              {showFullTrace ? 'Show less' : `Show all ${parsedFrames.length} frames`}
+              {showFullTrace ? <Trans>Show less</Trans> : <Trans>Show all {parsedFrames.length} frames</Trans>}
             </button>
           )}
         </div>
@@ -184,13 +185,13 @@ export const StackTraceViewer: React.FC<StackTraceViewerProps> = ({
         {/* Raw stack trace */}
         {displayedFrames.length > 0 && (
           <div style={{ marginBottom: '16px' }}>
-            <div style={{ 
-              marginBottom: '8px', 
-              fontSize: '12px', 
+            <div style={{
+              marginBottom: '8px',
+              fontSize: '12px',
               fontWeight: 'bold',
               color: 'var(--color-text-primary)'
             }}>
-              Raw Stack Trace:
+              <Trans>Raw Stack Trace:</Trans>
             </div>
             <CodeBlock
               code={stack}
@@ -204,13 +205,13 @@ export const StackTraceViewer: React.FC<StackTraceViewerProps> = ({
         {/* Parsed frames */}
         {displayedFrames.length > 0 && (
           <div>
-            <div style={{ 
-              marginBottom: '8px', 
-              fontSize: '12px', 
+            <div style={{
+              marginBottom: '8px',
+              fontSize: '12px',
               fontWeight: 'bold',
               color: 'var(--color-text-primary)'
             }}>
-              Parsed Frames:
+              <Trans>Parsed Frames:</Trans>
             </div>
             <Accordion 
               items={frameAccordionItems}

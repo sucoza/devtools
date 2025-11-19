@@ -16,7 +16,9 @@
     "test:ui": "vitest --ui",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts,.tsx",
-    "format": "prettier --write src/**/*.{ts,tsx}"
+    "format": "prettier --write src/**/*.{ts,tsx}",
+    "i18n:extract": "lingui extract",
+    "i18n:compile": "lingui compile"
   },
   "keywords": [
     "devtools",
@@ -33,6 +35,9 @@
     "react-dom": ">=18.0.0"
   },
   "dependencies": {
+    "@lingui/core": "catalog:",
+    "@lingui/macro": "catalog:",
+    "@lingui/react": "catalog:",
     "@sucoza/devtools-common": "workspace:*",
     "@sucoza/plugin-core": "workspace:*",
     "@sucoza/shared-components": "workspace:*",
@@ -47,6 +52,8 @@
     "zustand": "catalog:"
   },
   "devDependencies": {
+    "@babel/core": "catalog:",
+    "@lingui/cli": "catalog:",
     "@rollup/plugin-commonjs": "catalog:",
     "@rollup/plugin-node-resolve": "catalog:",
     "@rollup/plugin-typescript": "catalog:",

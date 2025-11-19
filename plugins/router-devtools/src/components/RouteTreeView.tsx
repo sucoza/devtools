@@ -3,6 +3,7 @@
  */
 
 import React, { useMemo } from 'react';
+import { Trans } from '@lingui/macro';
 import {
   Badge,
   EmptyState
@@ -109,12 +110,12 @@ function RouteNode({
         {/* Route info */}
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
           {/* Path */}
-          <span style={{ 
+          <span style={{
             color: node.isActive ? '#4ec9b0' : '#cccccc',
             fontWeight: node.isActive ? '600' : '400'
           }}>
             {node.path || '/'}
-            {node.index && <span style={{ color: '#e67e22', fontSize: '9px' }}> (index)</span>}
+            {node.index && <span style={{ color: '#e67e22', fontSize: '9px' }}> <Trans>(index)</Trans></span>}
           </span>
           
           {/* Element name */}
@@ -126,18 +127,18 @@ function RouteNode({
           
           {/* Active indicator */}
           {node.isActive && (
-            <Badge variant="success" size="xs">ACTIVE</Badge>
+            <Badge variant="success" size="xs"><Trans>ACTIVE</Trans></Badge>
           )}
-          
+
           {/* Matched indicator */}
           {node.isMatched && !node.isActive && (
-            <Badge variant="warning" size="xs">MATCHED</Badge>
+            <Badge variant="warning" size="xs"><Trans>MATCHED</Trans></Badge>
           )}
-          
+
           {/* Parameters count */}
           {node.params && Object.keys(node.params).length > 0 && (
             <Badge variant="info" size="xs">
-              {`${Object.keys(node.params).length} param${Object.keys(node.params).length > 1 ? 's' : ''}`}
+              <Trans>{Object.keys(node.params).length} param{Object.keys(node.params).length > 1 ? 's' : ''}</Trans>
             </Badge>
           )}
         </div>
@@ -158,7 +159,7 @@ function RouteNode({
               }}
               title={`Navigate to ${node.fullPath}`}
             >
-              Go
+              <Trans>Go</Trans>
             </button>
           )}
         </div>
@@ -174,7 +175,7 @@ function RouteNode({
           borderRadius: '3px',
           border: '1px solid #3c3c3c'
         }}>
-          <div style={{ color: '#9cdcfe', fontSize: '10px', marginBottom: '4px' }}>Parameters:</div>
+          <div style={{ color: '#9cdcfe', fontSize: '10px', marginBottom: '4px' }}><Trans>Parameters:</Trans></div>
           {Object.entries(node.params).map(([key, value]) => (
             <div key={key} style={{ display: 'flex', gap: '8px', fontSize: '10px', marginBottom: '2px' }}>
               <span style={{ color: '#e74c3c', minWidth: '60px' }}>{key}:</span>
@@ -194,7 +195,7 @@ function RouteNode({
           borderRadius: '3px',
           border: '1px solid #3c3c3c'
         }}>
-          <div style={{ color: '#9cdcfe', fontSize: '10px', marginBottom: '4px' }}>Loader Data:</div>
+          <div style={{ color: '#9cdcfe', fontSize: '10px', marginBottom: '4px' }}><Trans>Loader Data:</Trans></div>
           <pre style={{
             fontSize: '9px',
             color: '#d4d4d4',
@@ -266,8 +267,8 @@ export function RouteTreeView({
     return (
       <EmptyState
         icon={<Route size={48} />}
-        title="No routes found"
-        description="Make sure your router adapter is properly connected and routes are defined."
+        title={<Trans>No routes found</Trans>}
+        description={<Trans>Make sure your router adapter is properly connected and routes are defined.</Trans>}
       />
     );
   }
@@ -284,14 +285,14 @@ export function RouteTreeView({
         fontSize: '11px'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ color: '#9cdcfe' }}>Route Tree</span>
+          <span style={{ color: '#9cdcfe' }}><Trans>Route Tree</Trans></span>
           <span style={{ color: '#969696' }}>
-            {stats.totalNodes} routes • {stats.activeNodes} active • {stats.matchedNodes} matched
+            <Trans>{stats.totalNodes} routes • {stats.activeNodes} active • {stats.matchedNodes} matched</Trans>
           </span>
         </div>
         {currentLocation && (
           <div style={{ marginTop: '4px', color: '#cccccc', fontSize: '10px' }}>
-            <span style={{ color: '#e74c3c' }}>Current:</span> {currentLocation.pathname}
+            <span style={{ color: '#e74c3c' }}><Trans>Current:</Trans></span> {currentLocation.pathname}
             {currentLocation.search && (
               <span style={{ color: '#3498db' }}>{currentLocation.search}</span>
             )}
@@ -359,9 +360,9 @@ export function RouteTreeView({
             borderRadius: '3px'
           }}
         >
-          Expand All
+          <Trans>Expand All</Trans>
         </button>
-        
+
         <button
           onClick={() => {
             // Collapse all routes
@@ -377,7 +378,7 @@ export function RouteTreeView({
             borderRadius: '3px'
           }}
         >
-          Collapse All
+          <Trans>Collapse All</Trans>
         </button>
       </div>
     </div>
