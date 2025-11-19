@@ -79,6 +79,12 @@ export function LoggerDevToolsPanel() {
       preserveOriginal: true,
       includeTrace: false,
     },
+    structured: {
+      enabled: true,
+      autoTracing: false,
+      includeHostname: false,
+      includeTimestamp: true,
+    },
   });
   const [metrics, setMetrics] = useState<LogMetrics>({
     totalLogs: 0,
@@ -355,7 +361,8 @@ export function LoggerDevToolsPanel() {
           log.message.toLowerCase().includes(query) ||
           (log.category && log.category.toLowerCase().includes(query)) ||
           (log.tags && log.tags.some(tag => tag.toLowerCase().includes(query))) ||
-          (log.data && JSON.stringify(log.data).toLowerCase().includes(query))
+          (log.data && JSON.stringify(log.data).toLowerCase().includes(query)) ||
+          (log.fields && JSON.stringify(log.fields).toLowerCase().includes(query))
         );
       }
 
@@ -1441,6 +1448,65 @@ export function LoggerDevToolsPanel() {
                       ))}
                     </div>
                   )}
+                  {log.fields && (
+                    <div style={{ marginTop: '2px', fontSize: '10px', color: '#666' }}>
+                      {log.fields.correlationId && (
+                        <span style={{
+                          marginRight: '8px',
+                          padding: '1px 4px',
+                          background: 'rgba(78, 201, 176, 0.1)',
+                          borderRadius: '2px',
+                          color: '#4ec9b0',
+                        }}>
+                          🔗 {log.fields.correlationId}
+                        </span>
+                      )}
+                      {log.fields.traceId && (
+                        <span style={{
+                          marginRight: '8px',
+                          padding: '1px 4px',
+                          background: 'rgba(86, 156, 214, 0.1)',
+                          borderRadius: '2px',
+                          color: '#569cd6',
+                        }}>
+                          🔍 {log.fields.traceId.substring(0, 8)}...
+                        </span>
+                      )}
+                      {log.fields.userId && (
+                        <span style={{
+                          marginRight: '8px',
+                          padding: '1px 4px',
+                          background: 'rgba(206, 145, 120, 0.1)',
+                          borderRadius: '2px',
+                          color: '#ce9178',
+                        }}>
+                          👤 {log.fields.userId}
+                        </span>
+                      )}
+                      {log.fields.requestId && (
+                        <span style={{
+                          marginRight: '8px',
+                          padding: '1px 4px',
+                          background: 'rgba(220, 220, 170, 0.1)',
+                          borderRadius: '2px',
+                          color: '#dcdcaa',
+                        }}>
+                          📨 {log.fields.requestId}
+                        </span>
+                      )}
+                      {log.fields.duration !== undefined && (
+                        <span style={{
+                          marginRight: '8px',
+                          padding: '1px 4px',
+                          background: 'rgba(181, 206, 168, 0.1)',
+                          borderRadius: '2px',
+                          color: '#b5cea8',
+                        }}>
+                          ⏱️ {log.fields.duration}ms
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             })
@@ -1510,6 +1576,42 @@ export function LoggerDevToolsPanel() {
                 }}>
                   {JSON.stringify(selectedLog.context, null, 2)}
                 </pre>
+              </div>
+            )}
+
+            {selectedLog.fields && Object.keys(selectedLog.fields).length > 0 && (
+              <div style={{ marginBottom: '10px' }}>
+                <div style={{ color: '#969696', marginBottom: '2px' }}>Structured Fields:</div>
+                <div style={{
+                  background: '#252526',
+                  borderRadius: '3px',
+                  padding: '4px',
+                  fontSize: '10px',
+                }}>
+                  {Object.entries(selectedLog.fields).map(([key, value]) => (
+                    <div key={key} style={{
+                      display: 'flex',
+                      gap: '8px',
+                      padding: '2px 0',
+                      borderBottom: '1px solid #333',
+                    }}>
+                      <span style={{
+                        color: '#4ec9b0',
+                        fontWeight: 'bold',
+                        minWidth: '120px',
+                      }}>
+                        {key}:
+                      </span>
+                      <span style={{
+                        color: typeof value === 'number' ? '#b5cea8' : '#ce9178',
+                        wordBreak: 'break-word',
+                        flex: 1,
+                      }}>
+                        {typeof value === 'object' ? JSON.stringify(value) : String(value)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
 
