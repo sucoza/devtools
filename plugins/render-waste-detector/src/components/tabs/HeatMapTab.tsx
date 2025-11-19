@@ -124,7 +124,7 @@ export function HeatMapTab({
         .tab-header h2 {
           margin: 0;
           font-size: 18px;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .heatmap-controls {
@@ -135,9 +135,9 @@ export function HeatMapTab({
 
         .heatmap-controls select {
           padding: 6px 8px;
-          border: 1px solid var(--border-color, #e1e5e9);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 4px;
-          background: var(--bg-secondary, #f8f9fa);
+          background: var(--dt-bg-secondary, #f8f9fa);
           font-size: 13px;
         }
 
@@ -148,9 +148,9 @@ export function HeatMapTab({
           justify-content: center;
           width: 32px;
           height: 32px;
-          border: 1px solid var(--border-color, #e1e5e9);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 4px;
-          background: var(--bg-secondary, #f8f9fa);
+          background: var(--dt-bg-secondary, #f8f9fa);
           cursor: pointer;
         }
 
@@ -159,8 +159,8 @@ export function HeatMapTab({
           display: flex;
           align-items: center;
           justify-content: center;
-          background: var(--bg-secondary, #f8f9fa);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 8px;
           overflow: hidden;
         }
@@ -182,7 +182,7 @@ export function HeatMapTab({
 
         .heatmap-rect:hover {
           opacity: 0.8;
-          stroke: var(--color-primary, #007bff);
+          stroke: var(--dt-border-focus, #007bff);
           stroke-width: 2;
         }
 
@@ -192,19 +192,19 @@ export function HeatMapTab({
           align-items: center;
           justify-content: center;
           text-align: center;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
           padding: 48px;
         }
 
         .empty-state h3 {
           margin: 16px 0 8px 0;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .analyze-btn {
           margin-top: 16px;
           padding: 10px 20px;
-          background: var(--color-primary, #007bff);
+          background: var(--dt-border-focus, #007bff);
           color: white;
           border: none;
           border-radius: 6px;
@@ -217,15 +217,15 @@ export function HeatMapTab({
           align-items: center;
           gap: 16px;
           padding: 12px 16px;
-          background: var(--bg-secondary, #f8f9fa);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 6px;
           font-size: 12px;
         }
 
         .legend-title {
           font-weight: 500;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .legend-items {
@@ -243,41 +243,6 @@ export function HeatMapTab({
           width: 12px;
           height: 12px;
           border-radius: 2px;
-        }
-
-        /* Dark theme */
-        .theme-dark .tab-header h2 {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .heatmap-controls select {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .refresh-btn,
-        .theme-dark .settings-btn {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .heatmap-content {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .empty-state h3 {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .heatmap-legend {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .legend-title {
-          color: var(--text-primary, #ffffff);
         }
       `}</style>
     </div>

@@ -246,7 +246,7 @@ export function SuggestionsTab({
         .tab-header h2 {
           margin: 0;
           font-size: 18px;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .suggestions-actions {
@@ -260,7 +260,7 @@ export function SuggestionsTab({
           align-items: center;
           gap: 6px;
           padding: 8px 12px;
-          background: var(--color-primary, #007bff);
+          background: var(--dt-border-focus, #007bff);
           color: white;
           border: none;
           border-radius: 6px;
@@ -278,8 +278,8 @@ export function SuggestionsTab({
           align-items: center;
           gap: 6px;
           padding: 8px 12px;
-          background: var(--bg-secondary, #f8f9fa);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 6px;
           cursor: pointer;
           font-size: 13px;
@@ -289,8 +289,8 @@ export function SuggestionsTab({
           display: flex;
           gap: 16px;
           padding: 12px 16px;
-          background: var(--bg-secondary, #f8f9fa);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 6px;
           font-size: 12px;
         }
@@ -302,24 +302,24 @@ export function SuggestionsTab({
         }
 
         .stat-label {
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
         }
 
         .stat-value {
           font-weight: 600;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .stat-item.critical .stat-value {
-          color: var(--color-danger, #dc3545);
+          color: var(--dt-status-error, #dc3545);
         }
 
         .stat-item.high .stat-value {
-          color: var(--color-warning, #fd7e14);
+          color: var(--dt-status-warning, #fd7e14);
         }
 
         .stat-item.medium .stat-value {
-          color: var(--color-warning, #ffc107);
+          color: var(--dt-status-warning, #ffc107);
         }
 
         .suggestions-content {
@@ -334,8 +334,8 @@ export function SuggestionsTab({
         }
 
         .suggestion-card {
-          background: var(--bg-secondary, #f8f9fa);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 8px;
           overflow: hidden;
         }
@@ -345,8 +345,8 @@ export function SuggestionsTab({
           justify-content: space-between;
           align-items: center;
           padding: 12px 16px;
-          background: var(--bg-tertiary, #f1f3f4);
-          border-bottom: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-tertiary, #f1f3f4);
+          border-bottom: 1px solid var(--dt-border-primary, #e1e5e9);
         }
 
         .suggestion-severity {
@@ -368,22 +368,22 @@ export function SuggestionsTab({
         }
 
         .severity-label.critical {
-          background: var(--color-danger, #dc3545);
+          background: var(--dt-status-error, #dc3545);
           color: white;
         }
 
         .severity-label.high {
-          background: var(--color-warning, #fd7e14);
+          background: var(--dt-status-warning, #fd7e14);
           color: white;
         }
 
         .severity-label.medium {
-          background: var(--color-warning, #ffc107);
+          background: var(--dt-status-warning, #ffc107);
           color: #1a1a1a;
         }
 
         .severity-label.low {
-          background: var(--color-info, #17a2b8);
+          background: var(--dt-status-info, #17a2b8);
           color: white;
         }
 
@@ -397,7 +397,7 @@ export function SuggestionsTab({
           align-items: center;
           gap: 4px;
           padding: 6px 10px;
-          background: var(--color-success, #28a745);
+          background: var(--dt-status-success, #28a745);
           color: white;
           border: none;
           border-radius: 4px;
@@ -411,7 +411,7 @@ export function SuggestionsTab({
           justify-content: center;
           width: 28px;
           height: 28px;
-          background: var(--color-danger, #dc3545);
+          background: var(--dt-status-error, #dc3545);
           color: white;
           border: none;
           border-radius: 4px;
@@ -426,13 +426,13 @@ export function SuggestionsTab({
           margin: 0 0 8px 0;
           font-size: 14px;
           font-weight: 600;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .suggestion-component {
           display: inline-block;
           padding: 2px 8px;
-          background: var(--color-primary, #007bff);
+          background: var(--dt-border-focus, #007bff);
           color: white;
           border-radius: 12px;
           font-size: 11px;
@@ -443,19 +443,19 @@ export function SuggestionsTab({
 
         .suggestion-description {
           margin: 0 0 12px 0;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
           line-height: 1.5;
         }
 
         .suggestion-solution {
           margin-bottom: 16px;
           font-size: 13px;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .code-example {
           margin-bottom: 16px;
-          border: 1px solid var(--border-color, #e1e5e9);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 4px;
           overflow: hidden;
         }
@@ -465,15 +465,15 @@ export function SuggestionsTab({
           justify-content: space-between;
           align-items: center;
           padding: 8px 12px;
-          background: var(--bg-tertiary, #f1f3f4);
-          border-bottom: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-tertiary, #f1f3f4);
+          border-bottom: 1px solid var(--dt-border-primary, #e1e5e9);
           font-size: 11px;
           font-weight: 500;
         }
 
         .copy-btn {
           padding: 2px 6px;
-          background: var(--color-primary, #007bff);
+          background: var(--dt-border-focus, #007bff);
           color: white;
           border: none;
           border-radius: 3px;
@@ -484,7 +484,7 @@ export function SuggestionsTab({
         .code-example pre {
           margin: 0;
           padding: 12px;
-          background: var(--bg-primary, #ffffff);
+          background: var(--dt-bg-primary, #ffffff);
           font-family: "Monaco", "Consolas", monospace;
           font-size: 11px;
           line-height: 1.4;
@@ -505,12 +505,12 @@ export function SuggestionsTab({
         }
 
         .impact-label {
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
         }
 
         .impact-value {
           font-weight: 600;
-          color: var(--color-success, #28a745);
+          color: var(--dt-status-success, #28a745);
         }
 
         .complexity-badge {
@@ -522,17 +522,17 @@ export function SuggestionsTab({
         }
 
         .complexity-badge.low {
-          background: var(--color-success, #28a745);
+          background: var(--dt-status-success, #28a745);
           color: white;
         }
 
         .complexity-badge.medium {
-          background: var(--color-warning, #ffc107);
+          background: var(--dt-status-warning, #ffc107);
           color: #1a1a1a;
         }
 
         .complexity-badge.high {
-          background: var(--color-danger, #dc3545);
+          background: var(--dt-status-error, #dc3545);
           color: white;
         }
 
@@ -545,13 +545,13 @@ export function SuggestionsTab({
         }
 
         .related-label {
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
         }
 
         .prop-tag {
           padding: 2px 6px;
-          background: var(--bg-tertiary, #f1f3f4);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-tertiary, #f1f3f4);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 3px;
           font-family: monospace;
         }
@@ -563,73 +563,17 @@ export function SuggestionsTab({
           justify-content: center;
           height: 100%;
           text-align: center;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
           padding: 48px;
         }
 
         .empty-state h3 {
           margin: 16px 0 8px 0;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .empty-state .analyze-btn {
           margin-top: 16px;
-        }
-
-        /* Dark theme */
-        .theme-dark .tab-header h2 {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .filter-btn {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .suggestions-stats {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .stat-value {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .suggestion-card {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .suggestion-header {
-          background: var(--bg-tertiary, #333);
-          border-color: var(--border-color, #444);
-        }
-
-        .theme-dark .suggestion-title {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .suggestion-solution {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .code-header {
-          background: var(--bg-tertiary, #333);
-          border-color: var(--border-color, #444);
-        }
-
-        .theme-dark .code-example pre {
-          background: var(--bg-primary, #1a1a1a);
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .prop-tag {
-          background: var(--bg-tertiary, #333);
-          border-color: var(--border-color, #444);
-        }
-
-        .theme-dark .empty-state h3 {
-          color: var(--text-primary, #ffffff);
         }
       `}</style>
     </div>

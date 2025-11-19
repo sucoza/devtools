@@ -117,7 +117,7 @@ export function TimelineTab({
         .tab-header h2 {
           margin: 0;
           font-size: 18px;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .timeline-controls {
@@ -133,15 +133,15 @@ export function TimelineTab({
           justify-content: center;
           width: 32px;
           height: 32px;
-          border: 1px solid var(--border-color, #e1e5e9);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 4px;
-          background: var(--bg-secondary, #f8f9fa);
+          background: var(--dt-bg-secondary, #f8f9fa);
           cursor: pointer;
         }
 
         .zoom-level {
           font-size: 12px;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
           min-width: 40px;
           text-align: center;
         }
@@ -149,13 +149,13 @@ export function TimelineTab({
         .divider {
           width: 1px;
           height: 20px;
-          background: var(--border-color, #e1e5e9);
+          background: var(--dt-border-primary, #e1e5e9);
         }
 
         .timeline-content {
           flex: 1;
-          background: var(--bg-secondary, #f8f9fa);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 8px;
           overflow: hidden;
         }
@@ -168,8 +168,8 @@ export function TimelineTab({
 
         .timeline-header {
           padding: 12px;
-          border-bottom: 1px solid var(--border-color, #e1e5e9);
-          background: var(--bg-tertiary, #f1f3f4);
+          border-bottom: 1px solid var(--dt-border-primary, #e1e5e9);
+          background: var(--dt-bg-tertiary, #f1f3f4);
         }
 
         .timeline-tracks {
@@ -180,15 +180,15 @@ export function TimelineTab({
 
         .timeline-track {
           display: flex;
-          border-bottom: 1px solid var(--border-color, #e1e5e9);
+          border-bottom: 1px solid var(--dt-border-primary, #e1e5e9);
           height: 40px;
         }
 
         .track-label {
           width: 200px;
           padding: 12px;
-          background: var(--bg-tertiary, #f1f3f4);
-          border-right: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-tertiary, #f1f3f4);
+          border-right: 1px solid var(--dt-border-primary, #e1e5e9);
           font-size: 12px;
           font-weight: 500;
           cursor: pointer;
@@ -198,7 +198,7 @@ export function TimelineTab({
         }
 
         .track-label:hover {
-          background: var(--bg-hover, #e9ecef);
+          background: var(--dt-bg-hover, #e9ecef);
         }
 
         .track-events {
@@ -218,23 +218,23 @@ export function TimelineTab({
         }
 
         .timeline-event.props-change {
-          background: var(--color-primary, #007bff);
+          background: var(--dt-border-focus, #007bff);
         }
 
         .timeline-event.state-change {
-          background: var(--color-success, #28a745);
+          background: var(--dt-status-success, #28a745);
         }
 
         .timeline-event.parent-render {
-          background: var(--color-warning, #ffc107);
+          background: var(--dt-status-warning, #ffc107);
         }
 
         .timeline-event.context-change {
-          background: var(--color-info, #17a2b8);
+          background: var(--dt-status-info, #17a2b8);
         }
 
         .timeline-event.force-update {
-          background: var(--color-danger, #dc3545);
+          background: var(--dt-status-error, #dc3545);
         }
 
         .timeline-event.initial-mount {
@@ -248,54 +248,12 @@ export function TimelineTab({
           justify-content: center;
           height: 100%;
           text-align: center;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
         }
 
         .empty-state h3 {
           margin: 16px 0 8px 0;
-          color: var(--text-primary, #1a1a1a);
-        }
-
-        /* Dark theme */
-        .theme-dark .tab-header h2 {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .zoom-btn,
-        .theme-dark .playback-btn {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .divider {
-          background: var(--border-color, #333);
-        }
-
-        .theme-dark .timeline-content {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .timeline-header {
-          background: var(--bg-tertiary, #333);
-          border-color: var(--border-color, #444);
-        }
-
-        .theme-dark .timeline-track {
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .track-label {
-          background: var(--bg-tertiary, #333);
-          border-color: var(--border-color, #444);
-        }
-
-        .theme-dark .track-label:hover {
-          background: var(--bg-hover, #3a3a3a);
-        }
-
-        .theme-dark .empty-state h3 {
-          color: var(--text-primary, #ffffff);
+          color: var(--dt-text-primary, #1a1a1a);
         }
       `}</style>
     </div>

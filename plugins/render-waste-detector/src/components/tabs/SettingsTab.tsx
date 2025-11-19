@@ -1,6 +1,5 @@
 import React from "react";
 import { Download, Upload, RotateCcw } from "lucide-react";
-import "../styles.css";
 import type {
   RenderWasteDetectorState,
   RenderWasteDetectorEventClient,
@@ -371,7 +370,7 @@ export function SettingsTab({
         .tab-header h2 {
           margin: 0;
           font-size: 18px;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary);
         }
 
         .settings-actions {
@@ -384,17 +383,18 @@ export function SettingsTab({
           align-items: center;
           gap: 6px;
           padding: 8px 12px;
-          background: var(--bg-secondary, #f8f9fa);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 6px;
           cursor: pointer;
           font-size: 13px;
+          color: var(--dt-text-primary);
         }
 
         .action-btn.danger {
-          background: var(--color-danger, #dc3545);
+          background: var(--dt-status-error);
           color: white;
-          border-color: var(--color-danger, #dc3545);
+          border-color: var(--dt-status-error);
         }
 
         .settings-content {
@@ -409,8 +409,8 @@ export function SettingsTab({
         }
 
         .settings-section {
-          background: var(--bg-secondary, #f8f9fa);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 8px;
           padding: 20px;
         }
@@ -418,7 +418,7 @@ export function SettingsTab({
         .settings-section h3 {
           margin: 0 0 20px 0;
           font-size: 16px;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary);
           font-weight: 600;
         }
 
@@ -436,7 +436,7 @@ export function SettingsTab({
           gap: 8px;
           font-size: 14px;
           font-weight: 500;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary);
         }
 
         .setting-item label input[type="checkbox"] {
@@ -447,17 +447,19 @@ export function SettingsTab({
         .setting-item label input[type="number"],
         .setting-item label select {
           padding: 8px 12px;
-          border: 1px solid var(--border-color, #e1e5e9);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
-          background: var(--bg-primary, #ffffff);
+          background: var(--dt-bg-primary);
+          color: var(--dt-text-primary);
           font-size: 13px;
         }
 
         .setting-item textarea {
           padding: 8px 12px;
-          border: 1px solid var(--border-color, #e1e5e9);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
-          background: var(--bg-primary, #ffffff);
+          background: var(--dt-bg-primary);
+          color: var(--dt-text-primary);
           font-size: 13px;
           font-family: inherit;
           resize: vertical;
@@ -466,40 +468,9 @@ export function SettingsTab({
         .setting-description {
           margin: 4px 0 0 0;
           font-size: 12px;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary);
           font-weight: normal;
           line-height: 1.4;
-        }
-
-        /* Dark theme */
-        .theme-dark .tab-header h2 {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .action-btn {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .settings-section {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .settings-section h3 {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .setting-item label {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .setting-item label input[type="number"],
-        .theme-dark .setting-item label select,
-        .theme-dark .setting-item textarea {
-          background: var(--bg-primary, #1a1a1a);
-          border-color: var(--border-color, #333);
-          color: var(--text-primary, #ffffff);
         }
       `}</style>
     </div>
