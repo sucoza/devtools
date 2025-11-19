@@ -2,13 +2,12 @@ import React from "react";
 import { Clock, Play, Pause, ZoomIn, ZoomOut } from "lucide-react";
 import type {
   RenderWasteDetectorState,
-  RenderWasteDetectorEventClient,
+  RenderWasteDetectorDevToolsClient,
 } from "../../types";
 
 interface TimelineTabProps {
   state: RenderWasteDetectorState;
-  eventClient: RenderWasteDetectorEventClient;
-  dispatch: (action: unknown) => void;
+  eventClient: RenderWasteDetectorDevToolsClient;
   compact: boolean;
   onComponentSelect: (componentId: string | null) => void;
   onSuggestionApply: (suggestionId: string) => void;
@@ -17,7 +16,6 @@ interface TimelineTabProps {
 export function TimelineTab({
   state,
   eventClient: _eventClient,
-  dispatch: _dispatch,
   compact: _compact,
   onComponentSelect,
 }: TimelineTabProps) {

@@ -11,13 +11,12 @@ import {
 
 import type {
   RenderWasteDetectorState,
-  RenderWasteDetectorEventClient,
+  RenderWasteDetectorDevToolsClient,
 } from "../../types";
 
 interface OverviewTabProps {
   state: RenderWasteDetectorState;
-  eventClient: RenderWasteDetectorEventClient;
-  dispatch: (action: unknown) => void;
+  eventClient: RenderWasteDetectorDevToolsClient;
   compact: boolean;
   onComponentSelect: (componentId: string | null) => void;
   onSuggestionApply: (suggestionId: string) => void;
@@ -26,7 +25,6 @@ interface OverviewTabProps {
 export function OverviewTab({
   state,
   eventClient,
-  dispatch: _dispatch,
   compact: _compact,
   onComponentSelect,
   onSuggestionApply,

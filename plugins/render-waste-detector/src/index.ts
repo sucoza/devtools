@@ -5,9 +5,9 @@ export { default as RenderWasteDetectorPanel } from "./components/PluginPanel";
 export {
   useRenderWasteDetectorStore,
   getRenderWasteDetectorStore,
-  createRenderWasteDetectorEventClient,
-  getRenderWasteDetectorEventClient,
-  resetRenderWasteDetectorEventClient,
+  createRenderWasteDetectorDevToolsClient,
+  getRenderWasteDetectorDevToolsClient,
+  resetRenderWasteDetectorDevToolsClient,
   getProfilerIntegration,
   startRenderProfiling,
   stopRenderProfiling,

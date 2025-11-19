@@ -8,8 +8,8 @@ import type {
   RenderWasteDetectorEvents,
 } from "../types";
 import {
-  createRenderWasteDetectorEventClient,
-  getRenderWasteDetectorEventClient,
+  createRenderWasteDetectorDevToolsClient,
+  getRenderWasteDetectorDevToolsClient,
 } from "../core";
 
 /**
@@ -23,8 +23,8 @@ export function useRenderWasteDetector(
   // Create or get event client
   const eventClient = (React as any).useMemo(() => {
     const client =
-      getRenderWasteDetectorEventClient() ||
-      createRenderWasteDetectorEventClient();
+      getRenderWasteDetectorDevToolsClient() ||
+      createRenderWasteDetectorDevToolsClient();
 
     // Apply settings if provided
     if (settings) {

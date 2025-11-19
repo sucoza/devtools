@@ -667,9 +667,41 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
      */
     startRecording: (settings?: Partial<RecordingSettings>) => {
       get().dispatch({ type: "recording/start", payload: settings });
+
+      // Start profiler integration if in browser environment
+      if (typeof window !== 'undefined') {
+        // Import dynamically to avoid circular dependencies
+        Promise.all([
+          import('./profiler-integration'),
+          import('./devtools-client')
+        ]).then(([profiler, client]) => {
+          const eventClient = client.getRenderWasteDetectorDevToolsClient();
+          if (eventClient) {
+            profiler.startRenderProfiling(eventClient);
+          }
+        }).catch((error) => {
+          console.warn('Failed to start profiler integration:', error);
+        });
+      }
     },
 
     stopRecording: () => {
+      // Stop profiler integration if in browser environment
+      if (typeof window !== 'undefined') {
+        // Import dynamically to avoid circular dependencies
+        Promise.all([
+          import('./profiler-integration'),
+          import('./devtools-client')
+        ]).then(([profiler, client]) => {
+          const eventClient = client.getRenderWasteDetectorDevToolsClient();
+          if (eventClient) {
+            profiler.stopRenderProfiling(eventClient);
+          }
+        }).catch((error) => {
+          console.warn('Failed to stop profiler integration:', error);
+        });
+      }
+
       get().dispatch({ type: "recording/stop" });
     },
 

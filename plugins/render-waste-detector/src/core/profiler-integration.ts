@@ -6,13 +6,13 @@ import type {
   ContextChange,
   RenderReason,
 } from "../types";
-import type { RenderWasteDetectorEventClient } from "./devtools-client";
+import type { RenderWasteDetectorDevToolsClient } from "./devtools-client";
 
 /**
  * React Profiler integration for render tracking
  */
 export class ProfilerIntegration {
-  private eventClient: RenderWasteDetectorEventClient;
+  private eventClient: RenderWasteDetectorDevToolsClient;
   private componentRegistry = new Map<string, ComponentInfo>();
   private previousProps = new Map<string, any>();
   private previousState = new Map<string, any>();
@@ -20,7 +20,7 @@ export class ProfilerIntegration {
   private renderCounts = new Map<string, number>();
   private isActive = false;
 
-  constructor(eventClient: RenderWasteDetectorEventClient) {
+  constructor(eventClient: RenderWasteDetectorDevToolsClient) {
     this.eventClient = eventClient;
   }
 
@@ -599,7 +599,7 @@ let profilerInstance: ProfilerIntegration | null = null;
 /**
  * Get or create profiler integration instance
  */
-export function getProfilerIntegration(eventClient: RenderWasteDetectorEventClient): ProfilerIntegration {
+export function getProfilerIntegration(eventClient: RenderWasteDetectorDevToolsClient): ProfilerIntegration {
   if (!profilerInstance) {
     profilerInstance = new ProfilerIntegration(eventClient);
   }
@@ -609,13 +609,13 @@ export function getProfilerIntegration(eventClient: RenderWasteDetectorEventClie
 /**
  * Start render profiling
  */
-export function startRenderProfiling(eventClient: RenderWasteDetectorEventClient): void {
+export function startRenderProfiling(eventClient: RenderWasteDetectorDevToolsClient): void {
   getProfilerIntegration(eventClient).start();
 }
 
 /**
  * Stop render profiling
  */
-export function stopRenderProfiling(eventClient: RenderWasteDetectorEventClient): void {
+export function stopRenderProfiling(eventClient: RenderWasteDetectorDevToolsClient): void {
   getProfilerIntegration(eventClient).stop();
 }

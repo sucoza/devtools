@@ -2,13 +2,12 @@ import React from "react";
 import { Search, BarChart3, Filter } from "lucide-react";
 import type {
   RenderWasteDetectorState,
-  RenderWasteDetectorEventClient,
+  RenderWasteDetectorDevToolsClient,
 } from "../../types";
 
 interface ComponentsTabProps {
   state: RenderWasteDetectorState;
-  eventClient: RenderWasteDetectorEventClient;
-  dispatch: (action: unknown) => void;
+  eventClient: RenderWasteDetectorDevToolsClient;
   compact: boolean;
   onComponentSelect: (componentId: string | null) => void;
   onSuggestionApply: (suggestionId: string) => void;
@@ -17,7 +16,6 @@ interface ComponentsTabProps {
 export function ComponentsTab({
   state,
   eventClient,
-  dispatch: _dispatch,
   compact: _compact,
   onComponentSelect,
 }: ComponentsTabProps) {

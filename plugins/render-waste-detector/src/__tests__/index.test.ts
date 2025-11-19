@@ -10,9 +10,9 @@ describe('render-waste-detector exports', () => {
   it('should export core functionality', () => {
     expect(exports.useRenderWasteDetectorStore).toBeDefined();
     expect(exports.getRenderWasteDetectorStore).toBeDefined();
-    expect(exports.createRenderWasteDetectorEventClient).toBeDefined();
-    expect(exports.getRenderWasteDetectorEventClient).toBeDefined();
-    expect(exports.resetRenderWasteDetectorEventClient).toBeDefined();
+    expect(exports.createRenderWasteDetectorDevToolsClient).toBeDefined();
+    expect(exports.getRenderWasteDetectorDevToolsClient).toBeDefined();
+    expect(exports.resetRenderWasteDetectorDevToolsClient).toBeDefined();
     expect(exports.getProfilerIntegration).toBeDefined();
     expect(exports.startRenderProfiling).toBeDefined();
     expect(exports.stopRenderProfiling).toBeDefined();
@@ -22,9 +22,9 @@ describe('render-waste-detector exports', () => {
   it('should have proper function types for exported functions', () => {
     expect(typeof exports.useRenderWasteDetectorStore).toBe('function');
     expect(typeof exports.getRenderWasteDetectorStore).toBe('function');
-    expect(typeof exports.createRenderWasteDetectorEventClient).toBe('function');
-    expect(typeof exports.getRenderWasteDetectorEventClient).toBe('function');
-    expect(typeof exports.resetRenderWasteDetectorEventClient).toBe('function');
+    expect(typeof exports.createRenderWasteDetectorDevToolsClient).toBe('function');
+    expect(typeof exports.getRenderWasteDetectorDevToolsClient).toBe('function');
+    expect(typeof exports.resetRenderWasteDetectorDevToolsClient).toBe('function');
     expect(typeof exports.getProfilerIntegration).toBe('function');
     expect(typeof exports.startRenderProfiling).toBe('function');
     expect(typeof exports.stopRenderProfiling).toBe('function');

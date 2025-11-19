@@ -1,8 +1,5 @@
 import type {
   RenderWasteDetectorState,
-  RenderWasteDetectorAction,
-  RenderWasteDetectorEvents,
-  RenderEvent,
   ComponentInfo,
   OptimizationSuggestion,
   RenderFilters,
@@ -11,583 +8,261 @@ import type {
   DevToolsTab,
   HeatMapData,
   RenderTree,
+  RenderEvent,
   RecordingSession,
 } from "../types";
 import { useRenderWasteDetectorStore } from "./devtools-store";
-import { startRenderProfiling, stopRenderProfiling } from "./profiler-integration";
 
 /**
- * Event client interface following TanStack DevTools patterns
+ * DevTools event client interface following TanStack patterns
  */
-export interface RenderWasteDetectorEventClient {
-  // Core methods
-  subscribe: (
-    callback: (
-      event: RenderWasteDetectorEvents[keyof RenderWasteDetectorEvents],
-      type: keyof RenderWasteDetectorEvents,
-    ) => void,
-  ) => () => void;
-  emit: <TEventType extends keyof RenderWasteDetectorEvents>(
-    type: TEventType,
-    event: RenderWasteDetectorEvents[TEventType],
-  ) => void;
+export interface DevToolsEventClient<TEvents extends Record<string, any>> {
+  subscribe: (callback: (event: TEvents[keyof TEvents], type: keyof TEvents) => void) => () => void;
   getState: () => RenderWasteDetectorState;
-  dispatch: (action: RenderWasteDetectorAction) => void;
+}
 
-  // Recording control methods
-  startRecording: (settings?: Partial<RecordingSettings>) => void;
-  stopRecording: () => void;
-  pauseRecording: () => void;
-  resumeRecording: () => void;
-  clearRecording: () => void;
-
-  // Component tracking methods
-  registerComponent: (component: ComponentInfo) => void;
-  unregisterComponent: (componentId: string) => void;
-  updateComponent: (componentId: string, updates: Partial<ComponentInfo>) => void;
-
-  // Render event methods
-  addRenderEvent: (event: RenderEvent) => void;
-  addRenderEventBatch: (events: RenderEvent[]) => void;
-  clearRenderEvents: () => void;
-
-  // Analysis methods
-  startAnalysis: () => Promise<void>;
-  dismissSuggestion: (suggestionId: string) => void;
-  applySuggestion: (suggestionId: string) => void;
-
-  // Heat map methods
-  updateHeatMap: (data: HeatMapData[]) => void;
-  setHeatMapMode: (mode: ViewOptions["heatMapMode"]) => void;
-
-  // Tree methods
-  updateRenderTree: (tree: RenderTree) => void;
-  expandComponent: (componentId: string) => void;
-  collapseComponent: (componentId: string) => void;
-  expandAllComponents: () => void;
-  collapseAllComponents: () => void;
-
-  // UI control methods
-  selectTab: (tab: DevToolsTab) => void;
-  selectComponent: (componentId: string | null) => void;
-  hoverComponent: (componentId: string | null) => void;
-  selectRenderEvent: (eventId: string | null) => void;
-  updateFilters: (filters: Partial<RenderFilters>) => void;
-  updateViewOptions: (options: Partial<ViewOptions>) => void;
-  setTheme: (theme: "light" | "dark" | "auto") => void;
-  toggleSplitView: () => void;
-
-  // Settings methods
-  updateSettings: (settings: Partial<RecordingSettings>) => void;
-  resetSettings: () => void;
-  importSettings: (settings: RecordingSettings) => void;
-  exportSettings: () => RecordingSettings;
-
-  // Session management methods
-  exportSession: (sessionId?: string) => unknown;
-  importSession: (sessionData: unknown) => void;
-
-  // Statistics methods
-  calculateStats: () => void;
-
-  // Performance monitoring methods
-  startPerformanceMonitoring: () => void;
-  stopPerformanceMonitoring: () => void;
-
-  // Utility methods
-  getFilteredComponents: () => ComponentInfo[];
-  getFilteredRenderEvents: () => RenderEvent[];
-  getFilteredSuggestions: () => OptimizationSuggestion[];
-
-  // Cleanup
-  destroy: () => void;
+export interface RenderWasteDetectorEvents {
+  'render-waste:state': RenderWasteDetectorState;
+  'render-waste:error': { message: string; stack?: string };
 }
 
 /**
- * Render Waste Detector DevTools event client implementation
+ * Render Waste Detector DevTools event client
+ * Follows the simplified TanStack DevTools pattern (like error-boundary-visualizer)
  */
-export class RenderWasteDetectorDevToolsEventClient
-  implements RenderWasteDetectorEventClient
-{
-  private unsubscribe?: () => void;
-  private store = useRenderWasteDetectorStore;
-  private subscribers = new Set<
-    (
-      event: RenderWasteDetectorEvents[keyof RenderWasteDetectorEvents],
-      type: keyof RenderWasteDetectorEvents,
-    ) => void
-  >();
-  private profilerCallbacks = new Map<
-    string,
-    (
-      id: string,
-      phase: string,
-      actualDuration: number,
-      baseDuration: number,
-      startTime: number,
-      commitTime: number,
-      interactions: Set<unknown>,
-    ) => void
-  >();
-
-  constructor() {
-    // Initialize profiler integration status monitoring
-    this.setupProfilerIntegration();
-  }
-
+export class RenderWasteDetectorDevToolsClient implements DevToolsEventClient<RenderWasteDetectorEvents> {
+  private unsubscribeStore?: () => void;
 
   /**
-   * Subscribe to store changes and emit events
+   * Subscribe to store changes
    */
   subscribe = (
     callback: (
       event: RenderWasteDetectorEvents[keyof RenderWasteDetectorEvents],
-      type: keyof RenderWasteDetectorEvents,
-    ) => void,
+      type: keyof RenderWasteDetectorEvents
+    ) => void
   ) => {
-    this.subscribers.add(callback);
-
-    // Subscribe to store changes
-    this.unsubscribe = this.store.subscribe((state) => {
-      callback(state, "render-waste:state");
+    // Subscribe to Zustand store changes
+    this.unsubscribeStore = useRenderWasteDetectorStore.subscribe((state) => {
+      callback(state, 'render-waste:state');
     });
 
     // Send initial state
-    const initialState = this.store.getState();
-    callback(initialState, "render-waste:state");
+    const initialState = useRenderWasteDetectorStore.getState();
+    callback(initialState, 'render-waste:state');
 
     return () => {
-      this.subscribers.delete(callback);
-      if (this.subscribers.size === 0) {
-        this.unsubscribe?.();
-        this.cleanup();
-      }
+      this.unsubscribeStore?.();
     };
   };
 
   /**
-   * Emit event to all subscribers
-   */
-  emit = <TEventType extends keyof RenderWasteDetectorEvents>(
-    type: TEventType,
-    event: RenderWasteDetectorEvents[TEventType],
-  ): void => {
-    this.subscribers.forEach((callback) => {
-      callback(event, type);
-    });
-  };
-
-  /**
-   * Get current state from store
+   * Get current state
    */
   getState = (): RenderWasteDetectorState => {
-    return this.store.getState();
+    return useRenderWasteDetectorStore.getState();
   };
 
-  /**
-   * Dispatch action to store
-   */
-  dispatch = (action: RenderWasteDetectorAction): void => {
-    this.store.getState().dispatch(action);
-
-    // Emit action event
-    this.emit("render-waste:action", action);
+  // Recording control methods
+  startRecording = (settings?: Partial<RecordingSettings>) => {
+    useRenderWasteDetectorStore.getState().startRecording(settings);
   };
 
-  // Convenience methods for common actions
-
-  /**
-   * Recording control methods
-   */
-  startRecording = (settings?: Partial<RecordingSettings>): void => {
-    this.store.getState().startRecording(settings);
-    this.setupRenderTracking();
-
-    const state = this.store.getState();
-    if (state.recording.activeSession) {
-      this.emit("render-waste:recording-started", {
-        sessionId: state.recording.activeSession.id,
-        settings: state.settings,
-      });
-    }
-    this.emit("render-waste:state", state);
+  stopRecording = () => {
+    useRenderWasteDetectorStore.getState().stopRecording();
   };
 
-  stopRecording = (): void => {
-    this.cleanupRenderTracking();
-    const sessionId = this.store.getState().recording.activeSession?.id;
-
-    this.store.getState().stopRecording();
-
-    const state = this.store.getState();
-    if (sessionId) {
-      this.emit("render-waste:recording-stopped", {
-        sessionId,
-        stats: state.stats,
-      });
-    }
-    this.emit("render-waste:state", state);
+  pauseRecording = () => {
+    useRenderWasteDetectorStore.getState().pauseRecording();
   };
 
-  pauseRecording = (): void => {
-    this.store.getState().pauseRecording();
-    this.emit("render-waste:state", this.store.getState());
+  resumeRecording = () => {
+    useRenderWasteDetectorStore.getState().resumeRecording();
   };
 
-  resumeRecording = (): void => {
-    this.store.getState().resumeRecording();
-    this.emit("render-waste:state", this.store.getState());
+  clearRecording = () => {
+    useRenderWasteDetectorStore.getState().clearRecording();
   };
 
-  clearRecording = (): void => {
-    this.store.getState().clearRecording();
-    this.emit("render-waste:state", this.store.getState());
+  // Component tracking methods
+  registerComponent = (component: ComponentInfo) => {
+    useRenderWasteDetectorStore.getState().registerComponent(component);
   };
 
-  /**
-   * Component tracking methods
-   */
-  registerComponent = (component: ComponentInfo): void => {
-    this.store.getState().registerComponent(component);
-    this.emit("render-waste:component-registered", component);
-    this.emit("render-waste:state", this.store.getState());
+  unregisterComponent = (componentId: string) => {
+    useRenderWasteDetectorStore.getState().unregisterComponent(componentId);
   };
 
-  unregisterComponent = (componentId: string): void => {
-    this.store.getState().unregisterComponent(componentId);
-    this.emit("render-waste:state", this.store.getState());
+  updateComponent = (componentId: string, updates: Partial<ComponentInfo>) => {
+    useRenderWasteDetectorStore.getState().updateComponent(componentId, updates);
   };
 
-  updateComponent = (
-    componentId: string,
-    updates: Partial<ComponentInfo>,
-  ): void => {
-    this.store.getState().updateComponent(componentId, updates);
-    this.emit("render-waste:state", this.store.getState());
+  // Render event methods
+  addRenderEvent = (event: RenderEvent) => {
+    useRenderWasteDetectorStore.getState().addRenderEvent(event);
   };
 
-  /**
-   * Render event methods
-   */
-  addRenderEvent = (event: RenderEvent): void => {
-    this.store.getState().addRenderEvent(event);
-    this.emit("render-waste:render-event", event);
-    this.emit("render-waste:state", this.store.getState());
+  addRenderEventBatch = (events: RenderEvent[]) => {
+    useRenderWasteDetectorStore.getState().addRenderEventBatch(events);
   };
 
-  addRenderEventBatch = (events: RenderEvent[]): void => {
-    this.store.getState().addRenderEventBatch(events);
-    events.forEach((event) => {
-      this.emit("render-waste:render-event", event);
-    });
-    this.emit("render-waste:state", this.store.getState());
+  clearRenderEvents = () => {
+    useRenderWasteDetectorStore.getState().clearRenderEvents();
   };
 
-  clearRenderEvents = (): void => {
-    this.store.getState().clearRenderEvents();
-    this.emit("render-waste:state", this.store.getState());
-  };
-
-  /**
-   * Analysis methods
-   */
+  // Analysis methods
   startAnalysis = async (): Promise<void> => {
-    try {
-      await this.store.getState().startAnalysis();
-      const state = this.store.getState();
-      this.emit("render-waste:analysis-complete", {
-        suggestions: state.suggestions,
-        heatMapData: state.heatMapData,
-      });
-      this.emit("render-waste:state", state);
-    } catch (error) {
-      this.emit("render-waste:error", {
-        message: `Failed to complete analysis: ${error instanceof Error ? error.message : String(error)}`,
-        stack: error instanceof Error ? error.stack : undefined,
-        context: { operation: "analysis" },
-      });
-    }
+    await useRenderWasteDetectorStore.getState().startAnalysis();
   };
 
-  dismissSuggestion = (suggestionId: string): void => {
-    this.store.getState().dismissSuggestion(suggestionId);
-    this.emit("render-waste:state", this.store.getState());
+  dismissSuggestion = (suggestionId: string) => {
+    useRenderWasteDetectorStore.getState().dismissSuggestion(suggestionId);
   };
 
-  applySuggestion = (suggestionId: string): void => {
-    const suggestion = this.store
-      .getState()
-      .suggestions.find((s: any) => s.id === suggestionId);
-    if (suggestion) {
-      this.store.getState().applySuggestion(suggestionId);
-      this.emit("render-waste:suggestion-applied", {
-        suggestionId,
-        componentId: suggestion.componentId,
-      });
-      this.emit("render-waste:state", this.store.getState());
-    }
+  applySuggestion = (suggestionId: string) => {
+    useRenderWasteDetectorStore.getState().applySuggestion(suggestionId);
   };
 
-  /**
-   * Heat map methods
-   */
-  updateHeatMap = (data: HeatMapData[]): void => {
-    this.store.getState().updateHeatMap(data);
-    this.emit("render-waste:state", this.store.getState());
+  // Heat map methods
+  updateHeatMap = (data: HeatMapData[]) => {
+    useRenderWasteDetectorStore.getState().updateHeatMap(data);
   };
 
-  setHeatMapMode = (mode: ViewOptions["heatMapMode"]): void => {
-    this.store.getState().setHeatMapMode(mode);
-    this.emit("render-waste:state", this.store.getState());
+  setHeatMapMode = (mode: ViewOptions["heatMapMode"]) => {
+    useRenderWasteDetectorStore.getState().setHeatMapMode(mode);
   };
 
-  /**
-   * Tree methods
-   */
-  updateRenderTree = (tree: RenderTree): void => {
-    this.store.getState().updateRenderTree(tree);
-    this.emit("render-waste:state", this.store.getState());
+  // Tree methods
+  updateRenderTree = (tree: RenderTree) => {
+    useRenderWasteDetectorStore.getState().updateRenderTree(tree);
   };
 
-  expandComponent = (componentId: string): void => {
-    this.store.getState().expandComponent(componentId);
-    this.emit("render-waste:state", this.store.getState());
+  expandComponent = (componentId: string) => {
+    useRenderWasteDetectorStore.getState().expandComponent(componentId);
   };
 
-  collapseComponent = (componentId: string): void => {
-    this.store.getState().collapseComponent(componentId);
-    this.emit("render-waste:state", this.store.getState());
+  collapseComponent = (componentId: string) => {
+    useRenderWasteDetectorStore.getState().collapseComponent(componentId);
   };
 
-  expandAllComponents = (): void => {
-    this.store.getState().expandAllComponents();
-    this.emit("render-waste:state", this.store.getState());
+  expandAllComponents = () => {
+    useRenderWasteDetectorStore.getState().expandAllComponents();
   };
 
-  collapseAllComponents = (): void => {
-    this.store.getState().collapseAllComponents();
-    this.emit("render-waste:state", this.store.getState());
+  collapseAllComponents = () => {
+    useRenderWasteDetectorStore.getState().collapseAllComponents();
   };
 
-  /**
-   * UI control methods
-   */
-  selectTab = (tab: DevToolsTab): void => {
-    this.store.getState().selectTab(tab);
-    this.emit("render-waste:state", this.store.getState());
+  // UI control methods
+  selectTab = (tab: DevToolsTab) => {
+    useRenderWasteDetectorStore.getState().selectTab(tab);
   };
 
-  selectComponent = (componentId: string | null): void => {
-    this.store.getState().selectComponent(componentId);
-    this.emit("render-waste:state", this.store.getState());
+  selectComponent = (componentId: string | null) => {
+    useRenderWasteDetectorStore.getState().selectComponent(componentId);
   };
 
-  hoverComponent = (componentId: string | null): void => {
-    this.store.getState().hoverComponent(componentId);
-    this.emit("render-waste:state", this.store.getState());
+  hoverComponent = (componentId: string | null) => {
+    useRenderWasteDetectorStore.getState().hoverComponent(componentId);
   };
 
-  selectRenderEvent = (eventId: string | null): void => {
-    this.store.getState().selectRenderEvent(eventId);
-    this.emit("render-waste:state", this.store.getState());
+  selectRenderEvent = (eventId: string | null) => {
+    useRenderWasteDetectorStore.getState().selectRenderEvent(eventId);
   };
 
-  updateFilters = (filters: Partial<RenderFilters>): void => {
-    this.store.getState().updateFilters(filters);
-    this.emit("render-waste:state", this.store.getState());
+  updateFilters = (filters: Partial<RenderFilters>) => {
+    useRenderWasteDetectorStore.getState().updateFilters(filters);
   };
 
-  updateViewOptions = (options: Partial<ViewOptions>): void => {
-    this.store.getState().updateViewOptions(options);
-    this.emit("render-waste:state", this.store.getState());
+  updateViewOptions = (options: Partial<ViewOptions>) => {
+    useRenderWasteDetectorStore.getState().updateViewOptions(options);
   };
 
-  setTheme = (theme: "light" | "dark" | "auto"): void => {
-    this.store.getState().setTheme(theme);
-    this.emit("render-waste:state", this.store.getState());
+  setTheme = (theme: "light" | "dark" | "auto") => {
+    useRenderWasteDetectorStore.getState().setTheme(theme);
   };
 
-  toggleSplitView = (): void => {
-    this.store.getState().toggleSplitView();
-    this.emit("render-waste:state", this.store.getState());
+  toggleSplitView = () => {
+    useRenderWasteDetectorStore.getState().toggleSplitView();
   };
 
-  /**
-   * Settings methods
-   */
-  updateSettings = (settings: Partial<RecordingSettings>): void => {
-    this.store.getState().updateSettings(settings);
-    this.emit("render-waste:state", this.store.getState());
+  // Settings methods
+  updateSettings = (settings: Partial<RecordingSettings>) => {
+    useRenderWasteDetectorStore.getState().updateSettings(settings);
   };
 
-  resetSettings = (): void => {
-    this.store.getState().resetSettings();
-    this.emit("render-waste:state", this.store.getState());
+  resetSettings = () => {
+    useRenderWasteDetectorStore.getState().resetSettings();
   };
 
-  importSettings = (settings: RecordingSettings): void => {
-    this.store.getState().importSettings(settings);
-    this.emit("render-waste:state", this.store.getState());
+  importSettings = (settings: RecordingSettings) => {
+    useRenderWasteDetectorStore.getState().importSettings(settings);
   };
 
   exportSettings = (): RecordingSettings => {
-    return this.store.getState().exportSettings();
+    return useRenderWasteDetectorStore.getState().exportSettings();
   };
 
-  /**
-   * Session management methods
-   */
-  exportSession = (sessionId?: string): any => {
-    const session = this.store.getState().exportSession(sessionId);
-    if (session) {
-      return {
-        ...session,
-        components: Array.from(session.components.entries()),
-        metrics: Array.from(session.metrics.entries()),
-      };
-    }
-    return null;
+  // Session management methods
+  exportSession = (sessionId?: string): RecordingSession | null => {
+    return useRenderWasteDetectorStore.getState().exportSession(sessionId);
   };
 
-  importSession = (sessionData: unknown): void => {
-    if (sessionData && (sessionData as { components?: unknown; metrics?: unknown }).components && (sessionData as { components?: unknown; metrics?: unknown }).metrics) {
-      const session = {
-        ...(sessionData as Record<string, any>),
-        components: new Map((sessionData as { components: [string, any][] }).components),
-        metrics: new Map((sessionData as { metrics: [string, any][] }).metrics),
-      };
-      this.store.getState().importSession(session as RecordingSession);
-      this.emit("render-waste:state", this.store.getState());
-    }
+  importSession = (session: RecordingSession) => {
+    useRenderWasteDetectorStore.getState().importSession(session);
   };
 
-  /**
-   * Statistics methods
-   */
-  calculateStats = (): void => {
-    this.store.getState().calculateStats();
-    this.emit("render-waste:state", this.store.getState());
+  // Statistics methods
+  calculateStats = () => {
+    useRenderWasteDetectorStore.getState().calculateStats();
   };
 
-  /**
-   * Performance monitoring methods
-   */
-  startPerformanceMonitoring = (): void => {
-    this.store.getState().startPerformanceMonitoring();
-    this.emit("render-waste:state", this.store.getState());
+  // Performance monitoring methods
+  startPerformanceMonitoring = () => {
+    useRenderWasteDetectorStore.getState().startPerformanceMonitoring();
   };
 
-  stopPerformanceMonitoring = (): void => {
-    this.store.getState().stopPerformanceMonitoring();
-    this.emit("render-waste:state", this.store.getState());
+  stopPerformanceMonitoring = () => {
+    useRenderWasteDetectorStore.getState().stopPerformanceMonitoring();
   };
 
-  /**
-   * Utility methods
-   */
+  // Utility methods
   getFilteredComponents = (): ComponentInfo[] => {
-    return this.store.getState().getFilteredComponents();
+    return useRenderWasteDetectorStore.getState().getFilteredComponents();
   };
 
   getFilteredRenderEvents = (): RenderEvent[] => {
-    return this.store.getState().getFilteredRenderEvents();
+    return useRenderWasteDetectorStore.getState().getFilteredRenderEvents();
   };
 
   getFilteredSuggestions = (): OptimizationSuggestion[] => {
-    return this.store.getState().getFilteredSuggestions();
-  };
-
-  /**
-   * Set up render tracking when recording starts
-   */
-  private setupRenderTracking = (): void => {
-    if (typeof window === "undefined") return;
-
-    const _settings = this.store.getState().settings;
-
-    // Start the real React Profiler integration
-    startRenderProfiling(this);
-
-    // console.log("Render tracking setup complete with settings:", settings);
-  };
-
-  /**
-   * Set up React Profiler integration status monitoring
-   */
-  private setupProfilerIntegration(): void {
-    // The real profiler integration is handled by the ProfilerIntegration class
-    // This method is kept for compatibility and monitoring
-    if (
-      typeof window !== "undefined" &&
-      (window as unknown as { __REACT_DEVTOOLS_GLOBAL_HOOK__?: unknown }).__REACT_DEVTOOLS_GLOBAL_HOOK__
-    ) {
-      // console.log("React DevTools Global Hook detected - real profiler integration active");
-    } else {
-      // console.warn("React DevTools not detected - profiling functionality may be limited");
-    }
-  }
-
-
-
-
-
-  /**
-   * Clean up render tracking when recording stops
-   */
-  private cleanupRenderTracking = (): void => {
-    // Stop the real React Profiler integration
-    stopRenderProfiling(this);
-
-    // Clear profiler callbacks
-    this.profilerCallbacks.clear();
-
-    // console.log("Render tracking cleanup complete");
-  };
-
-  /**
-   * Cleanup resources
-   */
-  private cleanup = (): void => {
-    this.cleanupRenderTracking();
-  };
-
-  /**
-   * Destroy event client and cleanup resources
-   */
-  destroy = (): void => {
-    this.unsubscribe?.();
-    this.cleanup();
-    this.subscribers.clear();
-    this.profilerCallbacks.clear();
+    return useRenderWasteDetectorStore.getState().getFilteredSuggestions();
   };
 }
 
 // Singleton instance
-let eventClientInstance: RenderWasteDetectorDevToolsEventClient | null = null;
+let clientInstance: RenderWasteDetectorDevToolsClient | null = null;
 
 /**
  * Create or get render waste detector DevTools event client
  */
-export function createRenderWasteDetectorEventClient(): RenderWasteDetectorDevToolsEventClient {
-  if (!eventClientInstance) {
-    eventClientInstance = new RenderWasteDetectorDevToolsEventClient();
+export function createRenderWasteDetectorDevToolsClient(): RenderWasteDetectorDevToolsClient {
+  if (!clientInstance) {
+    clientInstance = new RenderWasteDetectorDevToolsClient();
   }
-  return eventClientInstance;
+  return clientInstance;
 }
 
 /**
  * Get existing render waste detector DevTools event client
  */
-export function getRenderWasteDetectorEventClient(): RenderWasteDetectorDevToolsEventClient | null {
-  return eventClientInstance;
+export function getRenderWasteDetectorDevToolsClient(): RenderWasteDetectorDevToolsClient | null {
+  return clientInstance;
 }
 
 /**
  * Reset event client instance (useful for testing)
  */
-export function resetRenderWasteDetectorEventClient(): void {
-  if (eventClientInstance) {
-    eventClientInstance.destroy();
-    eventClientInstance = null;
-  }
+export function resetRenderWasteDetectorDevToolsClient(): void {
+  clientInstance = null;
 }
