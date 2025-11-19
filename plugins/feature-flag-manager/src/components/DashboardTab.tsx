@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { clsx } from 'clsx';
 import { FeatureFlagDevToolsState, FeatureFlagDevToolsClient, PanelTab } from '../types';
 import { formatDate } from '../utils';
-import './DashboardTab.css';
 
 interface DashboardTabProps {
   state: FeatureFlagDevToolsState;
@@ -20,7 +19,7 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
   const stats = useMemo(() => {
     const flags = Array.from(state.flags.values());
     const overrides = Array.from(state.overrides.values());
-    
+
     return {
       totalFlags: flags.length,
       enabledFlags: flags.filter(f => f.enabled).length,
@@ -40,103 +39,105 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
   }, [state.flags]);
 
   return (
-    <div className="dashboard-tab">
+    <div className="dt-content">
       {/* Stats Overview */}
-      <div className="stats-grid">
-        <div 
-          className={clsx("stat-card", "clickable")}
+      <div className="dt-stats-grid">
+        <div
+          className="dt-stat-card clickable"
           onClick={() => onNavigateToTab('flags')}
         >
           <h3>Feature Flags</h3>
-          <div className="stat-value">{stats.totalFlags}</div>
-          <div className="stat-details">
-            <span className="enabled">{stats.enabledFlags} enabled</span>
-            <span className="disabled">{stats.disabledFlags} disabled</span>
+          <div className="dt-stat-value">{stats.totalFlags}</div>
+          <div className="dt-stat-details">
+            <span className="dt-status-success">{stats.enabledFlags} enabled</span>
+            <span className="dt-status-error">{stats.disabledFlags} disabled</span>
           </div>
         </div>
 
-        <div 
-          className={clsx("stat-card", "clickable")}
+        <div
+          className="dt-stat-card clickable"
           onClick={() => onNavigateToTab('overrides')}
         >
           <h3>Overrides</h3>
-          <div className="stat-value">{stats.overriddenFlags}</div>
-          <div className="stat-details">Active overrides</div>
+          <div className="dt-stat-value">{stats.overriddenFlags}</div>
+          <div className="dt-stat-details">Active overrides</div>
         </div>
 
-        <div 
-          className={clsx("stat-card", "clickable")}
+        <div
+          className="dt-stat-card clickable"
           onClick={() => onNavigateToTab('experiments')}
         >
           <h3>Experiments</h3>
-          <div className="stat-value">{stats.experiments}</div>
-          <div className="stat-details">
-            <span className="active">{stats.activeExperiments} active</span>
+          <div className="dt-stat-value">{stats.experiments}</div>
+          <div className="dt-stat-details">
+            <span className="dt-status-info">{stats.activeExperiments} active</span>
           </div>
         </div>
 
-        <div 
-          className={clsx("stat-card", "clickable")}
+        <div
+          className="dt-stat-card clickable"
           onClick={() => onNavigateToTab('history')}
         >
           <h3>Evaluations</h3>
-          <div className="stat-value">{stats.evaluations}</div>
-          <div className="stat-details">Total evaluations</div>
+          <div className="dt-stat-value">{stats.evaluations}</div>
+          <div className="dt-stat-details">Total evaluations</div>
         </div>
       </div>
 
-      <div className="dashboard-content">
-        {/* Recent Flags */}
-        <div className="section">
-          <div className="section-header">
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+        {/* Recently Updated Flags */}
+        <div className="dt-section">
+          <div className="dt-section-header">
             <h3>Recently Updated Flags</h3>
-            <button 
+            <button
               onClick={() => onNavigateToTab('flags')}
-              className="view-all-button"
+              className="dt-btn dt-btn-sm dt-btn-primary"
             >
               View All
             </button>
           </div>
-          <div className="flag-list">
+          <div style={{ padding: '16px' }}>
             {recentFlags.map((flag) => {
               const override = state.overrides.get(flag.id);
               return (
-                <div key={flag.id} className="flag-item">
-                  <div className="flag-info">
-                    <div className="flag-header">
-                      <span className="flag-name">{flag.name}</span>
-                      <div className="flag-badges">
-                        <span className={clsx("flag-type", flag.type)}>{flag.type}</span>
-                        {override && <span className="override-badge">overridden</span>}
+                <div key={flag.id} className="dt-card" style={{ marginBottom: '12px' }}>
+                  <div className="dt-flex dt-justify-between dt-items-center">
+                    <div style={{ flex: 1 }}>
+                      <div className="dt-flex dt-items-center dt-gap-4 dt-mb-2">
+                        <span className="dt-font-semibold">{flag.name}</span>
+                        <div className="dt-flex dt-gap-2">
+                          <span className="dt-badge dt-badge-info">{flag.type}</span>
+                          {override && <span className="dt-badge dt-badge-warning">overridden</span>}
+                        </div>
+                      </div>
+                      <div className="dt-text-secondary dt-text-sm dt-mb-2">{flag.description}</div>
+                      <div className="dt-text-muted" style={{ fontSize: '11px' }}>
+                        Updated {formatDate(flag.updatedAt)} • Environment: {flag.environment}
                       </div>
                     </div>
-                    <div className="flag-description">{flag.description}</div>
-                    <div className="flag-meta">
-                      Updated {formatDate(flag.updatedAt)} • Environment: {flag.environment}
+                    <div className="dt-flex dt-flex-col dt-items-center dt-gap-2" style={{ marginLeft: '16px' }}>
+                      <span className={clsx("dt-badge", flag.enabled ? 'dt-badge-success' : 'dt-badge-error')}>
+                        {flag.enabled ? 'ON' : 'OFF'}
+                      </span>
+                      {flag.type === 'boolean' && (
+                        <button
+                          onClick={() => onToggleFlag(flag.id, !flag.enabled)}
+                          className={clsx("dt-btn dt-btn-sm", flag.enabled ? 'dt-btn-danger' : 'dt-btn-success')}
+                        >
+                          {flag.enabled ? 'Disable' : 'Enable'}
+                        </button>
+                      )}
                     </div>
-                  </div>
-                  <div className="flag-controls">
-                    <div className={clsx("flag-status", flag.enabled ? 'enabled' : 'disabled')}>
-                      {flag.enabled ? 'ON' : 'OFF'}
-                    </div>
-                    {flag.type === 'boolean' && (
-                      <button
-                        onClick={() => onToggleFlag(flag.id, !flag.enabled)}
-                        className={clsx("toggle-button", flag.enabled ? 'enabled' : 'disabled')}
-                      >
-                        {flag.enabled ? 'Disable' : 'Enable'}
-                      </button>
-                    )}
                   </div>
                 </div>
               );
             })}
             {recentFlags.length === 0 && (
-              <div className="empty-state">
+              <div className="dt-empty-state">
                 <p>No flags found</p>
-                <button 
+                <button
                   onClick={() => onNavigateToTab('settings')}
-                  className="setup-button"
+                  className="dt-btn dt-btn-primary"
                 >
                   Set up providers
                 </button>
@@ -146,49 +147,49 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
         </div>
 
         {/* Recent Evaluations */}
-        <div className="section">
-          <div className="section-header">
+        <div className="dt-section">
+          <div className="dt-section-header">
             <h3>Recent Evaluations</h3>
-            <button 
+            <button
               onClick={() => onNavigateToTab('history')}
-              className="view-all-button"
+              className="dt-btn dt-btn-sm dt-btn-primary"
             >
               View All
             </button>
           </div>
-          <div className="evaluation-list">
+          <div style={{ padding: '16px' }}>
             {stats.recentEvaluations.map((evaluation, index) => {
               const flag = state.flags.get(evaluation.flagId);
               return (
-                <div key={`${evaluation.flagId}-${index}`} className="evaluation-item">
-                  <div className="evaluation-info">
-                    <div className="evaluation-flag">
+                <div key={`${evaluation.flagId}-${index}`} className="dt-card" style={{ marginBottom: '12px' }}>
+                  <div>
+                    <div className="dt-font-semibold dt-mb-2">
                       {flag?.name || evaluation.flagId}
                     </div>
-                    <div className="evaluation-details">
-                      <span className={clsx("evaluation-reason", evaluation.reason)}>
+                    <div className="dt-flex dt-items-center dt-gap-4 dt-mb-2">
+                      <span className="dt-badge dt-badge-info">
                         {evaluation.reason}
                       </span>
-                      <span className="evaluation-value">
-                        {typeof evaluation.value === 'boolean' 
+                      <span className="dt-text-sm dt-text-secondary">
+                        {typeof evaluation.value === 'boolean'
                           ? evaluation.value.toString()
                           : JSON.stringify(evaluation.value)
                         }
                       </span>
                     </div>
+                    {evaluation.variant && (
+                      <div className="dt-text-muted dt-text-sm">
+                        Variant: {evaluation.variant.name}
+                      </div>
+                    )}
                   </div>
-                  {evaluation.variant && (
-                    <div className="evaluation-variant">
-                      Variant: {evaluation.variant.name}
-                    </div>
-                  )}
                 </div>
               );
             })}
             {stats.recentEvaluations.length === 0 && (
-              <div className="empty-state">
+              <div className="dt-empty-state">
                 <p>No evaluations yet</p>
-                <p className="empty-description">
+                <p className="dt-text-secondary">
                   Flag evaluations will appear here as they occur
                 </p>
               </div>

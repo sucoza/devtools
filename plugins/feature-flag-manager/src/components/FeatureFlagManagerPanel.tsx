@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  FeatureFlagDevToolsClient, 
-  FeatureFlagDevToolsState, 
-  PanelTab 
+import {
+  FeatureFlagDevToolsClient,
+  FeatureFlagDevToolsState,
+  PanelTab
 } from '../types';
 import {
   Tabs,
   Badge,
   ConfigMenu,
   type ConfigMenuItem,
-  COLORS,
+  ThemeProvider,
+  getColors,
   TYPOGRAPHY,
   SPACING,
   RADIUS
@@ -32,9 +33,9 @@ interface FeatureFlagManagerPanelProps {
   height?: number;
 }
 
-export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = ({
+const FeatureFlagManagerPanelInner: React.FC<FeatureFlagManagerPanelProps & { resolvedTheme: 'light' | 'dark' }> = ({
   client,
-  theme = 'auto',
+  resolvedTheme,
   defaultTab = 'dashboard',
   height = 600
 }) => {
@@ -42,6 +43,8 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
   const [activeTab, setActiveTab] = useState<PanelTab>(defaultTab);
   const [showUserContext, setShowUserContext] = useState(false);
   const [notifications, setNotifications] = useState<Array<{ id: string; type: 'info' | 'success' | 'warning' | 'error'; message: string }>>([]);
+
+  const COLORS = useMemo(() => getColors(resolvedTheme), [resolvedTheme]);
 
   // Subscribe to state changes
   useEffect(() => {
@@ -52,19 +55,11 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
     return () => unsubscribe();
   }, [client]);
 
-  // Handle theme
-  const resolvedTheme = useMemo(() => {
-    if (theme === 'auto') {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    return theme;
-  }, [theme]);
-
   // Add notification
   const addNotification = (type: 'info' | 'success' | 'warning' | 'error', message: string) => {
     const id = Date.now().toString();
     setNotifications(prev => [...prev, { id, type, message }]);
-    
+
     // Auto remove after 5 seconds
     setTimeout(() => {
       setNotifications(prev => prev.filter(n => n.id !== id));
@@ -116,11 +111,13 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
 
   if (!state) {
     return (
-      <div 
-        style={{ 
-          height, 
-          display: 'flex', 
-          alignItems: 'center', 
+      <div
+        className="dt-plugin-panel"
+        data-theme={resolvedTheme}
+        style={{
+          height,
+          display: 'flex',
+          alignItems: 'center',
           justifyContent: 'center',
           fontFamily: TYPOGRAPHY.fontFamily.sans,
           fontSize: TYPOGRAPHY.fontSize.sm,
@@ -261,11 +258,13 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
   ];
 
   return (
-    <div 
-      style={{ 
-        height, 
-        display: 'flex', 
-        flexDirection: 'column', 
+    <div
+      className="dt-plugin-panel"
+      data-theme={resolvedTheme}
+      style={{
+        height,
+        display: 'flex',
+        flexDirection: 'column',
         position: 'relative',
         fontFamily: TYPOGRAPHY.fontFamily.sans,
         fontSize: TYPOGRAPHY.fontSize.sm,
@@ -291,8 +290,8 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
 
       {/* User Context Panel */}
       {showUserContext && (
-        <div style={{ 
-          padding: SPACING['2xl'], 
+        <div style={{
+          padding: SPACING['2xl'],
           borderBottom: `1px solid ${COLORS.border.primary}`,
           backgroundColor: COLORS.background.secondary
         }}>
@@ -317,5 +316,24 @@ export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = (
       </div>
 
     </div>
+  );
+};
+
+export const FeatureFlagManagerPanel: React.FC<FeatureFlagManagerPanelProps> = ({
+  theme = 'auto',
+  ...props
+}) => {
+  // Handle theme
+  const resolvedTheme = useMemo(() => {
+    if (theme === 'auto') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return theme;
+  }, [theme]);
+
+  return (
+    <ThemeProvider defaultTheme={resolvedTheme}>
+      <FeatureFlagManagerPanelInner {...props} resolvedTheme={resolvedTheme} />
+    </ThemeProvider>
   );
 };
