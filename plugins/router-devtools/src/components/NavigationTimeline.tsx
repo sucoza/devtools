@@ -3,7 +3,6 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { Trans } from '@lingui/macro';
 import {
   DataTable,
   Badge,
@@ -53,7 +52,7 @@ export function NavigationTimeline({
   const columns: Column<NavigationHistoryEntry>[] = useMemo(() => [
     {
       key: 'timestamp',
-      header: <Trans>Time</Trans>,
+      header: 'Time',
       width: 100,
       sortable: true,
       render: (_value, row) => (
@@ -65,7 +64,7 @@ export function NavigationTimeline({
     },
     {
       key: 'action',
-      header: <Trans>Action</Trans>,
+      header: 'Action',
       width: 80,
       sortable: true,
       filterable: true,
@@ -80,7 +79,7 @@ export function NavigationTimeline({
     },
     {
       key: 'path',
-      header: <Trans>Path</Trans>,
+      header: 'Path',
       width: 200,
       sortable: true,
       render: (_value, row) => {
@@ -95,12 +94,12 @@ export function NavigationTimeline({
             <Navigation size={12} />
             <span style={{
               fontWeight: isCurrent ? 'bold' : 'normal',
-              color: isCurrent ? '#4ec9b0' : undefined
+              color: isCurrent ? "var(--dt-accent-secondary)" : undefined
             }}>
               {row.location.pathname}
             </span>
             {isCurrent && (
-              <Badge variant="success" size="xs"><Trans>CURRENT</Trans></Badge>
+              <Badge variant="success" size="xs">CURRENT</Badge>
             )}
           </div>
         );
@@ -108,27 +107,27 @@ export function NavigationTimeline({
     },
     {
       key: 'search',
-      header: <Trans>Query</Trans>,
+      header: 'Query',
       width: 150,
       render: (_value, row) => (
-        <span style={{ color: '#3498db', fontSize: '11px' }}>
+        <span style={{ color: "var(--dt-border-focus)", fontSize: '11px' }}>
           {row.location.search || '-'}
         </span>
       )
     },
     {
       key: 'hash',
-      header: <Trans>Hash</Trans>,
+      header: 'Hash',
       width: 100,
       render: (_value, row) => (
-        <span style={{ color: '#f39c12', fontSize: '11px' }}>
+        <span style={{ color: "var(--dt-status-warning)", fontSize: '11px' }}>
           {row.location.hash || '-'}
         </span>
       )
     },
     {
       key: 'duration',
-      header: <Trans>Duration</Trans>,
+      header: 'Duration',
       width: 80,
       sortable: true,
       align: 'right' as const,
@@ -138,7 +137,7 @@ export function NavigationTimeline({
     },
     {
       key: 'matches',
-      header: <Trans>Matches</Trans>,
+      header: 'Matches',
       width: 80,
       align: 'center' as const,
       render: (_value, row) => (
@@ -155,7 +154,7 @@ export function NavigationTimeline({
   // Row actions
   const rowActions = useMemo(() => [
     {
-      label: <Trans>Copy URL</Trans>,
+      label: 'Copy URL',
       icon: <Copy size={12} />,
       onClick: (row: NavigationHistoryEntry) => {
         const url = row.location.pathname + row.location.search + row.location.hash;
@@ -163,7 +162,7 @@ export function NavigationTimeline({
       }
     },
     {
-      label: <Trans>Navigate</Trans>,
+      label: 'Navigate',
       icon: <ExternalLink size={12} />,
       onClick: (row: NavigationHistoryEntry) => {
         const url = row.location.pathname + row.location.search + row.location.hash;
@@ -174,25 +173,25 @@ export function NavigationTimeline({
 
   // Render expanded row details
   const renderExpandedRow = (row: NavigationHistoryEntry) => (
-    <div style={{ padding: 16, background: '#1e1e1e', border: '1px solid #3c3c3c' }}>
+    <div style={{ padding: 16, background: "var(--dt-bg-primary)", border: "1px solid var(--dt-border-primary)" }}>
       <div style={{ marginBottom: 12 }}>
-        <h4 style={{ color: '#9cdcfe', fontSize: 12, margin: '0 0 8px 0' }}><Trans>Route Matches:</Trans></h4>
+        <h4 style={{ color: "var(--dt-accent-primary)", fontSize: 12, margin: '0 0 8px 0' }}>Route Matches:</h4>
         {row.matches.length === 0 ? (
-          <p style={{ color: '#969696', fontSize: 11 }}><Trans>No route matches</Trans></p>
+          <p style={{ color: "var(--dt-text-secondary)", fontSize: 11 }}>No route matches</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             {row.matches.map((match, idx) => (
               <div key={idx} style={{ fontSize: 11, display: 'flex', gap: 8 }}>
-                <span style={{ color: '#e74c3c', minWidth: 60 }}>
+                <span style={{ color: "var(--dt-status-error)", minWidth: 60 }}>
                   {match.route.path || '/'}
                 </span>
                 {match.route.element && (
-                  <span style={{ color: '#8e44ad' }}>
+                  <span style={{ color: "var(--dt-accent-primary)" }}>
                     {match.route.element}
                   </span>
                 )}
                 {Object.keys(match.params).length > 0 && (
-                  <span style={{ color: '#3498db' }}>
+                  <span style={{ color: "var(--dt-border-focus)" }}>
                     {Object.entries(match.params).map(([key, value]) => 
                       `${key}=${value}`
                     ).join(', ')}
@@ -203,16 +202,16 @@ export function NavigationTimeline({
           </div>
         )}
       </div>
-
+      
       <div>
-        <h4 style={{ color: '#9cdcfe', fontSize: 12, margin: '0 0 8px 0' }}><Trans>Location Details:</Trans></h4>
+        <h4 style={{ color: "var(--dt-accent-primary)", fontSize: 12, margin: '0 0 8px 0' }}>Location Details:</h4>
         <pre style={{
-          background: '#252526',
-          border: '1px solid #3c3c3c',
+          background: "var(--dt-bg-secondary)",
+          border: "1px solid var(--dt-border-primary)",
           padding: 8,
           borderRadius: 4,
           fontSize: 10,
-          color: '#d4d4d4',
+          color: "var(--dt-text-primary)",
           margin: 0,
           overflow: 'auto'
         }}>
@@ -232,8 +231,8 @@ export function NavigationTimeline({
     return (
       <EmptyState
         icon={<Navigation size={48} />}
-        title={<Trans>No navigation history</Trans>}
-        description={<Trans>Navigate around your application to see the timeline.</Trans>}
+        title="No navigation history"
+        description="Navigate around your application to see the timeline."
       />
     );
   }
@@ -260,7 +259,7 @@ export function NavigationTimeline({
       rowActions={rowActions}
       bulkActions={[
         {
-          label: <Trans>Clear Selected</Trans>,
+          label: 'Clear Selected',
           icon: <Copy size={16} />,
           onClick: (selectedEntries) => {
             // Clear selected history entries if needed
@@ -269,7 +268,7 @@ export function NavigationTimeline({
           }
         }
       ]}
-      emptyMessage={<Trans>No navigation history available. Navigate around your application to see entries here.</Trans>}
+      emptyMessage="No navigation history available. Navigate around your application to see entries here."
       getRowKey={(row, index) => row.id || index}
       getRowClassName={(row) => {
         const isCurrent = currentState ? 
