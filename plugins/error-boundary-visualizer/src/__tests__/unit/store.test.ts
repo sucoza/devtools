@@ -375,13 +375,8 @@ describe('Error Boundary DevTools Store', () => {
         id: 'strategy-1',
         name: 'Retry Strategy',
         description: 'Retry failed operation',
-        type: 'retry',
-        config: {
-          maxRetries: 3,
-          delay: 1000,
-        },
-        isActive: true,
-        createdAt: Date.now(),
+        maxRetries: 3,
+        retryDelay: 1000,
       };
 
       useErrorBoundaryDevTools.getState().addRecoveryStrategy(strategy);
@@ -395,10 +390,6 @@ describe('Error Boundary DevTools Store', () => {
         id: 'strategy-1',
         name: 'Retry Strategy',
         description: 'Retry failed operation',
-        type: 'retry',
-        config: {},
-        isActive: true,
-        createdAt: Date.now(),
       };
 
       useErrorBoundaryDevTools.getState().addRecoveryStrategy(strategy);
@@ -426,10 +417,6 @@ describe('Error Boundary DevTools Store', () => {
         id: 'strategy-1',
         name: 'Retry Strategy',
         description: 'Retry failed operation',
-        type: 'retry',
-        config: {},
-        isActive: true,
-        createdAt: Date.now(),
       };
 
       useErrorBoundaryDevTools.getState().registerErrorBoundary(boundary);
@@ -447,13 +434,10 @@ describe('Error Boundary DevTools Store', () => {
         id: 'sim-1',
         name: 'Test Simulation',
         description: 'Simulate render error',
-        type: 'render-error',
-        config: {
-          component: 'TestComponent',
-          trigger: 'mount',
-        },
-        isActive: false,
-        createdAt: Date.now(),
+        targetComponent: 'TestComponent',
+        errorType: ErrorCategory.RENDER,
+        errorMessage: 'Simulated render error',
+        triggerCondition: 'immediate',
       };
 
       useErrorBoundaryDevTools.getState().addSimulation(simulation);
@@ -467,10 +451,9 @@ describe('Error Boundary DevTools Store', () => {
         id: 'sim-1',
         name: 'Test Simulation',
         description: 'Simulate render error',
-        type: 'render-error',
-        config: {},
-        isActive: false,
-        createdAt: Date.now(),
+        errorType: ErrorCategory.RENDER,
+        errorMessage: 'Simulated render error',
+        triggerCondition: 'immediate',
       };
 
       useErrorBoundaryDevTools.getState().addSimulation(simulation);
@@ -485,10 +468,9 @@ describe('Error Boundary DevTools Store', () => {
         id: 'sim-1',
         name: 'Test Simulation',
         description: 'Simulate render error',
-        type: 'render-error',
-        config: {},
-        isActive: false,
-        createdAt: Date.now(),
+        errorType: ErrorCategory.RENDER,
+        errorMessage: 'Simulated render error',
+        triggerCondition: 'immediate',
       };
 
       useErrorBoundaryDevTools.getState().addSimulation(simulation);

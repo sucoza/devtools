@@ -240,10 +240,30 @@ export const useErrorBoundaryDevTools = create<
         const state = get()
         const boundary = state.errorBoundaries.get(boundaryId)
         const strategy = state.recoveryStrategies.get(strategyId)
-        
+
         if (boundary && strategy) {
-          // Apply strategy logic here
-          // Strategy ${strategyId} applied to boundary ${boundaryId}
+          // Update the boundary with the recovery strategy configuration
+          set((state) => {
+            const boundaries = new Map(state.errorBoundaries)
+            const existing = boundaries.get(boundaryId)
+            if (existing) {
+              boundaries.set(boundaryId, {
+                ...existing,
+                fallbackComponent: strategy.fallbackComponent ? strategy.fallbackComponent.name : undefined,
+              })
+            }
+            return { errorBoundaries: boundaries }
+          })
+
+          // If strategy has onReset callback, call it
+          if (strategy.onReset) {
+            strategy.onReset()
+          }
+
+          // Log the application for debugging
+          if (typeof console !== 'undefined' && console.log) {
+            console.log(`Recovery strategy '${strategy.name}' applied to boundary '${boundary.componentName}'`)
+          }
         }
       },
 
@@ -260,10 +280,55 @@ export const useErrorBoundaryDevTools = create<
       runSimulation: (simulationId) => {
         const state = get()
         const simulation = state.simulations.find((s) => s.id === simulationId)
-        
+
         if (simulation) {
-          // Trigger the simulated error
-          // Running simulation: ${simulation.name}
+          // Create a simulated error based on the simulation configuration
+          const simulatedError: ErrorInfo = {
+            id: `simulated-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            timestamp: Date.now(),
+            message: simulation.errorMessage,
+            category: simulation.errorType,
+            severity: ErrorSeverity.MEDIUM,
+            occurrences: 1,
+            firstSeen: Date.now(),
+            lastSeen: Date.now(),
+            metadata: {
+              simulated: true,
+              simulationId: simulation.id,
+              simulationName: simulation.name,
+              targetComponent: simulation.targetComponent,
+            },
+          }
+
+          // Handle different trigger conditions
+          const triggerError = () => {
+            get().addError(simulatedError)
+            get().updateMetrics()
+
+            if (typeof console !== 'undefined' && console.log) {
+              console.log(`Running simulation '${simulation.name}': ${simulation.errorMessage}`)
+            }
+          }
+
+          switch (simulation.triggerCondition) {
+            case 'immediate':
+              triggerError()
+              break
+            case 'delayed':
+              if (simulation.delay && simulation.delay > 0) {
+                setTimeout(triggerError, simulation.delay)
+              } else {
+                triggerError()
+              }
+              break
+            case 'conditional':
+              if (simulation.condition && simulation.condition()) {
+                triggerError()
+              }
+              break
+            default:
+              triggerError()
+          }
         }
       },
 
