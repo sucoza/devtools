@@ -1,0 +1,566 @@
+/**
+ * Unified Theme CSS for TanStack DevTools Plugins
+ *
+ * This file provides consistent styling across all plugins with support for
+ * both light and dark themes.
+ *
+ * Usage:
+ * 1. Import this file in your plugin's main component
+ * 2. Add data-theme="light" or data-theme="dark" to the root element
+ * 3. Use the provided CSS custom properties for styling
+ */
+
+/* ============================================================================
+   THEME VARIABLES
+   ========================================================================= */
+
+:root,
+[data-theme="dark"] {
+  /* Background Colors */
+  --dt-bg-primary: #1e1e1e;
+  --dt-bg-secondary: #252526;
+  --dt-bg-tertiary: #2d2d30;
+  --dt-bg-elevated: #3c3c3c;
+  --dt-bg-selected: #094771;
+  --dt-bg-hover: rgba(255, 255, 255, 0.1);
+
+  /* Border Colors */
+  --dt-border-primary: #3c3c3c;
+  --dt-border-secondary: #2d2d30;
+  --dt-border-focus: #3b82f6;
+
+  /* Text Colors */
+  --dt-text-primary: #d4d4d4;
+  --dt-text-secondary: #969696;
+  --dt-text-muted: #666666;
+  --dt-text-heading: #cccccc;
+  --dt-text-accent: #9cdcfe;
+  --dt-text-link: #4fc1ff;
+
+  /* Status Colors */
+  --dt-color-success: #10b981;
+  --dt-color-warning: #fbbf24;
+  --dt-color-error: #ef4444;
+  --dt-color-info: #3b82f6;
+  --dt-color-fatal: #dc2626;
+
+  /* Semantic Backgrounds */
+  --dt-bg-success: rgba(16, 185, 129, 0.1);
+  --dt-bg-warning: rgba(251, 191, 36, 0.1);
+  --dt-bg-error: rgba(239, 68, 68, 0.1);
+  --dt-bg-info: rgba(59, 130, 246, 0.1);
+}
+
+[data-theme="light"] {
+  /* Background Colors */
+  --dt-bg-primary: #ffffff;
+  --dt-bg-secondary: #f8f9fa;
+  --dt-bg-tertiary: #f3f4f6;
+  --dt-bg-elevated: #e5e7eb;
+  --dt-bg-selected: #dbeafe;
+  --dt-bg-hover: rgba(0, 0, 0, 0.05);
+
+  /* Border Colors */
+  --dt-border-primary: #e5e7eb;
+  --dt-border-secondary: #d1d5db;
+  --dt-border-focus: #3b82f6;
+
+  /* Text Colors */
+  --dt-text-primary: #1f2937;
+  --dt-text-secondary: #6b7280;
+  --dt-text-muted: #9ca3af;
+  --dt-text-heading: #111827;
+  --dt-text-accent: #3b82f6;
+  --dt-text-link: #2563eb;
+
+  /* Status Colors (same across themes) */
+  --dt-color-success: #10b981;
+  --dt-color-warning: #fbbf24;
+  --dt-color-error: #ef4444;
+  --dt-color-info: #3b82f6;
+  --dt-color-fatal: #dc2626;
+
+  /* Semantic Backgrounds */
+  --dt-bg-success: rgba(16, 185, 129, 0.1);
+  --dt-bg-warning: rgba(251, 191, 36, 0.1);
+  --dt-bg-error: rgba(239, 68, 68, 0.1);
+  --dt-bg-info: rgba(59, 130, 246, 0.1);
+}
+
+/* ============================================================================
+   BASE STYLES
+   ========================================================================= */
+
+.dt-plugin-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+  color: var(--dt-text-primary);
+  background: var(--dt-bg-primary);
+}
+
+/* ============================================================================
+   LAYOUT
+   ========================================================================= */
+
+.dt-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--dt-border-primary);
+  background: var(--dt-bg-secondary);
+}
+
+.dt-header h2 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--dt-text-heading);
+}
+
+.dt-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.dt-section {
+  background: var(--dt-bg-secondary);
+  border: 1px solid var(--dt-border-primary);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.dt-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: var(--dt-bg-tertiary);
+  border-bottom: 1px solid var(--dt-border-primary);
+}
+
+.dt-section-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--dt-text-heading);
+}
+
+/* ============================================================================
+   TABS
+   ========================================================================= */
+
+.dt-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--dt-border-primary);
+  background: var(--dt-bg-secondary);
+  overflow-x: auto;
+}
+
+.dt-tab {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border: 1px solid var(--dt-border-secondary);
+  background: var(--dt-bg-tertiary);
+  color: var(--dt-text-secondary);
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.dt-tab:hover {
+  background: var(--dt-bg-hover);
+  color: var(--dt-text-primary);
+}
+
+.dt-tab.active {
+  background: var(--dt-border-focus);
+  color: white;
+  border-color: var(--dt-border-focus);
+}
+
+/* ============================================================================
+   BUTTONS
+   ========================================================================= */
+
+.dt-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border: 1px solid var(--dt-border-primary);
+  border-radius: 4px;
+  background: var(--dt-bg-tertiary);
+  color: var(--dt-text-primary);
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1.5;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.dt-btn:hover:not(:disabled) {
+  background: var(--dt-bg-hover);
+  border-color: var(--dt-border-secondary);
+}
+
+.dt-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.dt-btn-primary {
+  background: var(--dt-border-focus);
+  border-color: var(--dt-border-focus);
+  color: white;
+}
+
+.dt-btn-primary:hover:not(:disabled) {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.dt-btn-success {
+  background: var(--dt-color-success);
+  border-color: var(--dt-color-success);
+  color: white;
+}
+
+.dt-btn-danger {
+  background: var(--dt-color-error);
+  border-color: var(--dt-color-error);
+  color: white;
+}
+
+.dt-btn-sm {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.dt-btn-icon {
+  padding: 4px;
+  background: none;
+  border: 1px solid transparent;
+}
+
+/* ============================================================================
+   CARDS & STATS
+   ========================================================================= */
+
+.dt-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.dt-stat-card {
+  padding: 16px;
+  background: var(--dt-bg-secondary);
+  border: 1px solid var(--dt-border-primary);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.dt-stat-card.clickable {
+  cursor: pointer;
+}
+
+.dt-stat-card.clickable:hover {
+  background: var(--dt-bg-tertiary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dt-stat-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dt-text-secondary);
+}
+
+.dt-stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dt-text-heading);
+  margin-bottom: 4px;
+}
+
+.dt-stat-details {
+  font-size: 12px;
+  color: var(--dt-text-secondary);
+  display: flex;
+  gap: 8px;
+}
+
+.dt-card {
+  background: var(--dt-bg-secondary);
+  border: 1px solid var(--dt-border-primary);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 8px;
+  transition: all 0.2s ease;
+}
+
+.dt-card:hover {
+  border-color: var(--dt-border-secondary);
+}
+
+.dt-card.selected {
+  border-color: var(--dt-border-focus);
+  background: var(--dt-bg-selected);
+}
+
+/* ============================================================================
+   FORMS & INPUTS
+   ========================================================================= */
+
+.dt-input,
+.dt-select,
+.dt-textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--dt-border-primary);
+  border-radius: 4px;
+  background: var(--dt-bg-secondary);
+  color: var(--dt-text-primary);
+  font-size: 12px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+.dt-input:focus,
+.dt-select:focus,
+.dt-textarea:focus {
+  outline: none;
+  border-color: var(--dt-border-focus);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dt-form-group {
+  margin-bottom: 16px;
+}
+
+.dt-form-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+  color: var(--dt-text-primary);
+  font-size: 13px;
+}
+
+/* ============================================================================
+   BADGES & TAGS
+   ========================================================================= */
+
+.dt-badge {
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.dt-badge-success {
+  background: var(--dt-bg-success);
+  color: var(--dt-color-success);
+}
+
+.dt-badge-warning {
+  background: var(--dt-bg-warning);
+  color: var(--dt-color-warning);
+}
+
+.dt-badge-error {
+  background: var(--dt-bg-error);
+  color: var(--dt-color-error);
+}
+
+.dt-badge-info {
+  background: var(--dt-bg-info);
+  color: var(--dt-color-info);
+}
+
+/* ============================================================================
+   STATUS INDICATORS
+   ========================================================================= */
+
+.dt-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dt-status-success {
+  color: var(--dt-color-success);
+}
+
+.dt-status-warning {
+  color: var(--dt-color-warning);
+}
+
+.dt-status-error {
+  color: var(--dt-color-error);
+}
+
+.dt-status-info {
+  color: var(--dt-color-info);
+}
+
+/* ============================================================================
+   UTILITIES
+   ========================================================================= */
+
+.dt-empty-state {
+  text-align: center;
+  color: var(--dt-text-muted);
+  padding: 60px 20px;
+  font-size: 15px;
+}
+
+.dt-loading {
+  color: var(--dt-text-secondary);
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.dt-divider {
+  border: 0;
+  border-top: 1px solid var(--dt-border-primary);
+  margin: 16px 0;
+}
+
+/* Flexbox Utilities */
+.dt-flex {
+  display: flex;
+}
+
+.dt-flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.dt-items-center {
+  align-items: center;
+}
+
+.dt-justify-between {
+  justify-content: space-between;
+}
+
+.dt-gap-2 {
+  gap: 4px;
+}
+
+.dt-gap-4 {
+  gap: 8px;
+}
+
+.dt-gap-6 {
+  gap: 12px;
+}
+
+/* Spacing Utilities */
+.dt-mb-2 {
+  margin-bottom: 4px;
+}
+
+.dt-mb-4 {
+  margin-bottom: 8px;
+}
+
+.dt-mb-6 {
+  margin-bottom: 12px;
+}
+
+.dt-mb-8 {
+  margin-bottom: 16px;
+}
+
+.dt-p-4 {
+  padding: 8px;
+}
+
+.dt-p-6 {
+  padding: 12px;
+}
+
+.dt-p-8 {
+  padding: 16px;
+}
+
+/* Text Utilities */
+.dt-text-sm {
+  font-size: 11px;
+}
+
+.dt-text-base {
+  font-size: 12px;
+}
+
+.dt-text-md {
+  font-size: 13px;
+}
+
+.dt-text-lg {
+  font-size: 14px;
+}
+
+.dt-font-medium {
+  font-weight: 500;
+}
+
+.dt-font-semibold {
+  font-weight: 600;
+}
+
+.dt-font-bold {
+  font-weight: 700;
+}
+
+.dt-text-muted {
+  color: var(--dt-text-muted);
+}
+
+.dt-text-secondary {
+  color: var(--dt-text-secondary);
+}
+
+/* ============================================================================
+   ANIMATIONS
+   ========================================================================= */
+
+@keyframes dt-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.dt-pulse {
+  animation: dt-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes dt-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dt-spin {
+  animation: dt-spin 1s linear infinite;
+}

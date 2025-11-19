@@ -1,7 +1,5 @@
 import React from 'react'
 import { StressTestPanel } from './components/StressTestPanel'
-import './styles.css'
-import './styles-new-components.css'
 
 export interface StressTestPluginConfig {
   // Plugin configuration options can be added here

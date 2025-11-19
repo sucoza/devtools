@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
 import {
   Activity,
@@ -22,11 +22,13 @@ import {
   Toolbar,
   Footer,
   ConfigMenu,
+  ThemeProvider,
   COLORS,
   SPACING,
   TYPOGRAPHY,
   RADIUS,
 } from '@sucoza/shared-components';
+import '@sucoza/shared-components/dist/styles/theme.css';
 
 import type {
   RenderWasteDetectorPanelProps,
@@ -49,9 +51,9 @@ import TimelineTab from "./tabs/TimelineTab";
 import SettingsTab from "./tabs/SettingsTab";
 
 /**
- * Main Render Waste Detector DevTools Panel
+ * Main Render Waste Detector DevTools Panel (Inner component)
  */
-export function PluginPanel({
+function PluginPanelInner({
   className,
   style,
   theme = "auto",
@@ -370,6 +372,27 @@ export function PluginPanel({
       
       {children}
     </div>
+  );
+}
+
+/**
+ * Render Waste Detector DevTools Panel with Theme Provider
+ */
+export function PluginPanel(props: RenderWasteDetectorPanelProps) {
+  const { theme = "auto" } = props;
+
+  // Resolve theme
+  const resolvedTheme = useMemo(() => {
+    if (theme === "auto") {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return theme;
+  }, [theme]);
+
+  return (
+    <ThemeProvider defaultTheme={resolvedTheme}>
+      <PluginPanelInner {...props} />
+    </ThemeProvider>
   );
 }
 

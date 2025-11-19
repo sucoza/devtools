@@ -87,3 +87,5 @@ export type { FooterProps, FooterStat, FooterAction } from './Footer';
 
 export { ConfigMenu } from './ConfigMenu';
 export type { ConfigMenuProps, ConfigMenuItem } from './ConfigMenu';
+
+export { ThemeProvider, useTheme, useThemeOptional } from './ThemeProvider';

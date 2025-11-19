@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import { 
-  Shield, 
-  User, 
-  Key, 
-  Lock, 
-  Unlock, 
+import {
+  Shield,
+  User,
+  Key,
+  Lock,
+  Unlock,
   Settings,
   AlertTriangle,
   X,
@@ -20,19 +20,22 @@ import {
   Alert,
   ScrollableContainer,
   ConfigMenu,
+  ThemeProvider,
+  useThemeOptional,
   type ConfigMenuItem
 } from '@sucoza/shared-components';
 import { useAuthMockClient } from '../core/devtools-client';
-import '../styles.css';
+
 
 type TabType = 'overview' | 'scenarios' | 'roles' | 'permissions' | 'jwt' | 'storage' | 'settings';
 
-export function AuthPermissionsMockPanel() {
+function AuthPermissionsMockPanelInner() {
   const { state, client } = useAuthMockClient();
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
   const [customToken, setCustomToken] = useState('');
   const [showWarning, setShowWarning] = useState(true);
+  const theme = useThemeOptional('light');
 
   const handleApplyScenario = (scenarioId: string) => {
     client.applyScenario(scenarioId);
@@ -196,7 +199,7 @@ export function AuthPermissionsMockPanel() {
   function renderOverviewTab() {
     return (
       <ScrollableContainer>
-        <div className="overview-tab">
+        <div className="dt-content dt-p-8">
             <div className="auth-status">
               <h3>Authentication Status</h3>
               <div className={clsx('status-indicator', { 
@@ -242,10 +245,10 @@ export function AuthPermissionsMockPanel() {
                 <div className="tag-list">
                   {state.authState.roles.length > 0 ? (
                     state.authState.roles.map(role => (
-                      <span key={role} className="tag role-tag">{role}</span>
+                      <span key={role} className="dt-badge dt-badge-info">{role}</span>
                     ))
                   ) : (
-                    <span className="empty-state">No roles assigned</span>
+                    <span className="dt-empty-state">No roles assigned</span>
                   )}
                 </div>
               </div>
@@ -255,17 +258,17 @@ export function AuthPermissionsMockPanel() {
                 <div className="tag-list">
                   {state.authState.permissions.length > 0 ? (
                     state.authState.permissions.map(permission => (
-                      <span key={permission} className="tag permission-tag">{permission}</span>
+                      <span key={permission} className="dt-badge dt-badge-success">{permission}</span>
                     ))
                   ) : (
-                    <span className="empty-state">No permissions assigned</span>
+                    <span className="dt-empty-state">No permissions assigned</span>
                   )}
                 </div>
               </div>
             </div>
 
             {state.authState.isAuthenticated && (
-              <button onClick={handleLogout} className="btn btn-danger">
+              <button onClick={handleLogout} className="dt-btn dt-btn-danger">
                 <Lock className="icon-sm" />
                 Logout
               </button>
@@ -278,14 +281,14 @@ export function AuthPermissionsMockPanel() {
   function renderScenariosTab() {
     return (
       <ScrollableContainer>
-        <div className="scenarios-tab">
+        <div className="dt-content dt-p-8">
             <h3>Mock Scenarios</h3>
             <div className="scenario-list">
               {client.getScenarios().map(scenario => (
                 <div 
                   key={scenario.id} 
                   className={clsx('scenario-card', {
-                    active: selectedScenario === scenario.id
+                    selected: selectedScenario === scenario.id
                   })}
                 >
                   <div className="scenario-header">
@@ -307,7 +310,7 @@ export function AuthPermissionsMockPanel() {
                   </div>
                   <button 
                     onClick={() => handleApplyScenario(scenario.id)}
-                    className="btn btn-primary btn-sm"
+                    className="dt-btn dt-btn-primary dt-btn-sm"
                   >
                     Apply Scenario
                   </button>
@@ -322,11 +325,11 @@ export function AuthPermissionsMockPanel() {
   function renderRolesTab() {
     return (
       <ScrollableContainer>
-        <div className="roles-tab">
+        <div className="dt-content dt-p-8">
             <h3>Available Roles</h3>
             <div className="role-list">
               {client.getRoles().map(role => (
-                <div key={role.id} className="role-card">
+                <div key={role.id} className="dt-card">
                   <div className="role-header">
                     <h4>{role.name}</h4>
                     <input 
@@ -343,7 +346,7 @@ export function AuthPermissionsMockPanel() {
                   <p className="role-description">{role.description}</p>
                   <div className="permission-list">
                     {role.permissions.map(perm => (
-                      <span key={perm} className="tag permission-tag">{perm}</span>
+                      <span key={perm} className="dt-badge dt-badge-success">{perm}</span>
                     ))}
                   </div>
                 </div>
@@ -357,11 +360,11 @@ export function AuthPermissionsMockPanel() {
   function renderPermissionsTab() {
     return (
       <ScrollableContainer>
-        <div className="permissions-tab">
+        <div className="dt-content dt-p-8">
             <h3>Available Permissions</h3>
             <div className="permission-list">
               {client.getPermissions().map(permission => (
-                <div key={permission.id} className="permission-card">
+                <div key={permission.id} className="dt-card">
                   <div className="permission-header">
                     <div>
                       <h4>{permission.name}</h4>
@@ -395,7 +398,7 @@ export function AuthPermissionsMockPanel() {
   function renderJwtTab() {
     return (
       <ScrollableContainer>
-        <div className="jwt-tab">
+        <div className="dt-content dt-p-8">
             <h3>JWT Token Editor</h3>
             <div className="jwt-section">
               <h4>Current Token</h4>
@@ -404,14 +407,14 @@ export function AuthPermissionsMockPanel() {
                   <code className="token-text">{state.authState.token}</code>
                   <button 
                     onClick={() => copyToClipboard(state.authState.token!)}
-                    className="btn btn-icon"
+                    className="dt-btn dt-btn-icon"
                     title="Copy token"
                   >
                     <Copy className="icon-sm" />
                   </button>
                 </div>
               ) : (
-                <p className="empty-state">No token present</p>
+                <p className="dt-empty-state">No token present</p>
               )}
             </div>
 
@@ -427,7 +430,7 @@ export function AuthPermissionsMockPanel() {
                 />
                 <button 
                   onClick={handleUpdateToken}
-                  className="btn btn-primary"
+                  className="dt-btn dt-btn-primary"
                   disabled={!customToken}
                 >
                   Apply Token
@@ -465,7 +468,7 @@ export function AuthPermissionsMockPanel() {
   function renderStorageTab() {
     return (
       <ScrollableContainer>
-        <div className="storage-tab">
+        <div className="dt-content dt-p-8">
             <h3>Storage Operations</h3>
             <div className="storage-operations">
               {state.storageOperations.length > 0 ? (
@@ -488,7 +491,7 @@ export function AuthPermissionsMockPanel() {
                   ))}
                 </div>
               ) : (
-                <p className="empty-state">No storage operations recorded</p>
+                <p className="dt-empty-state">No storage operations recorded</p>
               )}
             </div>
 
@@ -517,17 +520,17 @@ export function AuthPermissionsMockPanel() {
   function renderSettingsTab() {
     return (
       <ScrollableContainer>
-        <div className="settings-tab">
+        <div className="dt-content dt-p-8">
             <h3>Settings</h3>
             
             <div className="settings-section">
               <h4>Configuration</h4>
               <div className="settings-actions">
-                <button onClick={handleExportConfig} className="btn btn-secondary">
+                <button onClick={handleExportConfig} className="dt-btn dt-btn-secondary">
                   <Download className="icon-sm" />
                   Export Config
                 </button>
-                <label className="btn btn-secondary">
+                <label className="dt-btn dt-btn-secondary">
                   <Upload className="icon-sm" />
                   Import Config
                   <input 
@@ -562,7 +565,7 @@ export function AuthPermissionsMockPanel() {
               <h4>Danger Zone</h4>
               <button 
                 onClick={() => client.clear()}
-                className="btn btn-danger"
+                className="dt-btn dt-btn-danger"
               >
                 <Trash2 className="icon-sm" />
                 Clear All Data
@@ -574,7 +577,7 @@ export function AuthPermissionsMockPanel() {
   }
 
   return (
-    <div className="auth-mock-panel" style={{ position: 'relative' }}>
+    <div className="dt-plugin-panel" data-theme={theme} style={{ position: 'relative' }}>
       {/* Warning Banner */}
       {showWarning && state.mockMode && (
         <Alert
@@ -605,5 +608,13 @@ export function AuthPermissionsMockPanel() {
         <ConfigMenu items={configMenuItems} size="sm" />
       </div>
     </div>
+  );
+}
+
+export function AuthPermissionsMockPanel() {
+  return (
+    <ThemeProvider defaultTheme="light">
+      <AuthPermissionsMockPanelInner />
+    </ThemeProvider>
   );
 }

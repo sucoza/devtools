@@ -94,7 +94,7 @@ export function ComponentsTab({
         .tab-header h2 {
           margin: 0;
           font-size: 18px;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .search-filter {
@@ -108,8 +108,8 @@ export function ComponentsTab({
           align-items: center;
           gap: 8px;
           padding: 8px 12px;
-          background: var(--bg-secondary, #f8f9fa);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 6px;
         }
 
@@ -126,8 +126,8 @@ export function ComponentsTab({
           align-items: center;
           gap: 6px;
           padding: 8px 12px;
-          background: var(--bg-secondary, #f8f9fa);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 6px;
           cursor: pointer;
           font-size: 13px;
@@ -148,15 +148,15 @@ export function ComponentsTab({
           justify-content: space-between;
           align-items: center;
           padding: 16px;
-          background: var(--bg-secondary, #f8f9fa);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 8px;
           cursor: pointer;
           transition: all 0.2s ease;
         }
 
         .component-item:hover {
-          border-color: var(--color-primary, #007bff);
+          border-color: var(--dt-border-focus, #007bff);
         }
 
         .component-info {
@@ -165,20 +165,20 @@ export function ComponentsTab({
 
         .component-name {
           font-weight: 500;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
           margin-bottom: 4px;
         }
 
         .component-location {
           font-size: 11px;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
         }
 
         .component-metrics {
           display: flex;
           align-items: center;
           gap: 6px;
-          color: var(--color-primary, #007bff);
+          color: var(--dt-border-focus, #007bff);
           font-size: 13px;
         }
 
@@ -189,40 +189,12 @@ export function ComponentsTab({
           justify-content: center;
           height: 100%;
           text-align: center;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
         }
 
         .empty-state h3 {
           margin: 16px 0 8px 0;
-          color: var(--text-primary, #1a1a1a);
-        }
-
-        /* Dark theme */
-        .theme-dark .tab-header h2 {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .search-box {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .filter-btn {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .component-item {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .component-name {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .empty-state h3 {
-          color: var(--text-primary, #ffffff);
+          color: var(--dt-text-primary, #1a1a1a);
         }
       `}</style>
     </div>

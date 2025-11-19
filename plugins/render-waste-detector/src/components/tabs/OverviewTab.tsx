@@ -290,19 +290,19 @@ export function OverviewTab({
           align-items: center;
           gap: 12px;
           padding: 16px;
-          background: var(--bg-secondary, #f8f9fa);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 8px;
           transition: all 0.2s ease;
         }
 
         .summary-card.warning {
-          border-color: var(--color-warning, #ffc107);
-          background: var(--color-warning-bg, #fff3cd);
+          border-color: var(--dt-status-warning, #ffc107);
+          background: var(--dt-bg-warning, #fff3cd);
         }
 
         .summary-card:hover {
-          border-color: var(--color-primary, #007bff);
+          border-color: var(--dt-border-focus, #007bff);
         }
 
         .card-icon {
@@ -311,7 +311,7 @@ export function OverviewTab({
           justify-content: center;
           width: 40px;
           height: 40px;
-          background: var(--color-primary, #007bff);
+          background: var(--dt-border-focus, #007bff);
           color: white;
           border-radius: 8px;
         }
@@ -323,12 +323,12 @@ export function OverviewTab({
         .card-value {
           font-size: 24px;
           font-weight: 600;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .card-label {
           font-size: 12px;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
           margin-top: 2px;
         }
 
@@ -342,8 +342,8 @@ export function OverviewTab({
         .content-section {
           display: flex;
           flex-direction: column;
-          background: var(--bg-secondary, #f8f9fa);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 8px;
           overflow: hidden;
         }
@@ -357,29 +357,29 @@ export function OverviewTab({
           align-items: center;
           justify-content: space-between;
           padding: 16px;
-          border-bottom: 1px solid var(--border-color, #e1e5e9);
+          border-bottom: 1px solid var(--dt-border-primary, #e1e5e9);
         }
 
         .section-header h3 {
           margin: 0;
           font-size: 14px;
           font-weight: 600;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .view-all-btn {
           padding: 4px 8px;
           font-size: 11px;
-          color: var(--color-primary, #007bff);
+          color: var(--dt-border-focus, #007bff);
           background: transparent;
-          border: 1px solid var(--color-primary, #007bff);
+          border: 1px solid var(--dt-border-focus, #007bff);
           border-radius: 4px;
           cursor: pointer;
           transition: all 0.2s ease;
         }
 
         .view-all-btn:hover {
-          background: var(--color-primary, #007bff);
+          background: var(--dt-border-focus, #007bff);
           color: white;
         }
 
@@ -396,7 +396,7 @@ export function OverviewTab({
           align-items: center;
           gap: 12px;
           padding: 12px;
-          border: 1px solid var(--border-color, #e1e5e9);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 6px;
           margin-bottom: 8px;
           cursor: pointer;
@@ -404,8 +404,8 @@ export function OverviewTab({
         }
 
         .wasteful-component-item:hover {
-          border-color: var(--color-primary, #007bff);
-          background: var(--bg-hover, #f0f8ff);
+          border-color: var(--dt-border-focus, #007bff);
+          background: var(--dt-bg-hover, #f0f8ff);
         }
 
         .component-rank {
@@ -414,7 +414,7 @@ export function OverviewTab({
           justify-content: center;
           width: 24px;
           height: 24px;
-          background: var(--color-danger, #dc3545);
+          background: var(--dt-status-error, #dc3545);
           color: white;
           border-radius: 12px;
           font-size: 11px;
@@ -427,19 +427,19 @@ export function OverviewTab({
 
         .component-name {
           font-weight: 500;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
           margin-bottom: 2px;
         }
 
         .component-stats {
           font-size: 11px;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
         }
 
         .waste-indicator {
           width: 60px;
           height: 6px;
-          background: var(--bg-tertiary, #f1f3f4);
+          background: var(--dt-bg-tertiary, #f1f3f4);
           border-radius: 3px;
           overflow: hidden;
         }
@@ -448,8 +448,8 @@ export function OverviewTab({
           height: 100%;
           background: linear-gradient(
             90deg,
-            var(--color-warning, #ffc107) 0%,
-            var(--color-danger, #dc3545) 100%
+            var(--dt-status-warning, #ffc107) 0%,
+            var(--dt-status-error, #dc3545) 100%
           );
           transition: width 0.3s ease;
         }
@@ -459,7 +459,7 @@ export function OverviewTab({
           align-items: center;
           gap: 12px;
           padding: 12px;
-          border: 1px solid var(--border-color, #e1e5e9);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 6px;
           margin-bottom: 8px;
         }
@@ -474,27 +474,27 @@ export function OverviewTab({
 
         .suggestion-title {
           font-weight: 500;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
           margin-bottom: 2px;
           font-size: 12px;
         }
 
         .suggestion-component {
           font-size: 11px;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
           margin-bottom: 2px;
         }
 
         .suggestion-impact {
           font-size: 10px;
-          color: var(--color-success, #28a745);
+          color: var(--dt-status-success, #28a745);
           font-weight: 500;
         }
 
         .apply-suggestion-btn {
           padding: 6px 12px;
           font-size: 11px;
-          background: var(--color-primary, #007bff);
+          background: var(--dt-border-focus, #007bff);
           color: white;
           border: none;
           border-radius: 4px;
@@ -503,7 +503,7 @@ export function OverviewTab({
         }
 
         .apply-suggestion-btn:hover {
-          background: var(--color-primary-dark, #0056b3);
+          background: var(--dt-border-focus-dark, #0056b3);
         }
 
         .activity-list {
@@ -518,20 +518,20 @@ export function OverviewTab({
           gap: 12px;
           align-items: center;
           padding: 8px 12px;
-          background: var(--bg-primary, #ffffff);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-primary, #ffffff);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 4px;
           font-size: 11px;
         }
 
         .activity-timestamp {
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
           font-family: monospace;
         }
 
         .activity-component {
           font-weight: 500;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .activity-reason {
@@ -539,23 +539,23 @@ export function OverviewTab({
           border-radius: 3px;
           font-size: 10px;
           text-transform: capitalize;
-          background: var(--bg-tertiary, #f1f3f4);
-          color: var(--text-secondary, #6c757d);
+          background: var(--dt-bg-tertiary, #f1f3f4);
+          color: var(--dt-text-secondary, #6c757d);
         }
 
         .activity-reason.parent-render {
-          background: var(--color-warning-bg, #fff3cd);
-          color: var(--color-warning-dark, #856404);
+          background: var(--dt-bg-warning, #fff3cd);
+          color: var(--dt-text-warning, #856404);
         }
 
         .activity-duration {
           font-family: monospace;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
         }
 
         .waste-tag {
           padding: 2px 6px;
-          background: var(--color-danger, #dc3545);
+          background: var(--dt-status-error, #dc3545);
           color: white;
           border-radius: 3px;
           font-size: 10px;
@@ -569,7 +569,7 @@ export function OverviewTab({
           justify-content: center;
           padding: 32px;
           text-align: center;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
         }
 
         .empty-hint {
@@ -582,7 +582,7 @@ export function OverviewTab({
           align-items: center;
           gap: 8px;
           padding: 8px 16px;
-          background: var(--color-primary, #007bff);
+          background: var(--dt-border-focus, #007bff);
           color: white;
           border: none;
           border-radius: 4px;
@@ -592,7 +592,7 @@ export function OverviewTab({
         }
 
         .analyze-btn:hover {
-          background: var(--color-primary-dark, #0056b3);
+          background: var(--dt-border-focus-dark, #0056b3);
         }
 
         .recording-prompt {
@@ -600,20 +600,20 @@ export function OverviewTab({
           align-items: center;
           justify-content: center;
           padding: 48px;
-          background: var(--bg-secondary, #f8f9fa);
-          border: 2px dashed var(--border-color, #e1e5e9);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border: 2px dashed var(--dt-border-primary, #e1e5e9);
           border-radius: 8px;
           text-align: center;
         }
 
         .prompt-content h3 {
           margin: 16px 0 8px 0;
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .prompt-content p {
           margin: 0 0 24px 0;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
           max-width: 400px;
         }
 
@@ -622,7 +622,7 @@ export function OverviewTab({
           align-items: center;
           gap: 8px;
           padding: 12px 24px;
-          background: var(--color-primary, #007bff);
+          background: var(--dt-border-focus, #007bff);
           color: white;
           border: none;
           border-radius: 6px;
@@ -632,52 +632,7 @@ export function OverviewTab({
         }
 
         .start-recording-btn:hover {
-          background: var(--color-primary-dark, #0056b3);
-        }
-
-        /* Theme dark mode */
-        .theme-dark .summary-card {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .card-value {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .content-section {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .section-header h3 {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .component-name {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .suggestion-title {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .activity-component {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .activity-item {
-          background: var(--bg-primary, #1a1a1a);
-          border-color: var(--border-color, #333);
-        }
-
-        .theme-dark .prompt-content h3 {
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .recording-prompt {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
+          background: var(--dt-border-focus-dark, #0056b3);
         }
       `}</style>
     </div>

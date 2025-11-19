@@ -2,11 +2,13 @@ import React from 'react';
 
 /**
  * Comprehensive style system for TanStack DevTools plugins
- * Based on VS Code dark theme with inline React.CSSProperties objects
+ * Supports both light and dark themes with consistent design tokens
  */
 
-// Color Palette - VS Code Dark Theme Colors
-export const COLORS = {
+export type Theme = 'light' | 'dark';
+
+// Color Palette - Dark Theme (VS Code inspired)
+export const COLORS_DARK = {
   // Background colors
   background: {
     primary: '#1e1e1e',        // Main background
@@ -16,14 +18,14 @@ export const COLORS = {
     selected: '#094771',       // Selected items
     hover: 'rgba(255, 255, 255, 0.1)', // Hover overlay
   },
-  
+
   // Border colors
   border: {
     primary: '#3c3c3c',        // Main borders
     secondary: '#2d2d30',      // Secondary borders
-    focus: '#007acc',          // Focus indicators
+    focus: '#3b82f6',          // Focus indicators (standardized blue)
   },
-  
+
   // Text colors
   text: {
     primary: '#d4d4d4',        // Primary text
@@ -34,46 +36,46 @@ export const COLORS = {
     link: '#4fc1ff',           // Links
     filename: '#dcdcaa',       // File names
   },
-  
+
   // Status colors
   status: {
-    success: '#4ec9b0',        // Success state
-    warning: '#f39c12',        // Warning state
-    error: '#e74c3c',          // Error state
-    info: '#3498db',           // Info state
-    fatal: '#c0392b',          // Fatal error
-    trace: '#7f8c8d',          // Trace level
-    debug: '#95a5a6',          // Debug level
+    success: '#10b981',        // Success state (standardized)
+    warning: '#fbbf24',        // Warning state (standardized)
+    error: '#ef4444',          // Error state (standardized)
+    info: '#3b82f6',           // Info state (standardized)
+    fatal: '#dc2626',          // Fatal error (standardized)
+    trace: '#6b7280',          // Trace level
+    debug: '#9ca3af',          // Debug level
   },
-  
-  // Log level colors (from logger plugin)
+
+  // Log level colors
   log: {
-    trace: '#7f8c8d',
-    debug: '#95a5a6',
-    info: '#3498db',
-    warn: '#f39c12',
-    error: '#e74c3c',
-    fatal: '#c0392b',
+    trace: '#6b7280',
+    debug: '#9ca3af',
+    info: '#3b82f6',
+    warn: '#fbbf24',
+    error: '#ef4444',
+    fatal: '#dc2626',
   },
-  
+
   // Log background colors (transparent overlays)
   logBackground: {
     trace: 'transparent',
     debug: 'transparent',
     info: 'transparent',
-    warn: 'rgba(243, 156, 18, 0.1)',
-    error: 'rgba(231, 76, 60, 0.1)',
-    fatal: 'rgba(192, 57, 43, 0.2)',
+    warn: 'rgba(251, 191, 36, 0.1)',
+    error: 'rgba(239, 68, 68, 0.1)',
+    fatal: 'rgba(220, 38, 38, 0.2)',
   },
-  
-  // Severity colors (for accessibility, testing, etc.)
+
+  // Severity colors
   severity: {
-    critical: '#e74c3c',
-    serious: '#f39c12',
-    moderate: '#f1c40f',
-    minor: '#3498db',
+    critical: '#ef4444',
+    serious: '#fbbf24',
+    moderate: '#eab308',
+    minor: '#3b82f6',
   },
-  
+
   // Chart and visualization colors
   chart: {
     grid: '#3c3c3c',
@@ -82,22 +84,108 @@ export const COLORS = {
   },
 } as const;
 
+// Color Palette - Light Theme (Modern, clean design)
+export const COLORS_LIGHT = {
+  // Background colors
+  background: {
+    primary: '#ffffff',        // Main background
+    secondary: '#f8f9fa',      // Elevated surfaces
+    tertiary: '#f3f4f6',       // Interactive elements
+    elevated: '#e5e7eb',       // Borders and dividers
+    selected: '#dbeafe',       // Selected items
+    hover: 'rgba(0, 0, 0, 0.05)', // Hover overlay
+  },
+
+  // Border colors
+  border: {
+    primary: '#e5e7eb',        // Main borders
+    secondary: '#d1d5db',      // Secondary borders
+    focus: '#3b82f6',          // Focus indicators
+  },
+
+  // Text colors
+  text: {
+    primary: '#1f2937',        // Primary text
+    secondary: '#6b7280',      // Secondary text
+    muted: '#9ca3af',          // Muted text
+    heading: '#111827',        // Headings
+    accent: '#3b82f6',         // Accent text
+    link: '#2563eb',           // Links
+    filename: '#7c3aed',       // File names
+  },
+
+  // Status colors
+  status: {
+    success: '#10b981',        // Success state
+    warning: '#fbbf24',        // Warning state
+    error: '#ef4444',          // Error state
+    info: '#3b82f6',           // Info state
+    fatal: '#dc2626',          // Fatal error
+    trace: '#6b7280',          // Trace level
+    debug: '#9ca3af',          // Debug level
+  },
+
+  // Log level colors
+  log: {
+    trace: '#6b7280',
+    debug: '#9ca3af',
+    info: '#3b82f6',
+    warn: '#f59e0b',
+    error: '#ef4444',
+    fatal: '#dc2626',
+  },
+
+  // Log background colors (transparent overlays)
+  logBackground: {
+    trace: 'transparent',
+    debug: 'transparent',
+    info: 'transparent',
+    warn: 'rgba(251, 191, 36, 0.1)',
+    error: 'rgba(239, 68, 68, 0.1)',
+    fatal: 'rgba(220, 38, 38, 0.15)',
+  },
+
+  // Severity colors
+  severity: {
+    critical: '#dc2626',
+    serious: '#f59e0b',
+    moderate: '#eab308',
+    minor: '#3b82f6',
+  },
+
+  // Chart and visualization colors
+  chart: {
+    grid: '#e5e7eb',
+    axis: '#6b7280',
+    tooltip: '#f8f9fa',
+  },
+} as const;
+
+// Helper function to get colors based on theme
+export const getColors = (theme: Theme = 'dark') => {
+  return theme === 'dark' ? COLORS_DARK : COLORS_LIGHT;
+};
+
+// Default to dark theme for backward compatibility
+export const COLORS = COLORS_DARK;
+
 // Typography styles
 export const TYPOGRAPHY = {
   // Font families
   fontFamily: {
-    mono: '"SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
     sans: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    mono: '"SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
   },
-  
-  // Font sizes
+
+  // Font sizes (standardized across all plugins)
   fontSize: {
-    xs: '9px',      // Extra small
-    sm: '10px',     // Small
-    base: '11px',   // Base
-    md: '12px',     // Medium
+    xs: '10px',     // Extra small
+    sm: '11px',     // Small
+    base: '12px',   // Base (most common in plugins)
+    md: '13px',     // Medium
     lg: '14px',     // Large
     xl: '16px',     // Extra large
+    '2xl': '18px',  // 2X large
   },
   
   // Font weights
@@ -131,13 +219,13 @@ export const SPACING = {
   '6xl': '32px',
 } as const;
 
-// Border radius
+// Border radius (standardized across all plugins)
 export const RADIUS = {
   none: '0',
   sm: '2px',
-  md: '3px',
-  lg: '4px',
-  xl: '6px',
+  md: '4px',    // Most common in plugins
+  lg: '6px',
+  xl: '8px',
   full: '9999px',
 } as const;
 
@@ -163,26 +251,30 @@ export const Z_INDEX = {
 } as const;
 
 // Component Styles - Reusable style objects for common components
+// Use getComponentStyles(theme) to get theme-aware styles
 
-export const COMPONENT_STYLES = {
-  // Base container styles
-  container: {
-    base: {
-      display: 'flex',
-      flexDirection: 'column' as const,
-      height: '100%',
-      background: COLORS.background.primary,
-      color: COLORS.text.primary,
-      fontFamily: TYPOGRAPHY.fontFamily.mono,
-      fontSize: TYPOGRAPHY.fontSize.md,
-    } satisfies React.CSSProperties,
-    
-    panel: {
-      background: COLORS.background.secondary,
-      border: `1px solid ${COLORS.border.primary}`,
-      borderRadius: RADIUS.md,
-    } satisfies React.CSSProperties,
-  },
+export const getComponentStyles = (theme: Theme = 'dark') => {
+  const COLORS = getColors(theme);
+
+  return {
+    // Base container styles
+    container: {
+      base: {
+        display: 'flex',
+        flexDirection: 'column' as const,
+        height: '100%',
+        background: COLORS.background.primary,
+        color: COLORS.text.primary,
+        fontFamily: TYPOGRAPHY.fontFamily.sans,
+        fontSize: TYPOGRAPHY.fontSize.base,
+      } satisfies React.CSSProperties,
+
+      panel: {
+        background: COLORS.background.secondary,
+        border: `1px solid ${COLORS.border.primary}`,
+        borderRadius: RADIUS.md,
+      } satisfies React.CSSProperties,
+    },
   
   // Header styles
   header: {
@@ -663,7 +755,11 @@ export const COMPONENT_STYLES = {
       color: COLORS.status.error,
     } satisfies React.CSSProperties,
   },
-} as const;
+  } as const;
+};
+
+// Default COMPONENT_STYLES for backward compatibility (uses dark theme)
+export const COMPONENT_STYLES = getComponentStyles('dark');
 
 // Animation keyframes (CSS-in-JS doesn't support @keyframes directly, but plugins can define these)
 export const ANIMATIONS = {
@@ -778,7 +874,14 @@ export const createSidebarResizer = (
 });
 
 export default {
+  // Theme-aware exports
+  getColors,
+  getComponentStyles,
+
+  // Default (dark theme) exports for backward compatibility
   COLORS,
+  COLORS_DARK,
+  COLORS_LIGHT,
   TYPOGRAPHY,
   SPACING,
   RADIUS,
@@ -787,6 +890,8 @@ export default {
   COMPONENT_STYLES,
   ANIMATIONS,
   LAYOUT,
+
+  // Utilities
   mergeStyles,
   createSidebarResizer,
 };

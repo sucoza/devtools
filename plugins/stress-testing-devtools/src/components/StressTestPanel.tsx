@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import { Flame, Play, Settings, History } from 'lucide-react'
 import {
   PluginPanel,
@@ -11,8 +11,10 @@ import {
   SPACING,
   TYPOGRAPHY,
   ConfigMenu,
+  ThemeProvider,
   type ConfigMenuItem,
 } from '@sucoza/shared-components'
+import '@sucoza/shared-components/dist/styles/theme.css'
 import { TestRunner } from './TestRunner'
 import { MetricsDisplay } from './MetricsDisplay'
 import { ConfigEditor } from './ConfigEditor'
@@ -21,7 +23,11 @@ import { stressTestStore } from '../store'
 import { StressTestRunner } from '../stress-runner'
 import { TestRun, StressTestConfig } from '../types'
 
-export const StressTestPanel: React.FC = () => {
+interface StressTestPanelProps {
+  theme?: 'light' | 'dark' | 'auto';
+}
+
+const StressTestPanelInner: React.FC<StressTestPanelProps> = () => {
   const [state, setState] = useState(stressTestStore.getState())
   const [activeTab, setActiveTab] = useState<'runner' | 'config' | 'history'>('runner')
   const [testRunner, setTestRunner] = useState<StressTestRunner | null>(null)
@@ -369,4 +375,25 @@ export const StressTestPanel: React.FC = () => {
       </div>
     </div>
   )
+}
+
+/**
+ * Stress Test Panel with Theme Provider
+ */
+export const StressTestPanel: React.FC<StressTestPanelProps> = (props) => {
+  const { theme = 'auto' } = props;
+
+  // Resolve theme
+  const resolvedTheme = useMemo(() => {
+    if (theme === 'auto') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return theme;
+  }, [theme]);
+
+  return (
+    <ThemeProvider defaultTheme={resolvedTheme}>
+      <StressTestPanelInner {...props} />
+    </ThemeProvider>
+  );
 }
