@@ -25,7 +25,8 @@ import {
   createBrowserAutomationEventClient,
   getBrowserAutomationEventClient,
 } from '../core';
-import { ConfigMenu, type ConfigMenuItem } from '@sucoza/shared-components';
+import { ConfigMenu, type ConfigMenuItem, ThemeProvider } from '@sucoza/shared-components';
+import '@sucoza/shared-components/dist/styles/theme.css';
 
 // Tab Components (placeholder implementations)
 import RecorderTab from './tabs/RecorderTab';
@@ -38,9 +39,9 @@ import AdvancedFeaturesTab from './tabs/AdvancedFeaturesTab';
 import { CollaborationTab } from './tabs/CollaborationTab';
 
 /**
- * Main Browser Automation Test Recorder DevTools Panel
+ * Main Browser Automation Test Recorder DevTools Panel (Inner component)
  */
-export function BrowserAutomationPanel({
+function BrowserAutomationPanelInner({
   className,
   style,
   theme = 'auto',
@@ -291,17 +292,11 @@ export function BrowserAutomationPanel({
           display: flex;
           flex-direction: column;
           height: 100%;
-          background: var(--bg-primary, #ffffff);
-          border: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-primary, #ffffff);
+          border: 1px solid var(--dt-border-primary, #e1e5e9);
           border-radius: 8px;
           font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
           font-size: 13px;
-        }
-
-        .theme-dark .browser-automation-devtools {
-          background: var(--bg-primary, #1a1a1a);
-          border-color: var(--border-color, #333);
-          color: var(--text-primary, #ffffff);
         }
 
         .devtools-header {
@@ -309,13 +304,8 @@ export function BrowserAutomationPanel({
           align-items: center;
           justify-content: space-between;
           padding: 8px 12px;
-          background: var(--bg-secondary, #f8f9fa);
-          border-bottom: 1px solid var(--border-color, #e1e5e9);
-        }
-
-        .theme-dark .devtools-header {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border-bottom: 1px solid var(--dt-border-primary, #e1e5e9);
         }
 
         .devtools-title {
@@ -323,11 +313,7 @@ export function BrowserAutomationPanel({
           align-items: center;
           gap: 8px;
           font-weight: 600;
-          color: var(--text-primary, #1a1a1a);
-        }
-
-        .theme-dark .devtools-title {
-          color: var(--text-primary, #ffffff);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .quick-actions {
@@ -344,14 +330,14 @@ export function BrowserAutomationPanel({
           border: none;
           border-radius: 4px;
           background: transparent;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
           cursor: pointer;
           transition: all 0.2s ease;
         }
 
         .quick-action-btn:hover {
           background: var(--bg-hover, #e9ecef);
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .quick-action-btn:disabled {
@@ -360,29 +346,19 @@ export function BrowserAutomationPanel({
         }
 
         .quick-action-btn.recording {
-          background: var(--color-success, #28a745);
+          background: var(--dt-status-success, #28a745);
           color: white;
         }
 
         .quick-action-btn.paused {
-          background: var(--color-warning, #ffc107);
+          background: var(--dt-status-warning, #ffc107);
           color: #1a1a1a;
-        }
-
-        .theme-dark .quick-action-btn:hover {
-          background: var(--bg-hover, #3a3a3a);
-          color: var(--text-primary, #ffffff);
         }
 
         .tab-navigation {
           display: flex;
-          background: var(--bg-secondary, #f8f9fa);
-          border-bottom: 1px solid var(--border-color, #e1e5e9);
-        }
-
-        .theme-dark .tab-navigation {
-          background: var(--bg-secondary, #2a2a2a);
-          border-color: var(--border-color, #333);
+          background: var(--dt-bg-secondary, #f8f9fa);
+          border-bottom: 1px solid var(--dt-border-primary, #e1e5e9);
         }
 
         .tab-button {
@@ -392,7 +368,7 @@ export function BrowserAutomationPanel({
           padding: 8px 12px;
           border: none;
           background: transparent;
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
           cursor: pointer;
           transition: all 0.2s ease;
           border-bottom: 2px solid transparent;
@@ -400,22 +376,13 @@ export function BrowserAutomationPanel({
 
         .tab-button:hover {
           background: var(--bg-hover, #e9ecef);
-          color: var(--text-primary, #1a1a1a);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .tab-button.active {
-          color: var(--color-primary, #007bff);
-          border-bottom-color: var(--color-primary, #007bff);
+          color: var(--dt-border-focus, #007bff);
+          border-bottom-color: var(--dt-border-focus, #007bff);
           background: var(--bg-active, #ffffff);
-        }
-
-        .theme-dark .tab-button:hover {
-          background: var(--bg-hover, #3a3a3a);
-          color: var(--text-primary, #ffffff);
-        }
-
-        .theme-dark .tab-button.active {
-          background: var(--bg-active, #1a1a1a);
         }
 
         .status-bar {
@@ -423,14 +390,9 @@ export function BrowserAutomationPanel({
           align-items: center;
           gap: 16px;
           padding: 6px 12px;
-          background: var(--bg-tertiary, #f1f3f4);
-          border-bottom: 1px solid var(--border-color, #e1e5e9);
+          background: var(--dt-bg-tertiary, #f1f3f4);
+          border-bottom: 1px solid var(--dt-border-primary, #e1e5e9);
           font-size: 11px;
-        }
-
-        .theme-dark .status-bar {
-          background: var(--bg-tertiary, #333);
-          border-color: var(--border-color, #444);
         }
 
         .status-item {
@@ -440,16 +402,12 @@ export function BrowserAutomationPanel({
         }
 
         .status-label {
-          color: var(--text-secondary, #6c757d);
+          color: var(--dt-text-secondary, #6c757d);
         }
 
         .status-value {
           font-weight: 500;
-          color: var(--text-primary, #1a1a1a);
-        }
-
-        .theme-dark .status-value {
-          color: var(--text-primary, #ffffff);
+          color: var(--dt-text-primary, #1a1a1a);
         }
 
         .status-indicator {
@@ -461,12 +419,12 @@ export function BrowserAutomationPanel({
         }
 
         .status-indicator.active {
-          background: var(--color-success, #28a745);
+          background: var(--dt-status-success, #28a745);
           color: white;
         }
 
         .status-indicator.paused {
-          background: var(--color-warning, #ffc107);
+          background: var(--dt-status-warning, #ffc107);
           color: #1a1a1a;
         }
 
@@ -493,6 +451,27 @@ export function BrowserAutomationPanel({
         }
       `}</style>
     </div>
+  );
+}
+
+/**
+ * Browser Automation DevTools Panel with Theme Provider
+ */
+export function BrowserAutomationPanel(props: BrowserAutomationDevToolsPanelProps) {
+  const { theme = 'auto' } = props;
+
+  // Resolve theme
+  const resolvedTheme = useMemo(() => {
+    if (theme === 'auto') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return theme;
+  }, [theme]);
+
+  return (
+    <ThemeProvider defaultTheme={resolvedTheme}>
+      <BrowserAutomationPanelInner {...props} />
+    </ThemeProvider>
   );
 }
 
