@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { 
+import React, { useState, useEffect, useMemo } from 'react';
+import {
   TrendingUp,
   TrendingDown,
   Minus,
@@ -9,11 +9,11 @@ import {
   Activity,
   Zap
 } from 'lucide-react';
-import { 
-  Tabs, 
-  DataTable, 
-  ProgressBar, 
-  Footer, 
+import {
+  Tabs,
+  DataTable,
+  ProgressBar,
+  Footer,
   Alert,
   Badge,
   StatusIndicator,
@@ -21,12 +21,18 @@ import {
   ScrollableContainer,
   SearchInput,
   ConfigMenu,
+  ThemeProvider,
   type ConfigMenuItem
 } from '@sucoza/shared-components';
+import '@sucoza/shared-components/dist/styles/theme.css';
 import { useMemoryProfilerDevTools } from '../core/devtools-client';
 import type { ComponentMemoryInfo, MemoryLeak, MemoryOptimizationSuggestion } from '../types';
 
-export function MemoryProfilerPanel() {
+interface MemoryProfilerPanelProps {
+  theme?: 'light' | 'dark' | 'auto'
+}
+
+function MemoryProfilerPanelInner() {
   const {
     isRunning,
     currentMemory,
@@ -72,37 +78,37 @@ export function MemoryProfilerPanel() {
           maxWidth: '500px',
           textAlign: 'center',
           padding: '32px',
-          background: '#f8f9fa',
+          background: "var(--dt-bg-secondary)",
           borderRadius: '12px',
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
         }}>
           <AlertTriangle size={48} style={{ 
-            color: '#ff9800',
+            color: "var(--dt-status-warning)",
             marginBottom: '16px'
           }} />
           <h3 style={{
             fontSize: '24px',
             fontWeight: 600,
             marginBottom: '12px',
-            color: '#1a1a1a'
+            color: "var(--dt-text-primary)"
           }}>Memory Profiler Not Supported</h3>
           <p style={{
             fontSize: '14px',
-            color: '#666',
+            color: "var(--dt-text-secondary)",
             marginBottom: '24px'
           }}>This browser doesn&apos;t support the required APIs for memory profiling.</p>
           <div style={{
             textAlign: 'left',
-            background: 'white',
+            background: "var(--dt-bg-primary)",
             borderRadius: '8px',
             padding: '20px',
-            border: '1px solid #e0e0e0'
+            border: "1px solid var(--dt-border-primary)"
           }}>
             <h4 style={{
               fontSize: '16px',
               fontWeight: 600,
               marginBottom: '16px',
-              color: '#333'
+              color: "var(--dt-text-primary)"
             }}>Required Features:</h4>
             <ul style={{
               listStyle: 'none',
@@ -116,7 +122,7 @@ export function MemoryProfilerPanel() {
                 gap: '8px',
                 padding: '8px 0',
                 fontSize: '14px',
-                color: supportInfo.memoryAPI ? '#4caf50' : '#f44336'
+                color: supportInfo.memoryAPI ? "var(--dt-status-success)" : "var(--dt-status-error)"
               }}>
                 {supportInfo.memoryAPI ? <CheckCircle size={18} /> : <XCircle size={18} />}
                 Performance Memory API
@@ -127,7 +133,7 @@ export function MemoryProfilerPanel() {
                 gap: '8px',
                 padding: '8px 0',
                 fontSize: '14px',
-                color: supportInfo.performanceObserver ? '#4caf50' : '#f44336'
+                color: supportInfo.performanceObserver ? "var(--dt-status-success)" : "var(--dt-status-error)"
               }}>
                 {supportInfo.performanceObserver ? <CheckCircle size={18} /> : <XCircle size={18} />}
                 Performance Observer API
@@ -138,7 +144,7 @@ export function MemoryProfilerPanel() {
                 gap: '8px',
                 padding: '8px 0',
                 fontSize: '14px',
-                color: supportInfo.reactDevTools ? '#4caf50' : '#666'
+                color: supportInfo.reactDevTools ? "var(--dt-status-success)" : "var(--dt-text-secondary)"
               }}>
                 {supportInfo.reactDevTools ? <CheckCircle size={18} /> : <XCircle size={18} />}
                 React DevTools Hook (optional)
@@ -146,8 +152,8 @@ export function MemoryProfilerPanel() {
             </ul>
             <p style={{
               fontSize: '13px',
-              color: '#666',
-              background: '#f5f5f5',
+              color: "var(--dt-text-secondary)",
+              background: "var(--dt-bg-secondary)",
               padding: '12px',
               borderRadius: '4px',
               margin: 0
@@ -156,7 +162,7 @@ export function MemoryProfilerPanel() {
               <code style={{
                 fontFamily: 'monospace',
                 fontSize: '12px',
-                background: '#e8e8e8',
+                background: "var(--dt-bg-tertiary)",
                 padding: '2px 4px',
                 borderRadius: '3px'
               }}>--enable-precise-memory-info --js-flags=&quot;--expose-gc&quot;</code>
@@ -261,14 +267,14 @@ export function MemoryProfilerPanel() {
       {/* Header with status */}
       <div style={{ 
         padding: '12px 16px', 
-        borderBottom: '1px solid #e5e7eb',
+        borderBottom: "1px solid var(--dt-border-primary)",
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        background: '#f9fafb'
+        background: "var(--dt-bg-secondary)"
       }}>
         <div>
-          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600', color: '#1f2937' }}>
+          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: '600', color: "var(--dt-text-primary)" }}>
             Memory & Performance Profiler
           </h2>
         </div>
@@ -522,9 +528,9 @@ function ComponentsTab({ components }: { components: ComponentMemoryInfo[] }) {
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case 'up': return <TrendingUp size={16} style={{ color: '#f56565' }} />;
-      case 'down': return <TrendingDown size={16} style={{ color: '#38a169' }} />;
-      default: return <Minus size={16} style={{ color: '#718096' }} />;
+      case 'up': return <TrendingUp size={16} style={{ color: "var(--dt-status-error)" }} />;
+      case 'down': return <TrendingDown size={16} style={{ color: "var(--dt-status-success)" }} />;
+      default: return <Minus size={16} style={{ color: "var(--dt-text-tertiary)" }} />;
     }
   };
 
@@ -581,12 +587,12 @@ function ComponentsTab({ components }: { components: ComponentMemoryInfo[] }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
           {component.suspiciousGrowth ? (
             <>
-              <AlertTriangle size={16} style={{ color: '#f56565' }} />
+              <AlertTriangle size={16} style={{ color: "var(--dt-status-error)" }} />
               <Badge variant="warning" size="xs">Growing</Badge>
             </>
           ) : (
             <>
-              <CheckCircle size={16} style={{ color: '#38a169' }} />
+              <CheckCircle size={16} style={{ color: "var(--dt-status-success)" }} />
               <Badge variant="success" size="xs">Normal</Badge>
             </>
           )}
@@ -638,7 +644,7 @@ function LeaksTab({ leaks }: { leaks: MemoryLeak[] }) {
       <EmptyState
         title="No Memory Leaks Detected"
         description="Great! No memory leaks have been detected in your application."
-        icon={<CheckCircle size={48} style={{ color: '#38a169' }} />}
+        icon={<CheckCircle size={48} style={{ color: "var(--dt-status-success)" }} />}
       />
     );
   }
@@ -647,10 +653,10 @@ function LeaksTab({ leaks }: { leaks: MemoryLeak[] }) {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       {sortedLeaks.map(leak => (
         <div key={leak.id} style={{ 
-          border: '1px solid #e2e8f0', 
+          border: "1px solid var(--dt-border-primary)", 
           borderRadius: '8px', 
           padding: '16px',
-          background: 'white'
+          background: "var(--dt-bg-primary)"
         }}>
           <div style={{ 
             display: 'flex', 
@@ -659,12 +665,12 @@ function LeaksTab({ leaks }: { leaks: MemoryLeak[] }) {
             marginBottom: '12px'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertTriangle size={20} style={{ color: '#f56565' }} />
+              <AlertTriangle size={20} style={{ color: "var(--dt-status-error)" }} />
               <div>
                 <div style={{ fontWeight: '600', fontSize: '14px' }}>
                   {leak.component || 'Unknown Component'}
                 </div>
-                <div style={{ fontSize: '12px', color: '#718096' }}>
+                <div style={{ fontSize: '12px', color: "var(--dt-text-tertiary)" }}>
                   {leak.type}
                 </div>
               </div>
@@ -674,7 +680,7 @@ function LeaksTab({ leaks }: { leaks: MemoryLeak[] }) {
             </Badge>
           </div>
           
-          <div style={{ marginBottom: '12px', fontSize: '14px', color: '#2d3748' }}>
+          <div style={{ marginBottom: '12px', fontSize: '14px', color: "var(--dt-text-primary)" }}>
             {leak.description}
           </div>
 
@@ -683,7 +689,7 @@ function LeaksTab({ leaks }: { leaks: MemoryLeak[] }) {
             gap: '16px', 
             marginBottom: '12px',
             fontSize: '12px',
-            color: '#718096'
+            color: "var(--dt-text-tertiary)"
           }}>
             <span>Impact: ~{(leak.estimatedMemoryImpact / 1024).toFixed(1)} KB</span>
             <span>Detected: {new Date(leak.detectedAt).toLocaleTimeString()}</span>
@@ -691,7 +697,7 @@ function LeaksTab({ leaks }: { leaks: MemoryLeak[] }) {
 
           <div style={{ 
             padding: '12px',
-            background: '#f7fafc',
+            background: "var(--dt-bg-secondary)",
             borderRadius: '6px',
             marginBottom: '12px',
             fontSize: '13px'
@@ -705,7 +711,7 @@ function LeaksTab({ leaks }: { leaks: MemoryLeak[] }) {
               alignItems: 'center',
               gap: '6px',
               padding: '8px 12px',
-              background: '#4299e1',
+              background: "var(--dt-border-focus)",
               color: 'white',
               border: 'none',
               borderRadius: '6px',
@@ -846,4 +852,21 @@ function TimelineTab({ timeline }: any) {
       )}
     </div>
   );
+}
+
+export function MemoryProfilerPanel(props: MemoryProfilerPanelProps = {}) {
+  const { theme = "auto" } = props
+
+  const resolvedTheme = useMemo(() => {
+    if (theme === "auto") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+    }
+    return theme
+  }, [theme])
+
+  return (
+    <ThemeProvider defaultTheme={resolvedTheme}>
+      <MemoryProfilerPanelInner />
+    </ThemeProvider>
+  )
 }

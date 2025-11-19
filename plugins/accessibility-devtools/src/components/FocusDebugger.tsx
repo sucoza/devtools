@@ -231,7 +231,7 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
       left: ${rect.left - 3}px;
       width: ${rect.width + 6}px;
       height: ${rect.height + 6}px;
-      border: 3px solid #f59e0b;
+      border: 3px solid var(--dt-status-warning);
       background: rgba(245, 158, 11, 0.1);
       pointer-events: none;
       z-index: 10000;
@@ -256,7 +256,7 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
       }
       
       *:focus {
-        outline: 2px solid #f59e0b !important;
+        outline: 2px solid var(--dt-status-warning) !important;
         outline-offset: 2px !important;
       }
     `;
@@ -307,7 +307,7 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
       case 'poor-contrast':
         return <AlertTriangle style={{ width: '16px', height: '16px', color: COLORS.status.warning }} />;
       case 'focus-trap-broken':
-        return <AlertTriangle style={{ width: '16px', height: '16px', color: '#f97316' }} />;
+        return <AlertTriangle style={{ width: '16px', height: '16px', color: "var(--dt-status-warning)" }} />;
       default:
         return <AlertTriangle style={{ width: '16px', height: '16px', color: COLORS.text.muted }} />;
     }
@@ -344,7 +344,7 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
           marginBottom: SPACING['3xl']
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.lg }}>
-            <Focus style={{ width: '20px', height: '20px', color: '#f59e0b' }} />
+            <Focus style={{ width: '20px', height: '20px', color: "var(--dt-status-warning)" }} />
             <h2 style={COMPONENT_STYLES.header.title}>
               Focus Debugger
             </h2>
@@ -458,13 +458,13 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
             marginTop: SPACING['4xl'],
             padding: SPACING['2xl'],
             backgroundColor: 'rgba(245, 158, 11, 0.1)',
-            border: '1px solid #f59e0b',
+            border: "1px solid var(--dt-border-primary)",
             borderRadius: RADIUS.lg
           }}>
             <h4 style={{
               fontSize: TYPOGRAPHY.fontSize.base,
               fontWeight: TYPOGRAPHY.fontWeight.medium,
-              color: '#f59e0b',
+              color: "var(--dt-status-warning)",
               marginBottom: SPACING.lg
             }}>
               Currently Focused Element
@@ -472,21 +472,21 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.xs }}>
               <p style={{
                 fontSize: TYPOGRAPHY.fontSize.base,
-                color: '#f59e0b'
+                color: "var(--dt-status-warning)"
               }}>
                 <strong>Tag:</strong> {currentFocusedElement.tagName.toLowerCase()}
               </p>
               {currentFocusedElement.id && (
                 <p style={{
                   fontSize: TYPOGRAPHY.fontSize.base,
-                  color: '#f59e0b'
+                  color: "var(--dt-status-warning)"
                 }}>
                   <strong>ID:</strong> {currentFocusedElement.id}
                 </p>
               )}
               <code style={{
                 fontSize: TYPOGRAPHY.fontSize.sm,
-                color: '#f59e0b',
+                color: "var(--dt-status-warning)",
                 backgroundColor: 'rgba(245, 158, 11, 0.2)',
                 padding: `${SPACING.xs} ${SPACING.sm}`,
                 borderRadius: RADIUS.sm,
@@ -709,7 +709,7 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
                         highlightElement(issue.element);
                       }}
                       style={{
-                        color: '#f59e0b',
+                        color: "var(--dt-status-warning)",
                         background: 'transparent',
                         border: 'none',
                         cursor: 'pointer',
@@ -718,7 +718,7 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
                         transition: 'color 0.15s ease'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.color = COLORS.text.accent}
-                      onMouseLeave={(e) => e.currentTarget.style.color = '#f59e0b'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = "var(--dt-status-warning)"}
                       title="Focus element"
                     >
                       <Eye style={{ width: '16px', height: '16px' }} />
@@ -826,7 +826,7 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
                         highlightElement(entry.element);
                       }}
                       style={{
-                        color: '#f59e0b',
+                        color: "var(--dt-status-warning)",
                         background: 'transparent',
                         border: 'none',
                         cursor: 'pointer',
@@ -835,7 +835,7 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
                         transition: 'color 0.15s ease'
                       }}
                       onMouseEnter={(e) => e.currentTarget.style.color = COLORS.text.accent}
-                      onMouseLeave={(e) => e.currentTarget.style.color = '#f59e0b'}
+                      onMouseLeave={(e) => e.currentTarget.style.color = "var(--dt-status-warning)"}
                       title="Focus element"
                     >
                       <Target style={{ width: '12px', height: '12px' }} />
