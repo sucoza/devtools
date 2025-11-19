@@ -67,10 +67,10 @@
       }
     },
     "typecheck": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "tsConfig": "plugins/graphql-devtools/tsconfig.json",
-        "noEmit": true
+        "command": "tsc --noEmit",
+        "cwd": "plugins/graphql-devtools"
       }
     },
     "format": {

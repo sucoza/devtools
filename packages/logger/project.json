@@ -49,10 +49,10 @@
       }
     },
     "typecheck": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "tsConfig": "packages/logger/tsconfig.json",
-        "noEmit": true
+        "command": "tsc --noEmit",
+        "cwd": "packages/logger"
       }
     },
     "format": {

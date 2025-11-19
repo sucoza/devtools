@@ -67,10 +67,10 @@
       }
     },
     "typecheck": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "tsConfig": "plugins/bundle-impact-analyzer/tsconfig.json",
-        "noEmit": true
+        "command": "tsc --noEmit",
+        "cwd": "plugins/bundle-impact-analyzer"
       }
     },
     "format": {

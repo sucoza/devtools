@@ -67,10 +67,10 @@
       }
     },
     "typecheck": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "tsConfig": "plugins/auth-permissions-mock/tsconfig.json",
-        "noEmit": true
+        "command": "tsc --noEmit",
+        "cwd": "plugins/auth-permissions-mock"
       }
     },
     "format": {

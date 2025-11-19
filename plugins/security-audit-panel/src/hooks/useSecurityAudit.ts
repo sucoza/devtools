@@ -16,15 +16,17 @@ export function useSecurityAudit() {
     startScan: client.startScan,
     cancelScan: client.cancelScan,
     clearVulnerabilities: client.clearVulnerabilities,
-    
+    quickScan: client.quickScan,
+
     // Scanner management
     enableScanner: client.enableScanner,
     disableScanner: client.disableScanner,
     configureScanners: client.configureScanners,
-    
+
     // Export/Import
     exportResults: client.exportResults,
-    
+    generateReport: client.generateReport,
+
     // UI actions
     selectTab: client.selectTab,
     selectVulnerability: client.selectVulnerability,

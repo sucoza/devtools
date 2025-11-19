@@ -173,21 +173,33 @@ export class SucozaI18nAdapter {
       if (key.namespace) namespaceSet.add(key.namespace);
     });
 
-    const namespaces: NamespaceInfo[] = Array.from(namespaceSet).map(name => ({
-      name,
-      keyCount: translationKeys.filter(k => k.namespace === name).length,
-      completeness: 100, // Would need proper calculation
-      lastUpdated: Date.now()
-    }));
+    const namespaces: NamespaceInfo[] = Array.from(namespaceSet).map(name => {
+      const namespaceKeys = translationKeys.filter(k => k.namespace === name);
+      const totalKeys = namespaceKeys.length;
+
+      return {
+        name,
+        languages: locales.map(l => l.code),
+        totalKeys,
+        translationCoverage: locales.reduce((acc, locale) => {
+          acc[locale.code] = 100; // Would need proper calculation based on actual translations
+          return acc;
+        }, {} as Record<string, number>),
+        keyUsage: namespaceKeys.reduce((acc, key) => {
+          acc[key.key] = key.count || 0;
+          return acc;
+        }, {} as Record<string, number>),
+        lastModified: Date.now()
+      };
+    });
 
     // Convert translations
     const translationObjects: Translation[] = Object.entries(translations).map(([key, value]) => ({
       namespace: 'common', // Would need proper namespace detection
       key,
       value: String(value),
-      interpolation: {},
-      lastUpdated: Date.now(),
-      locale: currentLocale
+      language: currentLocale,
+      lastModified: Date.now()
     }));
 
     return {

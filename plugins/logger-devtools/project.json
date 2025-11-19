@@ -70,10 +70,10 @@
       }
     },
     "typecheck": {
-      "executor": "@nx/js:tsc",
+      "executor": "nx:run-commands",
       "options": {
-        "tsConfig": "plugins/logger-devtools/tsconfig.json",
-        "noEmit": true
+        "command": "tsc --noEmit",
+        "cwd": "plugins/logger-devtools"
       }
     },
     "format": {

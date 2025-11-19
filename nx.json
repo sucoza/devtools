@@ -19,7 +19,12 @@
       "!{projectRoot}/**/*.spec.*",
       "!{projectRoot}/example/**/*"
     ],
-    "sharedGlobals": []
+    "sharedGlobals": [
+      "{workspaceRoot}/package.json",
+      "{workspaceRoot}/nx.json",
+      "{workspaceRoot}/pnpm-workspace.yaml",
+      "{workspaceRoot}/tsconfig.base.json"
+    ]
   },
   "targetDefaults": {
     "build": {
@@ -105,13 +110,6 @@
       "packages",
       "plugins"
     ]
-  },
-  "implicitDependencies": {
-    "package.json": {
-      "dependencies": "*",
-      "devDependencies": "*"
-    },
-    "nx.json": "*"
   },
   "pluginsConfig": {
     "@nx/rollup/plugin": {

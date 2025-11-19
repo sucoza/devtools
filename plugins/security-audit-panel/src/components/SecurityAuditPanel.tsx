@@ -84,40 +84,88 @@ export function SecurityAuditPanel({ className }: SecurityAuditPanelProps) {
 
   // Tab configuration
   const tabs = [
-    { id: 'dashboard', label: 'Dashboard', icon: Shield },
-    { id: 'vulnerabilities', label: 'Vulnerabilities', icon: AlertTriangle },
-    { id: 'scanners', label: 'Scanners', icon: Search },
-    { id: 'reports', label: 'Reports', icon: FileText },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: <Shield size={16} />,
+      content: (
+        <ScrollableContainer>
+          <DashboardTab />
+        </ScrollableContainer>
+      ),
+    },
+    {
+      id: 'vulnerabilities',
+      label: 'Vulnerabilities',
+      icon: <AlertTriangle size={16} />,
+      content: (
+        <ScrollableContainer>
+          <VulnerabilitiesTab />
+        </ScrollableContainer>
+      ),
+    },
+    {
+      id: 'scanners',
+      label: 'Scanners',
+      icon: <Search size={16} />,
+      content: (
+        <ScrollableContainer>
+          <ScannersTab />
+        </ScrollableContainer>
+      ),
+    },
+    {
+      id: 'reports',
+      label: 'Reports',
+      icon: <FileText size={16} />,
+      content: (
+        <ScrollableContainer>
+          <ReportsTab />
+        </ScrollableContainer>
+      ),
+    },
+    {
+      id: 'settings',
+      label: 'Settings',
+      icon: <Settings size={16} />,
+      content: (
+        <ScrollableContainer>
+          <SettingsTab />
+        </ScrollableContainer>
+      ),
+    },
   ];
 
   // Prepare toolbar actions
   const toolbarActions = [
     {
-      icon: Play,
+      id: 'start-scan',
+      icon: <Play size={16} />,
       label: state.isScanning ? 'Scanning...' : 'Start Scan',
       onClick: handleStartScan,
       disabled: state.isScanning,
       variant: 'primary' as const,
     },
     ...(state.isScanning ? [{
-      icon: Square,
+      id: 'stop-scan',
+      icon: <Square size={16} />,
       label: 'Stop',
       onClick: handleStopScan,
       variant: 'danger' as const,
     }] : []),
     {
-      icon: RotateCcw,
+      id: 'clear',
+      icon: <RotateCcw size={16} />,
       label: 'Clear',
       onClick: handleClearVulnerabilities,
       disabled: state.metrics.totalVulnerabilities === 0,
     },
     {
-      icon: Download,
+      id: 'export',
+      icon: <Download size={16} />,
       label: 'Export',
       onClick: handleExport,
       disabled: state.metrics.totalVulnerabilities === 0,
-      variant: 'secondary' as const,
     },
   ];
 
@@ -127,12 +175,12 @@ export function SecurityAuditPanel({ className }: SecurityAuditPanelProps) {
 
   // Footer stats
   const footerStats = [
-    { label: 'Total', value: state.metrics.totalVulnerabilities.toString() },
-    { label: 'Critical', value: getVulnerabilityCountBySeverity('critical').toString() },
-    { label: 'High', value: getVulnerabilityCountBySeverity('high').toString() },
-    { label: 'Medium', value: getVulnerabilityCountBySeverity('medium').toString() },
-    { label: 'Low', value: getVulnerabilityCountBySeverity('low').toString() },
-    { label: 'Security Score', value: `${state.metrics.securityScore}/100` },
+    { id: 'total', label: 'Total', value: state.metrics.totalVulnerabilities.toString() },
+    { id: 'critical', label: 'Critical', value: getVulnerabilityCountBySeverity('critical').toString() },
+    { id: 'high', label: 'High', value: getVulnerabilityCountBySeverity('high').toString() },
+    { id: 'medium', label: 'Medium', value: getVulnerabilityCountBySeverity('medium').toString() },
+    { id: 'low', label: 'Low', value: getVulnerabilityCountBySeverity('low').toString() },
+    { id: 'security-score', label: 'Security Score', value: `${state.metrics.securityScore}/100` },
   ];
 
   // Convert actions into config menu items
@@ -197,24 +245,6 @@ export function SecurityAuditPanel({ className }: SecurityAuditPanelProps) {
         title="Security Audit Panel"
         icon={Shield}
         className={className}
-        headerContent={(
-          <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.xs }}>
-            {state.isScanning && (
-              <StatusIndicator
-                status="loading"
-                size="sm"
-                label=""
-              />
-            )}
-            <span style={{ 
-              fontSize: '12px',
-              color: COLORS.text.secondary,
-              ...TYPOGRAPHY.caption 
-            }}>
-              {state.metrics.totalVulnerabilities} vulnerabilities
-            </span>
-          </div>
-        )}
       >
       <Toolbar actions={toolbarActions} />
 
@@ -230,54 +260,54 @@ export function SecurityAuditPanel({ className }: SecurityAuditPanelProps) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.md }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.xs }}>
-            <div style={{ 
-              width: '12px', 
-              height: '12px', 
-              backgroundColor: COLORS.status.danger, 
-              borderRadius: RADIUS.sm 
+            <div style={{
+              width: '12px',
+              height: '12px',
+              backgroundColor: COLORS.status.error,
+              borderRadius: RADIUS.sm
             }} />
-            <span style={{ ...TYPOGRAPHY.body.small, color: COLORS.text.primary }}>
+            <span style={{ fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.text.primary }}>
               Critical: {getVulnerabilityCountBySeverity('critical')}
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.xs }}>
-            <div style={{ 
-              width: '12px', 
-              height: '12px', 
-              backgroundColor: COLORS.status.warning, 
-              borderRadius: RADIUS.sm 
+            <div style={{
+              width: '12px',
+              height: '12px',
+              backgroundColor: COLORS.status.warning,
+              borderRadius: RADIUS.sm
             }} />
-            <span style={{ ...TYPOGRAPHY.body.small, color: COLORS.text.primary }}>
+            <span style={{ fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.text.primary }}>
               High: {getVulnerabilityCountBySeverity('high')}
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.xs }}>
-            <div style={{ 
-              width: '12px', 
-              height: '12px', 
-              backgroundColor: '#f59e0b', 
-              borderRadius: RADIUS.sm 
+            <div style={{
+              width: '12px',
+              height: '12px',
+              backgroundColor: '#f59e0b',
+              borderRadius: RADIUS.sm
             }} />
-            <span style={{ ...TYPOGRAPHY.body.small, color: COLORS.text.primary }}>
+            <span style={{ fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.text.primary }}>
               Medium: {getVulnerabilityCountBySeverity('medium')}
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.xs }}>
-            <div style={{ 
-              width: '12px', 
-              height: '12px', 
-              backgroundColor: COLORS.status.success, 
-              borderRadius: RADIUS.sm 
+            <div style={{
+              width: '12px',
+              height: '12px',
+              backgroundColor: COLORS.status.success,
+              borderRadius: RADIUS.sm
             }} />
-            <span style={{ ...TYPOGRAPHY.body.small, color: COLORS.text.primary }}>
+            <span style={{ fontSize: TYPOGRAPHY.fontSize.sm, color: COLORS.text.primary }}>
               Low: {getVulnerabilityCountBySeverity('low')}
             </span>
           </div>
         </div>
 
-        <div style={{ 
-          ...TYPOGRAPHY.body.small, 
-          color: COLORS.text.secondary 
+        <div style={{
+          fontSize: TYPOGRAPHY.fontSize.sm,
+          color: COLORS.text.secondary
         }}>
           Security Score: {state.metrics.securityScore}/100
         </div>
@@ -287,15 +317,7 @@ export function SecurityAuditPanel({ className }: SecurityAuditPanelProps) {
         activeTab={state.ui.activeTab}
         onTabChange={(tabId) => actions.selectTab(tabId as typeof state.ui.activeTab)}
         tabs={tabs}
-      >
-        <ScrollableContainer>
-          {state.ui.activeTab === 'dashboard' && <DashboardTab />}
-          {state.ui.activeTab === 'vulnerabilities' && <VulnerabilitiesTab />}
-          {state.ui.activeTab === 'scanners' && <ScannersTab />}
-          {state.ui.activeTab === 'reports' && <ReportsTab />}
-          {state.ui.activeTab === 'settings' && <SettingsTab />}
-        </ScrollableContainer>
-      </Tabs>
+      />
 
         <Footer stats={footerStats} />
       </PluginPanel>
