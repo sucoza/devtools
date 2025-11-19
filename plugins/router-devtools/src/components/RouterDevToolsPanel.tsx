@@ -3,6 +3,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { Trans } from '@lingui/macro';
 import {
   Toolbar,
   Tabs,
@@ -233,7 +234,7 @@ export function RouterDevToolsPanel() {
   const configMenuItems = [
     {
       id: 'toggle-recording',
-      label: 'Toggle Recording',
+      label: <Trans>Toggle Recording</Trans>,
       icon: '🔄',
       shortcut: 'Ctrl+R',
       onClick: () => {
@@ -243,14 +244,14 @@ export function RouterDevToolsPanel() {
     },
     {
       id: 'clear-history',
-      label: 'Clear History',
+      label: <Trans>Clear History</Trans>,
       icon: '🗑️',
       shortcut: 'Ctrl+K',
       onClick: clearHistory,
     },
     {
       id: 'reset-navigation',
-      label: 'Reset Navigation',
+      label: <Trans>Reset Navigation</Trans>,
       icon: '📍',
       onClick: () => {
         setState(prevState => ({
@@ -263,7 +264,7 @@ export function RouterDevToolsPanel() {
     },
     {
       id: 'export-routes',
-      label: 'Export Routes',
+      label: <Trans>Export Routes</Trans>,
       icon: '💾',
       shortcut: 'Ctrl+E',
       onClick: exportRoutes,
@@ -271,7 +272,7 @@ export function RouterDevToolsPanel() {
     },
     {
       id: 'settings',
-      label: 'Settings',
+      label: <Trans>Settings</Trans>,
       icon: '⚙️',
       shortcut: 'Ctrl+S',
       onClick: () => {
@@ -295,12 +296,12 @@ export function RouterDevToolsPanel() {
       }}>
         <Alert
           type="warning"
-          title="Router DevTools"
+          title={<Trans>Router DevTools</Trans>}
           description={
             <div>
-              <p>Waiting for router adapter to connect...</p>
+              <p><Trans>Waiting for router adapter to connect...</Trans></p>
               <p style={{ marginTop: '8px', fontSize: '12px' }}>
-                Make sure you have registered a router adapter in your application.
+                <Trans>Make sure you have registered a router adapter in your application.</Trans>
               </p>
             </div>
           }
@@ -315,16 +316,16 @@ export function RouterDevToolsPanel() {
   const tabs: Tab[] = [
     {
       id: 'tree',
-      label: 'Route Tree',
+      label: <Trans>Route Tree</Trans>,
       icon: <Navigation size={16} />
     },
     {
       id: 'params',
-      label: 'Parameters'
+      label: <Trans>Parameters</Trans>
     },
     {
       id: 'timeline',
-      label: 'Timeline'
+      label: <Trans>Timeline</Trans>
     }
   ];
 
@@ -337,8 +338,8 @@ export function RouterDevToolsPanel() {
       }}>
         {/* Header Toolbar */}
         <Toolbar
-          title="🧭 Router DevTools Enhanced"
-          subtitle={`${routeStats.totalRoutes} routes • ${routeStats.activeRoutes} active • ${state.navigationHistory.length} history`}
+          title={<Trans>🧭 Router DevTools Enhanced</Trans>}
+          subtitle={<Trans>{routeStats.totalRoutes} routes • {routeStats.activeRoutes} active • {state.navigationHistory.length} history</Trans>}
           showSearch
           searchValue={state.searchQuery}
           onSearchChange={handleSearchChange}
@@ -397,34 +398,34 @@ export function RouterDevToolsPanel() {
         stats={[
           {
             id: 'total-routes',
-            label: 'Total Routes',
+            label: <Trans>Total Routes</Trans>,
             value: routeStats.totalRoutes,
-            tooltip: 'Total number of defined routes'
+            tooltip: <Trans>Total number of defined routes</Trans>
           },
           {
             id: 'active-routes',
-            label: 'Active Routes',
+            label: <Trans>Active Routes</Trans>,
             value: routeStats.activeRoutes,
-            tooltip: 'Number of currently active/matched routes',
+            tooltip: <Trans>Number of currently active/matched routes</Trans>,
             variant: 'success'
           },
           {
             id: 'navigation-count',
-            label: 'Navigation Count',
+            label: <Trans>Navigation Count</Trans>,
             value: state.navigationHistory.length,
-            tooltip: 'Total number of navigation events'
+            tooltip: <Trans>Total number of navigation events</Trans>
           },
           {
             id: 'error-rate',
-            label: 'Error Rate',
+            label: <Trans>Error Rate</Trans>,
             value: `${((state.navigationHistory.filter(h => h.loadingState === 'submitting' && h.duration && h.duration > 5000).length / Math.max(state.navigationHistory.length, 1)) * 100).toFixed(1)}%`,
-            tooltip: 'Percentage of navigation attempts that were slow or problematic',
+            tooltip: <Trans>Percentage of navigation attempts that were slow or problematic</Trans>,
             variant: state.navigationHistory.filter(h => h.loadingState === 'submitting' && h.duration && h.duration > 5000).length > 0 ? 'warning' : 'default'
           }
         ]}
         status={{
           type: state.isConnected ? 'connected' : 'disconnected',
-          message: state.isConnected ? 'Router Adapter Connected' : 'Router Adapter Disconnected'
+          message: state.isConnected ? <Trans>Router Adapter Connected</Trans> : <Trans>Router Adapter Disconnected</Trans>
         }}
         size="sm"
         variant="default"

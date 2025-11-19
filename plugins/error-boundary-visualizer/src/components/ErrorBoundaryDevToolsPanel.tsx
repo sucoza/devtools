@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { 
+import { Trans } from '@lingui/macro'
+import {
   PluginPanel,
   ConfigMenu,
   type ConfigMenuItem
@@ -49,31 +50,31 @@ export const ErrorBoundaryDevToolsPanel: React.FC = () => {
 
 
   const tabs: PluginTab[] = [
-    { 
-      id: 'errors', 
-      label: 'Errors', 
+    {
+      id: 'errors',
+      label: <Trans>Errors</Trans>,
       icon: AlertTriangle,
       content: <ErrorList />
     },
-    { 
-      id: 'tree', 
-      label: 'Component Tree', 
+    {
+      id: 'tree',
+      label: <Trans>Component Tree</Trans>,
       content: <ComponentTreeView />
     },
-    { 
-      id: 'analytics', 
-      label: 'Analytics', 
+    {
+      id: 'analytics',
+      label: <Trans>Analytics</Trans>,
       content: <ErrorAnalytics />
     },
-    { 
-      id: 'simulator', 
-      label: 'Simulator', 
+    {
+      id: 'simulator',
+      label: <Trans>Simulator</Trans>,
       icon: Play,
       content: <ErrorSimulator />
     },
-    { 
-      id: 'recovery', 
-      label: 'Recovery', 
+    {
+      id: 'recovery',
+      label: <Trans>Recovery</Trans>,
       icon: Settings,
       content: <RecoveryStrategyEditor />
     },
@@ -82,14 +83,14 @@ export const ErrorBoundaryDevToolsPanel: React.FC = () => {
   const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'recording',
-      label: isRecording ? 'Stop Recording' : 'Start Recording',
+      label: isRecording ? <Trans>Stop Recording</Trans> : <Trans>Start Recording</Trans>,
       icon: isRecording ? '⏸️' : '▶️',
       onClick: handleToggleRecording,
       shortcut: 'Ctrl+R'
     },
     {
       id: 'clear',
-      label: 'Clear Errors',
+      label: <Trans>Clear Errors</Trans>,
       icon: '🗑️',
       onClick: clearErrors,
       shortcut: 'Ctrl+K',
@@ -97,14 +98,14 @@ export const ErrorBoundaryDevToolsPanel: React.FC = () => {
     },
     {
       id: 'export',
-      label: 'Export Error Data',
+      label: <Trans>Export Error Data</Trans>,
       icon: '💾',
       onClick: handleExport,
       shortcut: 'Ctrl+E'
     },
     {
       id: 'settings',
-      label: 'Settings',
+      label: <Trans>Settings</Trans>,
       icon: '⚙️',
       onClick: () => console.log('Settings clicked'),
       separator: true
@@ -121,7 +122,7 @@ export const ErrorBoundaryDevToolsPanel: React.FC = () => {
       `}</style>
       <div style={{ position: 'relative', height: '100%' }}>
         <PluginPanel
-          title="Error Boundary DevTools"
+          title={<Trans>Error Boundary DevTools</Trans>}
           tabs={tabs}
           activeTabId={activeTab}
           onTabChange={setActiveTab}

@@ -3,6 +3,7 @@
  */
 
 import React, { useState, useCallback } from 'react';
+import { Trans } from '@lingui/macro';
 import { NavigationState, RouteParamEditContext } from '../types/router';
 import { 
   updateParamEditContext, 
@@ -111,13 +112,13 @@ export function RouteParameterInspector({
 
   if (!currentState) {
     return (
-      <div style={{ 
-        padding: '20px', 
-        textAlign: 'center', 
+      <div style={{
+        padding: '20px',
+        textAlign: 'center',
         color: '#969696',
         fontSize: '12px'
       }}>
-        No route state available
+        <Trans>No route state available</Trans>
       </div>
     );
   }
@@ -132,9 +133,9 @@ export function RouteParameterInspector({
         gap: '1px'
       }}>
         {[
-          { key: 'params', label: 'Route Params' },
-          { key: 'search', label: 'Query Params' },
-          { key: 'state', label: 'Location State' }
+          { key: 'params', label: <Trans>Route Params</Trans> },
+          { key: 'search', label: <Trans>Query Params</Trans> },
+          { key: 'state', label: <Trans>Location State</Trans> }
         ].map((tab) => (
           <button
             key={tab.key}
@@ -167,7 +168,7 @@ export function RouteParameterInspector({
             margin: '2px 4px'
           }}
         >
-          {showRawJson ? 'Form View' : 'JSON View'}
+          {showRawJson ? <Trans>Form View</Trans> : <Trans>JSON View</Trans>}
         </button>
       </div>
 
@@ -175,14 +176,14 @@ export function RouteParameterInspector({
       <div style={{ flex: 1, overflow: 'auto' }}>
         {activeTab === 'params' && (
           <div>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
               alignItems: 'center',
-              marginBottom: '10px' 
+              marginBottom: '10px'
             }}>
               <h4 style={{ margin: 0, color: '#9cdcfe', fontSize: '12px' }}>
-                Route Parameters
+                <Trans>Route Parameters</Trans>
               </h4>
               <div style={{ fontSize: '11px', color: '#969696' }}>
                 {activeMatch?.route.path || 'No active route'}
@@ -217,14 +218,14 @@ export function RouteParameterInspector({
                 padding: '12px'
               }}>
                 {Object.keys(editContext.pendingParams).length === 0 ? (
-                  <div style={{ 
-                    color: '#969696', 
-                    fontStyle: 'italic', 
+                  <div style={{
+                    color: '#969696',
+                    fontStyle: 'italic',
                     fontSize: '11px',
                     textAlign: 'center',
                     padding: '20px 0'
                   }}>
-                    No route parameters in current route
+                    <Trans>No route parameters in current route</Trans>
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -272,14 +273,14 @@ export function RouteParameterInspector({
 
         {activeTab === 'search' && (
           <div>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
               alignItems: 'center',
-              marginBottom: '10px' 
+              marginBottom: '10px'
             }}>
               <h4 style={{ margin: 0, color: '#9cdcfe', fontSize: '12px' }}>
-                Query String Parameters
+                <Trans>Query String Parameters</Trans>
               </h4>
               <button
                 onClick={handleAddSearchParam}
@@ -293,7 +294,7 @@ export function RouteParameterInspector({
                   borderRadius: '3px'
                 }}
               >
-                Add Param
+                <Trans>Add Param</Trans>
               </button>
             </div>
 
@@ -325,13 +326,13 @@ export function RouteParameterInspector({
                 padding: '12px'
               }}>
                 <div style={{ marginBottom: '12px' }}>
-                  <label style={{ 
-                    color: '#9cdcfe', 
+                  <label style={{
+                    color: '#9cdcfe',
                     fontSize: '11px',
                     display: 'block',
                     marginBottom: '4px'
                   }}>
-                    Raw Query String:
+                    <Trans>Raw Query String:</Trans>
                   </label>
                   <input
                     type="text"
@@ -362,23 +363,23 @@ export function RouteParameterInspector({
                 </div>
 
                 <div style={{ borderTop: '1px solid #3c3c3c', paddingTop: '12px' }}>
-                  <div style={{ 
-                    color: '#9cdcfe', 
+                  <div style={{
+                    color: '#9cdcfe',
                     fontSize: '11px',
                     marginBottom: '8px'
                   }}>
-                    Individual Parameters:
+                    <Trans>Individual Parameters:</Trans>
                   </div>
-                  
+
                   {Object.keys(parseSearchParams(editContext.pendingSearch)).length === 0 ? (
-                    <div style={{ 
-                      color: '#969696', 
-                      fontStyle: 'italic', 
+                    <div style={{
+                      color: '#969696',
+                      fontStyle: 'italic',
                       fontSize: '11px',
                       textAlign: 'center',
                       padding: '20px 0'
                     }}>
-                      No query parameters
+                      <Trans>No query parameters</Trans>
                     </div>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -451,7 +452,7 @@ export function RouteParameterInspector({
         {activeTab === 'state' && (
           <div>
             <h4 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '12px' }}>
-              Location State
+              <Trans>Location State</Trans>
             </h4>
             <div style={{
               background: '#252526',
@@ -514,9 +515,9 @@ export function RouteParameterInspector({
               borderRadius: '3px'
             }}
           >
-            Reset
+            <Trans>Reset</Trans>
           </button>
-          
+
           <button
             onClick={handleApplyChanges}
             disabled={hasParamErrors(editContext)}
@@ -530,7 +531,7 @@ export function RouteParameterInspector({
               borderRadius: '3px'
             }}
           >
-            Apply Changes
+            <Trans>Apply Changes</Trans>
           </button>
         </div>
       )}

@@ -3,6 +3,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { Trans } from '@lingui/macro';
 import {
   DataTable,
   Badge,
@@ -52,7 +53,7 @@ export function NavigationTimeline({
   const columns: Column<NavigationHistoryEntry>[] = useMemo(() => [
     {
       key: 'timestamp',
-      header: 'Time',
+      header: <Trans>Time</Trans>,
       width: 100,
       sortable: true,
       render: (_value, row) => (
@@ -64,7 +65,7 @@ export function NavigationTimeline({
     },
     {
       key: 'action',
-      header: 'Action',
+      header: <Trans>Action</Trans>,
       width: 80,
       sortable: true,
       filterable: true,
@@ -79,7 +80,7 @@ export function NavigationTimeline({
     },
     {
       key: 'path',
-      header: 'Path',
+      header: <Trans>Path</Trans>,
       width: 200,
       sortable: true,
       render: (_value, row) => {
@@ -99,7 +100,7 @@ export function NavigationTimeline({
               {row.location.pathname}
             </span>
             {isCurrent && (
-              <Badge variant="success" size="xs">CURRENT</Badge>
+              <Badge variant="success" size="xs"><Trans>CURRENT</Trans></Badge>
             )}
           </div>
         );
@@ -107,7 +108,7 @@ export function NavigationTimeline({
     },
     {
       key: 'search',
-      header: 'Query',
+      header: <Trans>Query</Trans>,
       width: 150,
       render: (_value, row) => (
         <span style={{ color: '#3498db', fontSize: '11px' }}>
@@ -117,7 +118,7 @@ export function NavigationTimeline({
     },
     {
       key: 'hash',
-      header: 'Hash',
+      header: <Trans>Hash</Trans>,
       width: 100,
       render: (_value, row) => (
         <span style={{ color: '#f39c12', fontSize: '11px' }}>
@@ -127,7 +128,7 @@ export function NavigationTimeline({
     },
     {
       key: 'duration',
-      header: 'Duration',
+      header: <Trans>Duration</Trans>,
       width: 80,
       sortable: true,
       align: 'right' as const,
@@ -137,7 +138,7 @@ export function NavigationTimeline({
     },
     {
       key: 'matches',
-      header: 'Matches',
+      header: <Trans>Matches</Trans>,
       width: 80,
       align: 'center' as const,
       render: (_value, row) => (
@@ -154,7 +155,7 @@ export function NavigationTimeline({
   // Row actions
   const rowActions = useMemo(() => [
     {
-      label: 'Copy URL',
+      label: <Trans>Copy URL</Trans>,
       icon: <Copy size={12} />,
       onClick: (row: NavigationHistoryEntry) => {
         const url = row.location.pathname + row.location.search + row.location.hash;
@@ -162,7 +163,7 @@ export function NavigationTimeline({
       }
     },
     {
-      label: 'Navigate',
+      label: <Trans>Navigate</Trans>,
       icon: <ExternalLink size={12} />,
       onClick: (row: NavigationHistoryEntry) => {
         const url = row.location.pathname + row.location.search + row.location.hash;
@@ -175,9 +176,9 @@ export function NavigationTimeline({
   const renderExpandedRow = (row: NavigationHistoryEntry) => (
     <div style={{ padding: 16, background: '#1e1e1e', border: '1px solid #3c3c3c' }}>
       <div style={{ marginBottom: 12 }}>
-        <h4 style={{ color: '#9cdcfe', fontSize: 12, margin: '0 0 8px 0' }}>Route Matches:</h4>
+        <h4 style={{ color: '#9cdcfe', fontSize: 12, margin: '0 0 8px 0' }}><Trans>Route Matches:</Trans></h4>
         {row.matches.length === 0 ? (
-          <p style={{ color: '#969696', fontSize: 11 }}>No route matches</p>
+          <p style={{ color: '#969696', fontSize: 11 }}><Trans>No route matches</Trans></p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
             {row.matches.map((match, idx) => (
@@ -202,9 +203,9 @@ export function NavigationTimeline({
           </div>
         )}
       </div>
-      
+
       <div>
-        <h4 style={{ color: '#9cdcfe', fontSize: 12, margin: '0 0 8px 0' }}>Location Details:</h4>
+        <h4 style={{ color: '#9cdcfe', fontSize: 12, margin: '0 0 8px 0' }}><Trans>Location Details:</Trans></h4>
         <pre style={{
           background: '#252526',
           border: '1px solid #3c3c3c',
@@ -231,8 +232,8 @@ export function NavigationTimeline({
     return (
       <EmptyState
         icon={<Navigation size={48} />}
-        title="No navigation history"
-        description="Navigate around your application to see the timeline."
+        title={<Trans>No navigation history</Trans>}
+        description={<Trans>Navigate around your application to see the timeline.</Trans>}
       />
     );
   }
@@ -259,7 +260,7 @@ export function NavigationTimeline({
       rowActions={rowActions}
       bulkActions={[
         {
-          label: 'Clear Selected',
+          label: <Trans>Clear Selected</Trans>,
           icon: <Copy size={16} />,
           onClick: (selectedEntries) => {
             // Clear selected history entries if needed
@@ -268,7 +269,7 @@ export function NavigationTimeline({
           }
         }
       ]}
-      emptyMessage="No navigation history available. Navigate around your application to see entries here."
+      emptyMessage={<Trans>No navigation history available. Navigate around your application to see entries here.</Trans>}
       getRowKey={(row, index) => row.id || index}
       getRowClassName={(row) => {
         const isCurrent = currentState ? 

@@ -1,0 +1,1321 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2025-11-19 03:07+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: fr\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/components/ComponentTreeView.tsx:83
+msgid " | Heatmap shows error frequency"
+msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:250
+msgid "(Chart visualization will be implemented in future version)"
+msgstr ""
+
+#: src/components/RouteTreeView.tsx:118
+#~ msgid "(index)"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:1010
+#~ msgid "{0} actions recorded"
+#~ msgstr ""
+
+#: src/components/RouteTreeView.tsx:141
+#~ msgid "{0} param{1}"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:719
+#: src/ZustandDevToolsPanel.tsx:750
+#~ msgid "{0} properties"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:342
+#~ msgid "{0} routes • {1} active • {2} history"
+#~ msgstr ""
+
+#: src/components/RouteTreeView.tsx:290
+#~ msgid "{0} routes • {1} active • {2} matched"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:1004
+#~ msgid "{0} stores found"
+#~ msgstr ""
+
+#: src/App.tsx:105
+#~ msgid "{count, plural, zero {No files found} one {Found one file} few {Found # files} many {Found # files} other {Found # files}}"
+#~ msgstr ""
+
+#: src/App.tsx:97
+#~ msgid "{count, plural, zero {You have no items} one {You have # item} other {You have # items}}"
+#~ msgstr ""
+
+#: src/App.tsx:154
+#~ msgid "{gender, select, male {He is online} female {She is online} other {They are online}}"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:826
+#~ msgid "◀ Prev"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:912
+#~ msgid "✓ Copied!"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:872
+#~ msgid "✕ Exit"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:912
+#~ msgid "📋 Copy"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:857
+#~ msgid "🔄 Rewind to Here"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:640
+#~ msgid "🔍 Zustand Store Inspector"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:341
+#~ msgid "🧭 Router DevTools Enhanced"
+#~ msgstr ""
+
+#: src/App.tsx:61
+#~ msgid "1. Basic Translation"
+#~ msgstr ""
+
+#: src/App.tsx:74
+#~ msgid "2. Variable Interpolation"
+#~ msgstr ""
+
+#: src/App.tsx:89
+#~ msgid "3. Pluralization"
+#~ msgstr ""
+
+#: src/App.tsx:119
+#~ msgid "4. Context-based Selection"
+#~ msgstr ""
+
+#: src/App.tsx:166
+#~ msgid "5. Date & Time Formatting"
+#~ msgstr ""
+
+#: src/App.tsx:183
+#~ msgid "6. Rich Text with Components"
+#~ msgstr ""
+
+#: src/App.tsx:201
+#~ msgid "7. Usage Examples"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:258
+#~ msgid "Accessibility"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:238
+#~ msgid "Accessibility Auditor"
+#~ msgstr ""
+
+#: src/components/NavigationTimeline.tsx:68
+#~ msgid "Action"
+#~ msgstr ""
+
+#: src/components/RouteTreeView.tsx:130
+#~ msgid "ACTIVE"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:324
+#~ msgid "Active Fields"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:407
+#~ msgid "Active Routes"
+#~ msgstr ""
+
+#. placeholder {0}: simulations.length
+#: src/components/ErrorSimulator.tsx:408
+msgid "Active Simulations ({0})"
+msgstr ""
+
+#: src/components/FeatureFlagManagerPanel.tsx:239
+#~ msgid "Add New Flag"
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:297
+#~ msgid "Add Param"
+#~ msgstr ""
+
+#: src/components/ErrorList.tsx:139
+msgid "All Categories"
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:388
+#~ msgid "All fields are valid"
+#~ msgstr ""
+
+#: src/components/ErrorList.tsx:151
+msgid "All Severities"
+msgstr ""
+
+#: src/components/ErrorBoundaryDevToolsPanel.tsx:66
+msgid "Analytics"
+msgstr ""
+
+#: src/components/ErrorSimulator.tsx:302
+msgid "Any Component"
+msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:534
+#~ msgid "Apply Changes"
+#~ msgstr ""
+
+#: src/components/RecoveryStrategyEditor.tsx:423
+msgid "Apply to Error Boundaries"
+msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:152
+#~ msgid "ARIA"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:570
+#~ msgid "Auto-refresh"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:1015
+#~ msgid "Auto-refresh disabled"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:1015
+#~ msgid "Auto-refresh enabled"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:467
+#~ msgid "Average Validation Time"
+#~ msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:216
+msgid "By Category"
+msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:199
+msgid "By Severity"
+msgstr ""
+
+#: src/components/ErrorSimulator.tsx:240
+#: src/components/ErrorSimulator.tsx:357
+#: src/components/RecoveryStrategyEditor.tsx:238
+#: src/components/RecoveryStrategyEditor.tsx:332
+msgid "Cancel"
+msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:886
+#~ msgid "Changes at {0}"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:887
+#~ msgid "Changes since last action"
+#~ msgstr ""
+
+#. placeholder {0}: selectedNode.children.length
+#: src/components/ComponentTreeView.tsx:133
+msgid "Children: {0}"
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:593
+#~ msgid "Clean"
+#~ msgstr ""
+
+#: src/components/ErrorList.tsx:159
+msgid "Clear All"
+msgstr ""
+
+#: src/components/FeatureFlagManagerPanel.tsx:253
+#~ msgid "Clear All Overrides"
+#~ msgstr ""
+
+#: src/components/ErrorBoundaryDevToolsPanel.tsx:93
+msgid "Clear Errors"
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:309
+#~ msgid "Clear Form History"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:247
+#~ msgid "Clear History"
+#~ msgstr ""
+
+#: src/components/NavigationTimeline.tsx:263
+#~ msgid "Clear Selected"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:603
+#~ msgid "Clear State History"
+#~ msgstr ""
+
+#: src/App.tsx:192
+#~ msgid "Click <0>this link</0> to learn more."
+#~ msgstr ""
+
+#: src/components/RouteTreeView.tsx:381
+#~ msgid "Collapse All"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:140
+#~ msgid "Color Contrast"
+#~ msgstr ""
+
+#: src/components/ComponentTreeView.tsx:61
+#: src/components/ErrorBoundaryDevToolsPanel.tsx:61
+msgid "Component Tree"
+msgstr ""
+
+#: src/components/ErrorSimulator.tsx:336
+msgid "Conditional"
+msgstr ""
+
+#. placeholder {0}: key.charAt(0).toUpperCase() + key.slice(1)
+#: src/components/RecoveryStrategyEditor.tsx:314
+msgid "Copy {0}"
+msgstr ""
+
+#: src/components/NavigationTimeline.tsx:158
+#~ msgid "Copy URL"
+#~ msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:171
+msgid "Coverage"
+msgstr ""
+
+#. placeholder {0}: coverage.toFixed(1)
+#: src/components/ComponentTreeView.tsx:80
+msgid "Coverage: {0}%"
+msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:1052
+#~ msgid "Create a snapshot of all store states that you can restore later."
+#~ msgstr ""
+
+#: src/components/ErrorSimulator.tsx:247
+msgid "Create New Simulation"
+msgstr ""
+
+#: src/components/RecoveryStrategyEditor.tsx:245
+msgid "Create Recovery Strategy"
+msgstr ""
+
+#: src/components/ErrorSimulator.tsx:240
+#: src/components/ErrorSimulator.tsx:360
+msgid "Create Simulation"
+msgstr ""
+
+#: src/components/RecoveryStrategyEditor.tsx:238
+#: src/components/RecoveryStrategyEditor.tsx:335
+msgid "Create Strategy"
+msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:173
+#: src/components/AccessibilityDevToolsPanel.tsx:195
+#~ msgid "Critical"
+#~ msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:187
+msgid "Critical Errors"
+msgstr ""
+
+#. placeholder {0}: filteredErrors.filter(e => e.severity === 'critical').length
+#: src/components/ErrorList.tsx:169
+msgid "Critical: {0}"
+msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:711
+#~ msgid "Current"
+#~ msgstr ""
+
+#: src/components/NavigationTimeline.tsx:103
+#~ msgid "CURRENT"
+#~ msgstr ""
+
+#: src/App.tsx:169
+#~ msgid "Current date: {0}"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:883
+#~ msgid "Current State"
+#~ msgstr ""
+
+#: src/App.tsx:174
+#~ msgid "Current time: {0}"
+#~ msgstr ""
+
+#: src/components/RouteTreeView.tsx:295
+#~ msgid "Current:"
+#~ msgstr ""
+
+#. placeholder {0}: Array.from(recoveryStrategies.values()).length
+#: src/components/RecoveryStrategyEditor.tsx:377
+msgid "Custom Strategies ({0})"
+msgstr ""
+
+#: src/components/FeatureFlagManagerPanel.tsx:144
+#~ msgid "Dashboard"
+#~ msgstr ""
+
+#: src/components/ErrorSimulator.tsx:343
+msgid "Delay (ms)"
+msgstr ""
+
+#: src/components/ErrorSimulator.tsx:335
+msgid "Delayed"
+msgstr ""
+
+#: src/components/ErrorSimulator.tsx:265
+#: src/components/RecoveryStrategyEditor.tsx:263
+msgid "Description"
+msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:771
+#~ msgid "Diff"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:355
+#~ msgid "Dirty"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:325
+#~ msgid "Dirty Fields"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:275
+#~ msgid "Disable Auto Refresh"
+#~ msgstr ""
+
+#: src/components/NavigationTimeline.tsx:131
+#~ msgid "Duration"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:567
+#~ msgid "Duration:"
+#~ msgstr ""
+
+#: src/components/RecoveryStrategyEditor.tsx:407
+msgid "Edit"
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:275
+#~ msgid "Enable Auto Refresh"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:181
+#~ msgid "Engine"
+#~ msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:144
+msgid "Error Analytics"
+msgstr ""
+
+#. placeholder {0}: errorBoundaries.size
+#: src/components/ComponentTreeView.tsx:81
+msgid "Error Boundaries: {0}"
+msgstr ""
+
+#: src/components/ErrorBoundaryDevToolsPanel.tsx:125
+msgid "Error Boundary DevTools"
+msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:183
+msgid "Error Groups"
+msgstr ""
+
+#: src/components/ComponentTreeView.tsx:75
+msgid "Error Heatmap"
+msgstr ""
+
+#: src/components/ErrorSimulator.tsx:314
+msgid "Error Message"
+msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:165
+msgid "Error Rate"
+msgstr ""
+
+#: src/components/ErrorSimulator.tsx:234
+msgid "Error Simulator"
+msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:248
+msgid "Error trend chart would be displayed here"
+msgstr ""
+
+#: src/components/ErrorSimulator.tsx:278
+msgid "Error Type"
+msgstr ""
+
+#: src/components/ErrorBoundaryDevToolsPanel.tsx:55
+msgid "Errors"
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:571
+#~ msgid "Errors:"
+#~ msgstr ""
+
+#. placeholder {0}: selectedNode.errors.length
+#: src/components/ComponentTreeView.tsx:132
+msgid "Errors: {0}"
+msgstr ""
+
+#: src/components/RouteTreeView.tsx:363
+#~ msgid "Expand All"
+#~ msgstr ""
+
+#: src/components/FeatureFlagManagerPanel.tsx:179
+#~ msgid "Experiments"
+#~ msgstr ""
+
+#: src/components/ErrorBoundaryDevToolsPanel.tsx:101
+msgid "Export Error Data"
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:302
+#~ msgid "Export Form Data"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:99
+#~ msgid "Export Report"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:267
+#~ msgid "Export Routes"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:611
+#~ msgid "Export State"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:563
+#~ msgid "Failed"
+#~ msgstr ""
+
+#: src/components/RecoveryStrategyEditor.tsx:303
+msgid "Fallback Component Template"
+msgstr ""
+
+#: src/App.tsx:140
+#~ msgid "Female"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:485
+#~ msgid "Field Render Counts"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:231
+#~ msgid "Fields"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:380
+#~ msgid "Fields Defined:"
+#~ msgstr ""
+
+#: src/components/StackTraceViewer.tsx:96
+msgid "File:"
+msgstr ""
+
+#: src/components/FeatureFlagManagerPanel.tsx:156
+#~ msgid "Flags"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:164
+#~ msgid "Focus"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:479
+#~ msgid "Form Age"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:335
+#~ msgid "Form Fields"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:591
+#~ msgid "Form State Inspector"
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:171
+#~ msgid "Form View"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:323
+#~ msgid "Forms"
+#~ msgstr ""
+
+#: src/components/RouteTreeView.tsx:162
+#~ msgid "Go"
+#~ msgstr ""
+
+#. placeholder {0}: selectedNode.hasErrorBoundary ? 'Yes' : 'No'
+#: src/components/ComponentTreeView.tsx:131
+msgid "Has Error Boundary: {0}"
+msgstr ""
+
+#: src/components/NavigationTimeline.tsx:121
+#~ msgid "Hash"
+#~ msgstr ""
+
+#: src/App.tsx:77
+#~ msgid "Hello {userName}, welcome back!"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:91
+#~ msgid "Hide Overlay"
+#~ msgstr ""
+
+#: src/components/FeatureFlagManagerPanel.tsx:233
+#~ msgid "Hide User Context"
+#~ msgstr ""
+
+#. placeholder {0}: filteredErrors.filter(e => e.severity === 'high').length
+#: src/components/ErrorList.tsx:170
+msgid "High: {0}"
+msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:882
+#~ msgid "Historical State - {0}"
+#~ msgstr ""
+
+#: src/components/FeatureFlagManagerPanel.tsx:201
+#~ msgid "History"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:254
+#~ msgid "Idle"
+#~ msgstr ""
+
+#: src/components/ErrorSimulator.tsx:334
+msgid "Immediate"
+msgstr ""
+
+#: src/components/FeatureFlagManagerPanel.tsx:246
+#~ msgid "Import/Export Flags"
+#~ msgstr ""
+
+#: src/App.tsx:210
+#~ msgid "In JavaScript/TypeScript:"
+#~ msgstr ""
+
+#: src/App.tsx:205
+#~ msgid "In JSX:"
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:371
+#~ msgid "Individual Parameters:"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:347
+#~ msgid "Invalid"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:326
+#~ msgid "Invalid Fields"
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:171
+#~ msgid "JSON View"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:146
+#~ msgid "Keyboard Nav"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:158
+#~ msgid "Landmarks"
+#~ msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:152
+msgid "Last 24 Hours"
+msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:154
+msgid "Last 30 Days"
+msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:153
+msgid "Last 7 Days"
+msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:151
+msgid "Last Hour"
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:475
+#~ msgid "Last Validation"
+#~ msgstr ""
+
+#: src/App.tsx:55
+#~ msgid "LinguiJS Examples"
+#~ msgstr ""
+
+#: src/components/RouteTreeView.tsx:198
+#~ msgid "Loader Data:"
+#~ msgstr ""
+
+#: src/components/FeatureFlagManagerPanel.tsx:135
+#~ msgid "Loading feature flags..."
+#~ msgstr ""
+
+#: src/components/NavigationTimeline.tsx:208
+#~ msgid "Location Details:"
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:138
+#: src/components/RouteParameterInspector.tsx:455
+#~ msgid "Location State"
+#~ msgstr ""
+
+#. placeholder {0}: filteredErrors.filter(e => e.severity === 'low').length
+#: src/components/ErrorList.tsx:172
+msgid "Low: {0}"
+msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:304
+#~ msgid "Make sure you have registered a router adapter in your application."
+#~ msgstr ""
+
+#: src/components/RouteTreeView.tsx:271
+#~ msgid "Make sure your router adapter is properly connected and routes are defined."
+#~ msgstr ""
+
+#: src/App.tsx:130
+#~ msgid "Male"
+#~ msgstr ""
+
+#: src/components/RouteTreeView.tsx:135
+#~ msgid "MATCHED"
+#~ msgstr ""
+
+#: src/components/NavigationTimeline.tsx:141
+#~ msgid "Matches"
+#~ msgstr ""
+
+#: src/components/RecoveryStrategyEditor.tsx:289
+msgid "Max Retries"
+msgstr ""
+
+#. placeholder {0}: filteredErrors.filter(e => e.severity === 'medium').length
+#: src/components/ErrorList.tsx:171
+msgid "Medium: {0}"
+msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:176
+#: src/components/AccessibilityDevToolsPanel.tsx:216
+#~ msgid "Minor"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:175
+#: src/components/AccessibilityDevToolsPanel.tsx:209
+#~ msgid "Moderate"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:593
+#~ msgid "Modified"
+#~ msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:177
+msgid "MTTR"
+msgstr ""
+
+#: src/components/ErrorSimulator.tsx:252
+msgid "Name"
+msgstr ""
+
+#: src/components/NavigationTimeline.tsx:166
+#~ msgid "Navigate"
+#~ msgstr ""
+
+#: src/components/NavigationTimeline.tsx:236
+#~ msgid "Navigate around your application to see the timeline."
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:414
+#~ msgid "Navigation Count"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:841
+#~ msgid "Next ▶"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:509
+#~ msgid "No accessibility issues detected"
+#~ msgstr ""
+
+#: src/components/ErrorSimulator.tsx:416
+msgid "No active simulations. Create a new simulation or load a predefined scenario."
+msgstr ""
+
+#: src/components/ComponentTreeView.tsx:113
+msgid "No component tree available. Make sure the DevTools hook is properly connected."
+msgstr ""
+
+#: src/components/RecoveryStrategyEditor.tsx:385
+msgid "No custom strategies created yet. Create a new strategy or use a predefined template."
+msgstr ""
+
+#: src/components/RecoveryStrategyEditor.tsx:431
+msgid "No error boundaries registered yet."
+msgstr ""
+
+#: src/components/ErrorList.tsx:185
+msgid "No errors match the current filters."
+msgstr ""
+
+#: src/components/ErrorList.tsx:184
+msgid "No errors recorded yet."
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:330
+#: src/FormStateDevToolsPanel.tsx:368
+#: src/FormStateDevToolsPanel.tsx:411
+#: src/FormStateDevToolsPanel.tsx:460
+#: src/FormStateDevToolsPanel.tsx:501
+#: src/FormStateDevToolsPanel.tsx:593
+#~ msgid "No form selected"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:551
+#~ msgid "No form submissions recorded yet"
+#~ msgstr ""
+
+#: src/components/NavigationTimeline.tsx:235
+#~ msgid "No navigation history"
+#~ msgstr ""
+
+#: src/components/NavigationTimeline.tsx:272
+#~ msgid "No navigation history available. Navigate around your application to see entries here."
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:382
+#~ msgid "No query parameters"
+#~ msgstr ""
+
+#: src/components/NavigationTimeline.tsx:181
+#~ msgid "No route matches"
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:228
+#~ msgid "No route parameters in current route"
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:121
+#~ msgid "No route state available"
+#~ msgstr ""
+
+#: src/components/RouteTreeView.tsx:270
+#~ msgid "No routes found"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:990
+#~ msgid "No Store Selected"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:551
+#~ msgid "No submissions"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:409
+#~ msgid "Number of currently active/matched routes"
+#~ msgstr ""
+
+#. placeholder {0}: error.occurrences
+#: src/components/ErrorList.tsx:215
+msgid "Occurred {0} times"
+msgstr ""
+
+#: src/App.tsx:150
+#~ msgid "Other"
+#~ msgstr ""
+
+#: src/components/FeatureFlagManagerPanel.tsx:168
+#~ msgid "Overrides"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:123
+#~ msgid "Overview"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:324
+#~ msgid "Parameters"
+#~ msgstr ""
+
+#: src/components/RouteTreeView.tsx:178
+#~ msgid "Parameters:"
+#~ msgstr ""
+
+#: src/components/StackTraceViewer.tsx:214
+msgid "Parsed Frames:"
+msgstr ""
+
+#: src/components/NavigationTimeline.tsx:83
+#~ msgid "Path"
+#~ msgstr ""
+
+#. placeholder {0}: selectedNode.path
+#: src/components/ComponentTreeView.tsx:130
+msgid "Path: {0}"
+msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:64
+#~ msgid "Pause Scan"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:253
+#~ msgid "Paused"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:422
+#~ msgid "Percentage of navigation attempts that were slow or problematic"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:252
+#~ msgid "Performance"
+#~ msgstr ""
+
+#: src/App.tsx:220
+#~ msgid "Pluralization:"
+#~ msgstr ""
+
+#: src/components/ErrorSimulator.tsx:370
+msgid "Predefined Scenarios"
+msgstr ""
+
+#: src/components/RecoveryStrategyEditor.tsx:343
+msgid "Predefined Templates"
+msgstr ""
+
+#: src/components/NavigationTimeline.tsx:111
+#~ msgid "Query"
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:137
+#~ msgid "Query Params"
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:283
+#~ msgid "Query String Parameters"
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:335
+#~ msgid "Raw Query String:"
+#~ msgstr ""
+
+#: src/components/StackTraceViewer.tsx:194
+msgid "Raw Stack Trace:"
+msgstr ""
+
+#: src/components/ErrorBoundaryDevToolsPanel.tsx:77
+msgid "Recovery"
+msgstr ""
+
+#: src/components/RecoveryStrategyEditor.tsx:232
+msgid "Recovery Strategy Editor"
+msgstr ""
+
+#: src/components/FeatureFlagManagerPanel.tsx:226
+#~ msgid "Refresh Flags"
+#~ msgstr ""
+
+#: src/components/ErrorSimulator.tsx:447
+#: src/components/RecoveryStrategyEditor.tsx:413
+msgid "Remove"
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:435
+#~ msgid "Replay Form"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:294
+#~ msgid "Replay Form History"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:418
+#~ msgid "Replay Speed:"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:435
+#~ msgid "Replaying..."
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:357
+#~ msgid "Required"
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:518
+#~ msgid "Reset"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:254
+#~ msgid "Reset Navigation"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:619
+#~ msgid "Reset Store"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:64
+#~ msgid "Resume Scan"
+#~ msgstr ""
+
+#: src/components/RecoveryStrategyEditor.tsx:276
+msgid "Retry Delay (ms)"
+msgstr ""
+
+#: src/components/NavigationTimeline.tsx:179
+#~ msgid "Route Matches:"
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:186
+#~ msgid "Route Parameters"
+#~ msgstr ""
+
+#: src/components/RouteParameterInspector.tsx:136
+#~ msgid "Route Params"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:319
+#: src/components/RouteTreeView.tsx:288
+#~ msgid "Route Tree"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:428
+#~ msgid "Router Adapter Connected"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:428
+#~ msgid "Router Adapter Disconnected"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:299
+#~ msgid "Router DevTools"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:398
+#: src/FormStateDevToolsPanel.tsx:530
+#~ msgid "Rule:"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:224
+#~ msgid "Rules"
+#~ msgstr ""
+
+#: src/components/ErrorSimulator.tsx:441
+msgid "Run"
+msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:1108
+#~ msgid "Save Snapshot"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:595
+#: src/ZustandDevToolsPanel.tsx:1049
+#~ msgid "Save State Snapshot"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:253
+#~ msgid "Scanning"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:378
+#~ msgid "Schema Type:"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:601
+#~ msgid "Search fields..."
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:249
+#~ msgid "Search issues..."
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:644
+#~ msgid "Search stores..."
+#~ msgstr ""
+
+#: src/components/FeatureFlagManagerPanel.tsx:190
+#~ msgid "Segments"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:501
+#~ msgid "Select a form to view accessibility issues"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:411
+#~ msgid "Select a form to view field history"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:330
+#~ msgid "Select a form to view its fields"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:460
+#~ msgid "Select a form to view performance metrics"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:368
+#~ msgid "Select a form to view validation status"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:991
+#~ msgid "Select a store from the left panel to inspect its state and history"
+#~ msgstr ""
+
+#: src/App.tsx:26
+#~ msgid "Select Language:"
+#~ msgstr ""
+
+#: src/components/RecoveryStrategyEditor.tsx:462
+msgid "Select Strategy..."
+msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:174
+#: src/components/AccessibilityDevToolsPanel.tsx:202
+#~ msgid "Serious"
+#~ msgstr ""
+
+#: src/components/ErrorBoundaryDevToolsPanel.tsx:108
+msgid "Settings"
+msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:190
+#~ msgid "Severity"
+#~ msgstr ""
+
+#. placeholder {0}: parsedFrames.length
+#: src/components/StackTraceViewer.tsx:180
+msgid "Show all {0} frames"
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:282
+#: src/FormStateDevToolsPanel.tsx:288
+#~ msgid "Show All Fields"
+#~ msgstr ""
+
+#: src/components/StackTraceViewer.tsx:180
+msgid "Show less"
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:282
+#~ msgid "Show Only Dirty Fields"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:288
+#~ msgid "Show Only Invalid Fields"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:91
+#~ msgid "Show Overlay"
+#~ msgstr ""
+
+#: src/components/FeatureFlagManagerPanel.tsx:233
+#~ msgid "Show User Context"
+#~ msgstr ""
+
+#: src/components/ErrorBoundaryDevToolsPanel.tsx:71
+msgid "Simulator"
+msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:1058
+#~ msgid "Snapshot name (optional)"
+#~ msgstr ""
+
+#: src/components/StackTraceViewer.tsx:117
+msgid "Source Context:"
+msgstr ""
+
+#: src/components/StackTraceViewer.tsx:140
+msgid "Stack Frame:"
+msgstr ""
+
+#. placeholder {0}: parsedFrames.length
+#: src/components/StackTraceViewer.tsx:165
+msgid "Stack Trace ({0} frames)"
+msgstr ""
+
+#: src/components/ErrorBoundaryDevToolsPanel.tsx:86
+msgid "Start Recording"
+msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:65
+#~ msgid "Start Scan"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:770
+#~ msgid "State"
+#~ msgstr ""
+
+#: src/components/ErrorBoundaryDevToolsPanel.tsx:86
+msgid "Stop Recording"
+msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:84
+#~ msgid "Stop Scan"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:657
+#: src/ZustandDevToolsPanel.tsx:1002
+#~ msgid "Stores"
+#~ msgstr ""
+
+#: src/components/RecoveryStrategyEditor.tsx:250
+msgid "Strategy Name"
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:265
+#~ msgid "Submissions"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:563
+#~ msgid "Success"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:588
+#~ msgid "Take Snapshot"
+#~ msgstr ""
+
+#: src/components/ErrorSimulator.tsx:295
+msgid "Target Component"
+msgstr ""
+
+#: src/App.tsx:67
+#~ msgid "This demonstrates how to use LinguiJS with React."
+#~ msgstr ""
+
+#: src/App.tsx:186
+#~ msgid "This is <0>bold text</0> and this is <1>italic text</1>."
+#~ msgstr ""
+
+#: src/components/NavigationTimeline.tsx:56
+#~ msgid "Time"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:793
+#~ msgid "Time-Travel Mode"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:328
+#~ msgid "Timeline"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:573
+#~ msgid "Toggle automatic refresh of store data"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:237
+#~ msgid "Toggle Recording"
+#~ msgstr ""
+
+#. placeholder {0}: componentTree?.children?.length || 0
+#: src/components/ComponentTreeView.tsx:82
+msgid "Total Components: {0}"
+msgstr ""
+
+#: src/components/ErrorAnalytics.tsx:161
+msgid "Total Errors"
+msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:172
+#~ msgid "Total Issues"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:403
+#~ msgid "Total number of defined routes"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:416
+#~ msgid "Total number of navigation events"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:471
+#~ msgid "Total Renders"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:401
+#~ msgid "Total Routes"
+#~ msgstr ""
+
+#. placeholder {0}: filteredErrors.length
+#: src/components/ErrorList.tsx:168
+msgid "Total: {0}"
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:356
+#~ msgid "Touched"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:928
+#~ msgid "Tree View"
+#~ msgstr ""
+
+#: src/components/ErrorSimulator.tsx:327
+msgid "Trigger Condition"
+msgstr ""
+
+#. placeholder {0}: selectedNode.type
+#: src/components/ComponentTreeView.tsx:129
+msgid "Type: {0}"
+msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:347
+#~ msgid "Valid"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:238
+#~ msgid "Validation"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:396
+#~ msgid "Validation failed"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:352
+#~ msgid "Value:"
+#~ msgstr ""
+
+#: src/FormStateDevToolsPanel.tsx:575
+#~ msgid "View Submitted Values"
+#~ msgstr ""
+
+#: src/ZustandDevToolsPanel.tsx:795
+#~ msgid "Viewing state from {0}"
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:130
+#~ msgid "Violations"
+#~ msgstr ""
+
+#: src/components/RouterDevToolsPanel.tsx:302
+#~ msgid "Waiting for router adapter to connect..."
+#~ msgstr ""
+
+#: src/components/AccessibilityDevToolsPanel.tsx:178
+#~ msgid "WCAG Level"
+#~ msgstr ""
+
+#: src/App.tsx:64
+#~ msgid "Welcome to the DevTools internationalization example!"
+#~ msgstr ""
+
+#: src/App.tsx:215
+#~ msgid "With variables:"
+#~ msgstr ""
+
+#: src/App.tsx:80
+#~ msgid "You have {count} {0}"
+#~ msgstr ""

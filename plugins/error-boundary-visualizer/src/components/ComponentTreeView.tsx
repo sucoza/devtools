@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react'
+import { Trans } from '@lingui/macro'
 import { useErrorBoundaryDevTools } from '../core/store'
 import type { ComponentTreeNode } from '../types'
 
@@ -57,12 +58,12 @@ export const ComponentTreeView: React.FC = () => {
     <div style={containerStyles}>
       <div style={headerStyles}>
         <h3 style={{ margin: 0, color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-          Component Tree
+          <Trans>Component Tree</Trans>
         </h3>
-        <label style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: '6px', 
+        <label style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
           fontSize: '13px',
           color: theme === 'dark' ? '#ccc' : '#666'
         }}>
@@ -71,15 +72,15 @@ export const ComponentTreeView: React.FC = () => {
             checked={showHeatmap}
             onChange={(e) => setShowHeatmap(e.target.checked)}
           />
-          Error Heatmap
+          <Trans>Error Heatmap</Trans>
         </label>
       </div>
-      
+
       <div style={statsStyles}>
-        Coverage: {coverage.toFixed(1)}% | 
-        Error Boundaries: {errorBoundaries.size} | 
-        Total Components: {componentTree?.children?.length || 0}
-        {showHeatmap && ' | Heatmap shows error frequency'}
+        <Trans>Coverage: {coverage.toFixed(1)}%</Trans> |
+        <Trans>Error Boundaries: {errorBoundaries.size}</Trans> |
+        <Trans>Total Components: {componentTree?.children?.length || 0}</Trans>
+        {showHeatmap && <Trans> | Heatmap shows error frequency</Trans>}
       </div>
 
       <div style={{
@@ -104,12 +105,12 @@ export const ComponentTreeView: React.FC = () => {
             />
           </div>
         ) : (
-          <div style={{ 
-            padding: '20px', 
-            textAlign: 'center', 
-            color: theme === 'dark' ? '#999' : '#666' 
+          <div style={{
+            padding: '20px',
+            textAlign: 'center',
+            color: theme === 'dark' ? '#999' : '#666'
           }}>
-            No component tree available. Make sure the DevTools hook is properly connected.
+            <Trans>No component tree available. Make sure the DevTools hook is properly connected.</Trans>
           </div>
         )}
       </div>
@@ -125,11 +126,11 @@ export const ComponentTreeView: React.FC = () => {
             {selectedNode.name}
           </h4>
           <div style={{ fontSize: '12px', color: theme === 'dark' ? '#ccc' : '#666' }}>
-            <div>Type: {selectedNode.type}</div>
-            <div>Path: {selectedNode.path}</div>
-            <div>Has Error Boundary: {selectedNode.hasErrorBoundary ? 'Yes' : 'No'}</div>
-            <div>Errors: {selectedNode.errors.length}</div>
-            <div>Children: {selectedNode.children.length}</div>
+            <div><Trans>Type: {selectedNode.type}</Trans></div>
+            <div><Trans>Path: {selectedNode.path}</Trans></div>
+            <div><Trans>Has Error Boundary: {selectedNode.hasErrorBoundary ? 'Yes' : 'No'}</Trans></div>
+            <div><Trans>Errors: {selectedNode.errors.length}</Trans></div>
+            <div><Trans>Children: {selectedNode.children.length}</Trans></div>
           </div>
         </div>
       )}

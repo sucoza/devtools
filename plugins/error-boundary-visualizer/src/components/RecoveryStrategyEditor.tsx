@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Trans } from '@lingui/macro'
 import { useErrorBoundaryDevTools } from '../core/store'
 import type { ErrorRecoveryStrategy } from '../types'
 
@@ -228,25 +229,25 @@ export const RecoveryStrategyEditor: React.FC = () => {
     <div style={containerStyles}>
       <div style={headerStyles}>
         <h3 style={{ margin: 0, color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-          Recovery Strategy Editor
+          <Trans>Recovery Strategy Editor</Trans>
         </h3>
         <button
           style={buttonStyles}
           onClick={() => setIsCreating(!isCreating)}
         >
-          {isCreating ? 'Cancel' : 'Create Strategy'}
+          {isCreating ? <Trans>Cancel</Trans> : <Trans>Create Strategy</Trans>}
         </button>
       </div>
 
       {isCreating && (
         <div style={formStyles}>
           <h4 style={{ margin: '0 0 8px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-            Create Recovery Strategy
+            <Trans>Create Recovery Strategy</Trans>
           </h4>
-          
+
           <div>
             <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-              Strategy Name
+              <Trans>Strategy Name</Trans>
             </label>
             <input
               type="text"
@@ -259,7 +260,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
 
           <div>
             <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-              Description
+              <Trans>Description</Trans>
             </label>
             <textarea
               value={newStrategy.description || ''}
@@ -272,7 +273,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-                Retry Delay (ms)
+                <Trans>Retry Delay (ms)</Trans>
               </label>
               <input
                 type="number"
@@ -285,7 +286,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
 
             <div>
               <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-                Max Retries
+                <Trans>Max Retries</Trans>
               </label>
               <input
                 type="number"
@@ -299,7 +300,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
 
           <div>
             <label style={{ display: 'block', marginBottom: '4px', fontSize: '13px', fontWeight: 'bold' }}>
-              Fallback Component Template
+              <Trans>Fallback Component Template</Trans>
             </label>
             <div style={{ display: 'flex', gap: '8px', marginBottom: '8px' }}>
               {Object.entries(fallbackTemplates).map(([key, template]) => (
@@ -310,7 +311,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
                     navigator.clipboard.writeText(template)
                   }}
                 >
-                  Copy {key.charAt(0).toUpperCase() + key.slice(1)}
+                  <Trans>Copy {key.charAt(0).toUpperCase() + key.slice(1)}</Trans>
                 </button>
               ))}
             </div>
@@ -328,10 +329,10 @@ export const RecoveryStrategyEditor: React.FC = () => {
 
           <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
             <button style={secondaryButtonStyles} onClick={() => setIsCreating(false)}>
-              Cancel
+              <Trans>Cancel</Trans>
             </button>
             <button style={buttonStyles} onClick={handleCreateStrategy}>
-              Create Strategy
+              <Trans>Create Strategy</Trans>
             </button>
           </div>
         </div>
@@ -339,7 +340,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
 
       <div style={sectionStyles}>
         <h4 style={{ margin: '0 0 12px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-          Predefined Templates
+          <Trans>Predefined Templates</Trans>
         </h4>
         <div style={gridStyles}>
           {predefinedStrategies.map((template, index) => (
@@ -373,7 +374,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
 
       <div style={sectionStyles}>
         <h4 style={{ margin: '0 0 12px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-          Custom Strategies ({(Array.from(recoveryStrategies.values()) as ErrorRecoveryStrategy[]).length})
+          <Trans>Custom Strategies ({(Array.from(recoveryStrategies.values()) as ErrorRecoveryStrategy[]).length})</Trans>
         </h4>
         {(Array.from(recoveryStrategies.values()) as ErrorRecoveryStrategy[]).length === 0 ? (
           <div style={{
@@ -381,7 +382,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
             textAlign: 'center',
             color: theme === 'dark' ? '#999' : '#666'
           }}>
-            No custom strategies created yet. Create a new strategy or use a predefined template.
+            <Trans>No custom strategies created yet. Create a new strategy or use a predefined template.</Trans>
           </div>
         ) : (
           (Array.from(recoveryStrategies.values()) as ErrorRecoveryStrategy[]).map((strategy) => (
@@ -403,13 +404,13 @@ export const RecoveryStrategyEditor: React.FC = () => {
                   style={buttonStyles}
                   onClick={() => setEditingStrategy(strategy)}
                 >
-                  Edit
+                  <Trans>Edit</Trans>
                 </button>
                 <button
                   style={secondaryButtonStyles}
                   onClick={() => removeRecoveryStrategy(strategy.id)}
                 >
-                  Remove
+                  <Trans>Remove</Trans>
                 </button>
               </div>
             </div>
@@ -419,15 +420,15 @@ export const RecoveryStrategyEditor: React.FC = () => {
 
       <div style={sectionStyles}>
         <h4 style={{ margin: '0 0 12px 0', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-          Apply to Error Boundaries
+          <Trans>Apply to Error Boundaries</Trans>
         </h4>
         {errorBoundaries.size === 0 ? (
-          <div style={{ 
-            ...cardStyles, 
-            textAlign: 'center', 
-            color: theme === 'dark' ? '#999' : '#666' 
+          <div style={{
+            ...cardStyles,
+            textAlign: 'center',
+            color: theme === 'dark' ? '#999' : '#666'
           }}>
-            No error boundaries registered yet.
+            <Trans>No error boundaries registered yet.</Trans>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -458,7 +459,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
                       }}
                       defaultValue=""
                     >
-                      <option value="">Select Strategy...</option>
+                      <option value=""><Trans>Select Strategy...</Trans></option>
                       {(Array.from(recoveryStrategies.values()) as ErrorRecoveryStrategy[]).map(strategy => (
                         <option key={strategy.id} value={strategy.id}>
                           {strategy.name}

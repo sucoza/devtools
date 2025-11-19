@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Trans } from '@lingui/macro';
 import {
   FeatureFlagDevToolsClient,
   FeatureFlagDevToolsState,
@@ -127,7 +128,9 @@ const FeatureFlagManagerPanelInner: React.FC<FeatureFlagManagerPanelProps & { re
           color: COLORS.text.primary
         }}
       >
-        <div style={{ color: COLORS.text.muted }}>Loading feature flags...</div>
+        <div style={{ color: COLORS.text.muted }}>
+          <Trans>Loading feature flags...</Trans>
+        </div>
       </div>
     );
   }
@@ -135,7 +138,7 @@ const FeatureFlagManagerPanelInner: React.FC<FeatureFlagManagerPanelProps & { re
   const tabs = [
     {
       id: 'dashboard',
-      label: 'Dashboard',
+      label: <Trans>Dashboard</Trans>,
       content: (
         <DashboardTab
           state={state}
@@ -147,7 +150,7 @@ const FeatureFlagManagerPanelInner: React.FC<FeatureFlagManagerPanelProps & { re
     },
     {
       id: 'flags',
-      label: 'Flags',
+      label: <Trans>Flags</Trans>,
       badge: state.flags.size > 0 ? <Badge size="xs" variant="primary">{state.flags.size}</Badge> : undefined,
       content: (
         <FlagsTab
@@ -159,7 +162,7 @@ const FeatureFlagManagerPanelInner: React.FC<FeatureFlagManagerPanelProps & { re
     },
     {
       id: 'overrides',
-      label: 'Overrides',
+      label: <Trans>Overrides</Trans>,
       badge: state.overrides.size > 0 ? <Badge size="xs" variant="warning">{state.overrides.size}</Badge> : undefined,
       content: (
         <OverridesTab
@@ -170,7 +173,7 @@ const FeatureFlagManagerPanelInner: React.FC<FeatureFlagManagerPanelProps & { re
     },
     {
       id: 'experiments',
-      label: 'Experiments',
+      label: <Trans>Experiments</Trans>,
       badge: state.experiments.length > 0 ? <Badge size="xs" variant="info">{state.experiments.length}</Badge> : undefined,
       content: (
         <ExperimentsTab
@@ -181,7 +184,7 @@ const FeatureFlagManagerPanelInner: React.FC<FeatureFlagManagerPanelProps & { re
     },
     {
       id: 'segments',
-      label: 'Segments',
+      label: <Trans>Segments</Trans>,
       badge: state.userSegments.length > 0 ? <Badge size="xs" variant="info">{state.userSegments.length}</Badge> : undefined,
       content: (
         <SegmentsTab
@@ -192,7 +195,7 @@ const FeatureFlagManagerPanelInner: React.FC<FeatureFlagManagerPanelProps & { re
     },
     {
       id: 'history',
-      label: 'History',
+      label: <Trans>History</Trans>,
       badge: state.evaluationHistory.length > 0 ? <Badge size="xs" variant="default">{state.evaluationHistory.length}</Badge> : undefined,
       content: (
         <HistoryTab
@@ -203,7 +206,7 @@ const FeatureFlagManagerPanelInner: React.FC<FeatureFlagManagerPanelProps & { re
     },
     {
       id: 'settings',
-      label: 'Settings',
+      label: <Trans>Settings</Trans>,
       icon: <Settings size={16} />,
       content: (
         <SettingsTab
@@ -217,40 +220,40 @@ const FeatureFlagManagerPanelInner: React.FC<FeatureFlagManagerPanelProps & { re
   const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'refresh',
-      label: 'Refresh Flags',
+      label: <Trans>Refresh Flags</Trans>,
       icon: '🔄',
       onClick: handleRefresh,
       shortcut: 'Ctrl+R'
     },
     {
       id: 'user-context',
-      label: showUserContext ? 'Hide User Context' : 'Show User Context',
+      label: showUserContext ? <Trans>Hide User Context</Trans> : <Trans>Show User Context</Trans>,
       icon: '👤',
       onClick: () => setShowUserContext(!showUserContext)
     },
     {
       id: 'add-flag',
-      label: 'Add New Flag',
+      label: <Trans>Add New Flag</Trans>,
       icon: '➕',
       onClick: () => console.log('Add new flag clicked'),
       separator: true
     },
     {
       id: 'import-export',
-      label: 'Import/Export Flags',
+      label: <Trans>Import/Export Flags</Trans>,
       icon: '💾',
       onClick: () => console.log('Import/Export clicked'),
       shortcut: 'Ctrl+E'
     },
     {
       id: 'clear-overrides',
-      label: 'Clear All Overrides',
+      label: <Trans>Clear All Overrides</Trans>,
       icon: '🗑️',
       onClick: () => console.log('Clear overrides clicked')
     },
     {
       id: 'settings',
-      label: 'Settings',
+      label: <Trans>Settings</Trans>,
       icon: '⚙️',
       onClick: () => setActiveTab('settings'),
       separator: true

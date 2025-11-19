@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { 
-  Play, 
-  CheckCircle, 
-  AlertCircle, 
-  BarChart3, 
+import { Trans } from '@lingui/macro';
+import {
+  Play,
+  CheckCircle,
+  AlertCircle,
+  BarChart3,
   FileText,
   History,
   Accessibility,
@@ -227,41 +228,41 @@ export function FormStateDevToolsPanel() {
   const tabs = [
     {
       id: 'fields',
-      label: 'Fields',
+      label: <Trans>Fields</Trans>,
       icon: FileText,
       badge: selectedForm && filteredFields.length > 0 ? { count: filteredFields.length } : undefined,
       content: renderFieldsTab()
     },
     {
       id: 'validation',
-      label: 'Validation',
+      label: <Trans>Validation</Trans>,
       icon: CheckCircle,
       badge: selectedForm ? { count: Object.values(selectedForm.fields).filter(f => !f.isValid).length, variant: (Object.values(selectedForm.fields).filter(f => !f.isValid).length > 0 ? 'critical' : 'default') as 'critical' | 'serious' | 'moderate' | 'minor' | 'default' } : undefined,
       content: renderValidationTab()
     },
     {
       id: 'history',
-      label: 'History',
+      label: <Trans>History</Trans>,
       icon: History,
       badge: selectedForm && selectedForm.fieldHistory.length > 0 ? { count: selectedForm.fieldHistory.length } : undefined,
       content: renderHistoryTab()
     },
     {
       id: 'performance',
-      label: 'Performance',
+      label: <Trans>Performance</Trans>,
       icon: BarChart3,
       content: renderPerformanceTab()
     },
     {
       id: 'accessibility',
-      label: 'Accessibility',
+      label: <Trans>Accessibility</Trans>,
       icon: Accessibility,
       badge: selectedForm ? { count: selectedForm.accessibilityIssues.length, variant: (selectedForm.accessibilityIssues.length > 0 ? 'moderate' : 'default') as 'critical' | 'serious' | 'moderate' | 'minor' | 'default' } : undefined,
       content: renderAccessibilityTab()
     },
     {
       id: 'submissions',
-      label: 'Submissions',
+      label: <Trans>Submissions</Trans>,
       icon: Send,
       badge: submissions.filter(s => s.formId === selectedFormId).length > 0 ? { count: submissions.filter(s => s.formId === selectedFormId).length } : undefined,
       content: renderSubmissionsTab()
@@ -271,26 +272,26 @@ export function FormStateDevToolsPanel() {
   const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'auto-refresh',
-      label: autoRefresh ? 'Disable Auto Refresh' : 'Enable Auto Refresh',
+      label: autoRefresh ? <Trans>Disable Auto Refresh</Trans> : <Trans>Enable Auto Refresh</Trans>,
       icon: autoRefresh ? '⏸️' : '🔄',
       onClick: () => setAutoRefresh(!autoRefresh),
       shortcut: 'Ctrl+R'
     },
     {
       id: 'show-dirty',
-      label: showOnlyDirty ? 'Show All Fields' : 'Show Only Dirty Fields',
+      label: showOnlyDirty ? <Trans>Show All Fields</Trans> : <Trans>Show Only Dirty Fields</Trans>,
       icon: '🔍',
       onClick: () => setShowOnlyDirty(!showOnlyDirty)
     },
     {
       id: 'show-invalid',
-      label: showOnlyInvalid ? 'Show All Fields' : 'Show Only Invalid Fields',
+      label: showOnlyInvalid ? <Trans>Show All Fields</Trans> : <Trans>Show Only Invalid Fields</Trans>,
       icon: '⚠️',
       onClick: () => setShowOnlyInvalid(!showOnlyInvalid)
     },
     {
       id: 'replay-form',
-      label: 'Replay Form History',
+      label: <Trans>Replay Form History</Trans>,
       icon: '▶️',
       onClick: () => selectedFormId && handleReplayForm(selectedFormId),
       disabled: !selectedFormId || !selectedForm?.fieldHistory.length || isReplaying,
@@ -298,20 +299,20 @@ export function FormStateDevToolsPanel() {
     },
     {
       id: 'export-data',
-      label: 'Export Form Data',
+      label: <Trans>Export Form Data</Trans>,
       icon: '💾',
       onClick: () => console.log('Export form data clicked'),
       shortcut: 'Ctrl+E'
     },
     {
       id: 'clear-history',
-      label: 'Clear Form History',
+      label: <Trans>Clear Form History</Trans>,
       icon: '🗑️',
       onClick: () => console.log('Clear history clicked')
     },
     {
       id: 'settings',
-      label: 'Settings',
+      label: <Trans>Settings</Trans>,
       icon: '⚙️',
       onClick: () => console.log('Settings clicked'),
       separator: true
@@ -319,19 +320,19 @@ export function FormStateDevToolsPanel() {
   ];
 
   const metrics = [
-    { label: 'Forms', value: Object.keys(forms).length },
-    { label: 'Active Fields', value: selectedForm ? Object.keys(selectedForm.fields).length : 0 },
-    { label: 'Dirty Fields', value: selectedForm ? Object.values(selectedForm.fields).filter(f => f.isDirty).length : 0 },
-    { label: 'Invalid Fields', value: selectedForm ? Object.values(selectedForm.fields).filter(f => !f.isValid).length : 0 }
+    { label: <Trans>Forms</Trans>, value: Object.keys(forms).length },
+    { label: <Trans>Active Fields</Trans>, value: selectedForm ? Object.keys(selectedForm.fields).length : 0 },
+    { label: <Trans>Dirty Fields</Trans>, value: selectedForm ? Object.values(selectedForm.fields).filter(f => f.isDirty).length : 0 },
+    { label: <Trans>Invalid Fields</Trans>, value: selectedForm ? Object.values(selectedForm.fields).filter(f => !f.isValid).length : 0 }
   ];
 
   function renderFieldsTab() {
-    if (!selectedForm) return <EmptyState title="No form selected" description="Select a form to view its fields" />;
+    if (!selectedForm) return <EmptyState title={<Trans>No form selected</Trans>} description={<Trans>Select a form to view its fields</Trans>} />;
 
     return (
       <ScrollableContainer>
         <div className="space-y-4">
-          <div className="text-sm font-medium">Form Fields ({filteredFields.length})</div>
+          <div className="text-sm font-medium"><Trans>Form Fields</Trans> ({filteredFields.length})</div>
           <div className="space-y-2">
             {filteredFields.map(field => (
               <div key={field.name} className="bg-gray-800 rounded p-3 border border-gray-700">
@@ -341,19 +342,19 @@ export function FormStateDevToolsPanel() {
                     <Badge variant="default">{field.type}</Badge>
                   </div>
                   <div className="flex items-center gap-2">
-                    <StatusIndicator 
+                    <StatusIndicator
                       status={field.isValid ? 'success' : 'error'}
-                      label={field.isValid ? 'Valid' : 'Invalid'}
+                      label={field.isValid ? <Trans>Valid</Trans> : <Trans>Invalid</Trans>}
                     />
                   </div>
                 </div>
                 <div className="text-xs text-gray-400 mb-2">
-                  Value: <code>{JSON.stringify(field.value)}</code>
+                  <Trans>Value:</Trans> <code>{JSON.stringify(field.value)}</code>
                 </div>
                 <div className="flex gap-1">
-                  {field.isDirty && <Badge variant="warning">Dirty</Badge>}
-                  {field.isTouched && <Badge variant="info">Touched</Badge>}
-                  {field.isRequired && <Badge variant="default">Required</Badge>}
+                  {field.isDirty && <Badge variant="warning"><Trans>Dirty</Trans></Badge>}
+                  {field.isTouched && <Badge variant="info"><Trans>Touched</Trans></Badge>}
+                  {field.isRequired && <Badge variant="default"><Trans>Required</Trans></Badge>}
                 </div>
               </div>
             ))}
@@ -364,7 +365,7 @@ export function FormStateDevToolsPanel() {
   }
 
   function renderValidationTab() {
-    if (!selectedForm) return <EmptyState title="No form selected" description="Select a form to view validation status" />;
+    if (!selectedForm) return <EmptyState title={<Trans>No form selected</Trans>} description={<Trans>Select a form to view validation status</Trans>} />;
 
     const invalidFields = Object.values(selectedForm.fields).filter(f => !f.isValid);
 
@@ -374,9 +375,9 @@ export function FormStateDevToolsPanel() {
           {selectedForm.schema && (
             <div className="p-3 bg-blue-900/20 text-blue-400 rounded border border-blue-500/30">
               <div className="text-sm">
-                <strong>Schema Type:</strong> {selectedForm.schema.type}
+                <strong><Trans>Schema Type:</Trans></strong> {selectedForm.schema.type}
                 <br />
-                <strong>Fields Defined:</strong> {Object.keys(selectedForm.schema.parsedFields).length}
+                <strong><Trans>Fields Defined:</Trans></strong> {Object.keys(selectedForm.schema.parsedFields).length}
               </div>
             </div>
           )}
@@ -384,7 +385,7 @@ export function FormStateDevToolsPanel() {
           {invalidFields.length === 0 ? (
             <div className="flex items-center gap-2 p-3 bg-green-900/20 text-green-400 rounded border border-green-500/30">
               <CheckCircle className="w-4 h-4" />
-              All fields are valid
+              <Trans>All fields are valid</Trans>
             </div>
           ) : (
             <div className="space-y-2">
@@ -392,9 +393,9 @@ export function FormStateDevToolsPanel() {
                 <div key={field.name} className="flex items-start gap-2 p-3 bg-red-900/20 text-red-400 rounded border border-red-500/30">
                   <AlertCircle className="w-4 h-4 mt-0.5" />
                   <div>
-                    <strong>{field.name}:</strong> {field.validation.message || 'Validation failed'}
+                    <strong>{field.name}:</strong> {field.validation.message || <Trans>Validation failed</Trans>}
                     {field.validation.rule && (
-                      <div className="text-xs opacity-75 mt-1">Rule: {field.validation.rule}</div>
+                      <div className="text-xs opacity-75 mt-1"><Trans>Rule:</Trans> {field.validation.rule}</div>
                     )}
                   </div>
                 </div>
@@ -407,14 +408,14 @@ export function FormStateDevToolsPanel() {
   }
 
   function renderHistoryTab() {
-    if (!selectedForm) return <EmptyState title="No form selected" description="Select a form to view field history" />;
+    if (!selectedForm) return <EmptyState title={<Trans>No form selected</Trans>} description={<Trans>Select a form to view field history</Trans>} />;
 
     return (
       <ScrollableContainer>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <span className="text-sm font-medium">Replay Speed: {replaySpeed}x</span>
+              <span className="text-sm font-medium"><Trans>Replay Speed:</Trans> {replaySpeed}x</span>
               <input
                 type="range"
                 min="0.5"
@@ -431,7 +432,7 @@ export function FormStateDevToolsPanel() {
               className="flex items-center gap-2 px-3 py-1 text-sm bg-blue-500 text-white rounded disabled:opacity-50"
             >
               <Play className="w-3 h-3" />
-              {isReplaying ? 'Replaying...' : 'Replay Form'}
+              {isReplaying ? <Trans>Replaying...</Trans> : <Trans>Replay Form</Trans>}
             </button>
           </div>
 
@@ -456,32 +457,32 @@ export function FormStateDevToolsPanel() {
   }
 
   function renderPerformanceTab() {
-    if (!selectedForm) return <EmptyState title="No form selected" description="Select a form to view performance metrics" />;
+    if (!selectedForm) return <EmptyState title={<Trans>No form selected</Trans>} description={<Trans>Select a form to view performance metrics</Trans>} />;
 
     return (
       <ScrollableContainer>
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-gray-800 rounded p-4">
-              <div className="text-xs text-gray-400 mb-1">Average Validation Time</div>
+              <div className="text-xs text-gray-400 mb-1"><Trans>Average Validation Time</Trans></div>
               <div className="text-2xl font-bold">{selectedForm.performanceMetrics.averageValidationTime.toFixed(2)}ms</div>
             </div>
             <div className="bg-gray-800 rounded p-4">
-              <div className="text-xs text-gray-400 mb-1">Total Renders</div>
+              <div className="text-xs text-gray-400 mb-1"><Trans>Total Renders</Trans></div>
               <div className="text-2xl font-bold">{selectedForm.performanceMetrics.totalRenderCount}</div>
             </div>
             <div className="bg-gray-800 rounded p-4">
-              <div className="text-xs text-gray-400 mb-1">Last Validation</div>
+              <div className="text-xs text-gray-400 mb-1"><Trans>Last Validation</Trans></div>
               <div className="text-2xl font-bold">{selectedForm.performanceMetrics.lastValidationTime.toFixed(2)}ms</div>
             </div>
             <div className="bg-gray-800 rounded p-4">
-              <div className="text-xs text-gray-400 mb-1">Form Age</div>
+              <div className="text-xs text-gray-400 mb-1"><Trans>Form Age</Trans></div>
               <div className="text-2xl font-bold">{((Date.now() - selectedForm.performanceMetrics.formInitTime) / 1000).toFixed(0)}s</div>
             </div>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold mb-3">Field Render Counts</h3>
+            <h3 className="text-sm font-semibold mb-3"><Trans>Field Render Counts</Trans></h3>
             <div className="space-y-2">
               {Object.entries(selectedForm.performanceMetrics.fieldRenderCounts).map(([fieldName, count]) => (
                 <div key={fieldName} className="flex justify-between items-center bg-gray-800 rounded px-3 py-2">
@@ -497,7 +498,7 @@ export function FormStateDevToolsPanel() {
   }
 
   function renderAccessibilityTab() {
-    if (!selectedForm) return <EmptyState title="No form selected" description="Select a form to view accessibility issues" />;
+    if (!selectedForm) return <EmptyState title={<Trans>No form selected</Trans>} description={<Trans>Select a form to view accessibility issues</Trans>} />;
 
     return (
       <ScrollableContainer>
@@ -505,11 +506,11 @@ export function FormStateDevToolsPanel() {
           {selectedForm.accessibilityIssues.length === 0 ? (
             <div className="flex items-center gap-2 p-3 bg-green-900/20 text-green-400 rounded border border-green-500/30">
               <CheckCircle className="w-4 h-4" />
-              No accessibility issues detected
+              <Trans>No accessibility issues detected</Trans>
             </div>
           ) : (
             selectedForm.accessibilityIssues.map((issue, index) => (
-              <div 
+              <div
                 key={`${issue.fieldName}-${issue.rule}-${index}`}
                 className={`p-3 rounded border ${
                   issue.severity === 'error' ? 'bg-red-900/20 text-red-400 border-red-500/30' :
@@ -526,7 +527,7 @@ export function FormStateDevToolsPanel() {
                   </div>
                   <div className="text-sm">{issue.message}</div>
                   <div className="text-xs opacity-75">
-                    <strong>Rule:</strong> {issue.rule}
+                    <strong><Trans>Rule:</Trans></strong> {issue.rule}
                   </div>
                   <div className="text-xs text-blue-400">
                     💡 {issue.suggestion}
@@ -547,10 +548,10 @@ export function FormStateDevToolsPanel() {
       <ScrollableContainer>
         <div className="space-y-4">
           {formSubmissions.length === 0 ? (
-            <EmptyState title="No submissions" description="No form submissions recorded yet" />
+            <EmptyState title={<Trans>No submissions</Trans>} description={<Trans>No form submissions recorded yet</Trans>} />
           ) : (
             formSubmissions.slice().reverse().map((submission, index) => (
-              <div 
+              <div
                 key={`${submission.timestamp}-${index}`}
                 className={`bg-gray-800 rounded p-4 border-l-4 ${submission.success ? 'border-green-500' : 'border-red-500'}`}
               >
@@ -559,19 +560,19 @@ export function FormStateDevToolsPanel() {
                     {new Date(submission.timestamp).toLocaleString()}
                   </span>
                   <Badge variant={submission.success ? 'success' : 'error'}>
-                    {submission.success ? 'Success' : 'Failed'}
+                    {submission.success ? <Trans>Success</Trans> : <Trans>Failed</Trans>}
                   </Badge>
                 </div>
                 <div className="text-xs text-gray-400 mb-2">
-                  Duration: {submission.duration}ms
+                  <Trans>Duration:</Trans> {submission.duration}ms
                 </div>
                 {Object.keys(submission.validationErrors).length > 0 && (
                   <div className="p-2 bg-red-900/20 text-red-400 rounded border border-red-500/30 mb-2">
-                    Errors: {Object.keys(submission.validationErrors).join(', ')}
+                    <Trans>Errors:</Trans> {Object.keys(submission.validationErrors).join(', ')}
                   </div>
                 )}
                 <details className="mt-2">
-                  <summary className="cursor-pointer text-sm text-blue-400 hover:text-blue-300">View Submitted Values</summary>
+                  <summary className="cursor-pointer text-sm text-blue-400 hover:text-blue-300"><Trans>View Submitted Values</Trans></summary>
                   <pre className="mt-2 p-2 bg-gray-900 rounded text-xs overflow-auto">
                     {JSON.stringify(submission.values, null, 2)}
                   </pre>
@@ -587,9 +588,9 @@ export function FormStateDevToolsPanel() {
   return (
     <div style={{ position: 'relative', height: '100%' }}>
       <PluginPanel
-        title="Form State Inspector"
+        title={<Trans>Form State Inspector</Trans>}
         icon={FileText}
-        subtitle={selectedForm ? `${selectedForm.isDirty ? 'Modified' : 'Clean'} • ${Object.keys(selectedForm.fields).length} fields` : 'No form selected'}
+        subtitle={selectedForm ? `${selectedForm.isDirty ? <Trans>Modified</Trans> : <Trans>Clean</Trans>} • ${Object.keys(selectedForm.fields).length} fields` : <Trans>No form selected</Trans>}
         tabs={tabs}
         activeTabId={activeTab}
         onTabChange={(tabId) => setActiveTab(tabId as any)}
@@ -597,7 +598,7 @@ export function FormStateDevToolsPanel() {
         showSearch={true}
         searchValue={searchQuery}
         onSearchChange={setSearchQuery}
-        searchPlaceholder="Search fields..."
+        searchPlaceholder={<Trans>Search fields...</Trans>}
         // Simplified for now - add proper sidebar/filters later
         showMetrics={true}
       />

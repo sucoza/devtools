@@ -41,10 +41,19 @@
     "ci:all": "nx run-many -t lint,typecheck,test,build --all --parallel=3",
     "cloud:status": "nx-cloud status",
     "graph:affected": "nx affected:dep-graph",
-    "reset": "nx reset"
+    "reset": "nx reset",
+    "i18n:extract": "lingui extract",
+    "i18n:compile": "lingui compile",
+    "i18n:extract-compile": "lingui extract && lingui compile"
   },
   "devDependencies": {
+    "@babel/core": "catalog:",
     "@changesets/cli": "catalog:",
+    "@lingui/cli": "catalog:",
+    "@lingui/core": "catalog:",
+    "@lingui/detect-locale": "catalog:",
+    "@lingui/macro": "catalog:",
+    "@lingui/react": "catalog:",
     "@nx/eslint": "catalog:",
     "@nx/js": "catalog:",
     "@nx/rollup": "catalog:",
