@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/router-devtools-plugin",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "DevTools plugin for routing debugging, navigation tracking, and parameter inspection",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

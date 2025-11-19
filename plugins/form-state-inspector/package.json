@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/form-state-inspector-devtools-plugin",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Comprehensive form debugging and state management visualization tool for TanStack DevTools",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",

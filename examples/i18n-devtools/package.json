@@ -1,6 +1,6 @@
 {
   "name": "i18n-devtools-example",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Example application demonstrating the I18n DevTools plugin",
   "private": true,
   "type": "module",

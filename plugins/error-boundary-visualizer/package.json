@@ -1,6 +1,6 @@
 {
   "name": "@sucoza/error-boundary-visualizer-devtools-plugin",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Error Boundary Visualizer plugin for TanStack DevTools",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
