@@ -3,7 +3,6 @@
  */
 
 import React, { useMemo } from 'react';
-import { Trans } from '@lingui/macro';
 import {
   Badge,
   EmptyState
@@ -80,8 +79,8 @@ function RouteNode({
           alignItems: 'center',
           padding: '4px 8px',
           borderRadius: '3px',
-          background: isSelected ? '#094771' : (isCurrentPath ? '#1e3a28' : 'transparent'),
-          border: `1px solid ${isSelected ? '#007acc' : (isCurrentPath ? '#4ec9b0' : 'transparent')}`,
+          background: isSelected ? "var(--dt-bg-selected)" : (isCurrentPath ? "var(--dt-status-success-bg)" : "transparent"),
+          border: `1px solid ${isSelected ? "var(--dt-border-focus)" : (isCurrentPath ? "var(--dt-accent-secondary)" : "transparent")}`,
           cursor: 'pointer',
           fontSize: '11px',
           marginBottom: '1px'
@@ -95,7 +94,7 @@ function RouteNode({
             style={{
               background: 'none',
               border: 'none',
-              color: '#969696',
+              color: "var(--dt-text-secondary)",
               cursor: 'pointer',
               fontSize: '10px',
               padding: '0 4px 0 0',
@@ -110,35 +109,35 @@ function RouteNode({
         {/* Route info */}
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
           {/* Path */}
-          <span style={{
-            color: node.isActive ? '#4ec9b0' : '#cccccc',
+          <span style={{ 
+            color: node.isActive ? "var(--dt-accent-secondary)" : "var(--dt-text-primary)",
             fontWeight: node.isActive ? '600' : '400'
           }}>
             {node.path || '/'}
-            {node.index && <span style={{ color: '#e67e22', fontSize: '9px' }}> <Trans>(index)</Trans></span>}
+            {node.index && <span style={{ color: "var(--dt-status-warning)", fontSize: '9px' }}> (index)</span>}
           </span>
           
           {/* Element name */}
           {node.element && (
-            <span style={{ color: '#8e44ad', fontSize: '10px' }}>
+            <span style={{ color: "var(--dt-accent-primary)", fontSize: '10px' }}>
               {node.element}
             </span>
           )}
           
           {/* Active indicator */}
           {node.isActive && (
-            <Badge variant="success" size="xs"><Trans>ACTIVE</Trans></Badge>
+            <Badge variant="success" size="xs">ACTIVE</Badge>
           )}
-
+          
           {/* Matched indicator */}
           {node.isMatched && !node.isActive && (
-            <Badge variant="warning" size="xs"><Trans>MATCHED</Trans></Badge>
+            <Badge variant="warning" size="xs">MATCHED</Badge>
           )}
-
+          
           {/* Parameters count */}
           {node.params && Object.keys(node.params).length > 0 && (
             <Badge variant="info" size="xs">
-              <Trans>{Object.keys(node.params).length} param{Object.keys(node.params).length > 1 ? 's' : ''}</Trans>
+              {`${Object.keys(node.params).length} param${Object.keys(node.params).length > 1 ? 's' : ''}`}
             </Badge>
           )}
         </div>
@@ -150,8 +149,8 @@ function RouteNode({
               onClick={handleNavigateClick}
               style={{
                 background: 'none',
-                border: '1px solid #3c3c3c',
-                color: '#969696',
+                border: "1px solid var(--dt-border-primary)",
+                color: "var(--dt-text-secondary)",
                 cursor: 'pointer',
                 fontSize: '9px',
                 padding: '2px 6px',
@@ -159,7 +158,7 @@ function RouteNode({
               }}
               title={`Navigate to ${node.fullPath}`}
             >
-              <Trans>Go</Trans>
+              Go
             </button>
           )}
         </div>
@@ -171,15 +170,15 @@ function RouteNode({
           marginLeft: '24px',
           marginTop: '4px',
           padding: '8px',
-          background: '#252526',
+          background: "var(--dt-bg-secondary)",
           borderRadius: '3px',
-          border: '1px solid #3c3c3c'
+          border: "1px solid var(--dt-border-primary)"
         }}>
-          <div style={{ color: '#9cdcfe', fontSize: '10px', marginBottom: '4px' }}><Trans>Parameters:</Trans></div>
+          <div style={{ color: "var(--dt-accent-primary)", fontSize: '10px', marginBottom: '4px' }}>Parameters:</div>
           {Object.entries(node.params).map(([key, value]) => (
             <div key={key} style={{ display: 'flex', gap: '8px', fontSize: '10px', marginBottom: '2px' }}>
-              <span style={{ color: '#e74c3c', minWidth: '60px' }}>{key}:</span>
-              <span style={{ color: '#27ae60' }}>{value}</span>
+              <span style={{ color: "var(--dt-status-error)", minWidth: '60px' }}>{key}:</span>
+              <span style={{ color: "var(--dt-status-success)" }}>{value}</span>
             </div>
           ))}
         </div>
@@ -191,14 +190,14 @@ function RouteNode({
           marginLeft: '24px',
           marginTop: '4px',
           padding: '8px',
-          background: '#252526',
+          background: "var(--dt-bg-secondary)",
           borderRadius: '3px',
-          border: '1px solid #3c3c3c'
+          border: "1px solid var(--dt-border-primary)"
         }}>
-          <div style={{ color: '#9cdcfe', fontSize: '10px', marginBottom: '4px' }}><Trans>Loader Data:</Trans></div>
+          <div style={{ color: "var(--dt-accent-primary)", fontSize: '10px', marginBottom: '4px' }}>Loader Data:</div>
           <pre style={{
             fontSize: '9px',
-            color: '#d4d4d4',
+            color: "var(--dt-text-primary)",
             margin: 0,
             maxHeight: '100px',
             overflow: 'auto'
@@ -267,8 +266,8 @@ export function RouteTreeView({
     return (
       <EmptyState
         icon={<Route size={48} />}
-        title={<Trans>No routes found</Trans>}
-        description={<Trans>Make sure your router adapter is properly connected and routes are defined.</Trans>}
+        title="No routes found"
+        description="Make sure your router adapter is properly connected and routes are defined."
       />
     );
   }
@@ -278,26 +277,26 @@ export function RouteTreeView({
       {/* Stats header */}
       <div style={{
         padding: '8px 12px',
-        background: '#252526',
-        border: '1px solid #3c3c3c',
+        background: "var(--dt-bg-secondary)",
+        border: "1px solid var(--dt-border-primary)",
         borderRadius: '4px',
         marginBottom: '10px',
         fontSize: '11px'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ color: '#9cdcfe' }}><Trans>Route Tree</Trans></span>
-          <span style={{ color: '#969696' }}>
-            <Trans>{stats.totalNodes} routes • {stats.activeNodes} active • {stats.matchedNodes} matched</Trans>
+          <span style={{ color: "var(--dt-accent-primary)" }}>Route Tree</span>
+          <span style={{ color: "var(--dt-text-secondary)" }}>
+            {stats.totalNodes} routes • {stats.activeNodes} active • {stats.matchedNodes} matched
           </span>
         </div>
         {currentLocation && (
-          <div style={{ marginTop: '4px', color: '#cccccc', fontSize: '10px' }}>
-            <span style={{ color: '#e74c3c' }}><Trans>Current:</Trans></span> {currentLocation.pathname}
+          <div style={{ marginTop: '4px', color: "var(--dt-text-primary)", fontSize: '10px' }}>
+            <span style={{ color: "var(--dt-status-error)" }}>Current:</span> {currentLocation.pathname}
             {currentLocation.search && (
-              <span style={{ color: '#3498db' }}>{currentLocation.search}</span>
+              <span style={{ color: "var(--dt-border-focus)" }}>{currentLocation.search}</span>
             )}
             {currentLocation.hash && (
-              <span style={{ color: '#f39c12' }}>{currentLocation.hash}</span>
+              <span style={{ color: "var(--dt-status-warning)" }}>{currentLocation.hash}</span>
             )}
           </div>
         )}
@@ -307,8 +306,8 @@ export function RouteTreeView({
       <div style={{
         flex: 1,
         overflowY: 'auto',
-        background: '#1e1e1e',
-        border: '1px solid #3c3c3c',
+        background: "var(--dt-bg-primary)",
+        border: "1px solid var(--dt-border-primary)",
         borderRadius: '4px',
         padding: '8px'
       }}>
@@ -353,16 +352,16 @@ export function RouteTreeView({
           style={{
             padding: '4px 8px',
             fontSize: '11px',
-            border: '1px solid #3c3c3c',
-            background: '#2d2d30',
-            color: '#cccccc',
+            border: "1px solid var(--dt-border-primary)",
+            background: "var(--dt-bg-tertiary)",
+            color: "var(--dt-text-primary)",
             cursor: 'pointer',
             borderRadius: '3px'
           }}
         >
-          <Trans>Expand All</Trans>
+          Expand All
         </button>
-
+        
         <button
           onClick={() => {
             // Collapse all routes
@@ -371,14 +370,14 @@ export function RouteTreeView({
           style={{
             padding: '4px 8px',
             fontSize: '11px',
-            border: '1px solid #3c3c3c',
-            background: '#2d2d30',
-            color: '#cccccc',
+            border: "1px solid var(--dt-border-primary)",
+            background: "var(--dt-bg-tertiary)",
+            color: "var(--dt-text-primary)",
             cursor: 'pointer',
             borderRadius: '3px'
           }}
         >
-          <Trans>Collapse All</Trans>
+          Collapse All
         </button>
       </div>
     </div>

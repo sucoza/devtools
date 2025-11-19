@@ -1,24 +1,25 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { loggingEventClient } from './loggingEventClient';
 import type { LogEntry, LogLevel, LoggerConfig, LogMetrics } from './loggingEventClient';
-import { Footer, type FooterStat, ConfigMenu, type ConfigMenuItem } from '@sucoza/shared-components';
+import { Footer, type FooterStat, ConfigMenu, ThemeProvider, type ConfigMenuItem } from '@sucoza/shared-components';
+import '@sucoza/shared-components/dist/styles/theme.css';
 
 const LOG_COLORS: Record<LogLevel, string> = {
-  trace: '#7f8c8d',
-  debug: '#95a5a6',
-  info: '#3498db',
-  warn: '#f39c12',
-  error: '#e74c3c',
-  fatal: '#c0392b',
+  trace: 'var(--dt-text-tertiary)',
+  debug: 'var(--dt-text-secondary)',
+  info: 'var(--dt-border-focus)',
+  warn: 'var(--dt-status-warning)',
+  error: 'var(--dt-status-error)',
+  fatal: 'var(--dt-status-error)',
 };
 
 const LOG_BG_COLORS: Record<LogLevel, string> = {
   trace: 'transparent',
   debug: 'transparent',
   info: 'transparent',
-  warn: 'rgba(243, 156, 18, 0.1)',
-  error: 'rgba(231, 76, 60, 0.1)',
-  fatal: 'rgba(192, 57, 43, 0.2)',
+  warn: 'var(--dt-status-warning-bg)',
+  error: 'var(--dt-status-error-bg)',
+  fatal: 'var(--dt-status-error-bg)',
 };
 
 // UI State persistence helpers
@@ -54,7 +55,11 @@ const loadUIState = (): Partial<LoggerUIState> => {
   }
 };
 
-export function LoggerDevToolsPanel() {
+interface LoggerDevToolsPanelProps {
+  theme?: 'light' | 'dark' | 'auto'
+}
+
+function LoggerDevToolsPanelInner() {
   // Load saved UI state
   const savedState = loadUIState();
   
@@ -552,27 +557,27 @@ export function LoggerDevToolsPanel() {
 
   const renderLogData = (data: any, depth = 0): React.ReactNode => {
     if (data === null || data === undefined) {
-      return <span style={{ color: '#7f8c8d' }}>null</span>;
+      return <span style={{ color: "var(--dt-text-tertiary)" }}>null</span>;
     }
 
     if (typeof data === 'string') {
       if (data.startsWith('[') && data.endsWith(']')) {
-        return <span style={{ color: '#95a5a6', fontStyle: 'italic' }}>{data}</span>;
+        return <span style={{ color: "var(--dt-text-secondary)", fontStyle: 'italic' }}>{data}</span>;
       }
-      return <span style={{ color: '#27ae60' }}>&quot;{data}&quot;</span>;
+      return <span style={{ color: "var(--dt-status-success)" }}>&quot;{data}&quot;</span>;
     }
 
     if (typeof data === 'number') {
-      return <span style={{ color: '#3498db' }}>{data}</span>;
+      return <span style={{ color: "var(--dt-border-focus)" }}>{data}</span>;
     }
 
     if (typeof data === 'boolean') {
-      return <span style={{ color: '#e67e22' }}>{String(data)}</span>;
+      return <span style={{ color: "var(--dt-status-warning)" }}>{String(data)}</span>;
     }
 
     if (Array.isArray(data)) {
       if (depth > 2) {
-        return <span style={{ color: '#7f8c8d' }}>[...]</span>;
+        return <span style={{ color: "var(--dt-text-tertiary)" }}>[...]</span>;
       }
 
       // Check if this looks like console formatting
@@ -597,7 +602,7 @@ export function LoggerDevToolsPanel() {
 
     if (typeof data === 'object') {
       if (depth > 2) {
-        return <span style={{ color: '#7f8c8d' }}>{'{ ... }'}</span>;
+        return <span style={{ color: "var(--dt-text-tertiary)" }}>{'{ ... }'}</span>;
       }
       const entries = Object.entries(data);
       return (
@@ -606,7 +611,7 @@ export function LoggerDevToolsPanel() {
           {entries.map(([key, value], i) => (
             <span key={key}>
               {i > 0 && ', '}
-              <span style={{ color: '#e74c3c' }}>{key}</span>: {renderLogData(value, depth + 1)}
+              <span style={{ color: "var(--dt-status-error)" }}>{key}</span>: {renderLogData(value, depth + 1)}
             </span>
           ))}
           {'}'}
@@ -659,7 +664,7 @@ export function LoggerDevToolsPanel() {
             width="100%" 
             height={chartHeight} 
             style={{ 
-              background: '#1a1a1a', 
+              background: "var(--dt-bg-secondary)", 
               borderRadius: '3px',
               display: 'block'
             }}
@@ -714,7 +719,7 @@ export function LoggerDevToolsPanel() {
                 y1={chartHeight * ratio}
                 x2={1000}
                 y2={chartHeight * ratio}
-                stroke="#3c3c3c"
+                stroke="var(--dt-border-primary)"
                 strokeWidth="0.5"
                 strokeDasharray="4,4"
               />
@@ -724,7 +729,7 @@ export function LoggerDevToolsPanel() {
             <text
               x={990}
               y={12}
-              fill="#969696"
+              fill="var(--dt-text-secondary)"
               fontSize="12"
               textAnchor="end"
             >
@@ -740,19 +745,19 @@ export function LoggerDevToolsPanel() {
                 left: Math.min(chartHover.x + 10, window.innerWidth - 200),
                 top: 'auto',
                 bottom: 'auto',
-                background: '#2d2d30',
-                border: '1px solid #3c3c3c',
+                background: "var(--dt-bg-tertiary)",
+                border: "1px solid var(--dt-border-primary)",
                 borderRadius: '4px',
                 padding: '6px 8px',
                 fontSize: '10px',
-                color: '#d4d4d4',
+                color: "var(--dt-text-primary)",
                 boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
                 zIndex: 1000,
                 pointerEvents: 'none',
                 whiteSpace: 'nowrap'
               }}
             >
-              <div style={{ marginBottom: '2px', color: '#969696', fontSize: '9px' }}>
+              <div style={{ marginBottom: '2px', color: "var(--dt-text-secondary)", fontSize: '9px' }}>
                 {new Date(chartHover.data.timestamp).toLocaleTimeString()}
               </div>
               {levelOrder.map(level => {
@@ -775,8 +780,8 @@ export function LoggerDevToolsPanel() {
               <div style={{ 
                 marginTop: '2px', 
                 paddingTop: '2px', 
-                borderTop: '1px solid #3c3c3c',
-                color: '#969696',
+                borderTop: "1px solid var(--dt-border-primary)",
+                color: "var(--dt-text-secondary)",
                 fontSize: '9px'
               }}>
                 Total: {levelOrder.reduce((sum, level) => sum + chartHover.data[level], 0)}
@@ -883,28 +888,28 @@ export function LoggerDevToolsPanel() {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        background: '#1e1e1e',
-        color: '#d4d4d4',
+        background: "var(--dt-bg-primary)",
+        color: "var(--dt-text-primary)",
         fontFamily: '"SF Mono", Monaco, Consolas, monospace',
         fontSize: '12px',
       }}>
       {/* Header with controls */}
       <div style={{
         padding: '8px',
-        borderBottom: '1px solid #3c3c3c',
+        borderBottom: "1px solid var(--dt-border-primary)",
         display: 'flex',
         alignItems: 'center',
         gap: '10px',
         flexWrap: 'wrap',
       }}>
-        <h3 style={{ margin: 0, fontSize: '14px', color: '#cccccc' }}>📝 Logger DevTools</h3>
+        <h3 style={{ margin: 0, fontSize: '14px', color: "var(--dt-text-primary)" }}>📝 Logger DevTools</h3>
         
         <button
           onClick={() => setShowSidebar(!showSidebar)}
           style={{
             background: 'transparent',
             border: 'none',
-            color: '#cccccc',
+            color: "var(--dt-text-primary)",
             padding: '2px',
             cursor: 'pointer',
             display: 'flex',
@@ -919,7 +924,7 @@ export function LoggerDevToolsPanel() {
             height="12"
             viewBox="0 0 12 12"
             style={{
-              fill: '#cccccc',
+              fill: "var(--dt-text-primary)",
               transform: showSidebar ? 'rotate(0deg)' : 'rotate(-90deg)',
               transition: 'transform 0.1s ease',
             }}
@@ -930,7 +935,7 @@ export function LoggerDevToolsPanel() {
         </button>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <label style={{ color: '#969696' }}>Enabled:</label>
+          <label style={{ color: "var(--dt-text-secondary)" }}>Enabled:</label>
           <input
             type="checkbox"
             checked={config.enabled}
@@ -945,9 +950,9 @@ export function LoggerDevToolsPanel() {
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
             padding: '4px 8px',
-            background: '#252526',
-            border: '1px solid #3c3c3c',
-            color: '#cccccc',
+            background: "var(--dt-bg-secondary)",
+            border: "1px solid var(--dt-border-primary)",
+            color: "var(--dt-text-primary)",
             borderRadius: '3px',
             flex: '1',
             minWidth: '150px',
@@ -960,9 +965,9 @@ export function LoggerDevToolsPanel() {
           }}
           style={{
             padding: '4px 8px',
-            background: '#2d2d30',
-            border: '1px solid #3c3c3c',
-            color: '#cccccc',
+            background: "var(--dt-bg-tertiary)",
+            border: "1px solid var(--dt-border-primary)",
+            color: "var(--dt-text-primary)",
             borderRadius: '3px',
             cursor: 'pointer',
             marginRight: '8px'
@@ -974,9 +979,9 @@ export function LoggerDevToolsPanel() {
           onClick={clearLogs}
           style={{
             padding: '4px 8px',
-            background: '#2d2d30',
-            border: '1px solid #3c3c3c',
-            color: '#cccccc',
+            background: "var(--dt-bg-tertiary)",
+            border: "1px solid var(--dt-border-primary)",
+            color: "var(--dt-text-primary)",
             borderRadius: '3px',
             cursor: 'pointer',
           }}
@@ -989,9 +994,9 @@ export function LoggerDevToolsPanel() {
             onClick={() => exportLogs('json')}
             style={{
               padding: '4px 8px',
-              background: '#2d2d30',
-              border: '1px solid #3c3c3c',
-              color: '#cccccc',
+              background: "var(--dt-bg-tertiary)",
+              border: "1px solid var(--dt-border-primary)",
+              color: "var(--dt-text-primary)",
               borderRadius: '3px',
               cursor: 'pointer',
               fontSize: '11px',
@@ -1003,9 +1008,9 @@ export function LoggerDevToolsPanel() {
             onClick={() => exportLogs('csv')}
             style={{
               padding: '4px 8px',
-              background: '#2d2d30',
-              border: '1px solid #3c3c3c',
-              color: '#cccccc',
+              background: "var(--dt-bg-tertiary)",
+              border: "1px solid var(--dt-border-primary)",
+              color: "var(--dt-text-primary)",
               borderRadius: '3px',
               cursor: 'pointer',
               fontSize: '11px',
@@ -1017,9 +1022,9 @@ export function LoggerDevToolsPanel() {
             onClick={() => exportLogs('txt')}
             style={{
               padding: '4px 8px',
-              background: '#2d2d30',
-              border: '1px solid #3c3c3c',
-              color: '#cccccc',
+              background: "var(--dt-bg-tertiary)",
+              border: "1px solid var(--dt-border-primary)",
+              color: "var(--dt-text-primary)",
               borderRadius: '3px',
               cursor: 'pointer',
               fontSize: '11px',
@@ -1029,7 +1034,7 @@ export function LoggerDevToolsPanel() {
           </button>
         </div>
 
-        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#969696' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', color: "var(--dt-text-secondary)" }}>
           <input
             type="checkbox"
             checked={autoScroll}
@@ -1038,7 +1043,7 @@ export function LoggerDevToolsPanel() {
           Auto-scroll
         </label>
 
-        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#969696' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: '5px', color: "var(--dt-text-secondary)" }}>
           <input
             type="checkbox"
             checked={showMetrics}
@@ -1048,7 +1053,7 @@ export function LoggerDevToolsPanel() {
         </label>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-          <label style={{ color: '#969696' }}>Console Capture:</label>
+          <label style={{ color: "var(--dt-text-secondary)" }}>Console Capture:</label>
           <input
             type="checkbox"
             checked={config.intercept.enabled}
@@ -1063,8 +1068,8 @@ export function LoggerDevToolsPanel() {
       {/* Activity Chart */}
       {showMetrics && (
         <div style={{
-          background: '#252526',
-          borderBottom: '1px solid #3c3c3c',
+          background: "var(--dt-bg-secondary)",
+          borderBottom: "1px solid var(--dt-border-primary)",
         }}>
           {/* Chart Header */}
           <div 
@@ -1074,7 +1079,7 @@ export function LoggerDevToolsPanel() {
               justifyContent: 'space-between',
               padding: '8px 12px',
               cursor: 'pointer',
-              borderBottom: chartExpanded ? '1px solid #3c3c3c' : 'none',
+              borderBottom: chartExpanded ? "1px solid var(--dt-border-primary)" : "none",
             }}
             onClick={() => setChartExpanded(!chartExpanded)}
           >
@@ -1084,7 +1089,7 @@ export function LoggerDevToolsPanel() {
               gap: '8px',
             }}>
               <span style={{ 
-                color: '#969696', 
+                color: "var(--dt-text-secondary)", 
                 fontSize: '11px',
                 fontWeight: '500',
                 transition: 'transform 0.2s ease',
@@ -1093,7 +1098,7 @@ export function LoggerDevToolsPanel() {
                 ▶
               </span>
               <span style={{ 
-                color: '#cccccc', 
+                color: "var(--dt-text-primary)", 
                 fontSize: '12px',
                 fontWeight: '500'
               }}>
@@ -1101,7 +1106,7 @@ export function LoggerDevToolsPanel() {
               </span>
             </div>
             <span style={{
-              color: '#969696',
+              color: "var(--dt-text-secondary)",
               fontSize: '10px',
             }}>
               {chartExpanded ? 'Click to collapse' : 'Click to expand'}
@@ -1128,19 +1133,19 @@ export function LoggerDevToolsPanel() {
           <>
             <div style={{
               width: `${sidebarWidth}px`,
-              background: '#252526',
+              background: "var(--dt-bg-secondary)",
               overflowY: 'auto',
               padding: '8px',
               fontSize: '11px',
             }}>
             <div style={{ marginBottom: '12px' }}>
-              <h4 style={{ margin: '0 0 8px 0', color: '#cccccc', fontSize: '12px' }}>📊 Levels</h4>
+              <h4 style={{ margin: '0 0 8px 0', color: "var(--dt-text-primary)", fontSize: '12px' }}>📊 Levels</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                 <div
                   style={{
                     padding: '2px 6px',
                     cursor: 'pointer',
-                    backgroundColor: levelFilter === 'all' ? '#007acc' : 'transparent',
+                    backgroundColor: levelFilter === "all" ? "var(--dt-border-focus)" : "transparent",
                     borderRadius: '3px',
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1148,7 +1153,7 @@ export function LoggerDevToolsPanel() {
                   onClick={() => setLevelFilter('all')}
                 >
                   <span>All</span>
-                  <span style={{ color: '#969696' }}>{logs.length}</span>
+                  <span style={{ color: "var(--dt-text-secondary)" }}>{logs.length}</span>
                 </div>
                 {facetData.levels.map(([level, count]) => (
                   <div
@@ -1156,7 +1161,7 @@ export function LoggerDevToolsPanel() {
                     style={{
                       padding: '2px 6px',
                       cursor: 'pointer',
-                      backgroundColor: levelFilter === level ? '#007acc' : 'transparent',
+                      backgroundColor: levelFilter === level ? "var(--dt-border-focus)" : "transparent",
                       borderRadius: '3px',
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -1165,20 +1170,20 @@ export function LoggerDevToolsPanel() {
                     onClick={() => setLevelFilter(level)}
                   >
                     <span style={{ color: LOG_COLORS[level] }}>{level}</span>
-                    <span style={{ color: '#969696' }}>{count}</span>
+                    <span style={{ color: "var(--dt-text-secondary)" }}>{count}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             <div style={{ marginBottom: '12px' }}>
-              <h4 style={{ margin: '0 0 8px 0', color: '#cccccc', fontSize: '12px' }}>🏷️ Categories</h4>
+              <h4 style={{ margin: '0 0 8px 0', color: "var(--dt-text-primary)", fontSize: '12px' }}>🏷️ Categories</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                 <div
                   style={{
                     padding: '2px 6px',
                     cursor: 'pointer',
-                    backgroundColor: categoryFilter === 'all' ? '#007acc' : 'transparent',
+                    backgroundColor: categoryFilter === "all" ? "var(--dt-border-focus)" : "transparent",
                     borderRadius: '3px',
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -1186,7 +1191,7 @@ export function LoggerDevToolsPanel() {
                   onClick={() => setCategoryFilter('all')}
                 >
                   <span>All</span>
-                  <span style={{ color: '#969696' }}>{logs.length}</span>
+                  <span style={{ color: "var(--dt-text-secondary)" }}>{logs.length}</span>
                 </div>
                 {facetData.categories.slice(0, 10).map(([category, count]) => (
                   <div
@@ -1194,7 +1199,7 @@ export function LoggerDevToolsPanel() {
                     style={{
                       padding: '2px 6px',
                       cursor: 'pointer',
-                      backgroundColor: categoryFilter === category ? '#007acc' : 'transparent',
+                      backgroundColor: categoryFilter === category ? "var(--dt-border-focus)" : "transparent",
                       borderRadius: '3px',
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -1207,11 +1212,11 @@ export function LoggerDevToolsPanel() {
                       whiteSpace: 'nowrap',
                       maxWidth: '150px'
                     }}>{category}</span>
-                    <span style={{ color: '#969696' }}>{count}</span>
+                    <span style={{ color: "var(--dt-text-secondary)" }}>{count}</span>
                   </div>
                 ))}
                 {facetData.categories.length > 10 && (
-                  <div style={{ color: '#969696', padding: '2px 6px', fontSize: '10px' }}>
+                  <div style={{ color: "var(--dt-text-secondary)", padding: '2px 6px', fontSize: '10px' }}>
                     +{facetData.categories.length - 10} more
                   </div>
                 )}
@@ -1220,7 +1225,7 @@ export function LoggerDevToolsPanel() {
 
             {facetData.tags.length > 0 && (
               <div style={{ marginBottom: '12px' }}>
-                <h4 style={{ margin: '0 0 8px 0', color: '#cccccc', fontSize: '12px' }}>🏷️ Tags</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: "var(--dt-text-primary)", fontSize: '12px' }}>🏷️ Tags</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                   {facetData.tags.slice(0, 8).map(([tag, count]) => (
                     <div
@@ -1233,7 +1238,7 @@ export function LoggerDevToolsPanel() {
                         display: 'flex',
                         justifyContent: 'space-between',
                         fontSize: '10px',
-                        color: '#4ec9b0',
+                        color: "var(--dt-accent-secondary)",
                       }}
                       onClick={() => {
                         // Add tag to search query if not already present
@@ -1243,7 +1248,7 @@ export function LoggerDevToolsPanel() {
                       }}
                     >
                       <span>{tag}</span>
-                      <span style={{ color: '#969696' }}>{count}</span>
+                      <span style={{ color: "var(--dt-text-secondary)" }}>{count}</span>
                     </div>
                   ))}
                 </div>
@@ -1252,23 +1257,23 @@ export function LoggerDevToolsPanel() {
 
             {facetData.sources.length > 0 && (
               <div>
-                <h4 style={{ margin: '0 0 8px 0', color: '#cccccc', fontSize: '12px' }}>📁 Sources</h4>
+                <h4 style={{ margin: '0 0 8px 0', color: "var(--dt-text-primary)", fontSize: '12px' }}>📁 Sources</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                   <div
                     style={{
                       padding: '2px 6px',
                       cursor: 'pointer',
-                      backgroundColor: sourceFilter === 'all' ? '#007acc' : 'transparent',
+                      backgroundColor: sourceFilter === "all" ? "var(--dt-border-focus)" : "transparent",
                       borderRadius: '3px',
                       display: 'flex',
                       justifyContent: 'space-between',
                       fontSize: '10px',
-                      color: '#dcdcaa',
+                      color: "var(--dt-text-secondary)",
                     }}
                     onClick={() => setSourceFilter('all')}
                   >
                     <span>All</span>
-                    <span style={{ color: '#969696' }}>{logs.length}</span>
+                    <span style={{ color: "var(--dt-text-secondary)" }}>{logs.length}</span>
                   </div>
                   {facetData.sources.slice(0, 6).map(([source, count]) => (
                     <div
@@ -1276,12 +1281,12 @@ export function LoggerDevToolsPanel() {
                       style={{
                         padding: '2px 6px',
                         cursor: 'pointer',
-                        backgroundColor: sourceFilter === source ? '#007acc' : 'transparent',
+                        backgroundColor: sourceFilter === source ? "var(--dt-border-focus)" : "transparent",
                         borderRadius: '3px',
                         display: 'flex',
                         justifyContent: 'space-between',
                         fontSize: '10px',
-                        color: '#dcdcaa',
+                        color: "var(--dt-text-secondary)",
                       }}
                       onClick={() => setSourceFilter(source)}
                     >
@@ -1291,7 +1296,7 @@ export function LoggerDevToolsPanel() {
                         whiteSpace: 'nowrap',
                         maxWidth: '120px'
                       }}>{source}</span>
-                      <span style={{ color: '#969696' }}>{count}</span>
+                      <span style={{ color: "var(--dt-text-secondary)" }}>{count}</span>
                     </div>
                   ))}
                 </div>
@@ -1303,10 +1308,10 @@ export function LoggerDevToolsPanel() {
           <div
             style={{
               width: '4px',
-              background: '#3c3c3c',
+              background: "var(--dt-border-primary)",
               cursor: 'col-resize',
-              borderLeft: '1px solid #2d2d30',
-              borderRight: '1px solid #2d2d30',
+              borderLeft: "1px solid var(--dt-border-secondary)",
+              borderRight: "1px solid var(--dt-border-secondary)",
               position: 'relative',
             }}
             onMouseDown={(e) => {
@@ -1336,7 +1341,7 @@ export function LoggerDevToolsPanel() {
               transform: 'translate(-50%, -50%)',
               width: '1px',
               height: '20px',
-              background: '#666',
+              background: "var(--dt-text-tertiary)",
             }} />
           </div>
           </>
@@ -1354,7 +1359,7 @@ export function LoggerDevToolsPanel() {
           {filteredLogs.length === 0 ? (
             <div style={{ 
               textAlign: 'center', 
-              color: '#666', 
+              color: "var(--dt-text-tertiary)", 
               marginTop: '20px' 
             }}>
               No logs to display
@@ -1369,14 +1374,14 @@ export function LoggerDevToolsPanel() {
                   onDoubleClick={() => toggleLogExpansion(log.id)}
                   style={{
                     padding: '4px 8px',
-                    borderBottom: '1px solid #2d2d30',
+                    borderBottom: "1px solid var(--dt-border-primary)",
                     cursor: 'pointer',
                     background: selectedLog?.id === log.id ? '#094771' : LOG_BG_COLORS[log.level],
                     fontSize: '11px',
                   }}
                 >
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'baseline' }}>
-                    <span style={{ color: '#666', fontSize: '10px' }}>
+                    <span style={{ color: "var(--dt-text-tertiary)", fontSize: '10px' }}>
                       {new Date(log.timestamp).toLocaleTimeString('en-US', {
                         hour12: false,
                         hour: '2-digit',
@@ -1393,7 +1398,7 @@ export function LoggerDevToolsPanel() {
                     </span>
                     {log.category && (
                       <span style={{ 
-                        color: log.category === 'Console' ? '#ff8c00' : '#9cdcfe',
+                        color: log.category === "Console" ? "var(--dt-status-warning)" : "var(--dt-accent-primary)",
                         fontStyle: log.category === 'Console' ? 'italic' : 'normal'
                       }}>
                         [{log.category}]
@@ -1401,7 +1406,7 @@ export function LoggerDevToolsPanel() {
                     )}
                     {log.context?.intercepted && (
                       <span style={{ 
-                        color: '#ff8c00', 
+                        color: "var(--dt-status-warning)", 
                         fontSize: '10px',
                         background: 'rgba(255, 140, 0, 0.1)',
                         padding: '1px 4px',
@@ -1413,7 +1418,7 @@ export function LoggerDevToolsPanel() {
                     )}
                     <span style={{ flex: 1 }}>{renderLogMessage(log)}</span>
                     {log.data !== undefined && (
-                      <span style={{ color: '#969696' }}>
+                      <span style={{ color: "var(--dt-text-secondary)" }}>
                         {isExpanded ? '▾' : '▸'}
                       </span>
                     )}
@@ -1423,7 +1428,7 @@ export function LoggerDevToolsPanel() {
                       marginTop: '4px', 
                       marginLeft: '20px',
                       padding: '4px',
-                      background: '#1e1e1e',
+                      background: "var(--dt-bg-primary)",
                       borderRadius: '3px',
                     }}>
                       {renderLogData(log.data)}
@@ -1437,10 +1442,10 @@ export function LoggerDevToolsPanel() {
                           style={{
                             padding: '1px 4px',
                             marginRight: '4px',
-                            background: '#2d2d30',
+                            background: "var(--dt-bg-tertiary)",
                             borderRadius: '2px',
                             fontSize: '10px',
-                            color: '#969696',
+                            color: "var(--dt-text-secondary)",
                           }}
                         >
                           {tag}
@@ -1449,14 +1454,14 @@ export function LoggerDevToolsPanel() {
                     </div>
                   )}
                   {log.fields && (
-                    <div style={{ marginTop: '2px', fontSize: '10px', color: '#666' }}>
+                    <div style={{ marginTop: '2px', fontSize: '10px', color: "var(--dt-text-tertiary)" }}>
                       {log.fields.correlationId && (
                         <span style={{
                           marginRight: '8px',
                           padding: '1px 4px',
                           background: 'rgba(78, 201, 176, 0.1)',
                           borderRadius: '2px',
-                          color: '#4ec9b0',
+                          color: "var(--dt-accent-secondary)",
                         }}>
                           🔗 {log.fields.correlationId}
                         </span>
@@ -1467,7 +1472,7 @@ export function LoggerDevToolsPanel() {
                           padding: '1px 4px',
                           background: 'rgba(86, 156, 214, 0.1)',
                           borderRadius: '2px',
-                          color: '#569cd6',
+                          color: "var(--dt-border-focus)",
                         }}>
                           🔍 {log.fields.traceId.substring(0, 8)}...
                         </span>
@@ -1478,7 +1483,7 @@ export function LoggerDevToolsPanel() {
                           padding: '1px 4px',
                           background: 'rgba(206, 145, 120, 0.1)',
                           borderRadius: '2px',
-                          color: '#ce9178',
+                          color: "var(--dt-text-secondary)",
                         }}>
                           👤 {log.fields.userId}
                         </span>
@@ -1489,7 +1494,7 @@ export function LoggerDevToolsPanel() {
                           padding: '1px 4px',
                           background: 'rgba(220, 220, 170, 0.1)',
                           borderRadius: '2px',
-                          color: '#dcdcaa',
+                          color: "var(--dt-text-secondary)",
                         }}>
                           📨 {log.fields.requestId}
                         </span>
@@ -1500,7 +1505,7 @@ export function LoggerDevToolsPanel() {
                           padding: '1px 4px',
                           background: 'rgba(181, 206, 168, 0.1)',
                           borderRadius: '2px',
-                          color: '#b5cea8',
+                          color: "var(--dt-status-success)",
                         }}>
                           ⏱️ {log.fields.duration}ms
                         </span>
@@ -1517,19 +1522,19 @@ export function LoggerDevToolsPanel() {
         {selectedLog && (
           <div style={{
             width: '300px',
-            borderLeft: '1px solid #3c3c3c',
+            borderLeft: "1px solid var(--dt-border-primary)",
             padding: '10px',
             overflowY: 'auto',
           }}>
-            <h4 style={{ margin: '0 0 10px 0', color: '#9cdcfe' }}>Log Details</h4>
+            <h4 style={{ margin: '0 0 10px 0', color: "var(--dt-accent-primary)" }}>Log Details</h4>
             
             <div style={{ marginBottom: '10px' }}>
-              <div style={{ color: '#969696', marginBottom: '2px' }}>Time:</div>
+              <div style={{ color: "var(--dt-text-secondary)", marginBottom: '2px' }}>Time:</div>
               <div>{new Date(selectedLog.timestamp).toLocaleString()}</div>
             </div>
 
             <div style={{ marginBottom: '10px' }}>
-              <div style={{ color: '#969696', marginBottom: '2px' }}>Level:</div>
+              <div style={{ color: "var(--dt-text-secondary)", marginBottom: '2px' }}>Level:</div>
               <div style={{ color: LOG_COLORS[selectedLog.level] }}>
                 {selectedLog.level.toUpperCase()}
               </div>
@@ -1537,23 +1542,23 @@ export function LoggerDevToolsPanel() {
 
             {selectedLog.category && (
               <div style={{ marginBottom: '10px' }}>
-                <div style={{ color: '#969696', marginBottom: '2px' }}>Category:</div>
+                <div style={{ color: "var(--dt-text-secondary)", marginBottom: '2px' }}>Category:</div>
                 <div>{selectedLog.category}</div>
               </div>
             )}
 
             <div style={{ marginBottom: '10px' }}>
-              <div style={{ color: '#969696', marginBottom: '2px' }}>Message:</div>
+              <div style={{ color: "var(--dt-text-secondary)", marginBottom: '2px' }}>Message:</div>
               <div style={{ wordBreak: 'break-word' }}>{renderLogMessage(selectedLog)}</div>
             </div>
 
             {selectedLog.data !== undefined && (
               <div style={{ marginBottom: '10px' }}>
-                <div style={{ color: '#969696', marginBottom: '2px' }}>Data:</div>
+                <div style={{ color: "var(--dt-text-secondary)", marginBottom: '2px' }}>Data:</div>
                 <pre style={{
                   margin: 0,
                   padding: '4px',
-                  background: '#252526',
+                  background: "var(--dt-bg-secondary)",
                   borderRadius: '3px',
                   fontSize: '10px',
                   overflow: 'auto',
@@ -1565,11 +1570,11 @@ export function LoggerDevToolsPanel() {
 
             {selectedLog.context && (
               <div style={{ marginBottom: '10px' }}>
-                <div style={{ color: '#969696', marginBottom: '2px' }}>Context:</div>
+                <div style={{ color: "var(--dt-text-secondary)", marginBottom: '2px' }}>Context:</div>
                 <pre style={{
                   margin: 0,
                   padding: '4px',
-                  background: '#252526',
+                  background: "var(--dt-bg-secondary)",
                   borderRadius: '3px',
                   fontSize: '10px',
                   overflow: 'auto',
@@ -1581,9 +1586,9 @@ export function LoggerDevToolsPanel() {
 
             {selectedLog.fields && Object.keys(selectedLog.fields).length > 0 && (
               <div style={{ marginBottom: '10px' }}>
-                <div style={{ color: '#969696', marginBottom: '2px' }}>Structured Fields:</div>
+                <div style={{ color: "var(--dt-text-secondary)", marginBottom: '2px' }}>Structured Fields:</div>
                 <div style={{
-                  background: '#252526',
+                  background: "var(--dt-bg-secondary)",
                   borderRadius: '3px',
                   padding: '4px',
                   fontSize: '10px',
@@ -1593,17 +1598,17 @@ export function LoggerDevToolsPanel() {
                       display: 'flex',
                       gap: '8px',
                       padding: '2px 0',
-                      borderBottom: '1px solid #333',
+                      borderBottom: "1px solid var(--dt-border-primary)",
                     }}>
                       <span style={{
-                        color: '#4ec9b0',
+                        color: "var(--dt-accent-secondary)",
                         fontWeight: 'bold',
                         minWidth: '120px',
                       }}>
                         {key}:
                       </span>
                       <span style={{
-                        color: typeof value === 'number' ? '#b5cea8' : '#ce9178',
+                        color: typeof value === "number" ? "var(--dt-status-success)" : "var(--dt-text-secondary)",
                         wordBreak: 'break-word',
                         flex: 1,
                       }}>
@@ -1617,7 +1622,7 @@ export function LoggerDevToolsPanel() {
 
             {selectedLog.source && (
               <div style={{ marginBottom: '10px' }}>
-                <div style={{ color: '#969696', marginBottom: '2px' }}>Source:</div>
+                <div style={{ color: "var(--dt-text-secondary)", marginBottom: '2px' }}>Source:</div>
                 <div style={{ fontSize: '10px' }}>
                   {selectedLog.source.file && (
                     <div>{selectedLog.source.file}:{selectedLog.source.line}:{selectedLog.source.column}</div>
@@ -1631,15 +1636,15 @@ export function LoggerDevToolsPanel() {
 
             {selectedLog.stack && (
               <div style={{ marginBottom: '10px' }}>
-                <div style={{ color: '#969696', marginBottom: '2px' }}>Stack Trace:</div>
+                <div style={{ color: "var(--dt-text-secondary)", marginBottom: '2px' }}>Stack Trace:</div>
                 <pre style={{
                   margin: 0,
                   padding: '4px',
-                  background: '#252526',
+                  background: "var(--dt-bg-secondary)",
                   borderRadius: '3px',
                   fontSize: '10px',
                   overflow: 'auto',
-                  color: '#e74c3c',
+                  color: "var(--dt-status-error)",
                 }}>
                   {selectedLog.stack}
                 </pre>
@@ -1708,4 +1713,21 @@ export function LoggerDevToolsPanel() {
       </div>
     </div>
   );
+}
+
+export function LoggerDevToolsPanel(props: LoggerDevToolsPanelProps = {}) {
+  const { theme = 'auto' } = props
+
+  const resolvedTheme = useMemo(() => {
+    if (theme === 'auto') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+    return theme
+  }, [theme])
+
+  return (
+    <ThemeProvider defaultTheme={resolvedTheme}>
+      <LoggerDevToolsPanelInner />
+    </ThemeProvider>
+  )
 }

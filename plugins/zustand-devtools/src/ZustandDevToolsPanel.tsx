@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Trans } from '@lingui/macro';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Toolbar,
   Tabs,
@@ -12,8 +11,10 @@ import {
   StatusIndicator,
   EmptyState,
   ConfigMenu,
+  ThemeProvider,
   type ConfigMenuItem
 } from '@sucoza/shared-components';
+import '@sucoza/shared-components/dist/styles/theme.css';
 import { zustandEventClient } from './zustandEventClient';
 import type { ZustandStoreState } from './zustandEventClient';
 
@@ -56,7 +57,11 @@ const loadUIState = (): Partial<ZustandUIState> => {
   }
 };
 
-export function ZustandDevToolsPanel() {
+interface ZustandDevToolsPanelProps {
+  theme?: 'light' | 'dark' | 'auto'
+}
+
+function ZustandDevToolsPanelInner() {
   // Load saved UI state
   const savedState = loadUIState();
   
@@ -197,7 +202,7 @@ export function ZustandDevToolsPanel() {
           <span style={{ background: '#3c2415', color: '#f48771', textDecoration: 'line-through', marginRight: '8px' }}>
             {renderJson(prev)}
           </span>
-          <span style={{ background: '#1e3a28', color: '#4ec9b0' }}>
+          <span style={{ background: '#1e3a28', color: "var(--dt-accent-secondary)" }}>
             {renderJson(next)}
           </span>
         </div>
@@ -217,7 +222,7 @@ export function ZustandDevToolsPanel() {
               // Added property
               return (
                 <div key={key} style={{ marginLeft: '20px', background: '#1e3a28' }}>
-                  <span style={{ color: '#4ec9b0' }}>+ &quot;{key}&quot;: {renderJson(next[key])}</span>
+                  <span style={{ color: "var(--dt-accent-secondary)" }}>+ &quot;{key}&quot;: {renderJson(next[key])}</span>
                 </div>
               );
             } else if (!hasInNext) {
@@ -231,7 +236,7 @@ export function ZustandDevToolsPanel() {
               // Modified property
               return (
                 <div key={key} style={{ marginLeft: '20px' }}>
-                  <span style={{ color: '#e74c3c' }}>&quot;{key}&quot;</span>
+                  <span style={{ color: "var(--dt-status-error)" }}>&quot;{key}&quot;</span>
                   <span style={{ color: '#ecf0f1' }}>: </span>
                   {renderDiff(prev[key], next[key], `${path}.${key}`)}
                 </div>
@@ -240,7 +245,7 @@ export function ZustandDevToolsPanel() {
               // Unchanged property
               return (
                 <div key={key} style={{ marginLeft: '20px' }}>
-                  <span style={{ color: '#e74c3c' }}>&quot;{key}&quot;</span>
+                  <span style={{ color: "var(--dt-status-error)" }}>&quot;{key}&quot;</span>
                   <span style={{ color: '#ecf0f1' }}>: </span>
                   {renderJson(next[key])}
                 </div>
@@ -257,7 +262,7 @@ export function ZustandDevToolsPanel() {
         <span style={{ background: '#3c2415', color: '#f48771', textDecoration: 'line-through', marginRight: '8px' }}>
           {String(prev)}
         </span>
-        <span style={{ background: '#1e3a28', color: '#4ec9b0' }}>
+        <span style={{ background: '#1e3a28', color: "var(--dt-accent-secondary)" }}>
           {String(next)}
         </span>
       </span>
@@ -280,7 +285,7 @@ export function ZustandDevToolsPanel() {
     }
 
     if (typeof data === 'number') {
-      return <span style={{ color: '#3498db' }}>{String(data)}</span>;
+      return <span style={{ color: "var(--dt-border-focus)" }}>{String(data)}</span>;
     }
 
     if (typeof data === 'boolean') {
@@ -366,7 +371,7 @@ export function ZustandDevToolsPanel() {
             <div style={{ marginLeft: '16px', borderLeft: '1px solid #404040', paddingLeft: '8px' }}>
               {entries.map(([key, value]) => (
                 <div key={key} style={{ margin: '2px 0', display: 'flex', alignItems: 'flex-start' }}>
-                  <span style={{ color: '#e74c3c', fontSize: '11px', minWidth: 'fit-content' }}>&quot;{key}&quot;:</span>
+                  <span style={{ color: "var(--dt-status-error)", fontSize: '11px', minWidth: 'fit-content' }}>&quot;{key}&quot;:</span>
                   <div style={{ marginLeft: '8px' }}>
                     <TreeNode data={value} path={`${path}.${key}`} depth={depth + 1} />
                   </div>
@@ -395,7 +400,7 @@ export function ZustandDevToolsPanel() {
     }
 
     if (typeof data === 'number') {
-      return <span style={{ color: '#3498db' }}>{String(data)}</span>;
+      return <span style={{ color: "var(--dt-border-focus)" }}>{String(data)}</span>;
     }
 
     if (typeof data === 'boolean') {
@@ -430,7 +435,7 @@ export function ZustandDevToolsPanel() {
           <span style={{ color: '#95a5a6' }}>{'{'}</span>
           {Object.entries(data).map(([key, value]) => (
             <div key={key} style={{ marginLeft: '20px' }}>
-              <span style={{ color: '#e74c3c' }}>&quot;{key}&quot;</span>
+              <span style={{ color: "var(--dt-status-error)" }}>&quot;{key}&quot;</span>
               <span style={{ color: '#ecf0f1' }}>: </span>
               {renderJson(value, depth + 1)}
             </div>
@@ -567,10 +572,10 @@ export function ZustandDevToolsPanel() {
             checked={autoRefresh}
             onChange={(e) => setAutoRefresh(e.target.checked)}
           />
-          <Trans>Auto-refresh</Trans>
+          Auto-refresh
         </label>
       ),
-      tooltip: <Trans>Toggle automatic refresh of store data</Trans>,
+      tooltip: 'Toggle automatic refresh of store data',
     },
   ];
 
@@ -578,21 +583,21 @@ export function ZustandDevToolsPanel() {
   const configMenuItems: ConfigMenuItem[] = [
     {
       id: 'toggle-recording',
-      label: autoRefresh ? <Trans>Stop Recording</Trans> : <Trans>Start Recording</Trans>,
+      label: autoRefresh ? 'Stop Recording' : 'Start Recording',
       icon: '🔄',
       onClick: handleToggleRecording,
       shortcut: 'Ctrl+R'
     },
     {
       id: 'take-snapshot',
-      label: <Trans>Take Snapshot</Trans>,
+      label: 'Take Snapshot',
       icon: '📸',
       onClick: handleTakeSnapshot,
       shortcut: 'Ctrl+T'
     },
     {
       id: 'save-snapshot',
-      label: <Trans>Save State Snapshot</Trans>,
+      label: 'Save State Snapshot',
       icon: '💾',
       onClick: () => setShowSnapshotDialog(true),
       disabled: Object.keys(stores).length === 0,
@@ -600,7 +605,7 @@ export function ZustandDevToolsPanel() {
     },
     {
       id: 'clear-history',
-      label: <Trans>Clear State History</Trans>,
+      label: 'Clear State History',
       icon: '🗑️',
       onClick: handleClearHistory,
       disabled: actionHistory.length === 0,
@@ -608,7 +613,7 @@ export function ZustandDevToolsPanel() {
     },
     {
       id: 'export-state',
-      label: <Trans>Export State</Trans>,
+      label: 'Export State',
       icon: '💾',
       onClick: handleExportState,
       disabled: Object.keys(stores).length === 0,
@@ -616,7 +621,7 @@ export function ZustandDevToolsPanel() {
     },
     {
       id: 'reset-store',
-      label: <Trans>Reset Store</Trans>,
+      label: 'Reset Store',
       icon: '🔄',
       onClick: handleResetStore,
       disabled: !selectedStore,
@@ -624,7 +629,7 @@ export function ZustandDevToolsPanel() {
     },
     {
       id: 'settings',
-      label: <Trans>Settings</Trans>,
+      label: 'Settings',
       icon: '⚙️',
       onClick: () => {
         // Open settings - could expand to a settings modal/tab
@@ -637,11 +642,11 @@ export function ZustandDevToolsPanel() {
     <div style={{ position: 'relative', height: '100%' }}>
       <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Toolbar
-        title={<Trans>🔍 Zustand Store Inspector</Trans>}
+        title="🔍 Zustand Store Inspector"
         showSearch={true}
         searchValue={searchQuery}
         onSearchChange={setSearchQuery}
-        searchPlaceholder={<Trans>Search stores...</Trans>}
+        searchPlaceholder="Search stores..."
         actions={toolbarActions}
         showClear={true}
         onClear={() => setActionHistory([])}
@@ -652,9 +657,9 @@ export function ZustandDevToolsPanel() {
       <div style={{ display: 'flex', gap: '10px', flex: 1, overflow: 'hidden' }}>
         {/* Store List - Left Side */}
         <div style={{ flex: '0 0 250px', borderRight: '1px solid #3c3c3c' }}>
-          <div style={{ padding: '8px 10px', borderBottom: '1px solid #3c3c3c' }}>
+          <div style={{ padding: '8px 10px', borderBottom: "1px solid var(--dt-border-primary)" }}>
             <h4 style={{ margin: '0', color: '#9cdcfe', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Trans>Stores</Trans>
+              Stores 
               <Badge variant="outline" size="sm">
                 {filteredStores.length}
               </Badge>
@@ -671,10 +676,10 @@ export function ZustandDevToolsPanel() {
                     onClick={() => toggleStoreCollapse(name)}
                     style={{ 
                       fontWeight: '500', 
-                      color: '#4ec9b0', 
+                      color: "var(--dt-accent-secondary)", 
                       marginBottom: '4px',
                       padding: '4px 8px',
-                      background: '#2d2d30',
+                      background: "var(--dt-bg-tertiary)",
                       borderRadius: '3px',
                       cursor: 'pointer',
                       display: 'flex',
@@ -707,18 +712,16 @@ export function ZustandDevToolsPanel() {
                           fontSize: '11px'
                         }}
                       >
-                        <div style={{ color: '#cccccc', fontWeight: '500', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <Trans>Current</Trans>
-                          <StatusIndicator
-                            status="success"
-                            size="xs"
+                        <div style={{ color: "var(--dt-text-primary)", fontWeight: '500', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          Current
+                          <StatusIndicator 
+                            status="success" 
+                            size="xs" 
                             label="Current"
                           />
                         </div>
-                        <div style={{ fontSize: '10px', color: '#969696' }}>
-                          <Trans>
-                            {countProperties(store.state)} properties
-                          </Trans>
+                        <div style={{ fontSize: '10px', color: "var(--dt-text-secondary)" }}>
+                          {countProperties(store.state)} properties
                         </div>
                       </div>
                       
@@ -743,13 +746,11 @@ export function ZustandDevToolsPanel() {
                               fontSize: '11px'
                             }}
                           >
-                            <div style={{ color: '#969696', fontSize: '10px' }}>
+                            <div style={{ color: "var(--dt-text-secondary)", fontSize: '10px' }}>
                               {new Date(action.timestamp).toLocaleTimeString()}
                             </div>
-                            <div style={{ fontSize: '10px', color: '#969696' }}>
-                              <Trans>
-                                {countProperties(action.nextState)} properties
-                              </Trans>
+                            <div style={{ fontSize: '10px', color: "var(--dt-text-secondary)" }}>
+                              {countProperties(action.nextState)} properties
                             </div>
                           </div>
                         ))}
@@ -767,8 +768,8 @@ export function ZustandDevToolsPanel() {
             <>
               <Tabs
                 tabs={[
-                  { id: 'state', label: <Trans>State</Trans> },
-                  { id: 'diff', label: <Trans>Diff</Trans> }
+                  { id: 'state', label: 'State' },
+                  { id: 'diff', label: 'Diff' }
                 ]}
                 activeTab={activeTab}
                 onTabChange={(tabId) => setActiveTab(tabId as 'state' | 'diff')}
@@ -790,11 +791,9 @@ export function ZustandDevToolsPanel() {
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#9cdcfe' }}>
                       <span style={{ fontSize: '16px' }}>⏱️</span>
-                      <span style={{ fontWeight: 'bold' }}><Trans>Time-Travel Mode</Trans></span>
-                      <span style={{ color: '#cccccc' }}>
-                        <Trans>
-                          Viewing state from {new Date(actionHistory[selectedHistoryIndex].timestamp).toLocaleTimeString()}
-                        </Trans>
+                      <span style={{ fontWeight: 'bold' }}>Time-Travel Mode</span>
+                      <span style={{ color: "var(--dt-text-primary)" }}>
+                        Viewing state from {new Date(actionHistory[selectedHistoryIndex].timestamp).toLocaleTimeString()}
                       </span>
                     </div>
                     <div style={{ display: 'flex', gap: '8px' }}>
@@ -809,9 +808,9 @@ export function ZustandDevToolsPanel() {
                         style={{
                           padding: '4px 8px',
                           fontSize: '11px',
-                          border: '1px solid #3c3c3c',
-                          background: '#2d2d30',
-                          color: '#cccccc',
+                          border: "1px solid var(--dt-border-primary)",
+                          background: "var(--dt-bg-tertiary)",
+                          color: "var(--dt-text-primary)",
                           cursor: 'pointer',
                           borderRadius: '3px',
                           opacity: (() => {
@@ -823,53 +822,53 @@ export function ZustandDevToolsPanel() {
                         }}
                         title="Navigate to previous state"
                       >
-                        <Trans>◀ Prev</Trans>
+                        ◀ Prev
                       </button>
                       <button
                         onClick={() => handleNavigateHistory('next')}
                         style={{
                           padding: '4px 8px',
                           fontSize: '11px',
-                          border: '1px solid #3c3c3c',
-                          background: '#2d2d30',
-                          color: '#cccccc',
+                          border: "1px solid var(--dt-border-primary)",
+                          background: "var(--dt-bg-tertiary)",
+                          color: "var(--dt-text-primary)",
                           cursor: 'pointer',
                           borderRadius: '3px'
                         }}
                         title="Navigate to next state or return to current"
                       >
-                        <Trans>Next ▶</Trans>
+                        Next ▶
                       </button>
                       <button
                         onClick={handleRestoreState}
                         style={{
                           padding: '4px 12px',
                           fontSize: '11px',
-                          border: '1px solid #3c3c3c',
+                          border: "1px solid var(--dt-border-primary)",
                           background: '#1e5f1e',
-                          color: '#4ec9b0',
+                          color: "var(--dt-accent-secondary)",
                           cursor: 'pointer',
                           borderRadius: '3px',
                           fontWeight: 'bold'
                         }}
                         title="Rewind store to this state"
                       >
-                        <Trans>🔄 Rewind to Here</Trans>
+                        🔄 Rewind to Here
                       </button>
                       <button
                         onClick={handleJumpToCurrent}
                         style={{
                           padding: '4px 8px',
                           fontSize: '11px',
-                          border: '1px solid #3c3c3c',
-                          background: '#2d2d30',
-                          color: '#cccccc',
+                          border: "1px solid var(--dt-border-primary)",
+                          background: "var(--dt-bg-tertiary)",
+                          color: "var(--dt-text-primary)",
                           cursor: 'pointer',
                           borderRadius: '3px'
                         }}
                         title="Return to current state"
                       >
-                        <Trans>✕ Exit</Trans>
+                        ✕ Exit
                       </button>
                     </div>
                   </div>
@@ -879,27 +878,27 @@ export function ZustandDevToolsPanel() {
                   <div style={{ fontSize: '12px', color: '#9cdcfe' }}>
                     {activeTab === 'state' ? (
                       selectedHistoryIndex !== null
-                        ? <Trans>Historical State - {new Date(actionHistory[selectedHistoryIndex].timestamp).toLocaleTimeString()}</Trans>
-                        : <Trans>Current State</Trans>
+                        ? `Historical State - ${new Date(actionHistory[selectedHistoryIndex].timestamp).toLocaleTimeString()}`
+                        : 'Current State'
                     ) : (
                       selectedHistoryIndex !== null
-                        ? <Trans>Changes at {new Date(actionHistory[selectedHistoryIndex].timestamp).toLocaleTimeString()}</Trans>
-                        : <Trans>Changes since last action</Trans>
+                        ? `Changes at ${new Date(actionHistory[selectedHistoryIndex].timestamp).toLocaleTimeString()}`
+                        : 'Changes since last action'
                     )}
                   </div>
 
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
                       onClick={() => {
-                        const dataToShow = selectedHistoryIndex !== null
-                          ? actionHistory[selectedHistoryIndex].nextState
+                        const dataToShow = selectedHistoryIndex !== null 
+                          ? actionHistory[selectedHistoryIndex].nextState 
                           : stores[selectedStore].state;
                         copyToClipboard(dataToShow, selectedStore);
                       }}
                       style={{
                         padding: '4px 8px',
                         fontSize: '11px',
-                        border: '1px solid #3c3c3c',
+                        border: "1px solid var(--dt-border-primary)",
                         background: copySuccess === selectedStore ? '#1e5f1e' : '#2d2d30',
                         color: copySuccess === selectedStore ? '#4ec9b0' : '#cccccc',
                         cursor: 'pointer',
@@ -909,23 +908,23 @@ export function ZustandDevToolsPanel() {
                         gap: '4px'
                       }}
                     >
-                      {copySuccess === selectedStore ? <Trans>✓ Copied!</Trans> : <Trans>📋 Copy</Trans>}
+                      {copySuccess === selectedStore ? '✓ Copied!' : '📋 Copy'}
                     </button>
-
+                    
                     {activeTab === 'state' && (
                       <button
                         onClick={() => toggleStateExpansion(selectedStore)}
                         style={{
                           padding: '4px 8px',
                           fontSize: '11px',
-                          border: '1px solid #3c3c3c',
-                          background: '#2d2d30',
-                          color: '#cccccc',
+                          border: "1px solid var(--dt-border-primary)",
+                          background: "var(--dt-bg-tertiary)",
+                          color: "var(--dt-text-primary)",
                           cursor: 'pointer',
                           borderRadius: '3px'
                         }}
                       >
-                        {expandedStates.has(selectedStore) ? <Trans>JSON View</Trans> : <Trans>Tree View</Trans>}
+                        {expandedStates.has(selectedStore) ? 'JSON View' : 'Tree View'}
                       </button>
                     )}
                   </div>
@@ -947,7 +946,7 @@ export function ZustandDevToolsPanel() {
                         />
                       </div>
                     ) : (
-                      <pre style={{ margin: 0, color: '#d4d4d4' }}>
+                      <pre style={{ margin: 0, color: "var(--dt-text-primary)" }}>
                         {JSON.stringify(
                           selectedHistoryIndex !== null 
                             ? actionHistory[selectedHistoryIndex].nextState 
@@ -987,8 +986,8 @@ export function ZustandDevToolsPanel() {
             </>
           ) : (
             <EmptyState
-              title={<Trans>No Store Selected</Trans>}
-              description={<Trans>Select a store from the left panel to inspect its state and history</Trans>}
+              title="No Store Selected"
+              description="Select a store from the left panel to inspect its state and history"
               icon="📦"
             />
           )}
@@ -999,20 +998,20 @@ export function ZustandDevToolsPanel() {
         stats={[
           {
             id: 'store-count',
-            label: <Trans>Stores</Trans>,
+            label: 'Stores',
             value: filteredStores.length,
-            tooltip: <Trans>{filteredStores.length} stores found</Trans>
+            tooltip: `${filteredStores.length} stores found`
           },
           {
             id: 'history-count',
-            label: <Trans>History</Trans>,
+            label: 'History',
             value: actionHistory.length,
-            tooltip: <Trans>{actionHistory.length} actions recorded</Trans>
+            tooltip: `${actionHistory.length} actions recorded`
           }
         ]}
         status={{
           type: autoRefresh ? 'connected' : 'disconnected',
-          message: autoRefresh ? <Trans>Auto-refresh enabled</Trans> : <Trans>Auto-refresh disabled</Trans>
+          message: autoRefresh ? 'Auto-refresh enabled' : 'Auto-refresh disabled'
         }}
         size="sm"
         variant="compact"
@@ -1038,30 +1037,30 @@ export function ZustandDevToolsPanel() {
           zIndex: 100
         }}>
           <div style={{
-            background: '#2d2d30',
+            background: "var(--dt-bg-tertiary)",
             padding: '24px',
             borderRadius: '8px',
-            border: '1px solid #3c3c3c',
+            border: "1px solid var(--dt-border-primary)",
             minWidth: '400px',
             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)'
           }}>
             <h3 style={{ margin: '0 0 16px 0', color: '#9cdcfe', fontSize: '16px' }}>
-              <Trans>Save State Snapshot</Trans>
+              Save State Snapshot
             </h3>
-            <p style={{ margin: '0 0 12px 0', color: '#cccccc', fontSize: '12px' }}>
-              <Trans>Create a snapshot of all store states that you can restore later.</Trans>
+            <p style={{ margin: '0 0 12px 0', color: "var(--dt-text-primary)", fontSize: '12px' }}>
+              Create a snapshot of all store states that you can restore later.
             </p>
             <input
               type="text"
               value={snapshotName}
               onChange={(e) => setSnapshotName(e.target.value)}
-              placeholder={<Trans>Snapshot name (optional)</Trans>}
+              placeholder="Snapshot name (optional)"
               style={{
                 width: '100%',
                 padding: '8px',
-                background: '#1e1e1e',
-                border: '1px solid #3c3c3c',
-                color: '#cccccc',
+                background: "var(--dt-bg-primary)",
+                border: "1px solid var(--dt-border-primary)",
+                color: "var(--dt-text-primary)",
                 borderRadius: '4px',
                 fontSize: '12px',
                 marginBottom: '16px',
@@ -1082,30 +1081,30 @@ export function ZustandDevToolsPanel() {
                 }}
                 style={{
                   padding: '8px 16px',
-                  background: '#2d2d30',
-                  border: '1px solid #3c3c3c',
-                  color: '#cccccc',
+                  background: "var(--dt-bg-tertiary)",
+                  border: "1px solid var(--dt-border-primary)",
+                  color: "var(--dt-text-primary)",
                   borderRadius: '4px',
                   cursor: 'pointer',
                   fontSize: '12px'
                 }}
               >
-                <Trans>Cancel</Trans>
+                Cancel
               </button>
               <button
                 onClick={handleSaveSnapshot}
                 style={{
                   padding: '8px 16px',
-                  background: '#007acc',
-                  border: '1px solid #007acc',
-                  color: '#ffffff',
+                  background: "var(--dt-border-focus)",
+                  border: "1px solid var(--dt-border-focus)",
+                  color: "var(--dt-text-on-primary)",
                   borderRadius: '4px',
                   cursor: 'pointer',
                   fontSize: '12px',
                   fontWeight: 'bold'
                 }}
               >
-                <Trans>Save Snapshot</Trans>
+                Save Snapshot
               </button>
             </div>
           </div>
@@ -1113,4 +1112,21 @@ export function ZustandDevToolsPanel() {
       )}
     </div>
   );
+}
+
+export function ZustandDevToolsPanel(props: ZustandDevToolsPanelProps = {}) {
+  const { theme = "auto" } = props
+
+  const resolvedTheme = useMemo(() => {
+    if (theme === "auto") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+    }
+    return theme
+  }, [theme])
+
+  return (
+    <ThemeProvider defaultTheme={resolvedTheme}>
+      <ZustandDevToolsPanelInner />
+    </ThemeProvider>
+  )
 }

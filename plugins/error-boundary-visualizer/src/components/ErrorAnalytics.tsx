@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react'
-import { Trans } from '@lingui/macro'
 import { useErrorBoundaryDevTools } from '../core/store'
 import { ErrorCategory, ErrorSeverity } from '../types'
 
@@ -67,10 +66,10 @@ export const ErrorAnalytics: React.FC = () => {
 
   const selectStyles: React.CSSProperties = {
     padding: '6px 10px',
-    border: `1px solid ${theme === 'dark' ? '#444' : '#ccc'}`,
+    border: "1px solid var(--dt-border-primary)",
     borderRadius: '4px',
-    backgroundColor: theme === 'dark' ? '#2d2d2d' : '#ffffff',
-    color: theme === 'dark' ? '#ffffff' : '#333333',
+    backgroundColor: "var(--dt-bg-primary)",
+    color: "var(--dt-text-primary)",
     fontSize: '13px',
   }
 
@@ -82,14 +81,14 @@ export const ErrorAnalytics: React.FC = () => {
 
   const metricCardStyles: React.CSSProperties = {
     padding: '16px',
-    backgroundColor: theme === 'dark' ? '#252525' : '#f8f9fa',
-    border: `1px solid ${theme === 'dark' ? '#444' : '#ccc'}`,
+    backgroundColor: "var(--dt-bg-secondary)",
+    border: "1px solid var(--dt-border-primary)",
     borderRadius: '6px',
   }
 
   const metricTitleStyles: React.CSSProperties = {
     fontSize: '12px',
-    color: theme === 'dark' ? '#ccc' : '#666',
+    color: "var(--dt-text-secondary)",
     marginBottom: '4px',
     textTransform: 'uppercase',
     fontWeight: 'bold',
@@ -98,7 +97,7 @@ export const ErrorAnalytics: React.FC = () => {
   const metricValueStyles: React.CSSProperties = {
     fontSize: '24px',
     fontWeight: 'bold',
-    color: theme === 'dark' ? '#ffffff' : '#333333',
+    color: "var(--dt-text-primary)",
   }
 
   const breakdownStyles: React.CSSProperties = {
@@ -109,8 +108,8 @@ export const ErrorAnalytics: React.FC = () => {
 
   const breakdownCardStyles: React.CSSProperties = {
     padding: '12px',
-    backgroundColor: theme === 'dark' ? '#252525' : '#f8f9fa',
-    border: `1px solid ${theme === 'dark' ? '#444' : '#ccc'}`,
+    backgroundColor: "var(--dt-bg-secondary)",
+    border: "1px solid var(--dt-border-primary)",
     borderRadius: '6px'
   }
 
@@ -120,7 +119,7 @@ export const ErrorAnalytics: React.FC = () => {
     borderRadius: '10px',
     fontSize: '11px',
     fontWeight: 'bold',
-    color: '#ffffff',
+    color: "var(--dt-text-secondary)",
     backgroundColor: color,
     marginRight: '4px',
     marginBottom: '4px'
@@ -128,10 +127,10 @@ export const ErrorAnalytics: React.FC = () => {
 
   const getSeverityColor = (severity: ErrorSeverity) => {
     const colors = {
-      low: '#4caf50',
-      medium: '#ff9800',
-      high: '#ff5722', 
-      critical: '#f44336'
+      low: 'var(--dt-status-success)',
+      medium: 'var(--dt-status-warning)',
+      high: 'var(--dt-status-error)', 
+      critical: 'var(--dt-status-error)'
     }
     return colors[severity]
   }
@@ -140,52 +139,52 @@ export const ErrorAnalytics: React.FC = () => {
     <div style={containerStyles}>
       {/* Header Controls */}
       <div style={headerStyles}>
-        <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-          <Trans>Error Analytics</Trans>
+        <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold', color: "var(--dt-text-primary)" }}>
+          Error Analytics
         </h3>
         <select
           value={timeRange}
           onChange={(e) => setTimeRange(e.target.value as any)}
           style={selectStyles}
         >
-          <option value="1h"><Trans>Last Hour</Trans></option>
-          <option value="24h"><Trans>Last 24 Hours</Trans></option>
-          <option value="7d"><Trans>Last 7 Days</Trans></option>
-          <option value="30d"><Trans>Last 30 Days</Trans></option>
+          <option value="1h">Last Hour</option>
+          <option value="24h">Last 24 Hours</option>
+          <option value="7d">Last 7 Days</option>
+          <option value="30d">Last 30 Days</option>
         </select>
       </div>
 
       {/* Metrics Grid */}
       <div style={metricsGridStyles}>
         <div style={metricCardStyles}>
-          <div style={metricTitleStyles}><Trans>Total Errors</Trans></div>
-          <div style={{...metricValueStyles, color: filteredErrors.length > 10 ? '#ff5722' : '#4caf50'}}>{filteredErrors.length}</div>
+          <div style={metricTitleStyles}>Total Errors</div>
+          <div style={{...metricValueStyles, color: filteredErrors.length > 10 ? 'var(--dt-status-error)' : 'var(--dt-status-success)'}}>{filteredErrors.length}</div>
         </div>
         <div style={metricCardStyles}>
-          <div style={metricTitleStyles}><Trans>Error Rate</Trans></div>
-          <div style={{...metricValueStyles, color: errorRate > 1 ? '#f44336' : '#4caf50'}}>
+          <div style={metricTitleStyles}>Error Rate</div>
+          <div style={{...metricValueStyles, color: errorRate > 1 ? 'var(--dt-status-error)' : 'var(--dt-status-success)'}}>
             {errorRate.toFixed(2)}/min
           </div>
         </div>
         <div style={metricCardStyles}>
-          <div style={metricTitleStyles}><Trans>Coverage</Trans></div>
-          <div style={{...metricValueStyles, color: coverage > 80 ? '#4caf50' : coverage > 50 ? '#ff9800' : '#f44336'}}>
+          <div style={metricTitleStyles}>Coverage</div>
+          <div style={{...metricValueStyles, color: coverage > 80 ? 'var(--dt-status-success)' : coverage > 50 ? 'var(--dt-status-warning)' : 'var(--dt-status-error)'}}>
             {coverage.toFixed(1)}%
           </div>
         </div>
         <div style={metricCardStyles}>
-          <div style={metricTitleStyles}><Trans>MTTR</Trans></div>
-          <div style={{...metricValueStyles, color: calculateMTTR() < 5 ? '#4caf50' : '#ff9800'}}>
+          <div style={metricTitleStyles}>MTTR</div>
+          <div style={{...metricValueStyles, color: calculateMTTR() < 5 ? 'var(--dt-status-success)' : 'var(--dt-status-warning)'}}>
             {calculateMTTR()}m
           </div>
         </div>
         <div style={metricCardStyles}>
-          <div style={metricTitleStyles}><Trans>Error Groups</Trans></div>
+          <div style={metricTitleStyles}>Error Groups</div>
           <div style={metricValueStyles}>{errorGroups.length}</div>
         </div>
         <div style={metricCardStyles}>
-          <div style={metricTitleStyles}><Trans>Critical Errors</Trans></div>
-          <div style={{...metricValueStyles, color: criticalErrors > 0 ? '#f44336' : '#4caf50'}}>
+          <div style={metricTitleStyles}>Critical Errors</div>
+          <div style={{...metricValueStyles, color: criticalErrors > 0 ? 'var(--dt-status-error)' : 'var(--dt-status-success)'}}>
             {criticalErrors}
           </div>
         </div>
@@ -195,8 +194,8 @@ export const ErrorAnalytics: React.FC = () => {
       {filteredErrors.length > 0 && (
         <div style={breakdownStyles}>
           <div style={breakdownCardStyles}>
-            <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 'bold', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-              <Trans>By Severity</Trans>
+            <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 'bold', color: "var(--dt-text-primary)" }}>
+              By Severity
             </h4>
             <div>
               {Object.values(ErrorSeverity).map(severity => {
@@ -212,15 +211,15 @@ export const ErrorAnalytics: React.FC = () => {
           </div>
 
           <div style={breakdownCardStyles}>
-            <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 'bold', color: theme === 'dark' ? '#ffffff' : '#333333' }}>
-              <Trans>By Category</Trans>
+            <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', fontWeight: 'bold', color: "var(--dt-text-primary)" }}>
+              By Category
             </h4>
             <div>
               {Object.values(ErrorCategory).map(category => {
                 const count = filteredErrors.filter(e => e.category === category).length
                 if (count === 0) return null
                 return (
-                  <span key={category} style={badgeStyles('#007acc')}>
+                  <span key={category} style={badgeStyles("var(--dt-border-focus)")}>
                     {category.replace('_', ' ')}: {count}
                   </span>
                 )
@@ -235,19 +234,19 @@ export const ErrorAnalytics: React.FC = () => {
         flex: 1,
         minHeight: '200px',
         padding: '16px',
-        backgroundColor: theme === 'dark' ? '#252525' : '#f8f9fa',
-        border: `1px solid ${theme === 'dark' ? '#444' : '#ccc'}`,
+        backgroundColor: "var(--dt-bg-secondary)",
+        border: "1px solid var(--dt-border-primary)",
         borderRadius: '6px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: theme === 'dark' ? '#ccc' : '#666'
+        color: "var(--dt-text-secondary)"
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '48px', marginBottom: '8px' }}>📊</div>
-          <div><Trans>Error trend chart would be displayed here</Trans></div>
+          <div>Error trend chart would be displayed here</div>
           <div style={{ fontSize: '12px', marginTop: '4px' }}>
-            <Trans>(Chart visualization will be implemented in future version)</Trans>
+            (Chart visualization will be implemented in future version)
           </div>
         </div>
       </div>

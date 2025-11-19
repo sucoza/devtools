@@ -3,7 +3,6 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import { Trans } from '@lingui/macro';
 import { NavigationState, RouteParamEditContext } from '../types/router';
 import { 
   updateParamEditContext, 
@@ -112,13 +111,13 @@ export function RouteParameterInspector({
 
   if (!currentState) {
     return (
-      <div style={{
-        padding: '20px',
-        textAlign: 'center',
-        color: '#969696',
+      <div style={{ 
+        padding: '20px', 
+        textAlign: 'center', 
+        color: "var(--dt-text-secondary)",
         fontSize: '12px'
       }}>
-        <Trans>No route state available</Trans>
+        No route state available
       </div>
     );
   }
@@ -128,24 +127,24 @@ export function RouteParameterInspector({
       {/* Tab Navigation */}
       <div style={{ 
         display: 'flex', 
-        borderBottom: '1px solid #3c3c3c', 
+        borderBottom: "1px solid var(--dt-border-primary)", 
         marginBottom: '10px',
         gap: '1px'
       }}>
         {[
-          { key: 'params', label: <Trans>Route Params</Trans> },
-          { key: 'search', label: <Trans>Query Params</Trans> },
-          { key: 'state', label: <Trans>Location State</Trans> }
+          { key: 'params', label: 'Route Params' },
+          { key: 'search', label: 'Query Params' },
+          { key: 'state', label: 'Location State' }
         ].map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key as 'params' | 'search' | 'state')}
             style={{
               padding: '6px 12px',
-              background: activeTab === tab.key ? '#1e1e1e' : 'transparent',
+              background: activeTab === tab.key ? "var(--dt-bg-primary)" : "transparent",
               border: 'none',
-              borderBottom: activeTab === tab.key ? '2px solid #007acc' : '2px solid transparent',
-              color: activeTab === tab.key ? '#cccccc' : '#969696',
+              borderBottom: activeTab === tab.key ? "2px solid var(--dt-border-focus)" : "2px solid transparent",
+              color: activeTab === tab.key ? "var(--dt-text-primary)" : "var(--dt-text-secondary)",
               cursor: 'pointer',
               fontSize: '11px',
               fontWeight: '500'
@@ -160,15 +159,15 @@ export function RouteParameterInspector({
           style={{
             padding: '4px 8px',
             fontSize: '10px',
-            border: '1px solid #3c3c3c',
-            background: showRawJson ? '#1e5f1e' : '#2d2d30',
-            color: showRawJson ? '#4ec9b0' : '#cccccc',
+            border: "1px solid var(--dt-border-primary)",
+            background: showRawJson ? "var(--dt-status-success-bg)" : "var(--dt-bg-tertiary)",
+            color: showRawJson ? "var(--dt-accent-secondary)" : "var(--dt-text-primary)",
             cursor: 'pointer',
             borderRadius: '3px',
             margin: '2px 4px'
           }}
         >
-          {showRawJson ? <Trans>Form View</Trans> : <Trans>JSON View</Trans>}
+          {showRawJson ? 'Form View' : 'JSON View'}
         </button>
       </div>
 
@@ -176,30 +175,30 @@ export function RouteParameterInspector({
       <div style={{ flex: 1, overflow: 'auto' }}>
         {activeTab === 'params' && (
           <div>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
               alignItems: 'center',
-              marginBottom: '10px'
+              marginBottom: '10px' 
             }}>
-              <h4 style={{ margin: 0, color: '#9cdcfe', fontSize: '12px' }}>
-                <Trans>Route Parameters</Trans>
+              <h4 style={{ margin: 0, color: "var(--dt-accent-primary)", fontSize: '12px' }}>
+                Route Parameters
               </h4>
-              <div style={{ fontSize: '11px', color: '#969696' }}>
+              <div style={{ fontSize: '11px', color: "var(--dt-text-secondary)" }}>
                 {activeMatch?.route.path || 'No active route'}
               </div>
             </div>
 
             {showRawJson ? (
               <div style={{
-                background: '#252526',
-                border: '1px solid #3c3c3c',
+                background: "var(--dt-bg-secondary)",
+                border: "1px solid var(--dt-border-primary)",
                 borderRadius: '4px',
                 padding: '12px'
               }}>
                 <pre style={{ 
                   fontSize: '11px', 
-                  color: '#d4d4d4', 
+                  color: "var(--dt-text-primary)", 
                   margin: 0,
                   whiteSpace: 'pre-wrap' 
                 }}>
@@ -212,27 +211,27 @@ export function RouteParameterInspector({
               </div>
             ) : (
               <div style={{
-                background: '#1e1e1e',
-                border: '1px solid #3c3c3c',
+                background: "var(--dt-bg-primary)",
+                border: "1px solid var(--dt-border-primary)",
                 borderRadius: '4px',
                 padding: '12px'
               }}>
                 {Object.keys(editContext.pendingParams).length === 0 ? (
-                  <div style={{
-                    color: '#969696',
-                    fontStyle: 'italic',
+                  <div style={{ 
+                    color: "var(--dt-text-secondary)", 
+                    fontStyle: 'italic', 
                     fontSize: '11px',
                     textAlign: 'center',
                     padding: '20px 0'
                   }}>
-                    <Trans>No route parameters in current route</Trans>
+                    No route parameters in current route
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {Object.entries(editContext.pendingParams).map(([key, value]) => (
                       <div key={key} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <label style={{ 
-                          color: '#e74c3c', 
+                          color: "var(--dt-status-error)", 
                           fontSize: '11px', 
                           minWidth: '80px',
                           fontWeight: '500' 
@@ -247,15 +246,15 @@ export function RouteParameterInspector({
                             flex: 1,
                             padding: '4px 8px',
                             fontSize: '11px',
-                            border: `1px solid ${editContext.errors[key] ? '#e74c3c' : '#3c3c3c'}`,
+                            border: `1px solid ${editContext.errors[key] ? "var(--dt-status-error)" : "var(--dt-border-primary)"}`,
                             borderRadius: '3px',
-                            background: '#252526',
-                            color: '#cccccc'
+                            background: "var(--dt-bg-secondary)",
+                            color: "var(--dt-text-primary)"
                           }}
                         />
                         {editContext.errors[key] && (
                           <span style={{ 
-                            color: '#e74c3c', 
+                            color: "var(--dt-status-error)", 
                             fontSize: '10px',
                             minWidth: '120px'
                           }}>
@@ -273,41 +272,41 @@ export function RouteParameterInspector({
 
         {activeTab === 'search' && (
           <div>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
               alignItems: 'center',
-              marginBottom: '10px'
+              marginBottom: '10px' 
             }}>
-              <h4 style={{ margin: 0, color: '#9cdcfe', fontSize: '12px' }}>
-                <Trans>Query String Parameters</Trans>
+              <h4 style={{ margin: 0, color: "var(--dt-accent-primary)", fontSize: '12px' }}>
+                Query String Parameters
               </h4>
               <button
                 onClick={handleAddSearchParam}
                 style={{
                   padding: '4px 8px',
                   fontSize: '10px',
-                  border: '1px solid #3c3c3c',
-                  background: '#2d2d30',
-                  color: '#cccccc',
+                  border: "1px solid var(--dt-border-primary)",
+                  background: "var(--dt-bg-tertiary)",
+                  color: "var(--dt-text-primary)",
                   cursor: 'pointer',
                   borderRadius: '3px'
                 }}
               >
-                <Trans>Add Param</Trans>
+                Add Param
               </button>
             </div>
 
             {showRawJson ? (
               <div style={{
-                background: '#252526',
-                border: '1px solid #3c3c3c',
+                background: "var(--dt-bg-secondary)",
+                border: "1px solid var(--dt-border-primary)",
                 borderRadius: '4px',
                 padding: '12px'
               }}>
                 <pre style={{ 
                   fontSize: '11px', 
-                  color: '#d4d4d4', 
+                  color: "var(--dt-text-primary)", 
                   margin: 0,
                   whiteSpace: 'pre-wrap' 
                 }}>
@@ -320,19 +319,19 @@ export function RouteParameterInspector({
               </div>
             ) : (
               <div style={{
-                background: '#1e1e1e',
-                border: '1px solid #3c3c3c',
+                background: "var(--dt-bg-primary)",
+                border: "1px solid var(--dt-border-primary)",
                 borderRadius: '4px',
                 padding: '12px'
               }}>
                 <div style={{ marginBottom: '12px' }}>
-                  <label style={{
-                    color: '#9cdcfe',
+                  <label style={{ 
+                    color: "var(--dt-accent-primary)", 
                     fontSize: '11px',
                     display: 'block',
                     marginBottom: '4px'
                   }}>
-                    <Trans>Raw Query String:</Trans>
+                    Raw Query String:
                   </label>
                   <input
                     type="text"
@@ -348,38 +347,38 @@ export function RouteParameterInspector({
                       width: '100%',
                       padding: '4px 8px',
                       fontSize: '11px',
-                      border: `1px solid ${editContext.errors.search ? '#e74c3c' : '#3c3c3c'}`,
+                      border: `1px solid ${editContext.errors.search ? "var(--dt-status-error)" : "var(--dt-border-primary)"}`,
                       borderRadius: '3px',
-                      background: '#252526',
-                      color: '#cccccc'
+                      background: "var(--dt-bg-secondary)",
+                      color: "var(--dt-text-primary)"
                     }}
                     placeholder="?param1=value1&param2=value2"
                   />
                   {editContext.errors.search && (
-                    <div style={{ color: '#e74c3c', fontSize: '10px', marginTop: '4px' }}>
+                    <div style={{ color: "var(--dt-status-error)", fontSize: '10px', marginTop: '4px' }}>
                       {editContext.errors.search}
                     </div>
                   )}
                 </div>
 
-                <div style={{ borderTop: '1px solid #3c3c3c', paddingTop: '12px' }}>
-                  <div style={{
-                    color: '#9cdcfe',
+                <div style={{ borderTop: "1px solid var(--dt-border-primary)", paddingTop: '12px' }}>
+                  <div style={{ 
+                    color: "var(--dt-accent-primary)", 
                     fontSize: '11px',
                     marginBottom: '8px'
                   }}>
-                    <Trans>Individual Parameters:</Trans>
+                    Individual Parameters:
                   </div>
-
+                  
                   {Object.keys(parseSearchParams(editContext.pendingSearch)).length === 0 ? (
-                    <div style={{
-                      color: '#969696',
-                      fontStyle: 'italic',
+                    <div style={{ 
+                      color: "var(--dt-text-secondary)", 
+                      fontStyle: 'italic', 
                       fontSize: '11px',
                       textAlign: 'center',
                       padding: '20px 0'
                     }}>
-                      <Trans>No query parameters</Trans>
+                      No query parameters
                     </div>
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -404,13 +403,13 @@ export function RouteParameterInspector({
                               minWidth: '80px',
                               padding: '4px 8px',
                               fontSize: '11px',
-                              border: '1px solid #3c3c3c',
+                              border: "1px solid var(--dt-border-primary)",
                               borderRadius: '3px',
-                              background: '#252526',
-                              color: '#e74c3c'
+                              background: "var(--dt-bg-secondary)",
+                              color: "var(--dt-status-error)"
                             }}
                           />
-                          <span style={{ color: '#969696' }}>=</span>
+                          <span style={{ color: "var(--dt-text-secondary)" }}>=</span>
                           <input
                             type="text"
                             value={value}
@@ -419,10 +418,10 @@ export function RouteParameterInspector({
                               flex: 1,
                               padding: '4px 8px',
                               fontSize: '11px',
-                              border: '1px solid #3c3c3c',
+                              border: "1px solid var(--dt-border-primary)",
                               borderRadius: '3px',
-                              background: '#252526',
-                              color: '#27ae60'
+                              background: "var(--dt-bg-secondary)",
+                              color: "var(--dt-status-success)"
                             }}
                           />
                           <button
@@ -430,9 +429,9 @@ export function RouteParameterInspector({
                             style={{
                               padding: '2px 6px',
                               fontSize: '10px',
-                              border: '1px solid #3c3c3c',
-                              background: '#2d2d30',
-                              color: '#e74c3c',
+                              border: "1px solid var(--dt-border-primary)",
+                              background: "var(--dt-bg-tertiary)",
+                              color: "var(--dt-status-error)",
                               cursor: 'pointer',
                               borderRadius: '2px'
                             }}
@@ -451,18 +450,18 @@ export function RouteParameterInspector({
 
         {activeTab === 'state' && (
           <div>
-            <h4 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '12px' }}>
-              <Trans>Location State</Trans>
+            <h4 style={{ margin: '0 0 10px 0', color: "var(--dt-accent-primary)", fontSize: '12px' }}>
+              Location State
             </h4>
             <div style={{
-              background: '#252526',
-              border: '1px solid #3c3c3c',
+              background: "var(--dt-bg-secondary)",
+              border: "1px solid var(--dt-border-primary)",
               borderRadius: '4px',
               padding: '12px'
             }}>
               <pre style={{ 
                 fontSize: '11px', 
-                color: '#d4d4d4', 
+                color: "var(--dt-text-primary)", 
                 margin: 0,
                 whiteSpace: 'pre-wrap' 
               }}>
@@ -484,8 +483,8 @@ export function RouteParameterInspector({
         <div style={{
           marginTop: '10px',
           padding: '10px',
-          background: '#252526',
-          border: '1px solid #3c3c3c',
+          background: "var(--dt-bg-secondary)",
+          border: "1px solid var(--dt-border-primary)",
           borderRadius: '4px',
           display: 'flex',
           gap: '8px',
@@ -494,7 +493,7 @@ export function RouteParameterInspector({
           {getParamErrorMessage(editContext) && (
             <div style={{ 
               flex: 1, 
-              color: '#e74c3c', 
+              color: "var(--dt-status-error)", 
               fontSize: '10px',
               display: 'flex',
               alignItems: 'center'
@@ -508,30 +507,30 @@ export function RouteParameterInspector({
             style={{
               padding: '6px 12px',
               fontSize: '11px',
-              border: '1px solid #3c3c3c',
-              background: '#2d2d30',
-              color: '#cccccc',
+              border: "1px solid var(--dt-border-primary)",
+              background: "var(--dt-bg-tertiary)",
+              color: "var(--dt-text-primary)",
               cursor: 'pointer',
               borderRadius: '3px'
             }}
           >
-            <Trans>Reset</Trans>
+            Reset
           </button>
-
+          
           <button
             onClick={handleApplyChanges}
             disabled={hasParamErrors(editContext)}
             style={{
               padding: '6px 12px',
               fontSize: '11px',
-              border: '1px solid #3c3c3c',
-              background: hasParamErrors(editContext) ? '#3c3c3c' : '#1e5f1e',
-              color: hasParamErrors(editContext) ? '#969696' : '#4ec9b0',
+              border: "1px solid var(--dt-border-primary)",
+              background: hasParamErrors(editContext) ? "var(--dt-border-primary)" : "var(--dt-status-success-bg)",
+              color: hasParamErrors(editContext) ? "var(--dt-text-secondary)" : "var(--dt-accent-secondary)",
               cursor: hasParamErrors(editContext) ? 'not-allowed' : 'pointer',
               borderRadius: '3px'
             }}
           >
-            <Trans>Apply Changes</Trans>
+            Apply Changes
           </button>
         </div>
       )}

@@ -2,8 +2,7 @@
  * Main Router DevTools Panel Component
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { Trans } from '@lingui/macro';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Toolbar,
   Tabs,
@@ -11,8 +10,10 @@ import {
   Alert,
   ScrollableContainer,
   ConfigMenu,
+  ThemeProvider,
   type Tab
 } from '@sucoza/shared-components';
+import '@sucoza/shared-components/dist/styles/theme.css';
 import { Download, Trash2, Navigation } from 'lucide-react';
 import { routerEventClient } from '../core/router-event-client';
 import { 
@@ -72,7 +73,11 @@ const loadUIState = (): Partial<RouterUIState> => {
   }
 };
 
-export function RouterDevToolsPanel() {
+interface RouterDevToolsPanelProps {
+  theme?: 'light' | 'dark' | 'auto'
+}
+
+function RouterDevToolsPanelInner() {
   // Load saved UI state
   const savedState = loadUIState();
 
@@ -234,7 +239,7 @@ export function RouterDevToolsPanel() {
   const configMenuItems = [
     {
       id: 'toggle-recording',
-      label: <Trans>Toggle Recording</Trans>,
+      label: 'Toggle Recording',
       icon: '🔄',
       shortcut: 'Ctrl+R',
       onClick: () => {
@@ -244,14 +249,14 @@ export function RouterDevToolsPanel() {
     },
     {
       id: 'clear-history',
-      label: <Trans>Clear History</Trans>,
+      label: 'Clear History',
       icon: '🗑️',
       shortcut: 'Ctrl+K',
       onClick: clearHistory,
     },
     {
       id: 'reset-navigation',
-      label: <Trans>Reset Navigation</Trans>,
+      label: 'Reset Navigation',
       icon: '📍',
       onClick: () => {
         setState(prevState => ({
@@ -264,7 +269,7 @@ export function RouterDevToolsPanel() {
     },
     {
       id: 'export-routes',
-      label: <Trans>Export Routes</Trans>,
+      label: 'Export Routes',
       icon: '💾',
       shortcut: 'Ctrl+E',
       onClick: exportRoutes,
@@ -272,7 +277,7 @@ export function RouterDevToolsPanel() {
     },
     {
       id: 'settings',
-      label: <Trans>Settings</Trans>,
+      label: 'Settings',
       icon: '⚙️',
       shortcut: 'Ctrl+S',
       onClick: () => {
@@ -296,12 +301,12 @@ export function RouterDevToolsPanel() {
       }}>
         <Alert
           type="warning"
-          title={<Trans>Router DevTools</Trans>}
+          title="Router DevTools"
           description={
             <div>
-              <p><Trans>Waiting for router adapter to connect...</Trans></p>
+              <p>Waiting for router adapter to connect...</p>
               <p style={{ marginTop: '8px', fontSize: '12px' }}>
-                <Trans>Make sure you have registered a router adapter in your application.</Trans>
+                Make sure you have registered a router adapter in your application.
               </p>
             </div>
           }
@@ -316,16 +321,16 @@ export function RouterDevToolsPanel() {
   const tabs: Tab[] = [
     {
       id: 'tree',
-      label: <Trans>Route Tree</Trans>,
+      label: 'Route Tree',
       icon: <Navigation size={16} />
     },
     {
       id: 'params',
-      label: <Trans>Parameters</Trans>
+      label: 'Parameters'
     },
     {
       id: 'timeline',
-      label: <Trans>Timeline</Trans>
+      label: 'Timeline'
     }
   ];
 
@@ -338,8 +343,8 @@ export function RouterDevToolsPanel() {
       }}>
         {/* Header Toolbar */}
         <Toolbar
-          title={<Trans>🧭 Router DevTools Enhanced</Trans>}
-          subtitle={<Trans>{routeStats.totalRoutes} routes • {routeStats.activeRoutes} active • {state.navigationHistory.length} history</Trans>}
+          title="🧭 Router DevTools Enhanced"
+          subtitle={`${routeStats.totalRoutes} routes • ${routeStats.activeRoutes} active • ${state.navigationHistory.length} history`}
           showSearch
           searchValue={state.searchQuery}
           onSearchChange={handleSearchChange}
@@ -398,40 +403,40 @@ export function RouterDevToolsPanel() {
         stats={[
           {
             id: 'total-routes',
-            label: <Trans>Total Routes</Trans>,
+            label: 'Total Routes',
             value: routeStats.totalRoutes,
-            tooltip: <Trans>Total number of defined routes</Trans>
+            tooltip: 'Total number of defined routes'
           },
           {
             id: 'active-routes',
-            label: <Trans>Active Routes</Trans>,
+            label: 'Active Routes',
             value: routeStats.activeRoutes,
-            tooltip: <Trans>Number of currently active/matched routes</Trans>,
+            tooltip: 'Number of currently active/matched routes',
             variant: 'success'
           },
           {
             id: 'navigation-count',
-            label: <Trans>Navigation Count</Trans>,
+            label: 'Navigation Count',
             value: state.navigationHistory.length,
-            tooltip: <Trans>Total number of navigation events</Trans>
+            tooltip: 'Total number of navigation events'
           },
           {
             id: 'error-rate',
-            label: <Trans>Error Rate</Trans>,
+            label: 'Error Rate',
             value: `${((state.navigationHistory.filter(h => h.loadingState === 'submitting' && h.duration && h.duration > 5000).length / Math.max(state.navigationHistory.length, 1)) * 100).toFixed(1)}%`,
-            tooltip: <Trans>Percentage of navigation attempts that were slow or problematic</Trans>,
+            tooltip: 'Percentage of navigation attempts that were slow or problematic',
             variant: state.navigationHistory.filter(h => h.loadingState === 'submitting' && h.duration && h.duration > 5000).length > 0 ? 'warning' : 'default'
           }
         ]}
         status={{
           type: state.isConnected ? 'connected' : 'disconnected',
-          message: state.isConnected ? <Trans>Router Adapter Connected</Trans> : <Trans>Router Adapter Disconnected</Trans>
+          message: state.isConnected ? 'Router Adapter Connected' : 'Router Adapter Disconnected'
         }}
         size="sm"
         variant="default"
       />
       </div>
-      
+
       {/* ConfigMenu overlay */}
       <div style={{
         position: 'absolute',
@@ -443,4 +448,21 @@ export function RouterDevToolsPanel() {
       </div>
     </div>
   );
+}
+
+export function RouterDevToolsPanel(props: RouterDevToolsPanelProps = {}) {
+  const { theme = 'auto' } = props
+
+  const resolvedTheme = useMemo(() => {
+    if (theme === 'auto') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+    return theme
+  }, [theme])
+
+  return (
+    <ThemeProvider defaultTheme={resolvedTheme}>
+      <RouterDevToolsPanelInner />
+    </ThemeProvider>
+  )
 }
