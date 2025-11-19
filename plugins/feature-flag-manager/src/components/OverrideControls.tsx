@@ -334,7 +334,7 @@ export const OverrideControls: React.FC<OverrideControlsProps> = ({
           margin-bottom: 16px;
           padding: 12px;
           background-color: var(--dt-status-warning-bg);
-          border-left: 4px solid #f59e0b;
+          border-left: 4px solid var(--dt-status-warning);
           border-radius: 4px;
         }
         

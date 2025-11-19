@@ -14,11 +14,11 @@ export const ExperimentsTab: React.FC<ExperimentsTabProps> = ({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'running': return '#10b981';
-      case 'paused': return '#f59e0b';
-      case 'completed': return '#6b7280';
-      case 'draft': return '#3b82f6';
-      default: return '#6b7280';
+      case 'running': return 'var(--dt-status-success)';
+      case 'paused': return 'var(--dt-status-warning)';
+      case 'completed': return 'var(--dt-text-secondary)';
+      case 'draft': return 'var(--dt-border-focus)';
+      default: return 'var(--dt-text-secondary)';
     }
   };
 

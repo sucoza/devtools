@@ -16,6 +16,7 @@ import {
   SPACING,
   RADIUS
 } from '@sucoza/shared-components';
+import '@sucoza/shared-components/dist/styles/theme.css';
 import { DashboardTab } from './DashboardTab';
 import { FlagsTab } from './FlagsTab';
 import { OverridesTab } from './OverridesTab';

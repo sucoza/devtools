@@ -48,10 +48,10 @@ export function LanguageSwitcher({
   }, [languages, searchQuery, sortBy, showOnlyIncomplete]);
 
   const getCompletenessColor = useCallback((completeness: number): string => {
-    if (completeness >= 95) return '#4ec9b0'; // Green
-    if (completeness >= 80) return '#d19a66'; // Orange
-    if (completeness >= 50) return '#e5c07b'; // Yellow
-    return '#f48771'; // Red
+    if (completeness >= 95) return 'var(--dt-status-success)'; // Green
+    if (completeness >= 80) return 'var(--dt-status-warning)'; // Orange
+    if (completeness >= 50) return 'var(--dt-status-warning)'; // Yellow
+    return 'var(--dt-status-error)'; // Red
   }, []);
 
   const getCompletenessIcon = useCallback((completeness: number): string => {
@@ -76,11 +76,11 @@ export function LanguageSwitcher({
       padding: '15px', 
       height: '100%', 
       overflowY: 'auto',
-      background: '#1e1e1e'
+      background: 'var(--dt-bg-primary)'
     }}>
       {/* Header with stats */}
       <div style={{ marginBottom: '20px' }}>
-        <h4 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '14px', fontWeight: '600' }}>
+        <h4 style={{ margin: '0 0 10px 0', color: 'var(--dt-border-focus)', fontSize: '14px', fontWeight: '600' }}>
           🌍 Language Management
         </h4>
         
@@ -91,45 +91,45 @@ export function LanguageSwitcher({
           marginBottom: '15px'
         }}>
           <div style={{ 
-            background: '#252526', 
+            background: 'var(--dt-bg-tertiary)', 
             padding: '10px', 
             borderRadius: '4px',
-            border: '1px solid #3c3c3c'
+            border: '1px solid var(--dt-border-primary)'
           }}>
-            <div style={{ fontSize: '10px', color: '#969696', marginBottom: '4px' }}>Total Languages</div>
-            <div style={{ fontSize: '18px', fontWeight: '600', color: '#4ec9b0' }}>{totalLanguages}</div>
+            <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginBottom: '4px' }}>Total Languages</div>
+            <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--dt-status-success)' }}>{totalLanguages}</div>
           </div>
           
           <div style={{ 
-            background: '#252526', 
+            background: 'var(--dt-bg-tertiary)', 
             padding: '10px', 
             borderRadius: '4px',
-            border: '1px solid #3c3c3c'
+            border: '1px solid var(--dt-border-primary)'
           }}>
-            <div style={{ fontSize: '10px', color: '#969696', marginBottom: '4px' }}>Complete (≥95%)</div>
-            <div style={{ fontSize: '18px', fontWeight: '600', color: '#4ec9b0' }}>{completeLanguages}</div>
+            <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginBottom: '4px' }}>Complete (≥95%)</div>
+            <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--dt-status-success)' }}>{completeLanguages}</div>
           </div>
           
           <div style={{ 
-            background: '#252526', 
+            background: 'var(--dt-bg-tertiary)', 
             padding: '10px', 
             borderRadius: '4px',
-            border: '1px solid #3c3c3c'
+            border: '1px solid var(--dt-border-primary)'
           }}>
-            <div style={{ fontSize: '10px', color: '#969696', marginBottom: '4px' }}>Avg Completeness</div>
+            <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginBottom: '4px' }}>Avg Completeness</div>
             <div style={{ fontSize: '18px', fontWeight: '600', color: getCompletenessColor(averageCompleteness) }}>
               {averageCompleteness}%
             </div>
           </div>
           
           <div style={{ 
-            background: '#252526', 
+            background: 'var(--dt-bg-tertiary)', 
             padding: '10px', 
             borderRadius: '4px',
-            border: '1px solid #3c3c3c'
+            border: '1px solid var(--dt-border-primary)'
           }}>
-            <div style={{ fontSize: '10px', color: '#969696', marginBottom: '4px' }}>Current Language</div>
-            <div style={{ fontSize: '18px', fontWeight: '600', color: '#007acc' }}>
+            <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginBottom: '4px' }}>Current Language</div>
+            <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--dt-border-focus)' }}>
               {currentLanguage.toUpperCase()}
             </div>
           </div>
@@ -140,9 +140,9 @@ export function LanguageSwitcher({
       <div style={{ 
         marginBottom: '20px',
         padding: '15px',
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c'
+        border: '1px solid var(--dt-border-primary)'
       }}>
         <div style={{ 
           display: 'flex', 
@@ -161,9 +161,9 @@ export function LanguageSwitcher({
               minWidth: '150px',
               padding: '6px 10px',
               borderRadius: '4px',
-              border: '1px solid #3c3c3c',
-              background: '#1e1e1e',
-              color: '#cccccc',
+              border: '1px solid var(--dt-border-primary)',
+              background: 'var(--dt-bg-primary)',
+              color: 'var(--dt-text-primary)',
               fontSize: '12px'
             }}
           />
@@ -174,9 +174,9 @@ export function LanguageSwitcher({
             style={{
               padding: '6px 10px',
               borderRadius: '4px',
-              border: '1px solid #3c3c3c',
-              background: '#1e1e1e',
-              color: '#cccccc',
+              border: '1px solid var(--dt-border-primary)',
+              background: 'var(--dt-bg-primary)',
+              color: 'var(--dt-text-primary)',
               fontSize: '11px'
             }}
           >
@@ -195,7 +195,7 @@ export function LanguageSwitcher({
           </label>
         </div>
         
-        <div style={{ fontSize: '10px', color: '#969696' }}>
+        <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)' }}>
           Showing {filteredAndSortedLanguages.length} of {totalLanguages} languages
         </div>
       </div>
@@ -215,9 +215,9 @@ export function LanguageSwitcher({
               key={language.code}
               onClick={() => handleLanguageSelect(language.code)}
               style={{
-                background: isActive ? '#094771' : '#252526',
+                background: isActive ? 'var(--dt-border-focus)' : 'var(--dt-bg-tertiary)',
                 border: '1px solid',
-                borderColor: isActive ? '#007acc' : '#3c3c3c',
+                borderColor: isActive ? 'var(--dt-border-focus)' : 'var(--dt-border-primary)',
                 borderRadius: '6px',
                 padding: '12px',
                 cursor: 'pointer',
@@ -226,13 +226,13 @@ export function LanguageSwitcher({
               }}
               onMouseEnter={(e) => {
                 if (!isActive) {
-                  e.currentTarget.style.borderColor = '#007acc';
+                  e.currentTarget.style.borderColor = 'var(--dt-border-focus)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isActive) {
-                  e.currentTarget.style.borderColor = '#3c3c3c';
+                  e.currentTarget.style.borderColor = 'var(--dt-border-primary)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }
               }}
@@ -248,15 +248,15 @@ export function LanguageSwitcher({
                   <span style={{ 
                     fontSize: '18px',
                     fontWeight: '700',
-                    color: isActive ? '#ffffff' : '#cccccc'
+                    color: isActive ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)'
                   }}>
                     {language.code.toUpperCase()}
                   </span>
                   
                   {language.isRTL && (
                     <span style={{ 
-                      background: '#2d2d30', 
-                      color: '#d19a66', 
+                      background: 'var(--dt-bg-secondary)', 
+                      color: 'var(--dt-status-warning)', 
                       padding: '2px 6px', 
                       borderRadius: '2px',
                       fontSize: '8px',
@@ -268,8 +268,8 @@ export function LanguageSwitcher({
                   
                   {language.isDefault && (
                     <span style={{ 
-                      background: '#2d2d30', 
-                      color: '#4ec9b0', 
+                      background: 'var(--dt-bg-secondary)', 
+                      color: 'var(--dt-status-success)', 
                       padding: '2px 6px', 
                       borderRadius: '2px',
                       fontSize: '8px',
@@ -285,7 +285,7 @@ export function LanguageSwitcher({
                     {getCompletenessIcon(language.completeness)}
                   </span>
                   {isActive && (
-                    <span style={{ color: '#4ec9b0', fontSize: '14px' }}>●</span>
+                    <span style={{ color: 'var(--dt-status-success)', fontSize: '14px' }}>●</span>
                   )}
                 </div>
               </div>
@@ -295,14 +295,14 @@ export function LanguageSwitcher({
                 <div style={{ 
                   fontSize: '12px', 
                   fontWeight: '600',
-                  color: isActive ? '#ffffff' : '#cccccc',
+                  color: isActive ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)',
                   marginBottom: '2px'
                 }}>
                   {language.name}
                 </div>
                 <div style={{ 
                   fontSize: '11px', 
-                  color: '#969696',
+                  color: 'var(--dt-text-secondary)',
                   fontStyle: 'italic'
                 }}>
                   {language.nativeName}
@@ -317,7 +317,7 @@ export function LanguageSwitcher({
                   alignItems: 'center',
                   marginBottom: '4px'
                 }}>
-                  <span style={{ fontSize: '10px', color: '#969696' }}>
+                  <span style={{ fontSize: '10px', color: 'var(--dt-text-secondary)' }}>
                     Translation Progress
                   </span>
                   <span style={{ 
@@ -332,7 +332,7 @@ export function LanguageSwitcher({
                 <div style={{
                   width: '100%',
                   height: '6px',
-                  background: '#2d2d30',
+                  background: 'var(--dt-bg-secondary)',
                   borderRadius: '3px',
                   overflow: 'hidden'
                 }}>
@@ -350,7 +350,7 @@ export function LanguageSwitcher({
                 display: 'flex', 
                 justifyContent: 'space-between',
                 fontSize: '10px',
-                color: '#969696'
+                color: 'var(--dt-text-secondary)'
               }}>
                 <span>
                   {language.translatedKeys}/{language.totalKeys} keys
@@ -366,8 +366,8 @@ export function LanguageSwitcher({
                   position: 'absolute',
                   top: '8px',
                   right: '8px',
-                  background: '#5a1d1d',
-                  color: '#f48771',
+                  background: 'var(--dt-status-error-bg)',
+                  color: 'var(--dt-status-error)',
                   padding: '2px 6px',
                   borderRadius: '10px',
                   fontSize: '8px',
@@ -384,7 +384,7 @@ export function LanguageSwitcher({
       {filteredAndSortedLanguages.length === 0 && (
         <div style={{ 
           textAlign: 'center', 
-          color: '#969696', 
+          color: 'var(--dt-text-secondary)', 
           fontSize: '12px',
           marginTop: '40px'
         }}>
@@ -399,11 +399,11 @@ export function LanguageSwitcher({
       <div style={{ 
         marginTop: '30px',
         padding: '15px',
-        background: '#252526',
+        background: 'var(--dt-bg-tertiary)',
         borderRadius: '4px',
-        border: '1px solid #3c3c3c'
+        border: '1px solid var(--dt-border-primary)'
       }}>
-        <h5 style={{ margin: '0 0 10px 0', color: '#9cdcfe', fontSize: '12px' }}>
+        <h5 style={{ margin: '0 0 10px 0', color: 'var(--dt-border-focus)', fontSize: '12px' }}>
           Quick Actions
         </h5>
         
@@ -418,9 +418,9 @@ export function LanguageSwitcher({
             style={{
               padding: '6px 12px',
               fontSize: '11px',
-              border: '1px solid #3c3c3c',
-              background: '#2d2d30',
-              color: '#cccccc',
+              border: '1px solid var(--dt-border-primary)',
+              background: 'var(--dt-bg-secondary)',
+              color: 'var(--dt-text-primary)',
               cursor: 'pointer',
               borderRadius: '3px'
             }}
@@ -438,9 +438,9 @@ export function LanguageSwitcher({
             style={{
               padding: '6px 12px',
               fontSize: '11px',
-              border: '1px solid #3c3c3c',
-              background: '#2d2d30',
-              color: '#cccccc',
+              border: '1px solid var(--dt-border-primary)',
+              background: 'var(--dt-bg-secondary)',
+              color: 'var(--dt-text-primary)',
               cursor: 'pointer',
               borderRadius: '3px'
             }}
@@ -458,9 +458,9 @@ export function LanguageSwitcher({
             style={{
               padding: '6px 12px',
               fontSize: '11px',
-              border: '1px solid #3c3c3c',
-              background: '#2d2d30',
-              color: '#cccccc',
+              border: '1px solid var(--dt-border-primary)',
+              background: 'var(--dt-bg-secondary)',
+              color: 'var(--dt-text-primary)',
               cursor: 'pointer',
               borderRadius: '3px'
             }}

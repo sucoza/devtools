@@ -80,7 +80,7 @@ function MemoryProfilerPanelInner() {
           padding: '32px',
           background: "var(--dt-bg-secondary)",
           borderRadius: '12px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+          border: '1px solid var(--dt-border-primary)'
         }}>
           <AlertTriangle size={48} style={{ 
             color: "var(--dt-status-warning)",

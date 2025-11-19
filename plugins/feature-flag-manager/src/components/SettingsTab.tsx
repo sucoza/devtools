@@ -450,7 +450,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           font-size: 18px;
           font-weight: 600;
           color: var(--dt-text-primary);
-          border-bottom: 1px solid #f3f4f6;
+          border-bottom: 1px solid var(--dt-border-primary);
           padding-bottom: 8px;
         }
         

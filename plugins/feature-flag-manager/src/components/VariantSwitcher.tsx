@@ -123,7 +123,7 @@ export const VariantSwitcher: React.FC<VariantSwitcherProps> = ({
           text-align: left;
           cursor: pointer;
           transition: background-color 0.2s;
-          border-bottom: 1px solid #f3f4f6;
+          border-bottom: 1px solid var(--dt-border-primary);
         }
         
         .variant-option:last-child {

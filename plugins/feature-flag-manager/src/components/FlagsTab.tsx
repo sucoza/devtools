@@ -417,7 +417,7 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
           flex: ${selectedFlag ? '0 0 400px' : '1'};
           overflow-y: auto;
           background-color: var(--dt-bg-primary);
-          border-right: ${selectedFlag ? '1px solid #e5e7eb' : 'none'};
+          border-right: ${selectedFlag ? '1px solid var(--dt-border-primary)' : 'none'};
         }
         
         .flag-details {

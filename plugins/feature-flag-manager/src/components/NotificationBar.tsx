@@ -60,25 +60,25 @@ export const NotificationBar: React.FC<NotificationBarProps> = ({
         .notification.success {
           background-color: var(--dt-status-success-bg);
           color: var(--dt-status-success);
-          border-left: 4px solid #10b981;
+          border-left: 4px solid var(--dt-status-success);
         }
         
         .notification.error {
           background-color: var(--dt-status-error-bg);
           color: var(--dt-status-error);
-          border-left: 4px solid #ef4444;
+          border-left: 4px solid var(--dt-status-error);
         }
         
         .notification.warning {
           background-color: var(--dt-status-warning-bg);
           color: var(--dt-status-warning);
-          border-left: 4px solid #f59e0b;
+          border-left: 4px solid var(--dt-status-warning);
         }
         
         .notification.info {
           background-color: var(--dt-info-bg);
           color: var(--dt-info-text);
-          border-left: 4px solid #3b82f6;
+          border-left: 4px solid var(--dt-border-focus);
         }
         
         .notification-content {
