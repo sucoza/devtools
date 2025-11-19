@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Trans } from '@lingui/macro';
+import { Trans, t } from '@lingui/macro';
 import {
   Eye,
   EyeOff,
@@ -248,7 +248,7 @@ function AccessibilityDevToolsPanelInner({ className }: { className?: string }) 
         showFilters={true}
         searchValue={filters.searchQuery || ''}
         onSearchChange={updateSearchFilter}
-        searchPlaceholder={<Trans>Search issues...</Trans>}
+        searchPlaceholder={t`Search issues...`}
         status={{
           isActive: scanState.isScanning,
           label: scanState.isScanning

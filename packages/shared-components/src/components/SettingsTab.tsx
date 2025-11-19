@@ -1,14 +1,14 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { clsx } from 'clsx';
 import { Settings, ToggleLeft, ToggleRight } from 'lucide-react';
 
 export interface SettingField {
   key: string;
-  label: string;
+  label: ReactNode;
   description?: string;
   type: 'boolean' | 'number' | 'string' | 'select' | 'range';
   value: any;
-  options?: Array<{ label: string; value: any }>;
+  options?: Array<{ label: ReactNode; value: any }>;
   min?: number;
   max?: number;
   step?: number;
@@ -16,7 +16,8 @@ export interface SettingField {
 }
 
 export interface SettingSection {
-  title: string;
+  id?: string;
+  title: ReactNode;
   description?: string;
   fields: SettingField[];
 }
@@ -130,7 +131,7 @@ export function SettingsTab({
   return (
     <div className={clsx('space-y-6', className)}>
       {sections.map((section, sectionIndex) => (
-        <div key={section.title} className="bg-white border border-gray-200 rounded-lg p-4">
+        <div key={section.id || `section-${sectionIndex}`} className="bg-white border border-gray-200 rounded-lg p-4">
           <div className="flex items-center mb-4">
             <Settings className="w-5 h-5 text-gray-600 mr-2" />
             <h3 className="text-lg font-semibold text-gray-900">{section.title}</h3>

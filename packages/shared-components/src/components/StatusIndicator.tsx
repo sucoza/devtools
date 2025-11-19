@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../styles/plugin-styles';
 
 export interface StatusIndicatorProps {
   status?: 'active' | 'inactive' | 'pending' | 'success' | 'warning' | 'error' | 'loading';
-  label?: string;
+  label?: ReactNode;
   
   // Display options
   size?: 'xs' | 'sm' | 'md' | 'lg';
@@ -198,7 +198,7 @@ export function StatusIndicator({
         }),
       }}
     >
-      {icon || value || displayLabel.charAt(0).toUpperCase()}
+      {icon || value || (typeof displayLabel === 'string' ? displayLabel.charAt(0).toUpperCase() : displayLabel)}
     </div>
   );
   

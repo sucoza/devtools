@@ -96,4 +96,12 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
       `}</style>
     </div>
   );
+  }
+
+  // TODO: Implement history list view
+  return (
+    <div className="history-tab">
+      <p>History list view - To be implemented</p>
+    </div>
+  );
 };
