@@ -3,14 +3,13 @@ import { Lightbulb, Filter, CheckCircle, X } from "lucide-react";
 import { clsx } from "clsx";
 import type {
   RenderWasteDetectorState,
-  RenderWasteDetectorEventClient,
+  RenderWasteDetectorDevToolsClient,
   OptimizationSuggestion,
 } from "../../types";
 
 interface SuggestionsTabProps {
   state: RenderWasteDetectorState;
-  eventClient: RenderWasteDetectorEventClient;
-  dispatch: (action: unknown) => void;
+  eventClient: RenderWasteDetectorDevToolsClient;
   compact: boolean;
   onComponentSelect: (componentId: string | null) => void;
   onSuggestionApply: (suggestionId: string) => void;
@@ -19,7 +18,6 @@ interface SuggestionsTabProps {
 export function SuggestionsTab({
   state,
   eventClient,
-  dispatch: _dispatch,
   compact: _compact,
   onComponentSelect,
   onSuggestionApply,

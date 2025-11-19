@@ -34,12 +34,11 @@ import type {
   RenderWasteDetectorPanelProps,
   DevToolsTab,
   RenderWasteDetectorState,
-  RenderWasteDetectorAction,
   OptimizationSuggestion,
 } from "../types";
 import {
-  createRenderWasteDetectorEventClient,
-  getRenderWasteDetectorEventClient,
+  createRenderWasteDetectorDevToolsClient,
+  getRenderWasteDetectorDevToolsClient,
 } from "../core";
 
 // Tab Components
@@ -69,8 +68,8 @@ function PluginPanelInner({
   // Create or get event client
   const eventClient = (() => {
     const client =
-      getRenderWasteDetectorEventClient() ||
-      createRenderWasteDetectorEventClient();
+      getRenderWasteDetectorDevToolsClient() ||
+      createRenderWasteDetectorDevToolsClient();
 
     // Apply default settings if provided
     if (defaultSettings) {
@@ -91,12 +90,6 @@ function PluginPanelInner({
   const handleTabChange = (tab: DevToolsTab) => {
     eventClient.selectTab(tab);
     onTabChange?.(tab);
-  };
-
-  // Handle events
-  const handleEvent = (action: RenderWasteDetectorAction) => {
-    eventClient.dispatch(action);
-    onEvent?.(action);
   };
 
   // Handle component selection
@@ -277,7 +270,6 @@ function PluginPanelInner({
           <OverviewTab
             state={state}
             eventClient={eventClient}
-            dispatch={handleEvent}
             compact={compact}
             onComponentSelect={handleComponentSelect}
             onSuggestionApply={handleSuggestionApply}
@@ -287,7 +279,6 @@ function PluginPanelInner({
           <ComponentsTab
             state={state}
             eventClient={eventClient}
-            dispatch={handleEvent}
             compact={compact}
             onComponentSelect={handleComponentSelect}
             onSuggestionApply={handleSuggestionApply}
@@ -297,7 +288,6 @@ function PluginPanelInner({
           <HeatMapTab
             state={state}
             eventClient={eventClient}
-            dispatch={handleEvent}
             compact={compact}
             onComponentSelect={handleComponentSelect}
             onSuggestionApply={handleSuggestionApply}
@@ -307,7 +297,6 @@ function PluginPanelInner({
           <SuggestionsTab
             state={state}
             eventClient={eventClient}
-            dispatch={handleEvent}
             compact={compact}
             onComponentSelect={handleComponentSelect}
             onSuggestionApply={handleSuggestionApply}
@@ -317,7 +306,6 @@ function PluginPanelInner({
           <TimelineTab
             state={state}
             eventClient={eventClient}
-            dispatch={handleEvent}
             compact={compact}
             onComponentSelect={handleComponentSelect}
             onSuggestionApply={handleSuggestionApply}
@@ -327,7 +315,6 @@ function PluginPanelInner({
           <SettingsTab
             state={state}
             eventClient={eventClient}
-            dispatch={handleEvent}
             compact={compact}
             onComponentSelect={handleComponentSelect}
             onSuggestionApply={handleSuggestionApply}

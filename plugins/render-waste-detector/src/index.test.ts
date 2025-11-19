@@ -15,9 +15,9 @@ describe('Render Waste Detector Plugin - Main Exports', () => {
   it('should export core functionality', () => {
     expect(RenderWasteDetectorPlugin.useRenderWasteDetectorStore).toBeDefined();
     expect(RenderWasteDetectorPlugin.getRenderWasteDetectorStore).toBeDefined();
-    expect(RenderWasteDetectorPlugin.createRenderWasteDetectorEventClient).toBeDefined();
-    expect(RenderWasteDetectorPlugin.getRenderWasteDetectorEventClient).toBeDefined();
-    expect(RenderWasteDetectorPlugin.resetRenderWasteDetectorEventClient).toBeDefined();
+    expect(RenderWasteDetectorPlugin.createRenderWasteDetectorDevToolsClient).toBeDefined();
+    expect(RenderWasteDetectorPlugin.getRenderWasteDetectorDevToolsClient).toBeDefined();
+    expect(RenderWasteDetectorPlugin.resetRenderWasteDetectorDevToolsClient).toBeDefined();
     expect(RenderWasteDetectorPlugin.getProfilerIntegration).toBeDefined();
     expect(RenderWasteDetectorPlugin.startRenderProfiling).toBeDefined();
     expect(RenderWasteDetectorPlugin.stopRenderProfiling).toBeDefined();

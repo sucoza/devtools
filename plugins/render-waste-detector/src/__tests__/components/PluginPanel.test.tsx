@@ -158,8 +158,8 @@ const mockEventClient = {
 };
 
 vi.mock('../../core/devtools-client', () => ({
-  getRenderWasteDetectorEventClient: vi.fn(() => mockEventClient),
-  createRenderWasteDetectorEventClient: vi.fn(() => mockEventClient)
+  getRenderWasteDetectorDevToolsClient: vi.fn(() => mockEventClient),
+  createRenderWasteDetectorDevToolsClient: vi.fn(() => mockEventClient)
 }));
 
 describe('PluginPanel', () => {

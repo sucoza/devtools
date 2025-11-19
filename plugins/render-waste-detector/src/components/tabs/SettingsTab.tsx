@@ -2,14 +2,13 @@ import React from "react";
 import { Download, Upload, RotateCcw } from "lucide-react";
 import type {
   RenderWasteDetectorState,
-  RenderWasteDetectorEventClient,
+  RenderWasteDetectorDevToolsClient,
   DevToolsTab,
 } from "../../types";
 
 interface SettingsTabProps {
   state: RenderWasteDetectorState;
-  eventClient: RenderWasteDetectorEventClient;
-  dispatch: (action: unknown) => void;
+  eventClient: RenderWasteDetectorDevToolsClient;
   compact: boolean;
   onComponentSelect: (componentId: string | null) => void;
   onSuggestionApply: (suggestionId: string) => void;
@@ -18,7 +17,6 @@ interface SettingsTabProps {
 export function SettingsTab({
   state,
   eventClient,
-  dispatch: _dispatch,
   compact: _compact,
 }: SettingsTabProps) {
   const { settings, ui } = state;

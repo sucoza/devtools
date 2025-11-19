@@ -2,13 +2,12 @@ import React from "react";
 import { Flame, Settings, RefreshCw } from "lucide-react";
 import type {
   RenderWasteDetectorState,
-  RenderWasteDetectorEventClient,
+  RenderWasteDetectorDevToolsClient,
 } from "../../types";
 
 interface HeatMapTabProps {
   state: RenderWasteDetectorState;
-  eventClient: RenderWasteDetectorEventClient;
-  dispatch: (action: unknown) => void;
+  eventClient: RenderWasteDetectorDevToolsClient;
   compact: boolean;
   onComponentSelect: (componentId: string | null) => void;
   onSuggestionApply: (suggestionId: string) => void;
@@ -17,7 +16,6 @@ interface HeatMapTabProps {
 export function HeatMapTab({
   state,
   eventClient,
-  dispatch: _dispatch,
   compact: _compact,
   onComponentSelect,
 }: HeatMapTabProps) {
