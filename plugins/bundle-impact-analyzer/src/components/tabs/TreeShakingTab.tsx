@@ -1,9 +1,10 @@
 import React from 'react';
 import type { BundleAnalyzerState } from '../../types';
+import type { BundleAnalyzerDevToolsClient } from '../../core/devtools-client';
 
 interface TreeShakingTabProps {
   state: BundleAnalyzerState;
-  eventClient: unknown;
+  eventClient: BundleAnalyzerDevToolsClient;
 }
 
 export function TreeShakingTab({ state }: TreeShakingTabProps) {

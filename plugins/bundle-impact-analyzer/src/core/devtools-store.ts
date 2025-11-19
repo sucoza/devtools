@@ -91,13 +91,16 @@ interface BundleAnalyzerStore extends BundleAnalyzerState {
   // Configuration
   config: BundleAnalyzerConfig;
   updateConfig: (config: Partial<BundleAnalyzerConfig>) => void;
-  
+
   // Analysis jobs
   jobs: AnalysisJob[];
   startJob: (job: Omit<AnalysisJob, 'id' | 'startTime'>) => string;
   updateJob: (jobId: string, updates: Partial<AnalysisJob>) => void;
   completeJob: (jobId: string, result?: unknown) => void;
   failJob: (jobId: string, error: string) => void;
+
+  // Sample data generation
+  generateSampleData: () => void;
 }
 
 /**
@@ -572,6 +575,125 @@ export const useBundleAnalyzerStore = create<BundleAnalyzerStore>()(
             : job
         ),
       }));
+    },
+
+    /**
+     * Generate sample data for development/testing
+     */
+    generateSampleData: () => {
+      const sampleModules: BundleModule[] = [
+        {
+          id: 'react',
+          name: 'react',
+          size: 6800,
+          gzipSize: 2500,
+          path: 'node_modules/react/index.js',
+          imports: [],
+          exports: ['Component', 'createElement', 'useState', 'useEffect', 'useContext'],
+          usedExports: ['Component', 'createElement', 'useState'],
+          unusedExports: ['useEffect', 'useContext'],
+          isTreeShakeable: true,
+          isDynamic: false,
+          timestamp: Date.now(),
+        },
+        {
+          id: 'lodash',
+          name: 'lodash',
+          size: 71000,
+          gzipSize: 25000,
+          path: 'node_modules/lodash/lodash.js',
+          imports: [],
+          exports: ['map', 'filter', 'reduce', 'each', 'find'],
+          usedExports: ['map', 'filter'],
+          unusedExports: ['reduce', 'each', 'find'],
+          isTreeShakeable: false,
+          isDynamic: false,
+          timestamp: Date.now(),
+        },
+        {
+          id: 'app-main',
+          name: 'main.js',
+          size: 45000,
+          gzipSize: 15000,
+          path: 'src/main.js',
+          imports: ['react', 'lodash'],
+          exports: ['default'],
+          isTreeShakeable: true,
+          isDynamic: false,
+          chunk: 'main',
+          timestamp: Date.now(),
+        },
+        {
+          id: 'app-utils',
+          name: 'utils.js',
+          size: 12000,
+          gzipSize: 4000,
+          path: 'src/utils.js',
+          imports: [],
+          exports: ['formatDate', 'formatCurrency', 'debounce'],
+          usedExports: ['formatDate'],
+          unusedExports: ['formatCurrency', 'debounce'],
+          isTreeShakeable: true,
+          isDynamic: false,
+          timestamp: Date.now(),
+        },
+        {
+          id: 'vendor-chunk',
+          name: 'vendor.js',
+          size: 150000,
+          gzipSize: 50000,
+          path: 'dist/vendor.js',
+          imports: [],
+          exports: [],
+          isTreeShakeable: false,
+          isDynamic: true,
+          chunk: 'vendor',
+          timestamp: Date.now(),
+        },
+      ];
+
+      const sampleChunks: BundleChunk[] = [
+        {
+          id: 'main',
+          name: 'main',
+          size: 45000,
+          modules: [sampleModules[2]],
+          parents: [],
+          children: ['vendor'],
+          isEntry: true,
+          isAsync: false,
+          files: ['main.js'],
+          timestamp: Date.now(),
+        },
+        {
+          id: 'vendor',
+          name: 'vendor',
+          size: 150000,
+          modules: [sampleModules[0], sampleModules[1], sampleModules[4]],
+          parents: ['main'],
+          children: [],
+          isEntry: false,
+          isAsync: true,
+          files: ['vendor.js'],
+          timestamp: Date.now(),
+        },
+      ];
+
+      get().updateModules(sampleModules);
+      get().updateChunks(sampleChunks);
+      get().setBuildInfo({
+        buildTool: 'vite',
+        buildTime: Date.now(),
+        environment: 'development',
+        optimization: {
+          minimize: false,
+          treeShaking: true,
+          splitChunks: true,
+          sideEffects: false,
+        },
+        warnings: ['Large vendor bundle detected'],
+        errors: [],
+      });
     },
   }))
 );

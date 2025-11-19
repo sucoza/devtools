@@ -1,11 +1,11 @@
 import React from 'react';
 import { Activity, BarChart3, TreePine, Network } from 'lucide-react';
 import type { BundleAnalyzerState } from '../../types';
-import type { BundleAnalyzerEventClient } from '../../core/devtools-client';
+import type { BundleAnalyzerDevToolsClient } from '../../core/devtools-client';
 
 interface VisualizationTabProps {
   state: BundleAnalyzerState;
-  eventClient: BundleAnalyzerEventClient;
+  eventClient: BundleAnalyzerDevToolsClient;
 }
 
 export function VisualizationTab({ state, eventClient }: VisualizationTabProps) {

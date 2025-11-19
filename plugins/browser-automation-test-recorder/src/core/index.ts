@@ -7,18 +7,16 @@
 export {
   useBrowserAutomationStore,
   getBrowserAutomationStore,
+  getBrowserAutomationStoreApi,
 } from './devtools-store';
 
 // Event client exports
 export {
-  BrowserAutomationDevToolsEventClient,
+  BrowserAutomationDevToolsClient,
   createBrowserAutomationEventClient,
   getBrowserAutomationEventClient,
   resetBrowserAutomationEventClient,
 } from './devtools-client';
-
-// Export client interface
-export type { BrowserAutomationEventClient } from './devtools-client';
 
 // Recording system exports
 export { EventRecorder } from './recorder';

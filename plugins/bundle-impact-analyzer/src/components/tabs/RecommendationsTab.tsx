@@ -1,11 +1,11 @@
 import React from 'react';
 import { TrendingUp, AlertTriangle, Lightbulb, CheckCircle } from 'lucide-react';
 import type { BundleAnalyzerState, OptimizationRecommendation } from '../../types';
-import type { BundleAnalyzerEventClient } from '../../core/devtools-client';
+import type { BundleAnalyzerDevToolsClient } from '../../core/devtools-client';
 
 interface RecommendationsTabProps {
   state: BundleAnalyzerState;
-  eventClient: BundleAnalyzerEventClient;
+  eventClient: BundleAnalyzerDevToolsClient;
 }
 
 export function RecommendationsTab({ state, eventClient }: RecommendationsTabProps) {

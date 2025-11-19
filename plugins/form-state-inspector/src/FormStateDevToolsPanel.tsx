@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { Trans } from '@lingui/macro';
+import { Trans, t } from '@lingui/macro';
 import {
   Play,
   CheckCircle,
@@ -598,7 +598,7 @@ export function FormStateDevToolsPanel() {
         showSearch={true}
         searchValue={searchQuery}
         onSearchChange={setSearchQuery}
-        searchPlaceholder={<Trans>Search fields...</Trans>}
+        searchPlaceholder={t`Search fields...`}
         // Simplified for now - add proper sidebar/filters later
         showMetrics={true}
       />

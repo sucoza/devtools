@@ -16,7 +16,7 @@ import { COMPONENT_STYLES, COLORS, mergeStyles, createSidebarResizer } from '../
 // Tab configuration interface
 export interface PluginTab {
   id: string;
-  label: string;
+  label: ReactNode;
   icon?: React.ElementType;
   badge?: {
     count: number;
@@ -28,7 +28,7 @@ export interface PluginTab {
 // Action button interface
 export interface PluginAction {
   id: string;
-  label: string;
+  label: ReactNode;
   icon?: React.ElementType;
   onClick: () => void;
   variant?: 'primary' | 'success' | 'warning' | 'danger' | 'default';
@@ -38,7 +38,7 @@ export interface PluginAction {
 
 // Metric display interface
 export interface PluginMetric {
-  label: string;
+  label: ReactNode;
   value: string | number;
   color?: string;
   format?: 'number' | 'percentage' | 'bytes' | 'duration' | 'rate';
@@ -46,11 +46,12 @@ export interface PluginMetric {
 
 // Filter section interface
 export interface FilterSection {
-  title: string;
+  id?: string;
+  title: ReactNode;
   icon?: React.ElementType;
   items: Array<{
     id: string;
-    label: string;
+    label: ReactNode;
     count?: number;
     isActive?: boolean;
     onClick: () => void;
@@ -60,19 +61,19 @@ export interface FilterSection {
 // Main plugin panel props
 export interface PluginPanelProps {
   // Required props
-  title: string;
-  
+  title: ReactNode;
+
   // Content organization
   tabs?: PluginTab[];
   activeTabId?: string;
   onTabChange?: (tabId: string) => void;
   children?: ReactNode;
-  
+
   // Header controls
   actions?: PluginAction[];
   showSettings?: boolean;
   onSettingsClick?: () => void;
-  
+
   // Search functionality
   searchValue?: string;
   onSearchChange?: (value: string) => void;
@@ -95,7 +96,7 @@ export interface PluginPanelProps {
   // Status and state
   status?: {
     isActive: boolean;
-    label: string;
+    label: ReactNode;
     color?: string;
   };
   
@@ -106,11 +107,11 @@ export interface PluginPanelProps {
   
   // Misc
   icon?: React.ElementType;
-  subtitle?: string;
+  subtitle?: ReactNode;
   refreshAction?: () => void;
   clearAction?: () => void;
   exportActions?: Array<{
-    label: string;
+    label: ReactNode;
     onClick: () => void;
   }>;
 }
@@ -287,7 +288,7 @@ export function PluginPanel({
                   action.variant === 'danger' ? COMPONENT_STYLES.button.danger : {},
                   action.disabled ? COMPONENT_STYLES.button.disabled : {}
                 )}
-                title={action.tooltip || action.label}
+                title={action.tooltip || (typeof action.label === 'string' ? action.label : undefined)}
               >
                 {ActionIcon && <ActionIcon style={{ width: '12px', height: '12px' }} />}
                 {action.label}
@@ -419,10 +420,10 @@ export function PluginPanel({
         {showFilters && filterSections.length > 0 && (
           <>
             <div style={mergeStyles(COMPONENT_STYLES.sidebar.base, { width: `${sidebarWidth}px` })}>
-              {filterSections.map((section) => {
+              {filterSections.map((section, idx) => {
                 const SectionIcon = section.icon;
                 return (
-                  <div key={section.title} style={COMPONENT_STYLES.sidebar.section}>
+                  <div key={section.id || `section-${idx}`} style={COMPONENT_STYLES.sidebar.section}>
                     <h4 style={COMPONENT_STYLES.sidebar.sectionTitle}>
                       {SectionIcon && <SectionIcon style={{ width: '14px', height: '14px', marginRight: '4px' }} />}
                       {section.title}

@@ -7,11 +7,11 @@
 export { BrowserAutomationPanel } from './components/BrowserAutomationPanel';
 
 // Event client exports
-export { 
-  createBrowserAutomationEventClient, 
+export {
+  createBrowserAutomationEventClient,
   getBrowserAutomationEventClient,
   resetBrowserAutomationEventClient,
-  BrowserAutomationDevToolsEventClient 
+  BrowserAutomationDevToolsClient
 } from './core/devtools-client';
 
 // Component exports

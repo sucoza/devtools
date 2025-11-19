@@ -3,6 +3,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
+import json from '@rollup/plugin-json';
 
 export default {
   input: 'src/index.tsx',
@@ -20,6 +21,7 @@ export default {
   ],
   plugins: [
     peerDepsExternal(),
+    json(),
     resolve({
       extensions: ['.ts', '.tsx', '.js', '.jsx'],
     }),
@@ -37,5 +39,5 @@ export default {
       extract: 'styles.css',
     }),
   ],
-  external: ['react', 'react-dom', '@tanstack/react-query-devtools', 'source-map', 'stacktrace-parser', 'zustand', 'react-error-boundary'],
+  external: ['react', 'react-dom', '@tanstack/react-query-devtools', 'source-map', 'stacktrace-parser', 'zustand', 'react-error-boundary', '@lingui/core', '@lingui/macro', '@lingui/react'],
 };

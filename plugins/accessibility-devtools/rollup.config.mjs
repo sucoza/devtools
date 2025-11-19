@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
+import json from '@rollup/plugin-json';
 
 export default {
   input: 'src/index.ts',
@@ -14,7 +15,10 @@ export default {
     'zustand',
     'use-sync-external-store',
     'clsx',
-    'lucide-react'
+    'lucide-react',
+    '@lingui/core',
+    '@lingui/macro',
+    '@lingui/react'
   ],
   output: [
     {
@@ -32,6 +36,7 @@ export default {
   ],
   plugins: [
     peerDepsExternal(),
+    json(),
     resolve({
       browser: true,
       preferBuiltins: false,

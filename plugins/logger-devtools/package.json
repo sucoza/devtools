@@ -35,6 +35,9 @@
     "react-dom": ">=18.0.0"
   },
   "dependencies": {
+    "@lingui/core": "catalog:",
+    "@lingui/macro": "catalog:",
+    "@lingui/react": "catalog:",
     "@sucoza/devtools-common": "workspace:*",
     "@sucoza/logger": "workspace:*",
     "@sucoza/plugin-core": "workspace:*",
@@ -46,6 +49,8 @@
     "use-sync-external-store": "catalog:"
   },
   "devDependencies": {
+    "@babel/core": "catalog:",
+    "@lingui/cli": "catalog:",
     "@rollup/plugin-commonjs": "catalog:",
     "@rollup/plugin-node-resolve": "catalog:",
     "@rollup/plugin-typescript": "catalog:",

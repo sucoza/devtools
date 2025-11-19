@@ -79,4 +79,12 @@ export const ExperimentsTab: React.FC<ExperimentsTabProps> = ({
       `}</style>
     </div>
   );
+  }
+
+  // TODO: Implement experiments list view
+  return (
+    <div className="experiments-tab">
+      <p>Experiments list view - To be implemented</p>
+    </div>
+  );
 };

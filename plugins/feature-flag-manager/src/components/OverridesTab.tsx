@@ -84,4 +84,12 @@ export const OverridesTab: React.FC<OverridesTabProps> = ({
       `}</style>
     </div>
   );
+  }
+
+  // TODO: Implement overrides list view
+  return (
+    <div className="overrides-tab">
+      <p>Overrides list view - To be implemented</p>
+    </div>
+  );
 };

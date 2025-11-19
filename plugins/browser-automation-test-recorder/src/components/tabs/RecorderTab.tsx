@@ -20,22 +20,32 @@ export default function RecorderTab({ state, dispatch, compact: _compact }: TabC
 
   // Set up real-time updates
   useEffect(() => {
+    let previousEventCount = state.events.length;
+
     const unsubscribe = eventClient.subscribe((event, type) => {
-      if (type === 'recorder:event-added') {
-        setRealTimeEventCount(prev => prev + 1);
-        setLastEventTime(Date.now());
-      } else if (type === 'recorder:cdp-connected') {
-        setCdpConnected((event as { connected: boolean }).connected);
+      if (type === 'browser-automation:state') {
+        // Type guard to check if event is BrowserAutomationState
+        if ('events' in event && Array.isArray(event.events)) {
+          const currentState = event;
+          // Check if events were added
+          if (currentState.events.length > previousEventCount) {
+            setRealTimeEventCount(currentState.events.length);
+            setLastEventTime(Date.now());
+            previousEventCount = currentState.events.length;
+          }
+        }
       }
     });
 
     // Try to connect to CDP on mount
     eventClient.connectToCDP().then(connected => {
       setCdpConnected(connected);
+    }).catch(() => {
+      setCdpConnected(false);
     });
 
     return unsubscribe;
-  }, [eventClient]);
+  }, [eventClient, state.events.length]);
 
   const handleStartRecording = async () => {
     setIsLoading(true);

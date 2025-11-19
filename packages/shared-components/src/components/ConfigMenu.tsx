@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { clsx } from 'clsx';
 
 export interface ConfigMenuItem {
   id: string;
-  label: string;
+  label: ReactNode;
   icon?: string;
   onClick: () => void;
   disabled?: boolean;

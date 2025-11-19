@@ -59,6 +59,7 @@
     "@babel/core": "catalog:",
     "@lingui/cli": "catalog:",
     "@rollup/plugin-commonjs": "catalog:",
+    "@rollup/plugin-json": "catalog:",
     "@rollup/plugin-node-resolve": "catalog:",
     "@rollup/plugin-typescript": "catalog:",
     "@testing-library/jest-dom": "catalog:",

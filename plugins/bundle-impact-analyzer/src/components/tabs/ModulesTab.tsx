@@ -1,7 +1,7 @@
 import React from 'react';
-import { 
-  Package, 
-  FileText, 
+import {
+  Package,
+  FileText,
   Activity,
   TreePine,
   ExternalLink,
@@ -10,11 +10,11 @@ import {
   Zap
 } from 'lucide-react';
 import type { BundleAnalyzerState, BundleModule } from '../../types';
-import type { BundleAnalyzerEventClient } from '../../core/devtools-client';
+import type { BundleAnalyzerDevToolsClient } from '../../core/devtools-client';
 
 interface ModulesTabProps {
   state: BundleAnalyzerState;
-  eventClient: BundleAnalyzerEventClient;
+  eventClient: BundleAnalyzerDevToolsClient;
 }
 
 export function ModulesTab({ state, eventClient }: ModulesTabProps) {

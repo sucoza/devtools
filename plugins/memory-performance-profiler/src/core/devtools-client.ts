@@ -105,13 +105,13 @@ class MemoryProfilerDevToolsClient implements DevToolsEventClient<MemoryProfiler
 
   // Profiling control methods
   start = (samplingInterval?: number): void => {
-    useMemoryProfilerStore.getState().start(samplingInterval);
+    useMemoryProfilerStore.getState().startProfiling();
     this.memoryProfiler.start(samplingInterval);
   };
 
   stop = (): void => {
     this.memoryProfiler.stop();
-    useMemoryProfilerStore.getState().stop();
+    useMemoryProfilerStore.getState().stopProfiling();
   };
 
   // Configuration methods
@@ -140,7 +140,7 @@ class MemoryProfilerDevToolsClient implements DevToolsEventClient<MemoryProfiler
   exportData = (): string => {
     const state = useMemoryProfilerStore.getState();
     return JSON.stringify({
-      measurements: state.measurements,
+      measurements: state.timeline?.measurements || [],
       snapshots: state.snapshots,
       leaks: state.leaks,
       performance: state.performance,
@@ -152,7 +152,7 @@ class MemoryProfilerDevToolsClient implements DevToolsEventClient<MemoryProfiler
   importData = (jsonData: string): void => {
     try {
       const data = JSON.parse(jsonData);
-      useMemoryProfilerStore.getState().importData(data);
+      useMemoryProfilerStore.getState().importSession(data);
     } catch (error) {
       console.error('Failed to import memory profiler data:', error);
       throw new Error('Invalid import data format');
@@ -235,4 +235,48 @@ export function createMemoryProfilerEventClient(): MemoryProfilerDevToolsClient 
 // Get existing client
 export function getMemoryProfilerEventClient(): MemoryProfilerDevToolsClient {
   return memoryProfilerClient;
+}
+
+/**
+ * React hook for using the Memory Profiler DevTools
+ * Combines client methods with reactive state from the store
+ */
+export function useMemoryProfilerDevTools() {
+  const state = useMemoryProfilerStore.getState();
+  const client = memoryProfilerClient;
+
+  return {
+    // State from store
+    isRunning: state.isRunning,
+    currentMemory: state.currentMemory,
+    timeline: state.timeline,
+    components: state.components,
+    hooks: state.hooks,
+    leaks: state.leaks,
+    performance: state.performance,
+    gcEvents: state.gcEvents,
+    snapshots: state.snapshots,
+    suggestions: state.suggestions,
+    budgets: state.budgets,
+    alerts: state.alerts,
+    config: state.config,
+
+    // Client methods
+    start: client.start,
+    stop: client.stop,
+    reset: client.reset,
+    createSnapshot: client.createSnapshot,
+    forceGC: client.forceGC,
+    exportData: client.exportData,
+    importData: client.importData,
+    updateConfig: client.updateConfig,
+
+    // Client utilities
+    isSupported: client.isSupported(),
+    supportInfo: client.getSupportInfo(),
+
+    // Store actions
+    dismissAlert: state.dismissAlert,
+    dismissSuggestion: state.dismissSuggestion,
+  };
 }
