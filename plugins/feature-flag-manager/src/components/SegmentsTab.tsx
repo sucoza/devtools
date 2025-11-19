@@ -145,13 +145,13 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
           height: 100%;
           display: flex;
           flex-direction: column;
-          background-color: #fafafa;
+          background-color: var(--dt-bg-tertiary);
         }
         
         .tab-header {
           padding: 16px;
-          background-color: white;
-          border-bottom: 1px solid #e5e7eb;
+          background-color: var(--dt-bg-primary);
+          border-bottom: 1px solid var(--dt-border-primary);
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -161,13 +161,13 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
           margin: 0 0 4px 0;
           font-size: 18px;
           font-weight: 600;
-          color: #111827;
+          color: var(--dt-text-primary);
         }
         
         .header-info p {
           margin: 0;
           font-size: 14px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
         }
         
         .current-segment {
@@ -175,19 +175,19 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
           align-items: center;
           gap: 8px;
           padding: 8px 16px;
-          background-color: #f3f4f6;
+          background-color: var(--dt-bg-tertiary);
           border-radius: 6px;
         }
         
         .segment-label {
           font-size: 14px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           font-weight: 500;
         }
         
         .segment-value {
           font-size: 14px;
-          color: #1f2937;
+          color: var(--dt-text-primary);
           font-weight: 600;
           font-family: monospace;
         }
@@ -202,15 +202,15 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
         }
         
         .segment-card {
-          background-color: white;
-          border: 1px solid #e5e7eb;
+          background-color: var(--dt-bg-primary);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 8px;
           overflow: hidden;
           transition: all 0.2s ease;
         }
         
         .segment-card.active {
-          border-color: #3b82f6;
+          border-color: var(--dt-border-focus);
           box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
         }
         
@@ -219,11 +219,11 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
           justify-content: space-between;
           align-items: flex-start;
           padding: 16px;
-          background-color: #f9fafb;
+          background-color: var(--dt-bg-secondary);
         }
         
         .segment-card.active .segment-header {
-          background-color: #eff6ff;
+          background-color: var(--dt-bg-hover);
         }
         
         .segment-info {
@@ -234,20 +234,20 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
           margin: 0 0 4px 0;
           font-size: 16px;
           font-weight: 600;
-          color: #1f2937;
+          color: var(--dt-text-primary);
         }
         
         .segment-id {
           font-family: monospace;
           font-size: 12px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           margin-bottom: 8px;
         }
         
         .segment-description {
           margin: 0;
           font-size: 14px;
-          color: #4b5563;
+          color: var(--dt-text-secondary);
           line-height: 1.4;
         }
         
@@ -259,7 +259,7 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
         
         .active-badge {
           padding: 4px 8px;
-          background-color: #10b981;
+          background-color: var(--dt-status-success);
           color: white;
           border-radius: 12px;
           font-size: 11px;
@@ -269,10 +269,10 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
         
         .select-button {
           padding: 6px 16px;
-          border: 1px solid #d1d5db;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 6px;
-          background-color: white;
-          color: #374151;
+          background-color: var(--dt-bg-primary);
+          color: var(--dt-text-primary);
           cursor: pointer;
           font-size: 14px;
           font-weight: 500;
@@ -280,33 +280,33 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
         }
         
         .select-button:hover:not(:disabled) {
-          background-color: #3b82f6;
+          background-color: var(--dt-border-focus);
           color: white;
-          border-color: #3b82f6;
+          border-color: var(--dt-border-focus);
         }
         
         .select-button:disabled {
-          background-color: #f3f4f6;
-          color: #9ca3af;
+          background-color: var(--dt-bg-tertiary);
+          color: var(--dt-border-hover);
           cursor: not-allowed;
         }
         
         .select-button.selected {
-          background-color: #10b981;
+          background-color: var(--dt-status-success);
           color: white;
-          border-color: #10b981;
+          border-color: var(--dt-status-success);
         }
         
         .segment-rules {
           padding: 16px;
-          border-top: 1px solid #f3f4f6;
+          border-top: 1px solid var(--dt-bg-tertiary);
         }
         
         .segment-rules h5 {
           margin: 0 0 12px 0;
           font-size: 14px;
           font-weight: 600;
-          color: #374151;
+          color: var(--dt-text-primary);
         }
         
         .rules-list {
@@ -320,8 +320,8 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
           justify-content: space-between;
           align-items: center;
           padding: 8px 12px;
-          background-color: #f9fafb;
-          border: 1px solid #e5e7eb;
+          background-color: var(--dt-bg-secondary);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
         }
         
@@ -333,23 +333,23 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
         }
         
         .rule-condition strong {
-          color: #1f2937;
+          color: var(--dt-text-primary);
         }
         
         .operator {
           padding: 2px 6px;
-          background-color: #e5e7eb;
+          background-color: var(--dt-border-primary);
           border-radius: 3px;
           font-size: 11px;
           font-weight: 600;
           text-transform: uppercase;
-          color: #374151;
+          color: var(--dt-text-primary);
         }
         
         .values {
           font-family: monospace;
-          color: #6b7280;
-          background-color: #f3f4f6;
+          color: var(--dt-text-secondary);
+          background-color: var(--dt-bg-tertiary);
           padding: 2px 6px;
           border-radius: 3px;
         }
@@ -366,19 +366,19 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
         }
         
         .match-status.matches {
-          background-color: #dcfce7;
-          color: #166534;
+          background-color: var(--dt-status-success-bg);
+          color: var(--dt-status-success);
         }
         
         .match-status.no-match {
-          background-color: #fee2e2;
-          color: #991b1b;
+          background-color: var(--dt-status-error-bg);
+          color: var(--dt-status-error);
         }
         
         .segment-stats {
           padding: 16px;
-          background-color: #f9fafb;
-          border-top: 1px solid #e5e7eb;
+          background-color: var(--dt-bg-secondary);
+          border-top: 1px solid var(--dt-border-primary);
         }
         
         .stat-item {
@@ -389,78 +389,17 @@ export const SegmentsTab: React.FC<SegmentsTabProps> = ({
         
         .stat-label {
           font-size: 14px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           font-weight: 500;
         }
         
         .stat-value {
           font-size: 14px;
-          color: #1f2937;
+          color: var(--dt-text-primary);
           font-weight: 600;
         }
         
-        /* Dark theme */
-        :global(.dark) .segments-tab {
-          background-color: #1f2937;
-        }
-        
-        :global(.dark) .tab-header {
-          background-color: #374151;
-          border-color: #4b5563;
-        }
-        
-        :global(.dark) .header-info h3 {
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .current-segment {
-          background-color: #4b5563;
-        }
-        
-        :global(.dark) .segment-value {
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .segment-card {
-          background-color: #374151;
-          border-color: #4b5563;
-        }
-        
-        :global(.dark) .segment-header {
-          background-color: #4b5563;
-        }
-        
-        :global(.dark) .segment-card.active .segment-header {
-          background-color: #1e3a8a;
-        }
-        
-        :global(.dark) .segment-name {
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .select-button {
-          background-color: #4b5563;
-          border-color: #6b7280;
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .rule-item {
-          background-color: #4b5563;
-          border-color: #6b7280;
-        }
-        
-        :global(.dark) .rule-condition strong {
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .segment-stats {
-          background-color: #4b5563;
-          border-color: #6b7280;
-        }
-        
-        :global(.dark) .stat-value {
-          color: #f3f4f6;
-        }
+
       `}</style>
     </div>
   );

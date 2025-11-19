@@ -58,26 +58,26 @@ export const NotificationBar: React.FC<NotificationBarProps> = ({
         }
         
         .notification.success {
-          background-color: #d1fae5;
-          color: #065f46;
+          background-color: var(--dt-status-success-bg);
+          color: var(--dt-status-success);
           border-left: 4px solid #10b981;
         }
         
         .notification.error {
-          background-color: #fee2e2;
-          color: #991b1b;
+          background-color: var(--dt-status-error-bg);
+          color: var(--dt-status-error);
           border-left: 4px solid #ef4444;
         }
         
         .notification.warning {
-          background-color: #fef3c7;
-          color: #92400e;
+          background-color: var(--dt-status-warning-bg);
+          color: var(--dt-status-warning);
           border-left: 4px solid #f59e0b;
         }
         
         .notification.info {
-          background-color: #dbeafe;
-          color: #1e40af;
+          background-color: var(--dt-info-bg);
+          color: var(--dt-info-text);
           border-left: 4px solid #3b82f6;
         }
         
@@ -120,27 +120,7 @@ export const NotificationBar: React.FC<NotificationBarProps> = ({
             opacity: 1;
           }
         }
-        
-        /* Dark theme */
-        :global(.dark) .notification.success {
-          background-color: #064e3b;
-          color: #10b981;
-        }
-        
-        :global(.dark) .notification.error {
-          background-color: #7f1d1d;
-          color: #fca5a5;
-        }
-        
-        :global(.dark) .notification.warning {
-          background-color: #78350f;
-          color: #fbbf24;
-        }
-        
-        :global(.dark) .notification.info {
-          background-color: #1e3a8a;
-          color: #93c5fd;
-        }
+
       `}</style>
     </div>
   );

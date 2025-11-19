@@ -426,7 +426,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         .settings-tab {
           height: 100%;
           overflow-y: auto;
-          background-color: #fafafa;
+          background-color: var(--dt-bg-tertiary);
         }
         
         .settings-container {
@@ -439,8 +439,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         }
         
         .settings-section {
-          background-color: white;
-          border: 1px solid #e5e7eb;
+          background-color: var(--dt-bg-primary);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 8px;
           padding: 24px;
         }
@@ -449,7 +449,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           margin: 0 0 20px 0;
           font-size: 18px;
           font-weight: 600;
-          color: #111827;
+          color: var(--dt-text-primary);
           border-bottom: 1px solid #f3f4f6;
           padding-bottom: 8px;
         }
@@ -477,7 +477,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           gap: 8px;
           font-size: 14px;
           font-weight: 500;
-          color: #374151;
+          color: var(--dt-text-primary);
           cursor: pointer;
         }
         
@@ -488,26 +488,26 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         .setting-input, .setting-select {
           margin-left: 8px;
           padding: 6px 8px;
-          border: 1px solid #d1d5db;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           font-size: 14px;
         }
         
         .setting-input:disabled {
-          background-color: #f3f4f6;
-          color: #9ca3af;
+          background-color: var(--dt-bg-tertiary);
+          color: var(--dt-border-hover);
         }
         
         .setting-description {
           margin: 4px 0 0 0;
           font-size: 12px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           line-height: 1.4;
         }
         
         .add-provider-button {
           padding: 8px 16px;
-          background-color: #3b82f6;
+          background-color: var(--dt-border-focus);
           color: white;
           border: none;
           border-radius: 6px;
@@ -517,8 +517,8 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         }
         
         .add-provider-form {
-          background-color: #f9fafb;
-          border: 1px solid #e5e7eb;
+          background-color: var(--dt-bg-secondary);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 8px;
           padding: 20px;
           margin-bottom: 20px;
@@ -537,18 +537,18 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           gap: 4px;
           font-size: 14px;
           font-weight: 500;
-          color: #374151;
+          color: var(--dt-text-primary);
         }
         
         .form-input, .form-select {
           padding: 8px;
-          border: 1px solid #d1d5db;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           font-size: 14px;
         }
         
         .config-section {
-          border-top: 1px solid #e5e7eb;
+          border-top: 1px solid var(--dt-border-primary);
           padding-top: 16px;
           margin-top: 16px;
         }
@@ -557,20 +557,20 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           margin: 0 0 16px 0;
           font-size: 16px;
           font-weight: 600;
-          color: #374151;
+          color: var(--dt-text-primary);
         }
         
         .form-actions {
           display: flex;
           justify-content: flex-end;
-          border-top: 1px solid #e5e7eb;
+          border-top: 1px solid var(--dt-border-primary);
           padding-top: 16px;
           margin-top: 16px;
         }
         
         .save-button {
           padding: 8px 20px;
-          background-color: #10b981;
+          background-color: var(--dt-status-success);
           color: white;
           border: none;
           border-radius: 6px;
@@ -588,7 +588,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         .empty-providers {
           text-align: center;
           padding: 40px 20px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
         }
         
         .empty-providers p {
@@ -601,10 +601,10 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         }
         
         .provider-card {
-          border: 1px solid #e5e7eb;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 8px;
           padding: 16px;
-          background-color: #fafafa;
+          background-color: var(--dt-bg-tertiary);
         }
         
         .provider-header {
@@ -618,13 +618,13 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           margin: 0 0 4px 0;
           font-size: 16px;
           font-weight: 600;
-          color: #111827;
+          color: var(--dt-text-primary);
         }
         
         .provider-type {
           font-size: 12px;
           text-transform: uppercase;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           font-weight: 600;
         }
         
@@ -643,18 +643,18 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         }
         
         .status-indicator.enabled {
-          background-color: #dcfce7;
-          color: #166534;
+          background-color: var(--dt-status-success-bg);
+          color: var(--dt-status-success);
         }
         
         .status-indicator.disabled {
-          background-color: #fee2e2;
-          color: #991b1b;
+          background-color: var(--dt-status-error-bg);
+          color: var(--dt-status-error);
         }
         
         .remove-button {
           padding: 6px 12px;
-          background-color: #ef4444;
+          background-color: var(--dt-status-error);
           color: white;
           border: none;
           border-radius: 4px;
@@ -675,12 +675,12 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         
         .config-key {
           font-weight: 600;
-          color: #374151;
+          color: var(--dt-text-primary);
           min-width: 100px;
         }
         
         .config-value {
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           font-family: monospace;
         }
         
@@ -691,7 +691,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         
         .export-button {
           padding: 8px 16px;
-          background-color: #3b82f6;
+          background-color: var(--dt-border-focus);
           color: white;
           border: none;
           border-radius: 6px;
@@ -701,7 +701,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
         
         .clear-button {
           padding: 8px 16px;
-          background-color: #ef4444;
+          background-color: var(--dt-status-error);
           color: white;
           border: none;
           border-radius: 6px;
@@ -719,71 +719,21 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
           display: flex;
           justify-content: space-between;
           padding: 12px;
-          background-color: #f9fafb;
-          border: 1px solid #e5e7eb;
+          background-color: var(--dt-bg-secondary);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 6px;
         }
         
         .debug-item span:first-child {
           font-weight: 500;
-          color: #374151;
+          color: var(--dt-text-primary);
         }
         
         .debug-item span:last-child {
           font-family: monospace;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
         }
-        
-        /* Dark theme */
-        :global(.dark) .settings-tab {
-          background-color: #1f2937;
-        }
-        
-        :global(.dark) .settings-section {
-          background-color: #374151;
-          border-color: #4b5563;
-        }
-        
-        :global(.dark) .settings-section h3 {
-          color: #f3f4f6;
-          border-color: #4b5563;
-        }
-        
-        :global(.dark) .setting-label {
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .setting-input,
-        :global(.dark) .setting-select,
-        :global(.dark) .form-input,
-        :global(.dark) .form-select {
-          background-color: #4b5563;
-          border-color: #6b7280;
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .add-provider-form {
-          background-color: #4b5563;
-          border-color: #6b7280;
-        }
-        
-        :global(.dark) .provider-card {
-          background-color: #4b5563;
-          border-color: #6b7280;
-        }
-        
-        :global(.dark) .provider-info h4 {
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .debug-item {
-          background-color: #4b5563;
-          border-color: #6b7280;
-        }
-        
-        :global(.dark) .debug-item span:first-child {
-          color: #f3f4f6;
-        }
+
       `}</style>
     </div>
   );

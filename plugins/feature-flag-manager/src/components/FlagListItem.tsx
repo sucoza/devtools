@@ -250,21 +250,21 @@ export const FlagListItem: React.FC<FlagListItemProps> = ({
 
       <style>{`
         .flag-item {
-          border: 1px solid #e5e7eb;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 8px;
-          background-color: white;
+          background-color: var(--dt-bg-primary);
           margin: 8px;
           cursor: pointer;
           transition: all 0.2s ease;
         }
         
         .flag-item:hover {
-          border-color: #d1d5db;
+          border-color: var(--dt-border-primary);
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
         
         .flag-item.selected {
-          border-color: #3b82f6;
+          border-color: var(--dt-border-focus);
           box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
         }
         
@@ -290,7 +290,7 @@ export const FlagListItem: React.FC<FlagListItemProps> = ({
         .flag-name {
           font-size: 16px;
           font-weight: 600;
-          color: #111827;
+          color: var(--dt-text-primary);
         }
         
         .flag-badges {
@@ -309,7 +309,7 @@ export const FlagListItem: React.FC<FlagListItemProps> = ({
         
         .override-badge {
           padding: 2px 6px;
-          background-color: #f59e0b;
+          background-color: var(--dt-status-warning);
           color: white;
           border-radius: 12px;
           font-size: 10px;
@@ -319,7 +319,7 @@ export const FlagListItem: React.FC<FlagListItemProps> = ({
         
         .rollout-badge {
           padding: 2px 6px;
-          background-color: #8b5cf6;
+          background-color: var(--dt-accent-primary);
           color: white;
           border-radius: 12px;
           font-size: 10px;
@@ -329,20 +329,20 @@ export const FlagListItem: React.FC<FlagListItemProps> = ({
         .flag-id {
           font-family: monospace;
           font-size: 12px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           margin-bottom: 4px;
         }
         
         .flag-description {
           font-size: 14px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           margin-bottom: 8px;
           line-height: 1.4;
         }
         
         .flag-meta {
           font-size: 12px;
-          color: #9ca3af;
+          color: var(--dt-border-hover);
           display: flex;
           gap: 8px;
         }
@@ -367,14 +367,14 @@ export const FlagListItem: React.FC<FlagListItemProps> = ({
         .flag-value {
           font-family: monospace;
           font-size: 12px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           max-width: 120px;
           text-align: right;
           word-break: break-all;
         }
         
         .flag-controls {
-          border-top: 1px solid #f3f4f6;
+          border-top: 1px solid var(--dt-bg-tertiary);
           padding: 12px 16px;
         }
         
@@ -395,19 +395,19 @@ export const FlagListItem: React.FC<FlagListItemProps> = ({
         }
         
         .toggle-button.enabled {
-          background-color: #ef4444;
+          background-color: var(--dt-status-error);
           color: white;
         }
         
         .toggle-button.disabled {
-          background-color: #10b981;
+          background-color: var(--dt-status-success);
           color: white;
         }
         
         .control-button {
           padding: 6px 12px;
-          background-color: #f3f4f6;
-          border: 1px solid #d1d5db;
+          background-color: var(--dt-bg-tertiary);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           font-size: 12px;
           cursor: pointer;
@@ -415,18 +415,18 @@ export const FlagListItem: React.FC<FlagListItemProps> = ({
         }
         
         .control-button:hover {
-          background-color: #e5e7eb;
+          background-color: var(--dt-border-primary);
         }
         
         .control-button.active {
-          background-color: #3b82f6;
+          background-color: var(--dt-border-focus);
           color: white;
-          border-color: #3b82f6;
+          border-color: var(--dt-border-focus);
         }
         
         .remove-override-button {
           padding: 6px 12px;
-          background-color: #ef4444;
+          background-color: var(--dt-status-error);
           color: white;
           border: none;
           border-radius: 4px;
@@ -440,19 +440,19 @@ export const FlagListItem: React.FC<FlagListItemProps> = ({
           border: none;
           font-size: 12px;
           cursor: pointer;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
         }
         
         .override-panel {
-          border-top: 1px solid #f3f4f6;
+          border-top: 1px solid var(--dt-bg-tertiary);
           padding: 16px;
-          background-color: #f9fafb;
+          background-color: var(--dt-bg-secondary);
         }
         
         .expanded-details {
-          border-top: 1px solid #f3f4f6;
+          border-top: 1px solid var(--dt-bg-tertiary);
           padding: 16px;
-          background-color: #fafafa;
+          background-color: var(--dt-bg-tertiary);
         }
         
         .detail-section {
@@ -467,7 +467,7 @@ export const FlagListItem: React.FC<FlagListItemProps> = ({
           margin: 0 0 8px 0;
           font-size: 14px;
           font-weight: 600;
-          color: #374151;
+          color: var(--dt-text-primary);
         }
         
         .detail-section ul {
@@ -477,45 +477,16 @@ export const FlagListItem: React.FC<FlagListItemProps> = ({
         
         .detail-section li {
           font-size: 13px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           margin-bottom: 2px;
         }
         
         .detail-section div {
           font-size: 13px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           margin-bottom: 2px;
         }
-        
-        /* Dark theme */
-        :global(.dark) .flag-item {
-          background-color: #374151;
-          border-color: #4b5563;
-        }
-        
-        :global(.dark) .flag-name {
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .override-panel {
-          background-color: #4b5563;
-          border-color: #6b7280;
-        }
-        
-        :global(.dark) .expanded-details {
-          background-color: #4b5563;
-          border-color: #6b7280;
-        }
-        
-        :global(.dark) .control-button {
-          background-color: #4b5563;
-          border-color: #6b7280;
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .detail-section h4 {
-          color: #f3f4f6;
-        }
+
       `}</style>
     </div>
   );
