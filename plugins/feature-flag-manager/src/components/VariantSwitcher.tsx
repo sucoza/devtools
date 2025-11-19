@@ -68,8 +68,8 @@ export const VariantSwitcher: React.FC<VariantSwitcherProps> = ({
           align-items: center;
           gap: 6px;
           padding: 6px 12px;
-          background-color: #f3f4f6;
-          border: 1px solid #d1d5db;
+          background-color: var(--dt-bg-tertiary);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           font-size: 12px;
           cursor: pointer;
@@ -77,13 +77,13 @@ export const VariantSwitcher: React.FC<VariantSwitcherProps> = ({
         }
         
         .variant-button:hover {
-          background-color: #e5e7eb;
+          background-color: var(--dt-border-primary);
         }
         
         .variant-button.open {
-          background-color: #3b82f6;
+          background-color: var(--dt-border-focus);
           color: white;
-          border-color: #3b82f6;
+          border-color: var(--dt-border-focus);
         }
         
         .variant-label {
@@ -105,8 +105,8 @@ export const VariantSwitcher: React.FC<VariantSwitcherProps> = ({
           left: 0;
           right: 0;
           z-index: 1000;
-          background-color: white;
-          border: 1px solid #d1d5db;
+          background-color: var(--dt-bg-primary);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
           max-height: 200px;
@@ -131,12 +131,12 @@ export const VariantSwitcher: React.FC<VariantSwitcherProps> = ({
         }
         
         .variant-option:hover {
-          background-color: #f3f4f6;
+          background-color: var(--dt-bg-tertiary);
         }
         
         .variant-option.selected {
-          background-color: #eff6ff;
-          border-left: 3px solid #3b82f6;
+          background-color: var(--dt-bg-hover);
+          border-left: 3px solid var(--dt-border-focus);
         }
         
         .variant-info {
@@ -146,44 +146,16 @@ export const VariantSwitcher: React.FC<VariantSwitcherProps> = ({
         .variant-name {
           font-size: 12px;
           font-weight: 500;
-          color: #111827;
+          color: var(--dt-text-primary);
           margin-bottom: 2px;
         }
         
         .variant-details {
           font-size: 10px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           font-family: monospace;
         }
-        
-        /* Dark theme */
-        :global(.dark) .variant-button {
-          background-color: #4b5563;
-          border-color: #6b7280;
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .variant-button:hover {
-          background-color: #6b7280;
-        }
-        
-        :global(.dark) .variant-dropdown {
-          background-color: #374151;
-          border-color: #4b5563;
-        }
-        
-        :global(.dark) .variant-option:hover {
-          background-color: #4b5563;
-        }
-        
-        :global(.dark) .variant-option.selected {
-          background-color: #1e3a8a;
-          border-left-color: #60a5fa;
-        }
-        
-        :global(.dark) .variant-name {
-          color: #f3f4f6;
-        }
+
       `}</style>
     </div>
   );

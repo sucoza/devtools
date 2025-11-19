@@ -26,8 +26,10 @@ import {
   EmptyState,
   Skeleton,
   ConfigMenu,
+  ThemeProvider,
   type ConfigMenuItem
 } from '@sucoza/shared-components';
+import '@sucoza/shared-components/dist/styles/theme.css';
 import { i18nEventClient } from '../core/i18n-event-client';
 import type { 
   I18nState, 
@@ -88,7 +90,11 @@ const loadUIState = (): Partial<I18nUIState> => {
   }
 };
 
-export function I18nDevToolsPanel() {
+interface I18nDevToolsPanelProps {
+  theme?: 'light' | 'dark' | 'auto';
+}
+
+function I18nDevToolsPanelInner() {
   // Load saved UI state
   const savedState = loadUIState();
   
@@ -536,5 +542,26 @@ export function I18nDevToolsPanel() {
         <ConfigMenu items={configMenuItems} size="sm" />
       </div>
     </div>
+  );
+}
+
+/**
+ * I18n DevTools Panel with Theme Provider
+ */
+export function I18nDevToolsPanel(props: I18nDevToolsPanelProps = {}) {
+  const { theme = 'auto' } = props;
+
+  // Resolve theme
+  const resolvedTheme = useMemo(() => {
+    if (theme === 'auto') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return theme;
+  }, [theme]);
+
+  return (
+    <ThemeProvider defaultTheme={resolvedTheme}>
+      <I18nDevToolsPanelInner />
+    </ThemeProvider>
   );
 }

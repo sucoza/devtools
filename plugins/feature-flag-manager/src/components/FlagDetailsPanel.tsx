@@ -355,7 +355,7 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
           display: flex;
           flex-direction: column;
           height: 100%;
-          background-color: white;
+          background-color: var(--dt-bg-primary);
         }
         
         .panel-header {
@@ -363,8 +363,8 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
           justify-content: space-between;
           align-items: center;
           padding: 16px;
-          border-bottom: 1px solid #e5e7eb;
-          background-color: #f9fafb;
+          border-bottom: 1px solid var(--dt-border-primary);
+          background-color: var(--dt-bg-secondary);
         }
         
         .header-left {
@@ -377,7 +377,7 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
           width: 32px;
           height: 32px;
           background: none;
-          border: 1px solid #d1d5db;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           cursor: pointer;
           font-size: 18px;
@@ -395,7 +395,7 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         .flag-id {
           font-family: monospace;
           font-size: 12px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
         }
         
         .header-right {
@@ -423,7 +423,7 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         
         .override-indicator {
           padding: 4px 8px;
-          background-color: #f59e0b;
+          background-color: var(--dt-status-warning);
           color: white;
           border-radius: 4px;
           font-size: 10px;
@@ -433,8 +433,8 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         
         .current-value-section {
           padding: 16px;
-          border-bottom: 1px solid #e5e7eb;
-          background-color: #fafafa;
+          border-bottom: 1px solid var(--dt-border-primary);
+          background-color: var(--dt-bg-tertiary);
         }
         
         .value-display {
@@ -455,8 +455,8 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         
         .value-code {
           padding: 8px 12px;
-          background-color: #f3f4f6;
-          border: 1px solid #d1d5db;
+          background-color: var(--dt-bg-tertiary);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           font-family: monospace;
           font-size: 14px;
@@ -464,7 +464,7 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         
         .variant-info {
           font-size: 12px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
         }
         
         .value-actions {
@@ -474,7 +474,7 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         
         .test-button {
           padding: 6px 12px;
-          background-color: #3b82f6;
+          background-color: var(--dt-border-focus);
           color: white;
           border: none;
           border-radius: 4px;
@@ -484,7 +484,7 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         
         .tab-navigation {
           display: flex;
-          border-bottom: 1px solid #e5e7eb;
+          border-bottom: 1px solid var(--dt-border-primary);
         }
         
         .tab {
@@ -495,17 +495,17 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
           cursor: pointer;
           font-size: 14px;
           font-weight: 500;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
         }
         
         .tab:hover {
-          color: #374151;
-          background-color: #f9fafb;
+          color: var(--dt-text-primary);
+          background-color: var(--dt-bg-secondary);
         }
         
         .tab.active {
-          color: #3b82f6;
-          border-bottom-color: #3b82f6;
+          color: var(--dt-border-focus);
+          border-bottom-color: var(--dt-border-focus);
         }
         
         .tab-content {
@@ -524,7 +524,7 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
           display: block;
           font-weight: 600;
           margin-bottom: 4px;
-          color: #374151;
+          color: var(--dt-text-primary);
         }
         
         .tags-list {
@@ -535,14 +535,14 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         
         .tag {
           padding: 2px 8px;
-          background-color: #e5e7eb;
+          background-color: var(--dt-border-primary);
           border-radius: 12px;
           font-size: 12px;
-          color: #374151;
+          color: var(--dt-text-primary);
         }
         
         .override-section {
-          border-top: 1px solid #e5e7eb;
+          border-top: 1px solid var(--dt-border-primary);
           padding-top: 24px;
         }
         
@@ -566,13 +566,13 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         
         .current-indicator {
           font-size: 12px;
-          color: #10b981;
+          color: var(--dt-status-success);
           font-weight: 600;
         }
         
         .rule-item {
           padding: 12px;
-          border: 1px solid #e5e7eb;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           margin-bottom: 8px;
           display: flex;
@@ -591,8 +591,8 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         
         .dependency-item {
           padding: 8px 12px;
-          background-color: #f9fafb;
-          border-left: 3px solid #3b82f6;
+          background-color: var(--dt-bg-secondary);
+          border-left: 3px solid var(--dt-border-focus);
           margin-bottom: 8px;
         }
         
@@ -614,20 +614,20 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         .percentage-bar {
           flex: 1;
           height: 20px;
-          background-color: #e5e7eb;
+          background-color: var(--dt-border-primary);
           border-radius: 10px;
           overflow: hidden;
         }
         
         .percentage-fill {
           height: 100%;
-          background-color: #3b82f6;
+          background-color: var(--dt-border-focus);
           transition: width 0.3s ease;
         }
         
         .percentage-text {
           font-weight: 600;
-          color: #374151;
+          color: var(--dt-text-primary);
         }
         
         .rollout-settings h4 {
@@ -648,14 +648,14 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         
         .variant-item {
           padding: 16px;
-          border: 1px solid #e5e7eb;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 8px;
-          background-color: #fafafa;
+          background-color: var(--dt-bg-tertiary);
         }
         
         .variant-item.active {
-          border-color: #3b82f6;
-          background-color: #eff6ff;
+          border-color: var(--dt-border-focus);
+          background-color: var(--dt-bg-hover);
         }
         
         .variant-header {
@@ -671,7 +671,7 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         
         .variant-weight {
           font-weight: 600;
-          color: #3b82f6;
+          color: var(--dt-border-focus);
         }
         
         .variant-value {
@@ -685,13 +685,13 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         
         .variant-description {
           font-size: 14px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           margin-bottom: 12px;
         }
         
         .select-variant-button {
           padding: 6px 12px;
-          background-color: #3b82f6;
+          background-color: var(--dt-border-focus);
           color: white;
           border: none;
           border-radius: 4px;
@@ -711,7 +711,7 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         
         .eval-item label {
           font-weight: 600;
-          color: #374151;
+          color: var(--dt-text-primary);
           min-width: 80px;
         }
         
@@ -724,62 +724,30 @@ export const FlagDetailsPanel: React.FC<FlagDetailsPanelProps> = ({
         }
         
         .eval-reason.default {
-          background-color: #f3f4f6;
-          color: #374151;
+          background-color: var(--dt-bg-tertiary);
+          color: var(--dt-text-primary);
         }
         
         .eval-reason.override {
-          background-color: #f59e0b;
+          background-color: var(--dt-status-warning);
           color: white;
         }
         
         .eval-reason.targeting {
-          background-color: #8b5cf6;
+          background-color: var(--dt-accent-primary);
           color: white;
         }
         
         .empty-state {
           text-align: center;
           padding: 40px 20px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
         }
         
         .empty-state p {
           margin-bottom: 16px;
         }
-        
-        /* Dark theme */
-        :global(.dark) .flag-details-panel {
-          background-color: #1f2937;
-        }
-        
-        :global(.dark) .panel-header {
-          background-color: #374151;
-          border-color: #4b5563;
-        }
-        
-        :global(.dark) .flag-title h2 {
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .current-value-section {
-          background-color: #374151;
-          border-color: #4b5563;
-        }
-        
-        :global(.dark) .value-code {
-          background-color: #4b5563;
-          border-color: #6b7280;
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .info-item label {
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .targeting-section h4 {
-          color: #f3f4f6;
-        }
+
       `}</style>
     </div>
   );

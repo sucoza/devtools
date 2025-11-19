@@ -252,35 +252,35 @@ export const UserContextPanel: React.FC<UserContextPanelProps> = ({
         .context-input {
           width: 100%;
           padding: 6px 8px;
-          border: 1px solid #d1d5db;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           font-size: 14px;
-          background-color: white;
+          background-color: var(--dt-bg-primary);
         }
         
         .segment-button {
           padding: 4px 8px;
-          border: 1px solid #d1d5db;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
-          background-color: white;
+          background-color: var(--dt-bg-primary);
           cursor: pointer;
           font-size: 12px;
           transition: all 0.2s;
         }
         
         .segment-button:hover {
-          background-color: #f3f4f6;
+          background-color: var(--dt-bg-tertiary);
         }
         
         .segment-button.active {
-          background-color: #3b82f6;
+          background-color: var(--dt-border-focus);
           color: white;
-          border-color: #3b82f6;
+          border-color: var(--dt-border-focus);
         }
         
         .remove-button {
           padding: 4px 8px;
-          background-color: #ef4444;
+          background-color: var(--dt-status-error);
           color: white;
           border: none;
           border-radius: 4px;
@@ -289,12 +289,12 @@ export const UserContextPanel: React.FC<UserContextPanelProps> = ({
         }
         
         .remove-button:hover {
-          background-color: #dc2626;
+          background-color: var(--dt-status-error);
         }
         
         .reset-button {
           padding: 6px 12px;
-          background-color: #6b7280;
+          background-color: var(--dt-text-secondary);
           color: white;
           border: none;
           border-radius: 4px;
@@ -304,30 +304,14 @@ export const UserContextPanel: React.FC<UserContextPanelProps> = ({
         
         .apply-button {
           padding: 6px 12px;
-          background-color: #10b981;
+          background-color: var(--dt-status-success);
           color: white;
           border: none;
           border-radius: 4px;
           cursor: pointer;
           font-size: 14px;
         }
-        
-        /* Dark theme */
-        :global(.dark) .context-input {
-          background-color: #374151;
-          border-color: #4b5563;
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .segment-button {
-          background-color: #374151;
-          border-color: #4b5563;
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .segment-button:hover {
-          background-color: #4b5563;
-        }
+
       `}</style>
     </div>
   );

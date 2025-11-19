@@ -264,7 +264,7 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
           display: flex;
           flex-direction: column;
           height: 100%;
-          background-color: #fafafa;
+          background-color: var(--dt-bg-tertiary);
         }
         
         .toolbar {
@@ -272,8 +272,8 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
           justify-content: space-between;
           align-items: center;
           padding: 16px;
-          background-color: white;
-          border-bottom: 1px solid #e5e7eb;
+          background-color: var(--dt-bg-primary);
+          border-bottom: 1px solid var(--dt-border-primary);
         }
         
         .search-section {
@@ -285,15 +285,15 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
         .search-input {
           width: 300px;
           padding: 8px 12px;
-          border: 1px solid #d1d5db;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 6px;
           font-size: 14px;
         }
         
         .filter-button {
           padding: 8px 16px;
-          background-color: #f3f4f6;
-          border: 1px solid #d1d5db;
+          background-color: var(--dt-bg-tertiary);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 6px;
           cursor: pointer;
           font-size: 14px;
@@ -301,13 +301,13 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
         }
         
         .filter-button:hover {
-          background-color: #e5e7eb;
+          background-color: var(--dt-border-primary);
         }
         
         .filter-button.active {
-          background-color: #3b82f6;
+          background-color: var(--dt-border-focus);
           color: white;
-          border-color: #3b82f6;
+          border-color: var(--dt-border-focus);
         }
         
         .actions-section {
@@ -318,21 +318,21 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
         
         .results-count {
           font-size: 14px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
         }
         
         .sort-select {
           padding: 6px 8px;
-          border: 1px solid #d1d5db;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           font-size: 14px;
-          background-color: white;
+          background-color: var(--dt-bg-primary);
         }
         
         .filters-panel {
           padding: 16px;
-          background-color: #f9fafb;
-          border-bottom: 1px solid #e5e7eb;
+          background-color: var(--dt-bg-secondary);
+          border-bottom: 1px solid var(--dt-border-primary);
         }
         
         .filter-row {
@@ -355,16 +355,16 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
         .filter-group label {
           font-size: 14px;
           font-weight: 500;
-          color: #374151;
+          color: var(--dt-text-primary);
           white-space: nowrap;
         }
         
         .filter-group select {
           padding: 4px 8px;
-          border: 1px solid #d1d5db;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           font-size: 14px;
-          background-color: white;
+          background-color: var(--dt-bg-primary);
         }
         
         .filter-actions {
@@ -373,7 +373,7 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
         
         .clear-filters {
           padding: 6px 12px;
-          background-color: #ef4444;
+          background-color: var(--dt-status-error);
           color: white;
           border: none;
           border-radius: 4px;
@@ -389,8 +389,8 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
         
         .tag-filter {
           padding: 4px 8px;
-          background-color: white;
-          border: 1px solid #d1d5db;
+          background-color: var(--dt-bg-primary);
+          border: 1px solid var(--dt-border-primary);
           border-radius: 12px;
           cursor: pointer;
           font-size: 12px;
@@ -398,13 +398,13 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
         }
         
         .tag-filter:hover {
-          background-color: #f3f4f6;
+          background-color: var(--dt-bg-tertiary);
         }
         
         .tag-filter.active {
-          background-color: #3b82f6;
+          background-color: var(--dt-border-focus);
           color: white;
-          border-color: #3b82f6;
+          border-color: var(--dt-border-focus);
         }
         
         .flags-content {
@@ -416,14 +416,14 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
         .flags-list {
           flex: ${selectedFlag ? '0 0 400px' : '1'};
           overflow-y: auto;
-          background-color: white;
+          background-color: var(--dt-bg-primary);
           border-right: ${selectedFlag ? '1px solid #e5e7eb' : 'none'};
         }
         
         .flag-details {
           flex: 1;
           overflow-y: auto;
-          background-color: white;
+          background-color: var(--dt-bg-primary);
         }
         
         .empty-state {
@@ -433,7 +433,7 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
           justify-content: center;
           height: 300px;
           text-align: center;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
         }
         
         .empty-icon {
@@ -444,7 +444,7 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
         .empty-state h3 {
           margin: 0 0 8px 0;
           font-size: 18px;
-          color: #374151;
+          color: var(--dt-text-primary);
         }
         
         .empty-state p {
@@ -454,48 +454,13 @@ export const FlagsTab: React.FC<FlagsTabProps> = ({
         
         .clear-filters-button {
           padding: 8px 16px;
-          background-color: #3b82f6;
+          background-color: var(--dt-border-focus);
           color: white;
           border: none;
           border-radius: 6px;
           cursor: pointer;
         }
-        
-        /* Dark theme */
-        :global(.dark) .flags-tab {
-          background-color: #1f2937;
-        }
-        
-        :global(.dark) .toolbar {
-          background-color: #374151;
-          border-color: #4b5563;
-        }
-        
-        :global(.dark) .search-input {
-          background-color: #4b5563;
-          border-color: #6b7280;
-          color: #f9fafb;
-        }
-        
-        :global(.dark) .filter-button {
-          background-color: #4b5563;
-          border-color: #6b7280;
-          color: #f9fafb;
-        }
-        
-        :global(.dark) .filters-panel {
-          background-color: #374151;
-          border-color: #4b5563;
-        }
-        
-        :global(.dark) .flags-list {
-          background-color: #1f2937;
-          border-color: #374151;
-        }
-        
-        :global(.dark) .empty-state h3 {
-          color: #f3f4f6;
-        }
+
       `}</style>
     </div>
   );

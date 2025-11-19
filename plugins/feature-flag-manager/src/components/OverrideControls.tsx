@@ -234,17 +234,17 @@ export const OverrideControls: React.FC<OverrideControlsProps> = ({
         }
         
         .quick-button.enabled {
-          background-color: #10b981;
+          background-color: var(--dt-status-success);
           color: white;
         }
         
         .quick-button.disabled {
-          background-color: #ef4444;
+          background-color: var(--dt-status-error);
           color: white;
         }
         
         .quick-button.toggle {
-          background-color: #3b82f6;
+          background-color: var(--dt-border-focus);
           color: white;
         }
         
@@ -261,10 +261,10 @@ export const OverrideControls: React.FC<OverrideControlsProps> = ({
         .variant-selection select {
           width: 100%;
           padding: 8px;
-          border: 1px solid #d1d5db;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           font-size: 14px;
-          background-color: white;
+          background-color: var(--dt-bg-primary);
         }
         
         .value-input {
@@ -287,7 +287,7 @@ export const OverrideControls: React.FC<OverrideControlsProps> = ({
           flex: 1;
           padding: 8px;
           padding-right: 60px;
-          border: 1px solid #d1d5db;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           font-size: 14px;
           font-family: monospace;
@@ -298,9 +298,9 @@ export const OverrideControls: React.FC<OverrideControlsProps> = ({
           right: 8px;
           font-size: 10px;
           font-weight: 600;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           text-transform: uppercase;
-          background-color: #f3f4f6;
+          background-color: var(--dt-bg-tertiary);
           padding: 2px 4px;
           border-radius: 2px;
         }
@@ -308,7 +308,7 @@ export const OverrideControls: React.FC<OverrideControlsProps> = ({
         .input-help {
           margin-top: 4px;
           font-size: 12px;
-          color: #6b7280;
+          color: var(--dt-text-secondary);
           font-style: italic;
         }
         
@@ -325,7 +325,7 @@ export const OverrideControls: React.FC<OverrideControlsProps> = ({
         .reason-field {
           width: 100%;
           padding: 8px;
-          border: 1px solid #d1d5db;
+          border: 1px solid var(--dt-border-primary);
           border-radius: 4px;
           font-size: 14px;
         }
@@ -333,7 +333,7 @@ export const OverrideControls: React.FC<OverrideControlsProps> = ({
         .current-override {
           margin-bottom: 16px;
           padding: 12px;
-          background-color: #fef3c7;
+          background-color: var(--dt-status-warning-bg);
           border-left: 4px solid #f59e0b;
           border-radius: 4px;
         }
@@ -345,7 +345,7 @@ export const OverrideControls: React.FC<OverrideControlsProps> = ({
         
         .override-reason {
           font-size: 12px;
-          color: #92400e;
+          color: var(--dt-status-warning);
         }
         
         .actions {
@@ -356,7 +356,7 @@ export const OverrideControls: React.FC<OverrideControlsProps> = ({
         
         .apply-button {
           padding: 8px 16px;
-          background-color: #10b981;
+          background-color: var(--dt-status-success);
           color: white;
           border: none;
           border-radius: 4px;
@@ -365,53 +365,21 @@ export const OverrideControls: React.FC<OverrideControlsProps> = ({
         }
         
         .apply-button:disabled {
-          background-color: #d1d5db;
-          color: #9ca3af;
+          background-color: var(--dt-border-primary);
+          color: var(--dt-border-hover);
           cursor: not-allowed;
         }
         
         .remove-button {
           padding: 8px 16px;
-          background-color: #ef4444;
+          background-color: var(--dt-status-error);
           color: white;
           border: none;
           border-radius: 4px;
           font-size: 14px;
           cursor: pointer;
         }
-        
-        /* Dark theme */
-        :global(.dark) .variant-selection select {
-          background-color: #374151;
-          border-color: #4b5563;
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .value-field {
-          background-color: #374151;
-          border-color: #4b5563;
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .reason-field {
-          background-color: #374151;
-          border-color: #4b5563;
-          color: #f3f4f6;
-        }
-        
-        :global(.dark) .value-type {
-          background-color: #4b5563;
-          color: #d1d5db;
-        }
-        
-        :global(.dark) .current-override {
-          background-color: #451a03;
-          border-left-color: #d97706;
-        }
-        
-        :global(.dark) .override-reason {
-          color: #fbbf24;
-        }
+
       `}</style>
     </div>
   );
