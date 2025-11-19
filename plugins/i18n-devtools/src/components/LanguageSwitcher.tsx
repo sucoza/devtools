@@ -129,7 +129,7 @@ export function LanguageSwitcher({
             border: '1px solid var(--dt-border-primary)'
           }}>
             <div style={{ fontSize: '10px', color: 'var(--dt-text-secondary)', marginBottom: '4px' }}>Current Language</div>
-            <div style={{ fontSize: '18px', fontWeight: '600', color: '#007acc' }}>
+            <div style={{ fontSize: '18px', fontWeight: '600', color: 'var(--dt-border-focus)' }}>
               {currentLanguage.toUpperCase()}
             </div>
           </div>
@@ -215,9 +215,9 @@ export function LanguageSwitcher({
               key={language.code}
               onClick={() => handleLanguageSelect(language.code)}
               style={{
-                background: isActive ? '#094771' : '#252526',
+                background: isActive ? 'var(--dt-border-focus)' : 'var(--dt-bg-tertiary)',
                 border: '1px solid',
-                borderColor: isActive ? '#007acc' : '#3c3c3c',
+                borderColor: isActive ? 'var(--dt-border-focus)' : 'var(--dt-border-primary)',
                 borderRadius: '6px',
                 padding: '12px',
                 cursor: 'pointer',
@@ -226,13 +226,13 @@ export function LanguageSwitcher({
               }}
               onMouseEnter={(e) => {
                 if (!isActive) {
-                  e.currentTarget.style.borderColor = '#007acc';
+                  e.currentTarget.style.borderColor = 'var(--dt-border-focus)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!isActive) {
-                  e.currentTarget.style.borderColor = '#3c3c3c';
+                  e.currentTarget.style.borderColor = 'var(--dt-border-primary)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }
               }}
@@ -248,14 +248,14 @@ export function LanguageSwitcher({
                   <span style={{ 
                     fontSize: '18px',
                     fontWeight: '700',
-                    color: isActive ? '#ffffff' : '#cccccc'
+                    color: isActive ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)'
                   }}>
                     {language.code.toUpperCase()}
                   </span>
                   
                   {language.isRTL && (
                     <span style={{ 
-                      background: '#2d2d30', 
+                      background: 'var(--dt-bg-secondary)', 
                       color: 'var(--dt-status-warning)', 
                       padding: '2px 6px', 
                       borderRadius: '2px',
@@ -268,7 +268,7 @@ export function LanguageSwitcher({
                   
                   {language.isDefault && (
                     <span style={{ 
-                      background: '#2d2d30', 
+                      background: 'var(--dt-bg-secondary)', 
                       color: 'var(--dt-status-success)', 
                       padding: '2px 6px', 
                       borderRadius: '2px',
@@ -295,7 +295,7 @@ export function LanguageSwitcher({
                 <div style={{ 
                   fontSize: '12px', 
                   fontWeight: '600',
-                  color: isActive ? '#ffffff' : '#cccccc',
+                  color: isActive ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)',
                   marginBottom: '2px'
                 }}>
                   {language.name}
@@ -332,7 +332,7 @@ export function LanguageSwitcher({
                 <div style={{
                   width: '100%',
                   height: '6px',
-                  background: '#2d2d30',
+                  background: 'var(--dt-bg-secondary)',
                   borderRadius: '3px',
                   overflow: 'hidden'
                 }}>
@@ -366,7 +366,7 @@ export function LanguageSwitcher({
                   position: 'absolute',
                   top: '8px',
                   right: '8px',
-                  background: '#5a1d1d',
+                  background: 'var(--dt-status-error-bg)',
                   color: 'var(--dt-status-error)',
                   padding: '2px 6px',
                   borderRadius: '10px',
@@ -419,7 +419,7 @@ export function LanguageSwitcher({
               padding: '6px 12px',
               fontSize: '11px',
               border: '1px solid var(--dt-border-primary)',
-              background: '#2d2d30',
+              background: 'var(--dt-bg-secondary)',
               color: 'var(--dt-text-primary)',
               cursor: 'pointer',
               borderRadius: '3px'
@@ -439,7 +439,7 @@ export function LanguageSwitcher({
               padding: '6px 12px',
               fontSize: '11px',
               border: '1px solid var(--dt-border-primary)',
-              background: '#2d2d30',
+              background: 'var(--dt-bg-secondary)',
               color: 'var(--dt-text-primary)',
               cursor: 'pointer',
               borderRadius: '3px'
@@ -459,7 +459,7 @@ export function LanguageSwitcher({
               padding: '6px 12px',
               fontSize: '11px',
               border: '1px solid var(--dt-border-primary)',
-              background: '#2d2d30',
+              background: 'var(--dt-bg-secondary)',
               color: 'var(--dt-text-primary)',
               cursor: 'pointer',
               borderRadius: '3px'

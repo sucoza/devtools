@@ -150,13 +150,13 @@ export function KeyExplorer({
                     gap: '8px',
                     padding: '8px 12px',
                     background: selectedKey === topLevelKey && selectedNamespace === namespace 
-                      ? '#094771' 
-                      : '#252526',
+                      ? 'var(--dt-border-focus)' 
+                      : 'var(--dt-bg-tertiary)',
                     borderRadius: '4px',
                     cursor: 'pointer',
                     border: '1px solid',
                     borderColor: selectedKey === topLevelKey && selectedNamespace === namespace 
-                      ? '#007acc' 
+                      ? 'var(--dt-border-focus)' 
                       : 'transparent',
                     transition: 'all 0.2s ease'
                   }}
@@ -168,7 +168,7 @@ export function KeyExplorer({
                   <span style={{ color, fontSize: '12px' }}>{icon}</span>
                   
                   <span style={{ 
-                    color: status === 'missing' ? '#f48771' : '#cccccc',
+                    color: status === 'missing' ? 'var(--dt-status-error)' : 'var(--dt-text-primary)',
                     fontWeight: '500',
                     fontSize: '11px',
                     flex: 1
@@ -179,7 +179,7 @@ export function KeyExplorer({
                   <span style={{ 
                     fontSize: '10px', 
                     color: 'var(--dt-text-secondary)',
-                    background: '#2d2d30',
+                    background: 'var(--dt-bg-secondary)',
                     padding: '2px 6px',
                     borderRadius: '2px'
                   }}>
@@ -192,7 +192,7 @@ export function KeyExplorer({
                   <div style={{ 
                     marginLeft: '20px',
                     marginTop: '6px',
-                    borderLeft: '1px solid #3c3c3c',
+                    borderLeft: '1px solid var(--dt-border-primary)',
                     paddingLeft: '12px'
                   }}>
                     {Object.entries(translationsByKey).map(([fullKey, translations]) => (
@@ -203,8 +203,8 @@ export function KeyExplorer({
                           padding: '6px 10px',
                           margin: '3px 0',
                           background: selectedKey === fullKey && selectedNamespace === namespace 
-                            ? '#094771' 
-                            : '#2a2a2a',
+                            ? 'var(--dt-border-focus)' 
+                            : 'var(--dt-bg-secondary)',
                           borderRadius: '3px',
                           cursor: 'pointer',
                           fontSize: '10px'
@@ -217,7 +217,7 @@ export function KeyExplorer({
                           marginBottom: '3px'
                         }}>
                           <span style={{ 
-                            color: getKeyStatus(translations) === 'missing' ? '#f48771' : '#cccccc',
+                            color: getKeyStatus(translations) === 'missing' ? 'var(--dt-status-error)' : 'var(--dt-text-primary)',
                             fontWeight: '500'
                           }}>
                             {fullKey}
@@ -239,7 +239,7 @@ export function KeyExplorer({
                             }}>
                               <span>{t.language}:</span>
                               <span style={{ 
-                                color: t.isMissing ? '#f48771' : '#cccccc',
+                                color: t.isMissing ? 'var(--dt-status-error)' : 'var(--dt-text-primary)',
                                 maxWidth: '150px',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
@@ -275,7 +275,7 @@ export function KeyExplorer({
                       }}>
                         <span>{t.language}:</span>
                         <span style={{ 
-                          color: t.isMissing ? '#f48771' : '#cccccc',
+                          color: t.isMissing ? 'var(--dt-status-error)' : 'var(--dt-text-primary)',
                           maxWidth: '200px',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -297,7 +297,7 @@ export function KeyExplorer({
         <div style={{ 
           marginTop: '20px',
           padding: '10px',
-          background: '#2d2d30',
+          background: 'var(--dt-bg-secondary)',
           borderRadius: '4px',
           border: '1px solid var(--dt-border-primary)'
         }}>
@@ -312,7 +312,7 @@ export function KeyExplorer({
                 padding: '4px 8px',
                 margin: '2px 0',
                 background: selectedKey === key.key && selectedNamespace === key.namespace 
-                  ? '#094771' 
+                  ? 'var(--dt-border-focus)' 
                   : 'transparent',
                 borderRadius: '2px',
                 cursor: 'pointer',

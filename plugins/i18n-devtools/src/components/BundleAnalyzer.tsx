@@ -179,7 +179,7 @@ export function BundleAnalyzer({
             
             return (
               <tr key={`${item.namespace}-${item.language}`} style={{
-                background: index % 2 === 0 ? '#2a2a2a' : 'transparent'
+                background: index % 2 === 0 ? 'var(--dt-bg-secondary)' : 'transparent'
               }}>
                 <td style={{ padding: '10px', borderBottom: '1px solid var(--dt-border-primary)', color: 'var(--dt-status-success)', fontWeight: '500' }}>
                   {item.namespace}
@@ -203,7 +203,7 @@ export function BundleAnalyzer({
                   padding: '10px', 
                   textAlign: 'right', 
                   borderBottom: '1px solid var(--dt-border-primary)', 
-                  color: (item.duplicates?.length || 0) > 0 ? '#d19a66' : '#969696'
+                  color: (item.duplicates?.length || 0) > 0 ? 'var(--dt-status-warning)' : 'var(--dt-text-secondary)'
                 }}>
                   {item.duplicates?.length || 0}
                 </td>
@@ -211,7 +211,7 @@ export function BundleAnalyzer({
                   padding: '10px', 
                   textAlign: 'right', 
                   borderBottom: '1px solid var(--dt-border-primary)', 
-                  color: (item.unusedKeys?.length || 0) > 0 ? '#f48771' : '#969696'
+                  color: (item.unusedKeys?.length || 0) > 0 ? 'var(--dt-status-error)' : 'var(--dt-text-secondary)'
                 }}>
                   {item.unusedKeys?.length || 0}
                 </td>
@@ -219,7 +219,7 @@ export function BundleAnalyzer({
                   padding: '10px', 
                   textAlign: 'right', 
                   borderBottom: '1px solid var(--dt-border-primary)', 
-                  color: efficiency >= 90 ? '#4ec9b0' : efficiency >= 70 ? '#d19a66' : '#f48771',
+                  color: efficiency >= 90 ? 'var(--dt-status-success)' : efficiency >= 70 ? 'var(--dt-status-warning)' : 'var(--dt-status-error)',
                   fontWeight: '600'
                 }}>
                   {Math.round(efficiency)}%
@@ -266,7 +266,7 @@ export function BundleAnalyzer({
                 
                 <div style={{ 
                   flex: 1, 
-                  background: '#2d2d30', 
+                  background: 'var(--dt-bg-secondary)', 
                   borderRadius: '3px', 
                   height: '20px', 
                   position: 'relative'
@@ -285,7 +285,7 @@ export function BundleAnalyzer({
                     transform: 'translateY(-50%)',
                     fontSize: '9px',
                     fontWeight: '600',
-                    color: widthPercentage > 50 ? '#ffffff' : '#cccccc'
+                    color: widthPercentage > 50 ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)'
                   }}>
                     {formatSize(item.size)}
                   </div>
@@ -318,7 +318,7 @@ export function BundleAnalyzer({
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '15px' }}>
           <div style={{
-            background: '#2d2d30',
+            background: 'var(--dt-bg-secondary)',
             padding: '12px',
             borderRadius: '3px',
             border: '1px solid var(--dt-border-primary)'
@@ -335,7 +335,7 @@ export function BundleAnalyzer({
           </div>
           
           <div style={{
-            background: '#2d2d30',
+            background: 'var(--dt-bg-secondary)',
             padding: '12px',
             borderRadius: '3px',
             border: '1px solid var(--dt-border-primary)'
@@ -352,7 +352,7 @@ export function BundleAnalyzer({
           </div>
           
           <div style={{
-            background: '#2d2d30',
+            background: 'var(--dt-bg-secondary)',
             padding: '12px',
             borderRadius: '3px',
             border: '1px solid var(--dt-border-primary)'
@@ -437,7 +437,7 @@ export function BundleAnalyzer({
                   position: 'absolute',
                   top: '4px',
                   right: '4px',
-                  background: '#f48771',
+                  background: 'var(--dt-status-error)',
                   borderRadius: '50%',
                   width: '8px',
                   height: '8px'
@@ -537,8 +537,8 @@ export function BundleAnalyzer({
                 padding: '10px 20px',
                 fontSize: '12px',
                 border: '1px solid var(--dt-border-primary)',
-                background: isLoading ? '#2d2d30' : '#007acc',
-                color: isLoading ? '#969696' : '#ffffff',
+                background: isLoading ? 'var(--dt-bg-secondary)' : 'var(--dt-border-focus)',
+                color: isLoading ? 'var(--dt-text-secondary)' : 'var(--dt-text-on-primary)',
                 cursor: isLoading ? 'not-allowed' : 'pointer',
                 borderRadius: '4px',
                 fontWeight: '600',
@@ -565,8 +565,8 @@ export function BundleAnalyzer({
                     padding: '4px 8px',
                     fontSize: '10px',
                     border: '1px solid var(--dt-border-primary)',
-                    background: viewMode === mode.id ? '#007acc' : '#2d2d30',
-                    color: viewMode === mode.id ? '#ffffff' : '#cccccc',
+                    background: viewMode === mode.id ? 'var(--dt-border-focus)' : 'var(--dt-bg-secondary)',
+                    color: viewMode === mode.id ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)',
                     cursor: 'pointer',
                     borderRadius: '2px',
                     display: 'flex',
@@ -633,7 +633,7 @@ export function BundleAnalyzer({
                 padding: '4px 8px',
                 fontSize: '10px',
                 border: '1px solid var(--dt-border-primary)',
-                background: '#2d2d30',
+                background: 'var(--dt-bg-secondary)',
                 color: 'var(--dt-text-primary)',
                 cursor: 'pointer',
                 borderRadius: '2px'
@@ -648,9 +648,9 @@ export function BundleAnalyzer({
               {totals.totalDuplicates > 0 && (
                 <div style={{
                   padding: '10px',
-                  background: '#2d2d30',
+                  background: 'var(--dt-bg-secondary)',
                   borderRadius: '3px',
-                  border: '1px solid #d19a66'
+                  border: '1px solid var(--dt-status-warning)'
                 }}>
                   <div style={{ color: 'var(--dt-status-warning)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                     🔄 Remove Duplicate Keys ({totals.totalDuplicates})
@@ -664,9 +664,9 @@ export function BundleAnalyzer({
               {totals.totalUnused > 0 && (
                 <div style={{
                   padding: '10px',
-                  background: '#2d2d30',
+                  background: 'var(--dt-bg-secondary)',
                   borderRadius: '3px',
-                  border: '1px solid #f48771'
+                  border: '1px solid var(--dt-status-error)'
                 }}>
                   <div style={{ color: 'var(--dt-status-error)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                     🗑️ Remove Unused Keys ({totals.totalUnused})
@@ -679,9 +679,9 @@ export function BundleAnalyzer({
               
               <div style={{
                 padding: '10px',
-                background: '#2d2d30',
+                background: 'var(--dt-bg-secondary)',
                 borderRadius: '3px',
-                border: '1px solid #4ec9b0'
+                border: '1px solid var(--dt-status-success)'
               }}>
                 <div style={{ color: 'var(--dt-status-success)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                   ⚡ Enable Tree Shaking

@@ -58,7 +58,7 @@ export function CoverageVisualization({
     if (coverage >= 80) return 'var(--dt-status-warning)';
     if (coverage >= 60) return 'var(--dt-status-warning)';
     if (coverage >= 40) return 'var(--dt-status-error)';
-    return '#5a1d1d';
+    return 'var(--dt-status-error-bg)';
   };
 
   const getCoverageIntensity = (coverage: number): number => {
@@ -95,15 +95,15 @@ export function CoverageVisualization({
               onClick={() => setSelectedLanguage(selectedLanguage === lang.code ? null : lang.code)}
               style={{
                 padding: '8px',
-                background: selectedLanguage === lang.code ? '#094771' : '#252526',
+                background: selectedLanguage === lang.code ? 'var(--dt-border-focus)' : 'var(--dt-bg-tertiary)',
                 fontSize: '11px',
                 fontWeight: '600',
-                color: selectedLanguage === lang.code ? '#ffffff' : '#cccccc',
+                color: selectedLanguage === lang.code ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)',
                 cursor: 'pointer',
                 textAlign: 'center',
                 borderRadius: '2px',
                 border: '1px solid',
-                borderColor: selectedLanguage === lang.code ? '#007acc' : 'transparent'
+                borderColor: selectedLanguage === lang.code ? 'var(--dt-border-focus)' : 'transparent'
               }}
             >
               <div>{lang.code.toUpperCase()}</div>
@@ -129,14 +129,14 @@ export function CoverageVisualization({
               onClick={() => setSelectedNamespace(selectedNamespace === ns.name ? null : ns.name)}
               style={{
                 padding: '8px',
-                background: selectedNamespace === ns.name ? '#094771' : '#2d2d30',
+                background: selectedNamespace === ns.name ? 'var(--dt-border-focus)' : 'var(--dt-bg-secondary)',
                 fontSize: '11px',
                 fontWeight: '500',
-                color: selectedNamespace === ns.name ? '#ffffff' : '#4ec9b0',
+                color: selectedNamespace === ns.name ? 'var(--dt-text-on-primary)' : 'var(--dt-status-success)',
                 cursor: 'pointer',
                 borderRadius: '2px',
                 border: '1px solid',
-                borderColor: selectedNamespace === ns.name ? '#007acc' : 'transparent',
+                borderColor: selectedNamespace === ns.name ? 'var(--dt-border-focus)' : 'transparent',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between'
@@ -164,7 +164,7 @@ export function CoverageVisualization({
                     borderRadius: '2px',
                     fontSize: '11px',
                     fontWeight: '600',
-                    color: coverage > 50 ? '#ffffff' : '#cccccc',
+                    color: coverage > 50 ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)',
                     textAlign: 'center',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease'
@@ -216,7 +216,7 @@ export function CoverageVisualization({
                   {lang.code.toUpperCase()}
                 </div>
                 
-                <div style={{ flex: 1, background: '#2d2d30', borderRadius: '3px', height: '20px', position: 'relative' }}>
+                <div style={{ flex: 1, background: 'var(--dt-bg-secondary)', borderRadius: '3px', height: '20px', position: 'relative' }}>
                   <div style={{
                     width: `${lang.completeness}%`,
                     height: '100%',
@@ -231,7 +231,7 @@ export function CoverageVisualization({
                     transform: 'translateY(-50%)',
                     fontSize: '10px',
                     fontWeight: '600',
-                    color: lang.completeness > 50 ? '#ffffff' : '#cccccc'
+                    color: lang.completeness > 50 ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)'
                   }}>
                     {Math.round(lang.completeness)}%
                   </div>
@@ -283,7 +283,7 @@ export function CoverageVisualization({
                     {ns.name}
                   </div>
                   
-                  <div style={{ flex: 1, background: '#2d2d30', borderRadius: '3px', height: '20px', position: 'relative' }}>
+                  <div style={{ flex: 1, background: 'var(--dt-bg-secondary)', borderRadius: '3px', height: '20px', position: 'relative' }}>
                     <div style={{
                       width: `${averageCoverage}%`,
                       height: '100%',
@@ -298,7 +298,7 @@ export function CoverageVisualization({
                       transform: 'translateY(-50%)',
                       fontSize: '10px',
                       fontWeight: '600',
-                      color: averageCoverage > 50 ? '#ffffff' : '#cccccc'
+                      color: averageCoverage > 50 ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)'
                     }}>
                       {Math.round(averageCoverage)}%
                     </div>
@@ -347,7 +347,7 @@ export function CoverageVisualization({
                 alignItems: 'center', 
                 gap: '8px',
                 padding: '8px',
-                background: '#2d2d30',
+                background: 'var(--dt-bg-secondary)',
                 borderRadius: '3px'
               }}>
                 <div style={{
@@ -425,7 +425,7 @@ export function CoverageVisualization({
             
             return (
               <tr key={ns.name} style={{ 
-                background: selectedNamespace === ns.name ? '#094771' : 'transparent',
+                background: selectedNamespace === ns.name ? 'var(--dt-border-focus)' : 'transparent',
                 cursor: 'pointer'
               }}
               onClick={() => setSelectedNamespace(selectedNamespace === ns.name ? null : ns.name)}
@@ -570,8 +570,8 @@ export function CoverageVisualization({
               padding: '6px 12px',
               fontSize: '11px',
               border: '1px solid var(--dt-border-primary)',
-              background: viewMode === mode.id ? '#007acc' : '#2d2d30',
-              color: viewMode === mode.id ? '#ffffff' : '#cccccc',
+              background: viewMode === mode.id ? 'var(--dt-border-focus)' : 'var(--dt-bg-secondary)',
+              color: viewMode === mode.id ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)',
               cursor: 'pointer',
               borderRadius: '3px',
               display: 'flex',
@@ -603,7 +603,7 @@ export function CoverageVisualization({
           { label: '80-94%', color: 'var(--dt-status-warning)' },
           { label: '60-79%', color: 'var(--dt-status-warning)' },
           { label: '40-59%', color: 'var(--dt-status-error)' },
-          { label: '<40%', color: '#5a1d1d' }
+          { label: '<40%', color: 'var(--dt-status-error-bg)' }
         ].map(item => (
           <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <div style={{

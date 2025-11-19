@@ -91,15 +91,15 @@ export function HeatMapTab({
         <div className="legend-title">Heat Map Legend</div>
         <div className="legend-items">
           <div className="legend-item">
-            <div className="legend-color" style={{ background: "#28a745" }} />
+            <div className="legend-color" style={{ background: "var(--dt-status-success)" }} />
             <span>Low</span>
           </div>
           <div className="legend-item">
-            <div className="legend-color" style={{ background: "#ffc107" }} />
+            <div className="legend-color" style={{ background: "var(--dt-status-warning)" }} />
             <span>Medium</span>
           </div>
           <div className="legend-item">
-            <div className="legend-color" style={{ background: "#dc3545" }} />
+            <div className="legend-color" style={{ background: "var(--dt-status-error)" }} />
             <span>High</span>
           </div>
         </div>

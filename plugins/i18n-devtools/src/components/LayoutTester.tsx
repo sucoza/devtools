@@ -106,8 +106,8 @@ export function LayoutTester({
       direction: lang.isRTL ? 'rtl' : 'ltr',
       issues,
       screenshots: {
-        before: `data:image/svg+xml;base64,${btoa(`<svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="100" fill="#2d2d30"/><text x="10" y="30" fill="#cccccc" font-family="monospace" font-size="12">Original Layout</text><text x="10" y="50" fill="#969696" font-family="monospace" font-size="10">${lang.isRTL ? 'RTL' : 'LTR'}: ${language}</text></svg>`)}`,
-        after: `data:image/svg+xml;base64,${btoa(`<svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="100" fill="#1e5f1e"/><text x="10" y="30" fill="#ffffff" font-family="monospace" font-size="12">Fixed Layout</text><text x="10" y="50" fill="#4ec9b0" font-family="monospace" font-size="10">${issues.length} issues fixed</text></svg>`)}`
+        before: `data:image/svg+xml;base64,${btoa(`<svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="100" fill="var(--dt-bg-secondary)"/><text x="10" y="30" fill="var(--dt-text-primary)" font-family="monospace" font-size="12">Original Layout</text><text x="10" y="50" fill="var(--dt-text-secondary)" font-family="monospace" font-size="10">${lang.isRTL ? 'RTL' : 'LTR'}: ${language}</text></svg>`)}`,
+        after: `data:image/svg+xml;base64,${btoa(`<svg width="200" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="100" fill="var(--dt-status-success-bg)"/><text x="10" y="30" fill="var(--dt-text-on-primary)" font-family="monospace" font-size="12">Fixed Layout</text><text x="10" y="50" fill="var(--dt-status-success)" font-family="monospace" font-size="10">${issues.length} issues fixed</text></svg>`)}`
       }
     };
 
@@ -137,7 +137,7 @@ export function LayoutTester({
       case 'high': return 'var(--dt-status-error)';
       case 'medium': return 'var(--dt-status-warning)';
       case 'low': return 'var(--dt-status-warning)';
-      default: return '#969696';
+      default: return 'var(--dt-text-secondary)';
     }
   };
 
@@ -320,8 +320,8 @@ export function LayoutTester({
               padding: '8px 16px',
               fontSize: '11px',
               border: '1px solid var(--dt-border-primary)',
-              background: isTestingInProgress ? '#2d2d30' : '#007acc',
-              color: isTestingInProgress ? '#969696' : '#ffffff',
+              background: isTestingInProgress ? 'var(--dt-bg-secondary)' : 'var(--dt-border-focus)',
+              color: isTestingInProgress ? 'var(--dt-text-secondary)' : 'var(--dt-text-on-primary)',
               cursor: isTestingInProgress ? 'not-allowed' : 'pointer',
               borderRadius: '3px',
               fontWeight: '600'
@@ -337,8 +337,8 @@ export function LayoutTester({
               padding: '8px 16px',
               fontSize: '11px',
               border: '1px solid var(--dt-border-primary)',
-              background: isTestingInProgress ? '#2d2d30' : '#1e5f1e',
-              color: isTestingInProgress ? '#969696' : '#ffffff',
+              background: isTestingInProgress ? 'var(--dt-bg-secondary)' : 'var(--dt-status-success-bg)',
+              color: isTestingInProgress ? 'var(--dt-text-secondary)' : 'var(--dt-text-on-primary)',
               cursor: isTestingInProgress ? 'not-allowed' : 'pointer',
               borderRadius: '3px',
               fontWeight: '600'
@@ -353,7 +353,7 @@ export function LayoutTester({
               padding: '8px 16px',
               fontSize: '11px',
               border: '1px solid var(--dt-border-primary)',
-              background: '#2d2d30',
+              background: 'var(--dt-bg-secondary)',
               color: 'var(--dt-text-primary)',
               cursor: 'pointer',
               borderRadius: '3px'
@@ -392,11 +392,11 @@ export function LayoutTester({
                     onClick={() => setSelectedLanguage(result.language)}
                     style={{
                       padding: '10px 12px',
-                      background: selectedLanguage === result.language ? '#094771' : '#2d2d30',
+                      background: selectedLanguage === result.language ? 'var(--dt-border-focus)' : 'var(--dt-bg-secondary)',
                       borderRadius: '3px',
                       cursor: 'pointer',
                       border: '1px solid',
-                      borderColor: selectedLanguage === result.language ? '#007acc' : 'transparent',
+                      borderColor: selectedLanguage === result.language ? 'var(--dt-border-focus)' : 'transparent',
                       display: 'grid',
                       gridTemplateColumns: '100px 1fr 120px 80px',
                       alignItems: 'center',
@@ -409,7 +409,7 @@ export function LayoutTester({
                       gap: '6px',
                       fontSize: '11px',
                       fontWeight: '600',
-                      color: selectedLanguage === result.language ? '#ffffff' : '#cccccc'
+                      color: selectedLanguage === result.language ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)'
                     }}>
                       <span>{result.direction === 'rtl' ? '←' : '→'}</span>
                       {result.language.toUpperCase()}
@@ -437,7 +437,7 @@ export function LayoutTester({
                     <div style={{
                       fontSize: '11px',
                       fontWeight: '600',
-                      color: totalIssues === 0 ? '#4ec9b0' : totalIssues > 3 ? '#f48771' : '#d19a66',
+                      color: totalIssues === 0 ? 'var(--dt-status-success)' : totalIssues > 3 ? 'var(--dt-status-error)' : 'var(--dt-status-warning)',
                       textAlign: 'right'
                     }}>
                       {totalIssues} issues
@@ -462,7 +462,7 @@ export function LayoutTester({
                 </h5>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <span style={{
-                    background: currentResult.direction === 'rtl' ? '#d19a66' : '#4ec9b0',
+                    background: currentResult.direction === 'rtl' ? 'var(--dt-status-warning)' : 'var(--dt-status-success)',
                     color: 'var(--dt-text-on-primary)',
                     padding: '2px 8px',
                     borderRadius: '2px',
@@ -526,7 +526,7 @@ export function LayoutTester({
                       key={index}
                       style={{
                         padding: '10px 12px',
-                        background: '#2d2d30',
+                        background: 'var(--dt-bg-secondary)',
                         borderRadius: '3px',
                         border: '1px solid',
                         borderColor: getSeverityColor(issue.severity)

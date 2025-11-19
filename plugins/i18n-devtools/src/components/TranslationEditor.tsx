@@ -177,8 +177,8 @@ export function TranslationEditor({
                   padding: '4px 8px',
                   fontSize: '10px',
                   border: '1px solid var(--dt-border-primary)',
-                  background: copySuccess === 'Key' ? '#1e5f1e' : '#2d2d30',
-                  color: copySuccess === 'Key' ? '#4ec9b0' : '#cccccc',
+                  background: copySuccess === 'Key' ? 'var(--dt-status-success-bg)' : 'var(--dt-bg-secondary)',
+                  color: copySuccess === 'Key' ? 'var(--dt-status-success)' : 'var(--dt-text-primary)',
                   cursor: 'pointer',
                   borderRadius: '2px'
                 }}
@@ -192,8 +192,8 @@ export function TranslationEditor({
                   padding: '4px 8px',
                   fontSize: '10px',
                   border: '1px solid var(--dt-border-primary)',
-                  background: showAllLanguages ? '#007acc' : '#2d2d30',
-                  color: showAllLanguages ? '#ffffff' : '#cccccc',
+                  background: showAllLanguages ? 'var(--dt-border-focus)' : 'var(--dt-bg-secondary)',
+                  color: showAllLanguages ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)',
                   cursor: 'pointer',
                   borderRadius: '2px'
                 }}
@@ -215,7 +215,7 @@ export function TranslationEditor({
                   padding: '2px 6px',
                   fontSize: '9px',
                   border: '1px solid var(--dt-border-primary)',
-                  background: '#2d2d30',
+                  background: 'var(--dt-bg-secondary)',
                   color: 'var(--dt-text-primary)',
                   cursor: 'pointer',
                   borderRadius: '2px'
@@ -243,9 +243,9 @@ export function TranslationEditor({
                 key={translation.language}
                 style={{
                   marginBottom: '15px',
-                  background: isCurrentLanguage ? '#252526' : '#2a2a2a',
+                  background: isCurrentLanguage ? 'var(--dt-bg-tertiary)' : 'var(--dt-bg-secondary)',
                   border: '1px solid',
-                  borderColor: isCurrentLanguage ? '#007acc' : (isMissing ? '#8b3a3a' : '#3c3c3c'),
+                  borderColor: isCurrentLanguage ? 'var(--dt-border-focus)' : (isMissing ? 'var(--dt-status-error)' : 'var(--dt-border-primary)'),
                   borderRadius: '4px',
                   overflow: 'hidden'
                 }}
@@ -253,7 +253,7 @@ export function TranslationEditor({
                 {/* Language header */}
                 <div style={{
                   padding: '10px 12px',
-                  background: isCurrentLanguage ? '#094771' : (isMissing ? '#5a1d1d' : '#2d2d30'),
+                  background: isCurrentLanguage ? 'var(--dt-border-focus)' : (isMissing ? 'var(--dt-status-error-bg)' : 'var(--dt-bg-secondary)'),
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center'
@@ -262,14 +262,14 @@ export function TranslationEditor({
                     <span style={{ 
                       fontSize: '12px', 
                       fontWeight: '600',
-                      color: isCurrentLanguage ? '#ffffff' : (isMissing ? '#f48771' : '#cccccc')
+                      color: isCurrentLanguage ? 'var(--dt-text-on-primary)' : (isMissing ? 'var(--dt-status-error)' : 'var(--dt-text-primary)')
                     }}>
                       {translation.language.toUpperCase()}
                     </span>
                     
                     {isCurrentLanguage && (
                       <span style={{
-                        background: '#4ec9b0',
+                        background: 'var(--dt-status-success)',
                         color: 'var(--dt-text-on-primary)',
                         padding: '2px 6px',
                         borderRadius: '2px',
@@ -282,7 +282,7 @@ export function TranslationEditor({
                     
                     {isMissing && (
                       <span style={{
-                        background: '#f48771',
+                        background: 'var(--dt-status-error)',
                         color: 'var(--dt-text-on-primary)',
                         padding: '2px 6px',
                         borderRadius: '2px',
@@ -295,7 +295,7 @@ export function TranslationEditor({
                     
                     {hasChanged && (
                       <span style={{
-                        background: '#d19a66',
+                        background: 'var(--dt-status-warning)',
                         color: 'var(--dt-text-on-primary)',
                         padding: '2px 6px',
                         borderRadius: '2px',
@@ -314,8 +314,8 @@ export function TranslationEditor({
                         padding: '2px 6px',
                         fontSize: '9px',
                         border: '1px solid var(--dt-border-primary)',
-                        background: copySuccess === translation.language ? '#1e5f1e' : '#2d2d30',
-                        color: copySuccess === translation.language ? '#4ec9b0' : '#cccccc',
+                        background: copySuccess === translation.language ? 'var(--dt-status-success-bg)' : 'var(--dt-bg-secondary)',
+                        color: copySuccess === translation.language ? 'var(--dt-status-success)' : 'var(--dt-text-primary)',
                         cursor: 'pointer',
                         borderRadius: '2px'
                       }}
@@ -348,7 +348,7 @@ export function TranslationEditor({
                       border: '1px solid var(--dt-border-primary)',
                       borderRadius: '3px',
                       background: 'var(--dt-bg-primary)',
-                      color: isMissing ? '#f48771' : '#cccccc',
+                      color: isMissing ? 'var(--dt-status-error)' : 'var(--dt-text-primary)',
                       fontSize: '11px',
                       fontFamily: 'monospace',
                       lineHeight: '1.4'
@@ -424,7 +424,7 @@ export function TranslationEditor({
                 padding: '6px 12px',
                 fontSize: '11px',
                 border: '1px solid var(--dt-border-primary)',
-                background: '#2d2d30',
+                background: 'var(--dt-bg-secondary)',
                 color: 'var(--dt-text-primary)',
                 cursor: 'pointer',
                 borderRadius: '3px'
@@ -440,8 +440,8 @@ export function TranslationEditor({
                 padding: '6px 12px',
                 fontSize: '11px',
                 border: '1px solid var(--dt-border-primary)',
-                background: hasChanges ? '#1e5f1e' : '#2d2d30',
-                color: hasChanges ? '#ffffff' : '#969696',
+                background: hasChanges ? 'var(--dt-status-success-bg)' : 'var(--dt-bg-secondary)',
+                color: hasChanges ? 'var(--dt-text-on-primary)' : 'var(--dt-text-secondary)',
                 cursor: hasChanges ? 'pointer' : 'not-allowed',
                 borderRadius: '3px'
               }}

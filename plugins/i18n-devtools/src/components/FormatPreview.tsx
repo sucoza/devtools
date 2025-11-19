@@ -367,8 +367,8 @@ export function FormatPreview({
                   padding: '8px 10px',
                   fontSize: '11px',
                   border: '1px solid var(--dt-border-primary)',
-                  background: formatType === item.type ? '#007acc' : '#2d2d30',
-                  color: formatType === item.type ? '#ffffff' : '#cccccc',
+                  background: formatType === item.type ? 'var(--dt-border-focus)' : 'var(--dt-bg-secondary)',
+                  color: formatType === item.type ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)',
                   cursor: 'pointer',
                   borderRadius: '3px',
                   display: 'flex',
@@ -409,8 +409,8 @@ export function FormatPreview({
                   padding: '4px 8px',
                   fontSize: '10px',
                   border: '1px solid var(--dt-border-primary)',
-                  background: selectedLanguages.includes(lang.code) ? '#007acc' : '#2d2d30',
-                  color: selectedLanguages.includes(lang.code) ? '#ffffff' : '#cccccc',
+                  background: selectedLanguages.includes(lang.code) ? 'var(--dt-border-focus)' : 'var(--dt-bg-secondary)',
+                  color: selectedLanguages.includes(lang.code) ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)',
                   cursor: 'pointer',
                   borderRadius: '2px',
                   whiteSpace: 'nowrap'
@@ -428,7 +428,7 @@ export function FormatPreview({
                 padding: '4px 8px',
                 fontSize: '10px',
                 border: '1px solid var(--dt-border-primary)',
-                background: '#2d2d30',
+                background: 'var(--dt-bg-secondary)',
                 color: 'var(--dt-text-primary)',
                 cursor: 'pointer',
                 borderRadius: '2px'
@@ -442,7 +442,7 @@ export function FormatPreview({
                 padding: '4px 8px',
                 fontSize: '10px',
                 border: '1px solid var(--dt-border-primary)',
-                background: '#2d2d30',
+                background: 'var(--dt-bg-secondary)',
                 color: 'var(--dt-text-primary)',
                 cursor: 'pointer',
                 borderRadius: '2px'
@@ -501,7 +501,7 @@ export function FormatPreview({
                   padding: '3px 6px',
                   fontSize: '9px',
                   border: '1px solid var(--dt-border-primary)',
-                  background: '#2d2d30',
+                  background: 'var(--dt-bg-secondary)',
                   color: 'var(--dt-text-primary)',
                   cursor: 'pointer',
                   borderRadius: '2px'
@@ -562,8 +562,8 @@ export function FormatPreview({
             padding: '10px 20px',
             fontSize: '12px',
             border: '1px solid var(--dt-border-primary)',
-            background: isLoading ? '#2d2d30' : '#007acc',
-            color: isLoading ? '#969696' : '#ffffff',
+            background: isLoading ? 'var(--dt-bg-secondary)' : 'var(--dt-border-focus)',
+            color: isLoading ? 'var(--dt-text-secondary)' : 'var(--dt-text-on-primary)',
             cursor: isLoading ? 'not-allowed' : 'pointer',
             borderRadius: '4px',
             fontWeight: '600',
@@ -596,7 +596,7 @@ export function FormatPreview({
                   alignItems: 'center',
                   gap: '12px',
                   padding: '10px',
-                  background: '#2d2d30',
+                  background: 'var(--dt-bg-secondary)',
                   borderRadius: '3px',
                   border: '1px solid var(--dt-border-primary)'
                 }}
@@ -641,7 +641,7 @@ export function FormatPreview({
                 padding: '6px 12px',
                 fontSize: '10px',
                 border: '1px solid var(--dt-border-primary)',
-                background: '#2d2d30',
+                background: 'var(--dt-bg-secondary)',
                 color: 'var(--dt-text-primary)',
                 cursor: 'pointer',
                 borderRadius: '2px'

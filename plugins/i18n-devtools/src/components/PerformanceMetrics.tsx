@@ -117,8 +117,8 @@ export function PerformanceMetrics({
             padding: '8px 16px',
             fontSize: '11px',
             border: '1px solid var(--dt-border-primary)',
-            background: isRefreshing ? '#2d2d30' : '#007acc',
-            color: isRefreshing ? '#969696' : '#ffffff',
+            background: isRefreshing ? 'var(--dt-bg-secondary)' : 'var(--dt-border-focus)',
+            color: isRefreshing ? 'var(--dt-text-secondary)' : 'var(--dt-text-on-primary)',
             cursor: isRefreshing ? 'not-allowed' : 'pointer',
             borderRadius: '3px',
             fontWeight: '600'
@@ -152,7 +152,7 @@ export function PerformanceMetrics({
                 padding: '4px 8px',
                 fontSize: '10px',
                 border: '1px solid var(--dt-border-primary)',
-                background: '#2d2d30',
+                background: 'var(--dt-bg-secondary)',
                 color: 'var(--dt-text-primary)',
                 cursor: 'pointer',
                 borderRadius: '2px'
@@ -171,8 +171,8 @@ export function PerformanceMetrics({
                 padding: '4px 8px',
                 fontSize: '10px',
                 border: '1px solid var(--dt-border-primary)',
-                background: isRefreshing ? '#2d2d30' : '#007acc',
-                color: isRefreshing ? '#969696' : '#ffffff',
+                background: isRefreshing ? 'var(--dt-bg-secondary)' : 'var(--dt-border-focus)',
+                color: isRefreshing ? 'var(--dt-text-secondary)' : 'var(--dt-text-on-primary)',
                 cursor: isRefreshing ? 'not-allowed' : 'pointer',
                 borderRadius: '2px'
               }}
@@ -235,7 +235,7 @@ export function PerformanceMetrics({
                 padding: '12px',
                 borderRadius: '4px',
                 border: '1px solid',
-                borderColor: showDetails === metric.key ? status.color : '#3c3c3c',
+                borderColor: showDetails === metric.key ? status.color : 'var(--dt-border-primary)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease'
               }}
@@ -265,7 +265,7 @@ export function PerformanceMetrics({
                 <div style={{ 
                   marginTop: '8px', 
                   padding: '8px', 
-                  background: '#2d2d30', 
+                  background: 'var(--dt-bg-secondary)', 
                   borderRadius: '2px',
                   fontSize: '9px',
                   color: 'var(--dt-text-primary)'
@@ -303,7 +303,7 @@ export function PerformanceMetrics({
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px' }}>
           <div style={{
             padding: '10px',
-            background: '#2d2d30',
+            background: 'var(--dt-bg-secondary)',
             borderRadius: '3px',
             textAlign: 'center'
           }}>
@@ -317,7 +317,7 @@ export function PerformanceMetrics({
           
           <div style={{
             padding: '10px',
-            background: '#2d2d30',
+            background: 'var(--dt-bg-secondary)',
             borderRadius: '3px',
             textAlign: 'center'
           }}>
@@ -361,7 +361,7 @@ export function PerformanceMetrics({
                     
                     <div style={{ 
                       flex: 1, 
-                      background: '#2d2d30', 
+                      background: 'var(--dt-bg-secondary)', 
                       borderRadius: '3px', 
                       height: '16px', 
                       position: 'relative'
@@ -380,7 +380,7 @@ export function PerformanceMetrics({
                         transform: 'translateY(-50%)',
                         fontSize: '8px',
                         fontWeight: '600',
-                        color: widthPercentage > 30 ? '#ffffff' : '#cccccc'
+                        color: widthPercentage > 30 ? 'var(--dt-text-on-primary)' : 'var(--dt-text-primary)'
                       }}>
                         {formatTime(time)}
                       </div>
@@ -412,9 +412,9 @@ export function PerformanceMetrics({
           {metrics.initTime > 200 && (
             <div style={{
               padding: '10px',
-              background: '#5a1d1d',
+              background: 'var(--dt-status-error-bg)',
               borderRadius: '3px',
-              border: '1px solid #f48771'
+              border: '1px solid var(--dt-status-error)'
             }}>
               <div style={{ color: 'var(--dt-status-error)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                 🐌 Slow Initialization ({formatTime(metrics.initTime)})
@@ -429,9 +429,9 @@ export function PerformanceMetrics({
           {metrics.cacheHitRate < 0.8 && (
             <div style={{
               padding: '10px',
-              background: '#2d2d30',
+              background: 'var(--dt-bg-secondary)',
               borderRadius: '3px',
-              border: '1px solid #d19a66'
+              border: '1px solid var(--dt-status-warning)'
             }}>
               <div style={{ color: 'var(--dt-status-warning)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                 📦 Low Cache Hit Rate ({formatPercentage(metrics.cacheHitRate)})
@@ -446,9 +446,9 @@ export function PerformanceMetrics({
           {metrics.memoryUsage > 10 * 1024 * 1024 && (
             <div style={{
               padding: '10px',
-              background: '#2d2d30',
+              background: 'var(--dt-bg-secondary)',
               borderRadius: '3px',
-              border: '1px solid #d19a66'
+              border: '1px solid var(--dt-status-warning)'
             }}>
               <div style={{ color: 'var(--dt-status-warning)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                 🧠 High Memory Usage ({formatBytes(metrics.memoryUsage)})
@@ -463,9 +463,9 @@ export function PerformanceMetrics({
           {metrics.missedTranslationsCount > 50 && (
             <div style={{
               padding: '10px',
-              background: '#2d2d30',
+              background: 'var(--dt-bg-secondary)',
               borderRadius: '3px',
-              border: '1px solid #f48771'
+              border: '1px solid var(--dt-status-error)'
             }}>
               <div style={{ color: 'var(--dt-status-error)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                 ❌ High Miss Rate ({metrics.missedTranslationsCount} misses)
@@ -480,9 +480,9 @@ export function PerformanceMetrics({
           {metrics.initTime <= 50 && metrics.cacheHitRate >= 0.9 && metrics.averageKeyLookupTime <= 1 && (
             <div style={{
               padding: '10px',
-              background: '#1e5f1e',
+              background: 'var(--dt-status-success-bg)',
               borderRadius: '3px',
-              border: '1px solid #4ec9b0'
+              border: '1px solid var(--dt-status-success)'
             }}>
               <div style={{ color: 'var(--dt-status-success)', fontSize: '11px', fontWeight: '600', marginBottom: '4px' }}>
                 ✅ Excellent Performance

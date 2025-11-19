@@ -236,7 +236,7 @@ export function TimelineTab({
         }
 
         .timeline-event.initial-mount {
-          background: var(--color-secondary, #6c757d);
+          background: var(--dt-text-secondary);
         }
 
         .empty-state {

@@ -43,15 +43,15 @@ export function SuggestionsTab({
   const _getSeverityColor = (severity: OptimizationSuggestion["severity"]) => {
     switch (severity) {
       case "critical":
-        return "#dc3545";
+        return "var(--dt-status-error)";
       case "high":
-        return "#fd7e14";
+        return "var(--dt-status-warning)";
       case "medium":
-        return "#ffc107";
+        return "var(--dt-status-warning)";
       case "low":
-        return "#17a2b8";
+        return "var(--dt-status-info)";
       default:
-        return "#17a2b8";
+        return "var(--dt-status-info)";
     }
   };
 
@@ -377,7 +377,7 @@ export function SuggestionsTab({
 
         .severity-label.medium {
           background: var(--dt-status-warning, #ffc107);
-          color: #1a1a1a;
+          color: var(--dt-text-primary);
         }
 
         .severity-label.low {
@@ -526,7 +526,7 @@ export function SuggestionsTab({
 
         .complexity-badge.medium {
           background: var(--dt-status-warning, #ffc107);
-          color: #1a1a1a;
+          color: var(--dt-text-primary);
         }
 
         .complexity-badge.high {
