@@ -381,7 +381,7 @@ function ContrastResultItem({ result, onHighlight }: ContrastResultItemProps) {
     } else if (result.wcagAA) {
       return <CheckCircle style={{ width: '20px', height: '20px', color: COLORS.status.warning }} />;
     } else if (result.largeTextAA) {
-      return <AlertTriangle style={{ width: '20px', height: '20px', color: '#f97316' }} />;
+      return <AlertTriangle style={{ width: '20px', height: '20px', color: "var(--dt-status-warning)" }} />;
     } else {
       return <XCircle style={{ width: '20px', height: '20px', color: COLORS.status.error }} />;
     }
@@ -397,7 +397,7 @@ function ContrastResultItem({ result, onHighlight }: ContrastResultItemProps) {
   const getComplianceStyle = () => {
     if (result.wcagAAA) return COMPONENT_STYLES.tag.success;
     if (result.wcagAA) return COMPONENT_STYLES.tag.warning;
-    if (result.largeTextAA) return { ...COMPONENT_STYLES.tag.base, backgroundColor: 'rgba(249, 115, 22, 0.2)', color: '#f97316' };
+    if (result.largeTextAA) return { ...COMPONENT_STYLES.tag.base, backgroundColor: "var(--dt-status-warning-bg)", color: "var(--dt-status-warning)" };
     return COMPONENT_STYLES.tag.error;
   };
 

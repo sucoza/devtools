@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Trans } from '@lingui/macro';
 import {
   Eye,
@@ -14,7 +14,8 @@ import {
   MapPin,
   BarChart3
 } from 'lucide-react';
-import { PluginPanel, PluginTab, PluginAction, PluginMetric, FilterSection, COLORS, COMPONENT_STYLES, ConfigMenu, type ConfigMenuItem } from '@sucoza/shared-components';
+import { PluginPanel, PluginTab, PluginAction, PluginMetric, FilterSection, COLORS, COMPONENT_STYLES, ConfigMenu, ThemeProvider, type ConfigMenuItem } from '@sucoza/shared-components';
+import '@sucoza/shared-components/dist/styles/theme.css';
 import { useAccessibilityAudit } from '../hooks/useAccessibilityAudit';
 import { IssueList } from './IssueList';
 import { ColorContrastAnalyzer } from './ColorContrastAnalyzer';
@@ -25,12 +26,13 @@ import { FocusDebugger } from './FocusDebugger';
 
 export interface AccessibilityDevToolsPanelProps {
   className?: string;
+  theme?: 'light' | 'dark' | 'auto';
 }
 
 /**
  * Main Accessibility DevTools Panel
  */
-export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsPanelProps) {
+function AccessibilityDevToolsPanelInner({ className }: { className?: string }) {
   const {
     currentAudit,
     scanState,
@@ -269,5 +271,21 @@ export function AccessibilityDevToolsPanel({ className }: AccessibilityDevToolsP
   );
 }
 
+export function AccessibilityDevToolsPanel(props: AccessibilityDevToolsPanelProps = {}) {
+  const { theme = 'auto', ...rest } = props;
+
+  const resolvedTheme = useMemo(() => {
+    if (theme === 'auto') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return theme;
+  }, [theme]);
+
+  return (
+    <ThemeProvider defaultTheme={resolvedTheme}>
+      <AccessibilityDevToolsPanelInner {...rest} />
+    </ThemeProvider>
+  );
+}
 
 export default AccessibilityDevToolsPanel;

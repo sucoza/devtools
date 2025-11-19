@@ -387,9 +387,9 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
     
     // Add temporary highlight
     if (element instanceof HTMLElement) {
-      element.style.outline = '3px solid #ef4444';
+      element.style.outline = '3px solid var(--dt-status-error)';
       element.style.outlineOffset = '2px';
-      
+
       setTimeout(() => {
         element.style.outline = '';
         element.style.outlineOffset = '';
@@ -458,7 +458,7 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
             disabled={isAnalyzing}
             style={mergeStyles(
               COMPONENT_STYLES.button.base,
-              { backgroundColor: COLORS.severity.moderate, borderColor: COLORS.severity.moderate, color: '#ffffff' },
+              { backgroundColor: COLORS.severity.moderate, borderColor: COLORS.severity.moderate, color: "var(--dt-text-on-primary)" },
               isAnalyzing ? COMPONENT_STYLES.button.disabled : {}
             )}
             onMouseEnter={(e) => !isAnalyzing && Object.assign(e.currentTarget.style, COMPONENT_STYLES.button.hover)}
@@ -501,7 +501,7 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
           <div style={{
             textAlign: 'center',
             padding: SPACING['2xl'],
-            background: 'rgba(231, 76, 60, 0.1)',
+            background: "var(--dt-status-error-bg)",
             borderRadius: RADIUS.lg,
             border: `1px solid ${COLORS.severity.critical}`
           }}>
@@ -520,7 +520,7 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
           <div style={{
             textAlign: 'center',
             padding: SPACING['2xl'],
-            background: 'rgba(231, 76, 60, 0.1)',
+            background: "var(--dt-status-error-bg)",
             borderRadius: RADIUS.lg,
             border: `1px solid ${COLORS.status.error}`
           }}>
@@ -539,7 +539,7 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
           <div style={{
             textAlign: 'center',
             padding: SPACING['2xl'],
-            background: 'rgba(243, 156, 18, 0.1)',
+            background: "var(--dt-status-warning-bg)",
             borderRadius: RADIUS.lg,
             border: `1px solid ${COLORS.severity.moderate}`
           }}>
@@ -558,7 +558,7 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
           <div style={{
             textAlign: 'center',
             padding: SPACING['2xl'],
-            background: 'rgba(52, 152, 219, 0.1)',
+            background: "var(--dt-status-info-bg)",
             borderRadius: RADIUS.lg,
             border: `1px solid ${COLORS.severity.minor}`
           }}>

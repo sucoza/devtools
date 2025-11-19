@@ -162,7 +162,7 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
       left: ${rect.left - 2}px;
       width: ${rect.width + 4}px;
       height: ${rect.height + 4}px;
-      border: 2px solid #3b82f6;
+      border: 2px solid var(--dt-border-focus);
       background: rgba(59, 130, 246, 0.1);
       pointer-events: none;
       z-index: 10000;
@@ -175,7 +175,7 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
       position: absolute;
       top: -10px;
       left: -2px;
-      background: #3b82f6;
+      background: var(--dt-border-focus);
       color: white;
       padding: 2px 6px;
       font-size: 12px;

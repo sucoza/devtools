@@ -191,7 +191,7 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
     
     // Add temporary highlight
     if (element instanceof HTMLElement) {
-      element.style.outline = '3px solid #8b5cf6';
+      element.style.outline = "3px solid var(--dt-border-focus)";
       element.style.outlineOffset = '2px';
       element.style.backgroundColor = 'rgba(139, 92, 246, 0.1)';
       
@@ -228,7 +228,7 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
         left: ${rect.left}px;
         width: ${rect.width}px;
         height: ${rect.height}px;
-        border: 2px solid #8b5cf6;
+        border: 2px solid var(--dt-border-focus);
         background: rgba(139, 92, 246, 0.05);
         pointer-events: none;
         z-index: 9999;
@@ -241,7 +241,7 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
         position: absolute;
         top: -2px;
         left: -2px;
-        background: #8b5cf6;
+        background: var(--dt-border-focus);
         color: white;
         padding: 2px 6px;
         font-size: 12px;
@@ -463,13 +463,13 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
             <div style={{
               fontSize: TYPOGRAPHY.fontSize.xl,
               fontWeight: TYPOGRAPHY.fontWeight.bold,
-              color: '#9b59b6'
+              color: "var(--dt-border-focus)"
             }}>
               {stats.complementary}
             </div>
             <div style={{
               fontSize: TYPOGRAPHY.fontSize.xs,
-              color: '#9b59b6'
+              color: "var(--dt-border-focus)"
             }}>Aside</div>
           </div>
           <div style={{
@@ -628,13 +628,13 @@ function LandmarkItem({ landmark, isExpanded, onToggleExpanded, onHighlight }: L
     const styles = {
       'main': { color: COLORS.status.info, backgroundColor: 'rgba(52, 152, 219, 0.1)' },
       'navigation': { color: COLORS.status.success, backgroundColor: 'rgba(78, 201, 176, 0.1)' },
-      'complementary': { color: '#8b5cf6', backgroundColor: 'rgba(139, 92, 246, 0.1)' },
+      'complementary': { color: "var(--dt-border-focus)", backgroundColor: 'rgba(139, 92, 246, 0.1)' },
       'banner': { color: COLORS.status.warning, backgroundColor: 'rgba(243, 156, 18, 0.1)' },
-      'contentinfo': { color: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)' },
+      'contentinfo': { color: "var(--dt-border-focus)", backgroundColor: "var(--dt-status-info-bg)" },
       'region': { color: COLORS.text.secondary, backgroundColor: COLORS.background.tertiary },
-      'article': { color: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.1)' },
-      'form': { color: '#ec4899', backgroundColor: 'rgba(236, 72, 153, 0.1)' },
-      'search': { color: '#14b8a6', backgroundColor: 'rgba(20, 184, 166, 0.1)' },
+      'article': { color: "var(--dt-status-warning)", backgroundColor: 'rgba(249, 115, 22, 0.1)' },
+      'form': { color: "var(--dt-status-error)", backgroundColor: "var(--dt-status-error-bg)" },
+      'search': { color: "var(--dt-status-success)", backgroundColor: "var(--dt-status-success-bg)" },
     };
     return styles[role as keyof typeof styles] || { color: COLORS.text.secondary, backgroundColor: COLORS.background.tertiary };
   };
@@ -710,7 +710,7 @@ function LandmarkItem({ landmark, isExpanded, onToggleExpanded, onHighlight }: L
         <button
           onClick={onHighlight}
           style={{
-            color: '#6366f1',
+            color: "var(--dt-border-focus)",
             background: 'transparent',
             border: 'none',
             cursor: 'pointer',
@@ -719,7 +719,7 @@ function LandmarkItem({ landmark, isExpanded, onToggleExpanded, onHighlight }: L
             transition: 'color 0.15s ease'
           }}
           onMouseEnter={(e) => e.currentTarget.style.color = COLORS.text.accent}
-          onMouseLeave={(e) => e.currentTarget.style.color = '#6366f1'}
+          onMouseLeave={(e) => e.currentTarget.style.color = "var(--dt-border-focus)"}
           title="Highlight landmark"
         >
           <Eye style={{ width: '16px', height: '16px' }} />
