@@ -1,10 +1,11 @@
 import React from 'react';
 import { FileText, Package } from 'lucide-react';
 import type { BundleAnalyzerState } from '../../types';
+import type { BundleAnalyzerDevToolsClient } from '../../core/devtools-client';
 
 interface ChunksTabProps {
   state: BundleAnalyzerState;
-  eventClient: unknown;
+  eventClient: BundleAnalyzerDevToolsClient;
 }
 
 export function ChunksTab({ state }: ChunksTabProps) {

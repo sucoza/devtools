@@ -68,7 +68,7 @@ export class BundleAnalyzerDevToolsClient implements DevToolsEventClient<BundleA
   };
 
   startCDNAnalysis = (): void => {
-    useBundleAnalyzerStore.getState().startCDNAnalysis();
+    useBundleAnalyzerStore.getState().analyzeCDNOpportunities();
   };
 
   // Module methods
@@ -81,12 +81,13 @@ export class BundleAnalyzerDevToolsClient implements DevToolsEventClient<BundleA
   };
 
   analyzeImport = (modulePath: string): void => {
-    useBundleAnalyzerStore.getState().analyzeImport(modulePath);
+    useBundleAnalyzerStore.getState().analyzeImportImpact(modulePath);
   };
 
-  // UI methods
-  selectTab = (tabId: string): void => {
-    useBundleAnalyzerStore.getState().selectTab(tabId);
+  // UI methods (selectTab is handled by the component, not the store)
+  selectTab = (_tabId: string): void => {
+    // This is a no-op as tab selection is handled in the UI component
+    // We keep this method for API compatibility
   };
 
   // Recommendations methods
@@ -107,6 +108,16 @@ export class BundleAnalyzerDevToolsClient implements DevToolsEventClient<BundleA
   // Visualization methods
   updateVisualization = (settings: Partial<VisualizationSettings>): void => {
     useBundleAnalyzerStore.getState().updateVisualization(settings);
+  };
+
+  // Filter methods
+  updateFilters = (filters: Partial<BundleAnalyzerState['filters']>): void => {
+    useBundleAnalyzerStore.getState().updateFilters(filters);
+  };
+
+  // Tree shaking analysis
+  startTreeShakingAnalysis = (): void => {
+    useBundleAnalyzerStore.getState().analyzeTreeShaking();
   };
 }
 

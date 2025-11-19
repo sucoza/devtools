@@ -25,7 +25,7 @@ import type {
   ScreenshotInfo,
 } from '../types';
 import { SelectorEngine } from './selector-engine';
-import type { BrowserAutomationEventClient } from './devtools-client';
+import type { BrowserAutomationDevToolsClient } from './devtools-client';
 
 interface PerformanceWithMemory extends Performance {
   memory?: {
@@ -48,7 +48,7 @@ export class EventRecorder {
   
   // Core components
   private selectorEngine: SelectorEngine;
-  private devToolsClient: BrowserAutomationEventClient;
+  private devToolsClient: BrowserAutomationDevToolsClient;
   
   // Recording options
   private options: RecordingOptions = {
@@ -92,7 +92,7 @@ export class EventRecorder {
   
   constructor(
     selectorEngine: SelectorEngine,
-    devToolsClient: BrowserAutomationEventClient
+    devToolsClient: BrowserAutomationDevToolsClient
   ) {
     this.selectorEngine = selectorEngine;
     this.devToolsClient = devToolsClient;
@@ -398,10 +398,10 @@ export class EventRecorder {
 
       // Buffer the event
       this.eventBuffer.push(recordedEvent);
-      
-      // Emit event to DevTools
-      this.devToolsClient.emit('recorder:event-added', recordedEvent);
-      
+
+      // Add event to DevTools client
+      this.devToolsClient.addEvent(recordedEvent);
+
       // Update last event time
       this.lastEventTime = Date.now();
       
@@ -698,7 +698,7 @@ export class EventRecorder {
     };
 
     this.eventBuffer.push(recordedEvent);
-    this.devToolsClient.emit('recorder:event-added', recordedEvent);
+    this.devToolsClient.addEvent(recordedEvent);
   }
 
   /**

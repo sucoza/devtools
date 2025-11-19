@@ -1,7 +1,7 @@
 import React from 'react';
-import { 
-  Package, 
-  FileText, 
+import {
+  Package,
+  FileText,
   TrendingDown,
   AlertTriangle,
   CheckCircle,
@@ -9,11 +9,11 @@ import {
   Zap
 } from 'lucide-react';
 import type { BundleAnalyzerState } from '../../types';
-import type { BundleAnalyzerEventClient } from '../../core/devtools-client';
+import type { BundleAnalyzerDevToolsClient } from '../../core/devtools-client';
 
 interface OverviewTabProps {
   state: BundleAnalyzerState;
-  eventClient: BundleAnalyzerEventClient;
+  eventClient: BundleAnalyzerDevToolsClient;
 }
 
 export function OverviewTab({ state, eventClient }: OverviewTabProps) {

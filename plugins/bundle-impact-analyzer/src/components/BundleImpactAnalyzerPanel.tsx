@@ -36,7 +36,7 @@ import {
   createBundleAnalyzerEventClient,
   getBundleAnalyzerEventClient,
   startBundleInterception,
-  BundleAnalyzerDevToolsEventClient,
+  BundleAnalyzerDevToolsClient,
 } from '../core';
 
 // Tab components (we'll create these as placeholders for now)

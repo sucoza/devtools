@@ -24,6 +24,7 @@ import type {
 import {
   createBrowserAutomationEventClient,
   getBrowserAutomationEventClient,
+  getBrowserAutomationStoreApi,
 } from '../core';
 import { ConfigMenu, type ConfigMenuItem, ThemeProvider } from '@sucoza/shared-components';
 import '@sucoza/shared-components/dist/styles/theme.css';
@@ -69,9 +70,11 @@ function BrowserAutomationPanelInner({
     onTabChange?.(tab);
   };
 
-  // Handle events
+  // Handle events via store dispatch
   const handleEvent = (action: BrowserAutomationAction) => {
-    eventClient.dispatch(action);
+    // Get the store API and dispatch the action
+    const storeApi = getBrowserAutomationStoreApi();
+    storeApi.getState().dispatch(action);
     onEvent?.(action);
   };
 

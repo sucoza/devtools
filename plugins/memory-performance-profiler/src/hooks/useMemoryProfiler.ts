@@ -1,12 +1,10 @@
 import { useSyncExternalStore } from 'react';
 import { useMemo } from 'react';
-import { 
+import {
   useMemoryProfilerStore,
-  createMemoryProfilerEventClient
+  createMemoryProfilerEventClient,
+  type MemoryProfilerEvents
 } from '../core';
-import type { 
-  MemoryProfilerEvents
-} from '../types';
 
 /**
  * Main hook for accessing memory profiler functionality
@@ -21,9 +19,6 @@ export function useMemoryProfiler() {
 
   // Get store actions
   const actions = useMemoryProfilerStore.getState();
-
-  // Create event client for external integrations
-  const eventClient = useMemo(() => createMemoryProfilerEventClient(), []);
 
   return {
     // State
@@ -81,9 +76,6 @@ export function useMemoryProfiler() {
     getFilteredComponents: actions.getFilteredComponents,
     getCurrentMemoryUsage: actions.getCurrentMemoryUsage,
     getMemoryUtilization: actions.getMemoryUtilization,
-
-    // Event client for external integrations
-    eventClient,
   };
 }
 
@@ -91,27 +83,19 @@ export function useMemoryProfiler() {
  * Hook for subscribing to memory profiler events
  */
 export function useMemoryProfilerEvents() {
-  const eventClient = useMemo(() => createMemoryProfilerEventClient(), []);
-
   const subscribe = useMemo(() => {
-    return <K extends keyof MemoryProfilerEvents>(
-      event: K,
-      callback: (data: MemoryProfilerEvents[K]) => void
+    const client = createMemoryProfilerEventClient();
+    return (
+      callback: (
+        event: MemoryProfilerEvents[keyof MemoryProfilerEvents],
+        type: keyof MemoryProfilerEvents
+      ) => void
     ) => {
-      return eventClient.subscribe(event, callback);
+      return client.subscribe(callback);
     };
-  }, [eventClient]);
+  }, []);
 
-  const emit = useMemo(() => {
-    return <K extends keyof MemoryProfilerEvents>(
-      event: K,
-      data: MemoryProfilerEvents[K]
-    ) => {
-      return eventClient.emit(event, data);
-    };
-  }, [eventClient]);
-
-  return { subscribe, emit, eventClient };
+  return { subscribe };
 }
 
 /**

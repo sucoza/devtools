@@ -113,14 +113,14 @@ export class BundleInterceptor {
       };
       
       this.moduleCache.set(moduleId, module);
-      this.eventClient.emit('bundle:module-added', { module });
+      // Module added - store will be updated via analyzeImportImpact if needed
     } else {
       // Update existing module
       module.size = size;
       module.gzipSize = entry.encodedBodySize;
       module.timestamp = Date.now();
-      
-      this.eventClient.emit('bundle:module-updated', { module });
+
+      // Module updated - store will be updated via analyzeImportImpact if needed
     }
   }
 
@@ -313,9 +313,9 @@ export class BundleInterceptor {
         isDynamic,
         timestamp: Date.now(),
       };
-      
+
       this.moduleCache.set(moduleId, module);
-      this.eventClient.emit('bundle:module-added', { module });
+      // Module added - store will be updated when needed
     }
   }
 
@@ -460,7 +460,7 @@ class WebpackInterceptor {
       });
     }
 
-    this.eventClient.emit('bundle:chunk-added', { chunk });
+    // Chunk added - store will be updated when needed
   }
 
   private interceptWebpackRequire() {

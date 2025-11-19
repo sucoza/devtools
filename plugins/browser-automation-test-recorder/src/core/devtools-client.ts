@@ -8,6 +8,9 @@ import type {
   EventFilters,
   RecorderSettings,
   RecordingOptions,
+  ConnectionOptions,
+  ScreenshotOptions,
+  ScreenshotInfo,
 } from '../types';
 import { getBrowserAutomationStoreApi } from './devtools-store';
 import { EventRecorder } from './recorder';
@@ -83,8 +86,10 @@ export class BrowserAutomationDevToolsClient implements DevToolsEventClient<Brow
 
   // Recording control methods
   startRecording = async (options?: RecordingOptions): Promise<void> => {
-    await this.storeApi.getState().startRecording(options);
-    this.eventRecorder.start();
+    // Start recording in the store (default to 'standard' mode)
+    await this.storeApi.getState().startRecording('standard');
+    // Start the event recorder with options
+    this.eventRecorder.start(options);
   };
 
   stopRecording = async (): Promise<void> => {
@@ -172,14 +177,27 @@ export class BrowserAutomationDevToolsClient implements DevToolsEventClient<Brow
   };
 
   // CDP integration methods
-  connectToCDP = async (endpoint: string): Promise<void> => {
-    await this.cdpClient.connect(endpoint);
-    this.storeApi.getState().connectToCDP(endpoint);
+  connectToCDP = async (options?: ConnectionOptions): Promise<boolean> => {
+    try {
+      await this.cdpClient.connect(options);
+      return true;
+    } catch (error) {
+      console.error('Failed to connect to CDP:', error);
+      return false;
+    }
   };
 
   disconnectFromCDP = async (): Promise<void> => {
     await this.cdpClient.disconnect();
-    this.storeApi.getState().disconnectFromCDP();
+  };
+
+  takeScreenshot = async (options?: ScreenshotOptions): Promise<ScreenshotInfo | null> => {
+    try {
+      return await this.cdpClient.takeScreenshot(options);
+    } catch (error) {
+      console.error('Failed to take screenshot:', error);
+      return null;
+    }
   };
 
   // UI control methods
@@ -203,10 +221,6 @@ export class BrowserAutomationDevToolsClient implements DevToolsEventClient<Brow
     this.storeApi.getState().setTheme(theme);
   };
 
-  toggleCompactMode = (): void => {
-    this.storeApi.getState().toggleCompactMode();
-  };
-
   // Settings methods
   updateSettings = (settings: Partial<RecorderSettings>): void => {
     this.storeApi.getState().updateSettings(settings);
@@ -214,14 +228,6 @@ export class BrowserAutomationDevToolsClient implements DevToolsEventClient<Brow
 
   resetSettings = (): void => {
     this.storeApi.getState().resetSettings();
-  };
-
-  exportSettings = (): void => {
-    this.storeApi.getState().exportSettings();
-  };
-
-  importSettings = (settings: RecorderSettings): void => {
-    this.storeApi.getState().importSettings(settings);
   };
 
   // Utility methods
