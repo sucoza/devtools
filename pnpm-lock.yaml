@@ -48,6 +48,9 @@ catalogs:
     '@rollup/plugin-commonjs':
       specifier: ^29.0.0
       version: 29.0.0
+    '@rollup/plugin-json':
+      specifier: ^6.1.0
+      version: 6.1.0
     '@rollup/plugin-node-resolve':
       specifier: ^16.0.1
       version: 16.0.3
@@ -1491,6 +1494,9 @@ importers:
       '@rollup/plugin-commonjs':
         specifier: 'catalog:'
         version: 29.0.0(rollup@4.53.2)
+      '@rollup/plugin-json':
+        specifier: 'catalog:'
+        version: 6.1.0(rollup@4.53.2)
       '@rollup/plugin-node-resolve':
         specifier: 'catalog:'
         version: 16.0.3(rollup@4.53.2)
@@ -2223,6 +2229,9 @@ importers:
       '@rollup/plugin-commonjs':
         specifier: 'catalog:'
         version: 29.0.0(rollup@4.53.2)
+      '@rollup/plugin-json':
+        specifier: 'catalog:'
+        version: 6.1.0(rollup@4.53.2)
       '@rollup/plugin-node-resolve':
         specifier: 'catalog:'
         version: 16.0.3(rollup@4.53.2)
@@ -2344,6 +2353,9 @@ importers:
       '@rollup/plugin-commonjs':
         specifier: 'catalog:'
         version: 29.0.0(rollup@4.53.2)
+      '@rollup/plugin-json':
+        specifier: 'catalog:'
+        version: 6.1.0(rollup@4.53.2)
       '@rollup/plugin-node-resolve':
         specifier: 'catalog:'
         version: 16.0.3(rollup@4.53.2)
@@ -2462,6 +2474,9 @@ importers:
       '@rollup/plugin-commonjs':
         specifier: 'catalog:'
         version: 29.0.0(rollup@4.53.2)
+      '@rollup/plugin-json':
+        specifier: 'catalog:'
+        version: 6.1.0(rollup@4.53.2)
       '@rollup/plugin-node-resolve':
         specifier: 'catalog:'
         version: 16.0.3(rollup@4.53.2)
