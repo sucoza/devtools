@@ -17,6 +17,81 @@ export interface LoggerOptions {
   fields?: StructuredFields;
 }
 
+/**
+ * LoggerContext provides a fluent API for building log calls with structured data
+ */
+class LoggerContext {
+  constructor(
+    private parent: DevToolsLogger,
+    private options: LoggerOptions = {}
+  ) {}
+
+  /**
+   * Add structured fields to this log context
+   */
+  withFields(fields: StructuredFields): LoggerContext {
+    return new LoggerContext(this.parent, {
+      ...this.options,
+      fields: { ...this.options.fields, ...fields }
+    });
+  }
+
+  /**
+   * Set the category for logs in this context
+   */
+  withCategory(category: string): LoggerContext {
+    return new LoggerContext(this.parent, {
+      ...this.options,
+      category
+    });
+  }
+
+  /**
+   * Add tags to logs in this context
+   */
+  withTags(...tags: string[]): LoggerContext {
+    return new LoggerContext(this.parent, {
+      ...this.options,
+      tags: [...(this.options.tags || []), ...tags]
+    });
+  }
+
+  /**
+   * Add context metadata to logs
+   */
+  withContext(context: Record<string, any>): LoggerContext {
+    return new LoggerContext(this.parent, {
+      ...this.options,
+      context: { ...this.options.context, ...context }
+    });
+  }
+
+  // Logging methods with variadic arguments (like console.log)
+  trace(message: string, ...args: any[]): void {
+    this.parent['_log']('trace', message, args.length > 0 ? args : undefined, this.options);
+  }
+
+  debug(message: string, ...args: any[]): void {
+    this.parent['_log']('debug', message, args.length > 0 ? args : undefined, this.options);
+  }
+
+  info(message: string, ...args: any[]): void {
+    this.parent['_log']('info', message, args.length > 0 ? args : undefined, this.options);
+  }
+
+  warn(message: string, ...args: any[]): void {
+    this.parent['_log']('warn', message, args.length > 0 ? args : undefined, this.options);
+  }
+
+  error(message: string, ...args: any[]): void {
+    this.parent['_log']('error', message, args.length > 0 ? args : undefined, this.options);
+  }
+
+  fatal(message: string, ...args: any[]): void {
+    this.parent['_log']('fatal', message, args.length > 0 ? args : undefined, this.options);
+  }
+}
+
 class DevToolsLogger {
   private static instance: DevToolsLogger | null = null;
   private config: LoggerConfig = {
@@ -533,7 +608,8 @@ class DevToolsLogger {
     return Object.keys(fields).length > 0 ? fields : undefined;
   }
 
-  private log(level: LogLevel, message: string, data?: any, options?: LoggerOptions, sourceOverride?: LogEntry['source']) {
+  // Internal logging method (renamed from log to _log)
+  private _log(level: LogLevel, message: string, data?: any, options?: LoggerOptions, sourceOverride?: LogEntry['source']) {
     const category = options?.category;
 
     if (!this.shouldLog(level, category)) {
@@ -698,89 +774,110 @@ class DevToolsLogger {
     this.logBuffer = [];
   }
 
-  // Public API with method overloads
-  trace(message: string, data?: any, options?: LoggerOptions): void;
-  trace(category: string, message: string, ...args: any[]): void;
-  trace(...args: any[]) {
-    if (typeof args[0] === 'string' && typeof args[1] === 'string') {
-      // Category overload: trace(category, message, ...args)
-      const [category, message, ...data] = args;
-      this.log('trace', message, data.length === 1 ? data[0] : data.length > 1 ? data : undefined, { category });
-    } else {
-      // Standard overload: trace(message, data?, options?)
-      const [message, data, options] = args;
-      this.log('trace', message, data, options);
-    }
+  // ============================================================================
+  // Public Logging API - Variadic arguments like console.log
+  // ============================================================================
+
+  /**
+   * Log at trace level with variadic arguments
+   * @param message - Log message
+   * @param args - Additional arguments (data, objects, etc.)
+   */
+  trace(message: string, ...args: any[]): void {
+    this._log('trace', message, args.length > 0 ? args : undefined);
   }
 
-  debug(message: string, data?: any, options?: LoggerOptions): void;
-  debug(category: string, message: string, ...args: any[]): void;
-  debug(...args: any[]) {
-    if (typeof args[0] === 'string' && typeof args[1] === 'string') {
-      // Category overload: debug(category, message, ...args)
-      const [category, message, ...data] = args;
-      this.log('debug', message, data.length === 1 ? data[0] : data.length > 1 ? data : undefined, { category });
-    } else {
-      // Standard overload: debug(message, data?, options?)
-      const [message, data, options] = args;
-      this.log('debug', message, data, options);
-    }
+  /**
+   * Log at debug level with variadic arguments
+   * @param message - Log message
+   * @param args - Additional arguments (data, objects, etc.)
+   */
+  debug(message: string, ...args: any[]): void {
+    this._log('debug', message, args.length > 0 ? args : undefined);
   }
 
-  info(message: string, data?: any, options?: LoggerOptions): void;
-  info(category: string, message: string, ...args: any[]): void;
-  info(...args: any[]) {
-    if (typeof args[0] === 'string' && typeof args[1] === 'string') {
-      // Category overload: info(category, message, ...args)
-      const [category, message, ...data] = args;
-      this.log('info', message, data.length === 1 ? data[0] : data.length > 1 ? data : undefined, { category });
-    } else {
-      // Standard overload: info(message, data?, options?)
-      const [message, data, options] = args;
-      this.log('info', message, data, options);
-    }
+  /**
+   * Log at info level with variadic arguments
+   * @param message - Log message
+   * @param args - Additional arguments (data, objects, etc.)
+   */
+  info(message: string, ...args: any[]): void {
+    this._log('info', message, args.length > 0 ? args : undefined);
   }
 
-  warn(message: string, data?: any, options?: LoggerOptions): void;
-  warn(category: string, message: string, ...args: any[]): void;
-  warn(...args: any[]) {
-    if (typeof args[0] === 'string' && typeof args[1] === 'string') {
-      // Category overload: warn(category, message, ...args)
-      const [category, message, ...data] = args;
-      this.log('warn', message, data.length === 1 ? data[0] : data.length > 1 ? data : undefined, { category });
-    } else {
-      // Standard overload: warn(message, data?, options?)
-      const [message, data, options] = args;
-      this.log('warn', message, data, options);
-    }
+  /**
+   * Log at warn level with variadic arguments
+   * @param message - Log message
+   * @param args - Additional arguments (data, objects, etc.)
+   */
+  warn(message: string, ...args: any[]): void {
+    this._log('warn', message, args.length > 0 ? args : undefined);
   }
 
-  error(message: string, data?: any, options?: LoggerOptions): void;
-  error(category: string, message: string, ...args: any[]): void;
-  error(...args: any[]) {
-    if (typeof args[0] === 'string' && typeof args[1] === 'string') {
-      // Category overload: error(category, message, ...args)
-      const [category, message, ...data] = args;
-      this.log('error', message, data.length === 1 ? data[0] : data.length > 1 ? data : undefined, { category });
-    } else {
-      // Standard overload: error(message, data?, options?)
-      const [message, data, options] = args;
-      this.log('error', message, data, options);
-    }
+  /**
+   * Log at error level with variadic arguments
+   * @param message - Log message
+   * @param args - Additional arguments (data, objects, etc.)
+   */
+  error(message: string, ...args: any[]): void {
+    this._log('error', message, args.length > 0 ? args : undefined);
   }
 
-  fatal(message: string, data?: any, options?: LoggerOptions): void;
-  fatal(category: string, message: string, ...args: any[]): void;
-  fatal(...args: any[]) {
-    if (typeof args[0] === 'string' && typeof args[1] === 'string') {
-      // Category overload: fatal(category, message, ...args)
-      const [category, message, ...data] = args;
-      this.log('fatal', message, data.length === 1 ? data[0] : data.length > 1 ? data : undefined, { category });
-    } else {
-      // Standard overload: fatal(message, data?, options?)
-      const [message, data, options] = args;
-      this.log('fatal', message, data, options);
-    }
+  /**
+   * Log at fatal level with variadic arguments
+   * @param message - Log message
+   * @param args - Additional arguments (data, objects, etc.)
+   */
+  fatal(message: string, ...args: any[]): void {
+    this._log('fatal', message, args.length > 0 ? args : undefined);
+  }
+
+  // ============================================================================
+  // Fluent API - Builder pattern for structured logging
+  // ============================================================================
+
+  /**
+   * Create a logging context with structured fields
+   * @param fields - Structured fields to include in logs
+   * @returns LoggerContext for chaining
+   * @example
+   * logger.withFields({ userId: '123', requestId: 'abc' }).info('User logged in')
+   */
+  withFields(fields: StructuredFields): LoggerContext {
+    return new LoggerContext(this, { fields });
+  }
+
+  /**
+   * Create a logging context with a category
+   * @param category - Category for logs
+   * @returns LoggerContext for chaining
+   * @example
+   * logger.withCategory('API').info('Request received')
+   */
+  withCategory(category: string): LoggerContext {
+    return new LoggerContext(this, { category });
+  }
+
+  /**
+   * Create a logging context with tags
+   * @param tags - Tags to attach to logs
+   * @returns LoggerContext for chaining
+   * @example
+   * logger.withTags('performance', 'critical').warn('High latency detected')
+   */
+  withTags(...tags: string[]): LoggerContext {
+    return new LoggerContext(this, { tags });
+  }
+
+  /**
+   * Create a logging context with metadata
+   * @param context - Context metadata
+   * @returns LoggerContext for chaining
+   * @example
+   * logger.withContext({ version: '1.0' }).info('App started')
+   */
+  withContext(context: Record<string, any>): LoggerContext {
+    return new LoggerContext(this, { context });
   }
 
   // ============================================================================
@@ -933,7 +1030,7 @@ class DevToolsLogger {
    * @param data - Additional unstructured data
    */
   structured(level: LogLevel, message: string, fields: StructuredFields, data?: any): void {
-    this.log(level, message, data, { fields });
+    this._log(level, message, data, { fields });
   }
 
   /**
@@ -1096,97 +1193,68 @@ class ChildLogger {
     private options: LoggerOptions
   ) {}
 
-  private mergeOptions(additionalOptions?: LoggerOptions): LoggerOptions {
-    return {
-      category: additionalOptions?.category || this.options.category,
-      context: { ...this.options.context, ...additionalOptions?.context },
-      tags: [...(this.options.tags || []), ...(additionalOptions?.tags || [])],
-      fields: { ...this.options.fields, ...additionalOptions?.fields },
-    };
+  // Logging methods with variadic arguments
+  trace(message: string, ...args: any[]): void {
+    this.parent['_log']('trace', message, args.length > 0 ? args : undefined, this.options);
   }
 
-  trace(message: string, data?: any, options?: LoggerOptions): void;
-  trace(category: string, message: string, ...args: any[]): void;
-  trace(...args: any[]) {
-    if (typeof args[0] === 'string' && typeof args[1] === 'string') {
-      // Category overload: trace(category, message, ...args) - category overrides child's preset category
-      const [category, message, ...data] = args;
-      this.parent.trace(message, data.length === 1 ? data[0] : data.length > 1 ? data : undefined, 
-        this.mergeOptions({ category }));
-    } else {
-      // Standard overload: trace(message, data?, options?)
-      const [message, data, options] = args;
-      this.parent.trace(message, data, this.mergeOptions(options));
-    }
+  debug(message: string, ...args: any[]): void {
+    this.parent['_log']('debug', message, args.length > 0 ? args : undefined, this.options);
   }
 
-  debug(message: string, data?: any, options?: LoggerOptions): void;
-  debug(category: string, message: string, ...args: any[]): void;
-  debug(...args: any[]) {
-    if (typeof args[0] === 'string' && typeof args[1] === 'string') {
-      const [category, message, ...data] = args;
-      this.parent.debug(message, data.length === 1 ? data[0] : data.length > 1 ? data : undefined, 
-        this.mergeOptions({ category }));
-    } else {
-      const [message, data, options] = args;
-      this.parent.debug(message, data, this.mergeOptions(options));
-    }
+  info(message: string, ...args: any[]): void {
+    this.parent['_log']('info', message, args.length > 0 ? args : undefined, this.options);
   }
 
-  info(message: string, data?: any, options?: LoggerOptions): void;
-  info(category: string, message: string, ...args: any[]): void;
-  info(...args: any[]) {
-    if (typeof args[0] === 'string' && typeof args[1] === 'string') {
-      const [category, message, ...data] = args;
-      this.parent.info(message, data.length === 1 ? data[0] : data.length > 1 ? data : undefined, 
-        this.mergeOptions({ category }));
-    } else {
-      const [message, data, options] = args;
-      this.parent.info(message, data, this.mergeOptions(options));
-    }
+  warn(message: string, ...args: any[]): void {
+    this.parent['_log']('warn', message, args.length > 0 ? args : undefined, this.options);
   }
 
-  warn(message: string, data?: any, options?: LoggerOptions): void;
-  warn(category: string, message: string, ...args: any[]): void;
-  warn(...args: any[]) {
-    if (typeof args[0] === 'string' && typeof args[1] === 'string') {
-      const [category, message, ...data] = args;
-      this.parent.warn(message, data.length === 1 ? data[0] : data.length > 1 ? data : undefined, 
-        this.mergeOptions({ category }));
-    } else {
-      const [message, data, options] = args;
-      this.parent.warn(message, data, this.mergeOptions(options));
-    }
+  error(message: string, ...args: any[]): void {
+    this.parent['_log']('error', message, args.length > 0 ? args : undefined, this.options);
   }
 
-  error(message: string, data?: any, options?: LoggerOptions): void;
-  error(category: string, message: string, ...args: any[]): void;
-  error(...args: any[]) {
-    if (typeof args[0] === 'string' && typeof args[1] === 'string') {
-      const [category, message, ...data] = args;
-      this.parent.error(message, data.length === 1 ? data[0] : data.length > 1 ? data : undefined, 
-        this.mergeOptions({ category }));
-    } else {
-      const [message, data, options] = args;
-      this.parent.error(message, data, this.mergeOptions(options));
-    }
+  fatal(message: string, ...args: any[]): void {
+    this.parent['_log']('fatal', message, args.length > 0 ? args : undefined, this.options);
   }
 
-  fatal(message: string, data?: any, options?: LoggerOptions): void;
-  fatal(category: string, message: string, ...args: any[]): void;
-  fatal(...args: any[]) {
-    if (typeof args[0] === 'string' && typeof args[1] === 'string') {
-      const [category, message, ...data] = args;
-      this.parent.fatal(message, data.length === 1 ? data[0] : data.length > 1 ? data : undefined, 
-        this.mergeOptions({ category }));
-    } else {
-      const [message, data, options] = args;
-      this.parent.fatal(message, data, this.mergeOptions(options));
-    }
+  // Fluent API methods for child logger
+  withFields(fields: StructuredFields): LoggerContext {
+    return new LoggerContext(this.parent, {
+      ...this.options,
+      fields: { ...this.options.fields, ...fields }
+    });
   }
 
+  withCategory(category: string): LoggerContext {
+    return new LoggerContext(this.parent, {
+      ...this.options,
+      category
+    });
+  }
+
+  withTags(...tags: string[]): LoggerContext {
+    return new LoggerContext(this.parent, {
+      ...this.options,
+      tags: [...(this.options.tags || []), ...tags]
+    });
+  }
+
+  withContext(context: Record<string, any>): LoggerContext {
+    return new LoggerContext(this.parent, {
+      ...this.options,
+      context: { ...this.options.context, ...context }
+    });
+  }
+
+  // Create another child logger with merged options
   child(options: LoggerOptions): ChildLogger {
-    return new ChildLogger(this.parent, this.mergeOptions(options));
+    return new ChildLogger(this.parent, {
+      category: options.category || this.options.category,
+      context: { ...this.options.context, ...options.context },
+      tags: [...(this.options.tags || []), ...(options.tags || [])],
+      fields: { ...this.options.fields, ...options.fields },
+    });
   }
 }
 
@@ -1194,4 +1262,4 @@ class ChildLogger {
 export const logger = DevToolsLogger.getInstance();
 
 // Export for custom instances if needed
-export { DevToolsLogger, ChildLogger };
+export { DevToolsLogger, ChildLogger, LoggerContext };

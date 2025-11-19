@@ -48,20 +48,21 @@ npm install @sucoza/logger-devtools-plugin
 
 ### 1. Import and Use the Logger
 
+The logger supports variadic arguments just like `console.log`:
+
 ```typescript
 import { logger } from '@sucoza/logger-devtools-plugin';
 
-// Simple logging
+// Simple logging with variadic arguments (like console.log)
 logger.info('Application started');
-logger.warn('Low memory', { available: '100MB' });
+logger.warn('Low memory', 'Available:', '100MB');
 logger.error('Failed to connect', new Error('Network error'));
 
-// With additional data
-logger.debug('User action', {
-  action: 'button_click',
-  userId: 123,
-  timestamp: Date.now()
-});
+// Multiple arguments
+logger.debug('User action', { action: 'button_click', userId: 123 }, Date.now());
+
+// Any number of arguments
+logger.info('Processing', item, 'with config', config, 'at', timestamp);
 ```
 
 ### 2. Add to TanStack DevTools
@@ -94,21 +95,34 @@ function App() {
 
 The logger supports proper structured logging with well-defined fields for better queryability and standardization. Structured fields are separate from arbitrary data and follow common patterns (OpenTelemetry, ECS compatible).
 
-#### Using Structured Fields
+#### Using Structured Fields - Builder Pattern
+
+Use the fluent API with `withFields()` for the cleanest syntax:
 
 ```typescript
 import { logger } from '@sucoza/logger-devtools-plugin';
 
-// Log with structured fields
-logger.info('User login successful', undefined, {
-  fields: {
-    userId: 'user-123',
-    sessionId: 'sess-456',
-    action: 'login',
-    duration: 145,
-    environment: 'production'
-  }
-});
+// Builder pattern - chain withFields() before logging
+logger.withFields({
+  userId: 'user-123',
+  sessionId: 'sess-456',
+  action: 'login',
+  duration: 145,
+  environment: 'production'
+}).info('User login successful');
+
+// You can still pass additional arguments
+logger.withFields({
+  requestId: 'req-abc',
+  userId: 'user-123'
+}).info('Processing request', request, response);
+
+// Chain multiple builders
+logger
+  .withFields({ userId: 'user-123' })
+  .withCategory('API')
+  .withTags('important', 'audit')
+  .info('User action completed', result);
 
 // Structured fields are displayed prominently in the DevTools UI
 // and are fully searchable
@@ -122,9 +136,7 @@ Track related logs across operations with correlation and trace IDs:
 // Start a correlation context
 const correlationId = logger.startCorrelation();
 
-logger.info('Processing order', undefined, {
-  fields: { action: 'start', resource: 'order' }
-});
+logger.withFields({ action: 'start', resource: 'order' }).info('Processing order');
 
 // All logs in this context will include the correlation ID
 await processOrder();
@@ -147,25 +159,21 @@ Support for OpenTelemetry-compatible trace and span IDs:
 // Start a trace
 const traceId = logger.startTrace();
 
-logger.info('API request received', undefined, {
-  fields: {
-    traceId,
-    spanId: logger.newSpanId(),
-    action: 'http_request',
-    resource: 'api/users'
-  }
-});
+logger.withFields({
+  traceId,
+  spanId: logger.newSpanId(),
+  action: 'http_request',
+  resource: 'api/users'
+}).info('API request received');
 
 // Process with child span
 const childSpanId = logger.newSpanId();
-logger.info('Database query', undefined, {
-  fields: {
-    traceId,
-    spanId: childSpanId,
-    parentSpanId: logger.newSpanId(),
-    resource: 'database'
-  }
-});
+logger.withFields({
+  traceId,
+  spanId: childSpanId,
+  parentSpanId: logger.newSpanId(),
+  resource: 'database'
+}).info('Database query');
 
 logger.endTrace();
 ```
@@ -268,14 +276,16 @@ const apiLogger = logger.child({
 });
 
 // These fields are automatically included in all logs
-apiLogger.info('Request received', undefined, {
-  fields: {
-    action: 'http_request',
-    resource: 'users',
-    requestId: 'req-123'
-  }
-});
+apiLogger.withFields({
+  action: 'http_request',
+  resource: 'users',
+  requestId: 'req-123'
+}).info('Request received', requestData);
 // Result includes: service, version, action, resource, requestId
+
+// Or just use the child logger directly with variadic args
+apiLogger.info('Request received', requestData, responseTime);
+// Includes: service, version from parent
 ```
 
 #### Configuration
@@ -302,10 +312,13 @@ logger.updateConfig({
 Create specialized loggers for different parts of your application:
 
 ```typescript
-// Create category-specific loggers
+// Create category-specific loggers with structured fields
 const apiLogger = logger.child({
   category: 'API',
-  context: { service: 'backend', version: '1.0.0' }
+  fields: {
+    service: 'backend',
+    version: '1.0.0'
+  }
 });
 
 const dbLogger = logger.child({
@@ -316,6 +329,9 @@ const dbLogger = logger.child({
 // All logs from these will include the preset context
 apiLogger.info('Request received', { endpoint: '/users' });
 dbLogger.debug('Query executed', { query: 'SELECT * FROM users' });
+
+// Child loggers also support the fluent API
+apiLogger.withFields({ requestId: 'req-123' }).info('Processing', data);
 ```
 
 ### Console Interception
@@ -377,15 +393,15 @@ const metrics = logger.getMetrics();
 try {
   await riskyOperation();
 } catch (error) {
-  logger.error('Operation failed', error, {
-    category: 'Operations',
-    context: {
+  logger
+    .withCategory('Operations')
+    .withFields({
       userId: currentUser.id,
       operation: 'data_sync',
       attempt: retryCount
-    },
-    tags: ['critical', 'retry-failed']
-  });
+    })
+    .withTags('critical', 'retry-failed')
+    .error('Operation failed', error);
 }
 ```
 
@@ -398,11 +414,34 @@ const startTime = performance.now();
 await expensiveOperation();
 const duration = performance.now() - startTime;
 
-perfLogger.info('Operation completed', {
+perfLogger.withFields({
   duration,
   threshold: 1000,
   exceeded: duration > 1000
-});
+}).info('Operation completed');
+```
+
+### Fluent API (Builder Pattern)
+
+The logger supports a fluent/builder pattern for clean, readable logging:
+
+```typescript
+// Chain multiple context builders
+logger
+  .withFields({ userId: '123', sessionId: 'abc' })
+  .withCategory('Auth')
+  .withTags('security', 'audit')
+  .withContext({ ip: request.ip })
+  .info('User logged in', userData);
+
+// Use individual builders
+logger.withCategory('API').info('Request received', req);
+logger.withTags('performance').warn('Slow query detected', queryStats);
+
+// Combine with variadic arguments
+logger
+  .withFields({ requestId: 'req-123' })
+  .info('Processing', item1, item2, item3, result);
 ```
 
 ## Configuration Options
@@ -471,13 +510,26 @@ Export filtered logs in multiple formats:
 
 ### Main Logger Methods
 
-- `trace(message, data?, options?)` - Detailed trace information
-- `debug(message, data?, options?)` - Debug-level messages
-- `info(message, data?, options?)` - Informational messages
-- `warn(message, data?, options?)` - Warning messages
-- `error(message, data?, options?)` - Error messages
-- `fatal(message, data?, options?)` - Fatal error messages
+All logging methods support variadic arguments (like `console.log`):
+
+- `trace(message, ...args)` - Detailed trace information
+- `debug(message, ...args)` - Debug-level messages
+- `info(message, ...args)` - Informational messages
+- `warn(message, ...args)` - Warning messages
+- `error(message, ...args)` - Error messages
+- `fatal(message, ...args)` - Fatal error messages
 - `child(options)` - Create a child logger with preset options
+
+### Fluent API Methods
+
+Build logging context before calling log methods:
+
+- `withFields(fields)` - Add structured fields to the log
+- `withCategory(category)` - Set the category
+- `withTags(...tags)` - Add tags to the log
+- `withContext(context)` - Add context metadata
+
+All builder methods return a `LoggerContext` that supports chaining and has all logging methods (trace, debug, info, warn, error, fatal).
 
 ### Configuration Methods
 
