@@ -1,7 +1,5 @@
 import type {
   BrowserAutomationState,
-  BrowserAutomationAction,
-  BrowserAutomationEvents,
   RecordedEvent,
   TestGenerationOptions,
   ExportOptions,
@@ -18,74 +16,42 @@ import { CDPClient } from './cdp-client';
 import { EventProcessor } from './event-processor';
 
 /**
- * Event client interface following TanStack DevTools patterns
+ * DevTools event client interface following TanStack patterns
  */
-export interface BrowserAutomationEventClient {
-  subscribe: (
-    callback: (
-      event: BrowserAutomationEvents[keyof BrowserAutomationEvents],
-      type: keyof BrowserAutomationEvents
-    ) => void
-  ) => () => void;
-  emit: <TEventType extends keyof BrowserAutomationEvents>(
-    type: TEventType,
-    event: BrowserAutomationEvents[TEventType]
-  ) => void;
+export interface DevToolsEventClient<TEvents extends Record<string, any>> {
+  subscribe: (callback: (event: TEvents[keyof TEvents], type: keyof TEvents) => void) => () => void;
   getState: () => BrowserAutomationState;
-  dispatch: (action: BrowserAutomationAction) => void;
+}
+
+export interface BrowserAutomationEvents {
+  'browser-automation:state': BrowserAutomationState;
+  'browser-automation:error': { message: string; stack?: string };
 }
 
 /**
- * Browser Automation DevTools event client implementation
+ * Browser Automation DevTools event client
+ * Follows the simplified TanStack DevTools pattern
  */
-export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEventClient {
-  private unsubscribe?: () => void;
+export class BrowserAutomationDevToolsClient implements DevToolsEventClient<BrowserAutomationEvents> {
+  private unsubscribeStore?: () => void;
   private storeApi = getBrowserAutomationStoreApi();
-  private subscribers = new Set<(
-    event: BrowserAutomationEvents[keyof BrowserAutomationEvents],
-    type: keyof BrowserAutomationEvents
-  ) => void>();
-  
+
   // Core recording components
   private selectorEngine: SelectorEngine;
   private cdpClient: CDPClient;
   private eventRecorder: EventRecorder;
   private eventProcessor: EventProcessor;
-  
-  // Store property getter for compatibility
-  private get store() {
-    return this.storeApi;
-  }
-  
+
   constructor() {
     // Initialize core components
     this.selectorEngine = new SelectorEngine();
     this.cdpClient = new CDPClient();
     this.eventRecorder = new EventRecorder(this.selectorEngine, this);
     this.eventProcessor = new EventProcessor();
-    
-    // Initialize any default behavior
-    this.setupEventListeners();
-    this.setupRecordingIntegration();
   }
 
   /**
-   * Set up DOM event listeners for recording
-   */
-  private setupEventListeners() {
-    // Event listeners are now handled by EventRecorder
-  }
-  
-  /**
-   * Setup integration between recording components
-   */
-  private setupRecordingIntegration() {
-    // Handle processed events from event processor
-    // This would be expanded to include more sophisticated integration
-  }
-
-  /**
-   * Subscribe to store changes and emit events
+   * Subscribe to store changes
    */
   subscribe = (
     callback: (
@@ -93,441 +59,195 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
       type: keyof BrowserAutomationEvents
     ) => void
   ) => {
-    this.subscribers.add(callback);
-
     // Subscribe to store changes
-    this.unsubscribe = this.storeApi.subscribe(() => {
+    this.unsubscribeStore = this.storeApi.subscribe(() => {
       const state = this.storeApi.getState();
-      callback(state, 'recorder:state');
+      callback(state, 'browser-automation:state');
     });
 
     // Send initial state
     const initialState = this.storeApi.getState();
-    callback(initialState, 'recorder:state');
+    callback(initialState, 'browser-automation:state');
 
     return () => {
-      this.subscribers.delete(callback);
-      if (this.subscribers.size === 0) {
-        this.unsubscribe?.();
-        this.cleanup();
-      }
+      this.unsubscribeStore?.();
     };
   };
 
   /**
-   * Emit event to all subscribers
-   */
-  emit = <TEventType extends keyof BrowserAutomationEvents>(
-    type: TEventType,
-    event: BrowserAutomationEvents[TEventType]
-  ): void => {
-    this.subscribers.forEach(callback => {
-      callback(event, type);
-    });
-  };
-
-  /**
-   * Get current state from store
+   * Get current state
    */
   getState = (): BrowserAutomationState => {
     return this.storeApi.getState();
   };
 
-  /**
-   * Dispatch action to store
-   */
-  dispatch = (action: BrowserAutomationAction): void => {
-    this.storeApi.getState().dispatch(action);
-
-    // Emit action event
-    this.emit('recorder:action', action);
-  };
-
-  // Convenience methods for common actions
-
-  /**
-   * Recording control methods
-   */
-  startRecording = async (): Promise<void> => {
-    try {
-      // Get recording options from store
-      const state = this.storeApi.getState();
-      const options: RecordingOptions = {
-        ...state.settings.recordingOptions,
-        captureSelectors: true,
-        captureTimings: true,
-        selectorOptions: {
-          mode: state.settings.selectorOptions?.mode || 'auto',
-          strategy: state.settings.selectorOptions?.strategy || {
-            priority: ['data-testid', 'id', 'aria-label', 'css'],
-            fallback: true,
-            optimize: true,
-            includePosition: false,
-          },
-          timeout: state.settings.selectorOptions?.timeout || 5000,
-          retries: state.settings.selectorOptions?.retries || 3,
-          includeId: true,
-          includeClass: true,
-          includeAttributes: true,
-          includeText: true,
-          includePosition: false,
-          optimize: true,
-          unique: true,
-          stable: true,
-          generateAlternatives: true,
-          maxAlternatives: 3,
-          priority: ['data-testid', 'id', 'aria-label', 'text', 'css', 'xpath'],
-          customAttributes: [],
-          ignoreAttributes: [],
-          ariaLabelFallback: true,
-        },
-      };
-      
-      // Start event recorder
-      await this.eventRecorder.startRecording(options);
-      
-      // Update store
-      this.store().startRecording();
-      
-      // Setup event processing pipeline
-      this.setupEventProcessingPipeline();
-      
-      this.emit('recorder:state', this.storeApi.getState());
-    } catch (error) {
-      // // console.error('Failed to start recording:', error);
-      this.emit('recorder:error', {
-        message: `Failed to start recording: ${error instanceof Error ? error.message : String(error)}`,
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-    }
+  // Recording control methods
+  startRecording = async (options?: RecordingOptions): Promise<void> => {
+    await this.storeApi.getState().startRecording(options);
+    this.eventRecorder.start();
   };
 
   stopRecording = async (): Promise<void> => {
-    try {
-      // Stop event recorder and get recorded events
-      const recordedEvents = await this.eventRecorder.stopRecording();
-      
-      // Process events through event processor
-      for (const event of recordedEvents) {
-        this.eventProcessor.addEvent(event);
-      }
-      
-      const processingResult = await this.eventProcessor.processAllEvents();
-      const processedEvents = this.eventProcessor.getProcessedEvents();
-      
-      // Add processed events to store
-      processedEvents.forEach(event => {
-        this.store().addEvent(event);
-      });
-      
-      // Update store
-      this.store().stopRecording();
-      
-      this.emit('recorder:state', this.storeApi.getState());
-      this.emit('recorder:processing-complete', {
-        success: true,
-        originalCount: processingResult.originalCount,
-        processedCount: processingResult.processedCount,
-        optimizations: processingResult.optimizations,
-      });
-    } catch (error) {
-      // // console.error('Failed to stop recording:', error);
-      this.emit('recorder:error', {
-        message: `Failed to stop recording: ${error instanceof Error ? error.message : String(error)}`,
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-    }
+    this.eventRecorder.stop();
+    await this.storeApi.getState().stopRecording();
   };
 
   pauseRecording = (): void => {
-    this.eventRecorder.pauseRecording();
-    this.store().pauseRecording();
-    this.emit('recorder:state', this.storeApi.getState());
+    this.eventRecorder.pause();
+    this.storeApi.getState().pauseRecording();
   };
 
   resumeRecording = (): void => {
-    this.eventRecorder.resumeRecording();
-    this.store().resumeRecording();
-    this.emit('recorder:state', this.storeApi.getState());
+    this.eventRecorder.resume();
+    this.storeApi.getState().resumeRecording();
   };
 
   clearRecording = (): void => {
-    // Clear event processor
-    this.eventProcessor.clear();
-    
-    // Clear store
-    this.store().clearRecording();
-    
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().clearRecording();
   };
 
-  /**
-   * Event management methods
-   */
+  isRecording = (): boolean => {
+    return this.storeApi.getState().recording.isRecording;
+  };
+
+  // Event management methods
   addEvent = (event: RecordedEvent): void => {
-    this.store().addEvent(event);
-    this.emit('recorder:event-added', event);
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().addEvent(event);
   };
 
   removeEvent = (eventId: string): void => {
-    this.store().removeEvent(eventId);
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().removeEvent(eventId);
   };
 
   updateEvent = (eventId: string, updates: Partial<RecordedEvent>): void => {
-    this.store().updateEvent(eventId, updates);
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().updateEvent(eventId, updates);
   };
 
-  /**
-   * Playback control methods
-   */
+  // Playback control methods
   startPlayback = (): void => {
-    this.store().startPlayback();
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().startPlayback();
   };
 
   stopPlayback = (): void => {
-    this.store().stopPlayback();
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().stopPlayback();
   };
 
   pausePlayback = (): void => {
-    this.store().pausePlayback();
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().pausePlayback();
   };
 
   resumePlayback = (): void => {
-    this.store().resumePlayback();
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().resumePlayback();
   };
 
   stepPlayback = (eventId: string): void => {
-    this.store().stepPlayback(eventId);
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().stepPlayback(eventId);
   };
 
   setPlaybackSpeed = (speed: number): void => {
-    this.store().setPlaybackSpeed(speed);
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().setPlaybackSpeed(speed);
   };
 
-  /**
-   * Test generation methods
-   */
+  // Test generation methods
   generateTest = async (options: TestGenerationOptions): Promise<void> => {
-    try {
-      const generatedTest = await this.store().generateTest(options);
-      this.emit('recorder:test-generated', generatedTest);
-      this.emit('recorder:state', this.storeApi.getState());
-    } catch (error) {
-      this.emit('recorder:error', {
-        message: `Failed to generate test: ${error instanceof Error ? error.message : String(error)}`,
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-    }
+    await this.storeApi.getState().generateTest(options);
   };
 
   exportData = async (options: ExportOptions): Promise<void> => {
-    try {
-      await this.store().exportData(options);
-      this.emit('recorder:state', this.storeApi.getState());
-    } catch (error) {
-      this.emit('recorder:error', {
-        message: `Failed to export data: ${error instanceof Error ? error.message : String(error)}`,
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-    }
+    await this.storeApi.getState().exportData(options);
   };
 
-  /**
-   * Selector management methods
-   */
+  // Selector methods
   setSelectorMode = (mode: SelectorMode): void => {
-    this.store().setSelectorMode(mode);
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().setSelectorMode(mode);
   };
 
   highlightElement = (selector: string | null): void => {
-    // Use selector engine for highlighting
-    this.selectorEngine.highlightElement(selector);
-    
-    // Also try CDP highlighting if available
-    if (selector && this.cdpClient.isConnectedToCDP()) {
-      this.cdpClient.highlightElement(selector).catch(_error => {
-        // // console.warn('CDP highlighting failed:', _error);
-      });
+    if (selector) {
+      this.selectorEngine.highlightElement(selector);
+    } else {
+      this.selectorEngine.clearHighlight();
     }
-    
-    this.store().highlightElement(selector);
-    this.emit('recorder:selector-highlight', { selector });
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().highlightElement(selector);
   };
 
-  /**
-   * UI control methods
-   */
+  // CDP integration methods
+  connectToCDP = async (endpoint: string): Promise<void> => {
+    await this.cdpClient.connect(endpoint);
+    this.storeApi.getState().connectToCDP(endpoint);
+  };
+
+  disconnectFromCDP = async (): Promise<void> => {
+    await this.cdpClient.disconnect();
+    this.storeApi.getState().disconnectFromCDP();
+  };
+
+  // UI control methods
   selectTab = (tab: DevToolsTab): void => {
-    this.store().selectTab(tab);
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().selectTab(tab);
   };
 
   selectEvent = (eventId: string | null): void => {
-    this.store().selectEvent(eventId);
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().selectEvent(eventId);
   };
 
   togglePanel = (panelId: string): void => {
-    this.store().togglePanel(panelId);
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().togglePanel(panelId);
   };
 
   updateFilters = (filters: Partial<EventFilters>): void => {
-    this.store().updateFilters(filters);
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().updateFilters(filters);
   };
 
   setTheme = (theme: 'light' | 'dark' | 'auto'): void => {
-    this.store().setTheme(theme);
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().setTheme(theme);
   };
 
   toggleCompactMode = (): void => {
-    this.dispatch({ type: 'ui/compact/toggle' });
+    this.storeApi.getState().toggleCompactMode();
   };
 
-  /**
-   * Settings methods
-   */
+  // Settings methods
   updateSettings = (settings: Partial<RecorderSettings>): void => {
-    this.store().updateSettings(settings);
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().updateSettings(settings);
   };
 
   resetSettings = (): void => {
-    this.store().resetSettings();
-    this.emit('recorder:state', this.storeApi.getState());
+    this.storeApi.getState().resetSettings();
   };
 
   exportSettings = (): void => {
-    this.dispatch({ type: 'settings/export' });
+    this.storeApi.getState().exportSettings();
   };
 
   importSettings = (settings: RecorderSettings): void => {
-    this.dispatch({ type: 'settings/import', payload: settings });
+    this.storeApi.getState().importSettings(settings);
   };
 
-  /**
-   * Utility methods
-   */
+  // Utility methods
   getFilteredEvents = (): RecordedEvent[] => {
-    return this.store().getFilteredEvents();
+    return this.storeApi.getState().getFilteredEvents();
   };
 
   getSelectedEvent = (): RecordedEvent | null => {
-    return this.store().getSelectedEvent();
+    return this.storeApi.getState().getSelectedEvent();
   };
 
-  /**
-   * Set up event processing pipeline
-   */
-  private setupEventProcessingPipeline(): void {
-    // This method sets up the pipeline between EventRecorder and EventProcessor
-    // In a production implementation, this would handle real-time event processing
-  }
-
-  /**
-   * Connect to Chrome DevTools Protocol if available
-   */
-  async connectToCDP(): Promise<boolean> {
-    try {
-      await this.cdpClient.connect();
-      await this.cdpClient.enableDOM();
-      await this.cdpClient.enableRuntime();
-      await this.cdpClient.enablePage();
-      
-      this.emit('recorder:cdp-connected', { connected: true });
-      return true;
-    } catch {
-      // // console.warn('CDP connection failed');
-      this.emit('recorder:cdp-connected', { connected: false });
-      return false;
-    }
-  }
-  
-  /**
-   * Disconnect from Chrome DevTools Protocol
-   */
-  async disconnectFromCDP(): Promise<void> {
-    await this.cdpClient.disconnect();
-    this.emit('recorder:cdp-connected', { connected: false });
-  }
-  
-  /**
-   * Take screenshot using CDP or fallback method
-   */
-  async takeScreenshot(options?: unknown): Promise<unknown> {
-    try {
-      if (this.cdpClient.isConnectedToCDP()) {
-        return await this.cdpClient.takeScreenshot(options);
-      } else {
-        // Fallback screenshot implementation
-        // // console.warn('CDP not available, screenshot functionality limited');
-        return null;
-      }
-    } catch {
-      // // console.error('Screenshot failed');
-      return null;
-    }
-  }
-
-  /**
-   * Get event processor instance for advanced event management
-   */
-  getEventProcessor(): EventProcessor {
-    return this.eventProcessor;
-  }
-  
-  /**
-   * Get selector engine instance for element selection
-   */
-  getSelectorEngine(): SelectorEngine {
+  getSelectorEngine = (): SelectorEngine => {
     return this.selectorEngine;
-  }
-  
-  /**
-   * Get CDP client instance for low-level browser automation
-   */
-  getCDPClient(): CDPClient {
-    return this.cdpClient;
-  }
-  
-  /**
-   * Get event recorder instance
-   */
-  getEventRecorder(): EventRecorder {
-    return this.eventRecorder;
-  }
+  };
 
-  /**
-   * Check if recording is currently active
-   */
-  isRecording(): boolean {
-    return this.eventRecorder.getStatus().isRecording;
-  }
-  
-  /**
-   * Get current recording status
-   */
-  getRecordingStatus(): {
-    isRecording: boolean;
-    isPaused: boolean;
-    eventCount: number;
-    sessionId: string;
-  } {
-    return this.eventRecorder.getStatus();
-  }
+  getCDPClient = (): CDPClient => {
+    return this.cdpClient;
+  };
+
+  getEventRecorder = (): EventRecorder => {
+    return this.eventRecorder;
+  };
+
+  getEventProcessor = (): EventProcessor => {
+    return this.eventProcessor;
+  };
 
   /**
    * Cleanup resources
@@ -537,13 +257,13 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
     if (this.isRecording()) {
       await this.stopRecording();
     }
-    
+
     // Disconnect from CDP
     await this.disconnectFromCDP();
-    
+
     // Clear event processor
     this.eventProcessor.clear();
-    
+
     // Clear selector engine highlights
     this.selectorEngine.clearHighlight();
   };
@@ -552,38 +272,34 @@ export class BrowserAutomationDevToolsEventClient implements BrowserAutomationEv
    * Destroy event client and cleanup resources
    */
   destroy = async (): Promise<void> => {
-    this.unsubscribe?.();
+    this.unsubscribeStore?.();
     await this.cleanup();
-    this.subscribers.clear();
   };
 }
 
 // Singleton instance
-let eventClientInstance: BrowserAutomationDevToolsEventClient | null = null;
+let clientInstance: BrowserAutomationDevToolsClient | null = null;
 
 /**
  * Create or get browser automation DevTools event client
  */
-export function createBrowserAutomationEventClient(): BrowserAutomationDevToolsEventClient {
-  if (!eventClientInstance) {
-    eventClientInstance = new BrowserAutomationDevToolsEventClient();
+export function createBrowserAutomationEventClient(): BrowserAutomationDevToolsClient {
+  if (!clientInstance) {
+    clientInstance = new BrowserAutomationDevToolsClient();
   }
-  return eventClientInstance;
+  return clientInstance;
 }
 
 /**
  * Get existing browser automation DevTools event client
  */
-export function getBrowserAutomationEventClient(): BrowserAutomationDevToolsEventClient | null {
-  return eventClientInstance;
+export function getBrowserAutomationEventClient(): BrowserAutomationDevToolsClient | null {
+  return clientInstance;
 }
 
 /**
  * Reset event client instance (useful for testing)
  */
 export function resetBrowserAutomationEventClient(): void {
-  if (eventClientInstance) {
-    eventClientInstance.destroy();
-    eventClientInstance = null;
-  }
+  clientInstance = null;
 }
