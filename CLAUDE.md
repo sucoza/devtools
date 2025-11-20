@@ -35,7 +35,7 @@ These projects are under the `@sucoza` org on NPM, and sucoza on github.
 ## Architecture Overview
 
 ### TanStack DevTools Plugin Ecosystem
-This monorepo contains 20+ TanStack DevTools plugins following a standardized architecture:
+This monorepo contains 21 TanStack DevTools plugins following a standardized architecture:
 
 **Core Plugin Structure:**
 ```
@@ -108,13 +108,13 @@ All plugins use consistent peer dependencies:
 ### Workspace Structure
 
 ```
-tndt/
+devtools/
 ├── packages/                    # Shared infrastructure
 │   ├── devtools-common/        # Common types and utilities
 │   ├── devtools-importer/      # Vite plugin for easy setup
 │   ├── plugin-core/            # Core plugin infrastructure
 │   └── shared-components/      # Shared UI components
-├── plugins/                    # Individual DevTools plugins (20+)
+├── plugins/                    # Individual DevTools plugins (21)
 └── pnpm-workspace.yaml        # Workspace configuration
 ```
 

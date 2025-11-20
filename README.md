@@ -1,6 +1,6 @@
 # Sucoza DevTools - TanStack DevTools Plugin Ecosystem
 
-> A comprehensive collection of 26 TanStack DevTools plugins for enhanced React application development, debugging, and monitoring.
+> A comprehensive collection of 21 TanStack DevTools plugins for enhanced React application development, debugging, and monitoring.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![npm](https://img.shields.io/npm/v/@sucoza/devtools-importer.svg)](https://www.npmjs.com/org/sucoza)
@@ -12,7 +12,7 @@ The Sucoza DevTools ecosystem provides developers with a comprehensive suite of 
 
 ## ✨ Key Features
 
-- **🔌 26 Specialized Plugins** - Covering debugging, performance, testing, security, and more
+- **🔌 21 Specialized Plugins** - Covering debugging, performance, testing, security, and more
 - **🚀 Easy Integration** - One-line setup with our Vite plugin importer
 - **🎨 Consistent UI/UX** - Shared component library ensures uniform experience
 - **📦 Modular Architecture** - Use only the plugins you need
@@ -83,7 +83,7 @@ function App() {
 | [@sucoza/feature-flags](./packages/feature-flags) | Feature flag utilities | 0.1.5 |
 | [@sucoza/logger](./packages/logger) | Logging utilities | 0.1.5 |
 
-### DevTools Plugins (20 plugins)
+### DevTools Plugins (21 plugins)
 
 #### 🔍 Debugging & Development
 - **[Accessibility DevTools](./plugins/accessibility-devtools)** - Real-time WCAG compliance testing with axe-core
@@ -134,13 +134,12 @@ devtools/
 │   ├── shared-components/      # Shared React components
 │   ├── feature-flags/          # Feature flag utilities
 │   └── logger/                 # Logging utilities
-├── plugins/                    # Individual DevTools plugins (20 plugins)
+├── plugins/                    # Individual DevTools plugins (21 plugins)
 │   ├── accessibility-devtools/
 │   ├── api-mock-interceptor/
 │   ├── auth-permissions-mock/
-│   └── ... (17 more plugins)
+│   └── ... (18 more plugins)
 ├── docs/                       # Documentation
-│   └── CODE_GUIDELINES.md      # Coding standards
 ├── .github/                    # GitHub configuration
 │   └── workflows/              # CI/CD workflows
 ├── pnpm-workspace.yaml         # Workspace configuration
@@ -324,7 +323,7 @@ We welcome contributions! Please see our [Contributing Guidelines](./CONTRIBUTIN
 
 - Code of Conduct
 - Development setup
-- Coding standards (see [CODE_GUIDELINES.md](./docs/CODE_GUIDELINES.md))
+- Coding standards
 - Pull request process
 - Testing requirements
 
