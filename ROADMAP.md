@@ -234,11 +234,14 @@ Empower developers with specialized, modular, and seamlessly integrated developm
   - Push notification testing
   - Background sync debugging
 
-- [ ] **IndexedDB/LocalStorage Inspector** (P0)
-  - Storage visualization and editing
-  - Storage quota monitoring
-  - Import/export functionality
-  - Storage cleanup tools
+- [ ] **Database & Storage Inspector Plugin** (P0) - [Issue #17](https://github.com/sucoza/devtools/issues/17)
+  - IndexedDB schema exploration and data viewing
+  - LocalStorage/SessionStorage editing with search
+  - Cache API inspection for service worker caches
+  - Storage quota monitoring and performance metrics
+  - Data synchronization and offline queue monitoring
+  - Storage encryption validation
+  - Cross-tab storage event monitoring
 
 - [ ] **Real-time Collaboration Plugin** (P2)
   - WebRTC connection monitoring
@@ -283,6 +286,28 @@ Empower developers with specialized, modular, and seamlessly integrated developm
   - Real-time budget violation alerts
   - Historical performance tracking
   - CI/CD integration
+
+#### UI/UX & Animation
+- [ ] **Animation & Transition Debugger Plugin** (P0) - [Issue #13](https://github.com/sucoza/devtools/issues/13) ⚡
+  - Animation timeline with playback controls
+  - Transition state machine visualizer
+  - CSS keyframe editor with live preview
+  - Motion library integration (Framer Motion, React Spring)
+  - Animation performance profiler
+  - Easing function tester and transform matrix calculator
+  - Scroll-triggered animation debugger
+  - Reduced motion preference testing
+  - **Community Priority**: IMMEDIATE (0% coverage gap)
+
+- [ ] **Event System & Listener Debugger Plugin** (P0) - [Issue #18](https://github.com/sucoza/devtools/issues/18)
+  - DOM event listener registry viewer
+  - Event propagation visualizer
+  - Custom event tracker
+  - Event handler performance profiler
+  - Memory leak detection for orphaned listeners
+  - Passive event listener optimizer
+  - Touch/pointer event debugger
+  - Focus trap validator
 
 ### Platform & Framework Integrations
 
@@ -373,6 +398,40 @@ Empower developers with specialized, modular, and seamlessly integrated developm
   - Plugin ratings and reviews
   - Installation statistics
   - Featured plugins
+
+### Existing Plugin Enhancements
+
+#### High Priority
+- [ ] **Render Waste Detector - Hooks Debugger Enhancement** (P0) - [Issue #14](https://github.com/sucoza/devtools/issues/14) 🔴
+  - Hook dependency array validator with optimization suggestions
+  - useEffect cleanup tracker with memory leak detection
+  - Custom hook performance profiler
+  - Hook call order visualizer
+  - useCallback/useMemo effectiveness tracker
+  - Context provider optimization analyzer
+  - Component unmount cleanup verifier
+  - Hook rules violation detector
+  - Ref usage analyzer with memory tracking
+
+- [ ] **API Mock Interceptor - Third-Party Integration Monitor** (P1) - [Issue #15](https://github.com/sucoza/devtools/issues/15)
+  - Analytics event tracking (Google Analytics, Mixpanel)
+  - Social media SDK monitoring (Facebook, Twitter APIs)
+  - Payment gateway debugging (Stripe, PayPal)
+  - Map service monitoring (Google Maps, Mapbox)
+  - CDN performance tracking and external script monitoring
+  - CORS issue detection and resolution
+  - Third-party cookie compliance checking
+
+#### Medium Priority
+- [ ] **Design System Inspector - Advanced CSS Debugger** (P1) - [Issue #16](https://github.com/sucoza/devtools/issues/16)
+  - CSS-in-JS Runtime Inspector (styled-components, emotion)
+  - Cascade Specificity Analyzer
+  - Unused CSS Detection with tree-shaking recommendations
+  - Style Recomputation Profiler
+  - Layout Thrashing Detector
+  - CSS Containment Analyzer
+  - Grid/Flexbox Visualizer
+  - Animation Performance Analysis
 
 ---
 
@@ -592,6 +651,20 @@ Empower developers with specialized, modular, and seamlessly integrated developm
   - RxJS debugging
   - Standalone mode for Angular DevTools
 
+### PWA & Progressive Enhancement
+
+- [ ] **Accessibility DevTools - PWA Advanced Toolkit** (P2) - [Issue #19](https://github.com/sucoza/devtools/issues/19)
+  - Service worker lifecycle debugger
+  - Cache strategy effectiveness analyzer
+  - Offline capability tester with network simulation
+  - Background sync queue monitor
+  - Push notification template tester
+  - App install prompt optimizer
+  - PWA manifest validator
+  - Web app capability detector (File System API, etc.)
+  - Performance budget tracker for PWA metrics
+  - App shell loading analyzer
+
 ---
 
 ## Future Considerations
@@ -708,6 +781,95 @@ We actively track community feedback through:
 - **Discord Server** - Real-time community input (if established)
 - **Twitter/X** - Social media engagement
 - **Stack Overflow** - Common questions and problems
+
+### Active GitHub Issues (7 open)
+
+#### Phase 1 - High Priority Enhancement Requests
+
+**[Issue #13](https://github.com/sucoza/devtools/issues/13): Animation & Transition Debugger Plugin** ⚡ IMMEDIATE
+- Animation timeline with playback controls
+- Transition state machine visualizer
+- CSS keyframe editor with live preview
+- Motion library integration (Framer Motion, React Spring)
+- Animation performance profiler
+- Easing function tester and transform matrix calculator
+- Animation conflict detector and FLIP animation analyzer
+- Scroll-triggered animation debugger
+- Reduced motion preference testing
+- Animation accessibility auditor
+- **Status**: 0% coverage, unique capability gap
+
+**[Issue #14](https://github.com/sucoza/devtools/issues/14): Enhance render-waste-detector with Hooks Debugger** 🔴 HIGH
+- Hook dependency array validator with optimization suggestions
+- useEffect cleanup tracker with memory leak detection
+- Custom hook performance profiler
+- Hook call order visualizer
+- useCallback/useMemo effectiveness tracker
+- Context provider optimization analyzer
+- Component unmount cleanup verifier
+- Hook rules violation detector
+- Ref usage analyzer with memory tracking
+
+**[Issue #15](https://github.com/sucoza/devtools/issues/15): Enhance api-mock-interceptor with Third-Party Integration Monitor**
+- Analytics event tracking (Google Analytics, Mixpanel)
+- Social media SDK monitoring (Facebook, Twitter APIs)
+- Payment gateway debugging (Stripe, PayPal)
+- Map service monitoring (Google Maps, Mapbox)
+- CDN performance tracking
+- External script loading monitoring
+- CORS issue detection and resolution
+- Third-party cookie compliance checking
+
+#### Phase 2 - Medium Priority Enhancement Requests
+
+**[Issue #16](https://github.com/sucoza/devtools/issues/16): Enhance design-system-inspector with Advanced CSS Debugger**
+- CSS-in-JS Runtime Inspector (styled-components, emotion)
+- Cascade Specificity Analyzer
+- Unused CSS Detection with tree-shaking recommendations
+- Style Recomputation Profiler
+- Layout Thrashing Detector
+- CSS Containment Analyzer
+- Grid/Flexbox Visualizer
+- Animation Performance Analysis
+
+**[Issue #17](https://github.com/sucoza/devtools/issues/17): Database & Storage Inspector Plugin**
+- IndexedDB schema exploration and data viewing
+- LocalStorage/SessionStorage editing with search
+- Cache API inspection for service worker caches
+- Persistent storage quota monitoring
+- Storage performance metrics tracking
+- Data synchronization monitoring
+- Offline data queue inspection
+- Storage encryption validation
+- Data migration tracking
+- Cross-tab storage event monitoring
+
+**[Issue #18](https://github.com/sucoza/devtools/issues/18): Event System & Listener Debugger Plugin**
+- DOM event listener registry viewer
+- Event propagation visualizer (bubble/capture phases)
+- Custom event tracker
+- Event handler performance profiler
+- Memory leak detection for orphaned listeners
+- Event delegation analyzer
+- Passive event listener optimizer
+- Touch/pointer event debugger
+- Keyboard event sequence tracker
+- Focus trap validator
+- Scroll event performance monitor
+
+#### Phase 3 - Future Enhancement Requests
+
+**[Issue #19](https://github.com/sucoza/devtools/issues/19): Enhance accessibility-devtools with PWA Advanced Toolkit**
+- Service worker lifecycle debugger
+- Cache strategy effectiveness analyzer
+- Offline capability tester with network simulation
+- Background sync queue monitor
+- Push notification template tester
+- App install prompt optimizer
+- PWA manifest validator
+- Web app capability detector (File System API, etc.)
+- Performance budget tracker for PWA metrics
+- App shell loading analyzer
 
 ### How to Contribute to the Roadmap
 
