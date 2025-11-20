@@ -14,8 +14,8 @@ Thank you for your interest in contributing to the TanStack DevTools Plugin Ecos
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd tndt
+   git clone https://github.com/sucoza/devtools.git
+   cd devtools
    ```
 
 2. **Install dependencies** (pnpm recommended)
@@ -39,7 +39,7 @@ Thank you for your interest in contributing to the TanStack DevTools Plugin Ecos
 This is a monorepo containing TanStack DevTools plugins and shared packages:
 
 ```
-tndt/
+devtools/
 ├── packages/                    # Shared packages
 │   ├── devtools-common/        # Common types and utilities
 │   ├── devtools-importer/      # Vite plugin for automatic plugin loading
@@ -49,7 +49,7 @@ tndt/
 │   ├── accessibility-devtools/
 │   ├── api-mock-interceptor/
 │   ├── browser-automation-test-recorder/
-│   └── ... (20+ more plugins)
+│   └── ... (18 more plugins)
 └── CLAUDE.md                   # Development guidance
 ```
 
