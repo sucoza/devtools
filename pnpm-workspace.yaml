@@ -87,7 +87,7 @@ catalog:
   react-dom: ^19.1.1
   react-error-boundary: ^6.0.0
   react-router-dom: ^7.8.2
-  rollup: ^4.50.0
+  rollup: ^4.53.3
   rollup-plugin-analyzer: ^4.0.0
   rollup-plugin-peer-deps-external: ^2.2.4
   rollup-plugin-postcss: ^4.0.2
