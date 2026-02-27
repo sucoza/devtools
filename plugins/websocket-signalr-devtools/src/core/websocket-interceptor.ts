@@ -42,6 +42,7 @@ export class WebSocketInterceptor extends EventEmitter<{
     }
     this.connections.clear();
     this.connectionData.clear();
+    this.removeAllListeners();
   }
 
   getConnection(id: string): WebSocketConnection | undefined {

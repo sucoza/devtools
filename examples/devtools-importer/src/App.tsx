@@ -151,8 +151,12 @@ function App() {
     };
 
     ws.onmessage = (event: MessageEvent) => {
-      const message = JSON.parse(event.data);
-      setWsMessages(prev => [`${new Date().toLocaleTimeString()} - ${message.type}: ${message.data}`, ...prev.slice(0, 9)]);
+      try {
+        const message = JSON.parse(event.data);
+        setWsMessages(prev => [`${new Date().toLocaleTimeString()} - ${message.type}: ${message.data}`, ...prev.slice(0, 9)]);
+      } catch {
+        setWsMessages(prev => [`${new Date().toLocaleTimeString()} - ${event.data}`, ...prev.slice(0, 9)]);
+      }
     };
 
     ws.onerror = (error: Event) => {

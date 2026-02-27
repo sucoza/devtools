@@ -29,6 +29,9 @@ const defaultConfig: MemoryProfilerConfig = {
   }
 };
 
+/** Maximum number of timeline events to retain */
+const MAX_TIMELINE_EVENTS = 500;
+
 const initialState: MemoryProfilerState = {
   isRunning: false,
   config: defaultConfig,
@@ -433,14 +436,19 @@ export const useMemoryProfilerStore = create<MemoryProfilerStore>()(
         // Add timeline event
         let updatedTimeline = state.timeline;
         if (updatedTimeline) {
+          const newEvents = [...updatedTimeline.events, {
+            timestamp: event.timestamp,
+            type: 'gc' as const,
+            description: `Garbage Collection (${event.type}, ${event.duration.toFixed(2)}ms)`,
+            memoryImpact: event.memoryReclaimed
+          }];
+          // Trim timeline events to prevent unbounded growth
+          if (newEvents.length > MAX_TIMELINE_EVENTS) {
+            newEvents.splice(0, newEvents.length - MAX_TIMELINE_EVENTS);
+          }
           updatedTimeline = {
             ...updatedTimeline,
-            events: [...updatedTimeline.events, {
-              timestamp: event.timestamp,
-              type: 'gc',
-              description: `Garbage Collection (${event.type}, ${event.duration.toFixed(2)}ms)`,
-              memoryImpact: event.memoryReclaimed
-            }]
+            events: newEvents
           };
         }
 

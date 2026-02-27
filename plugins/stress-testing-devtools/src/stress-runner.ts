@@ -112,9 +112,15 @@ export class StressTestRunner {
       // Run test validation
       let testPassed = true
       try {
-        // Create a safe evaluation context
-        const testFunction = new Function('response', `return ${config.test}`)
-        testPassed = testFunction(responseData)
+        // SECURITY NOTE: new Function() is used here to execute user-provided test
+        // assertions in a devtools context. This is intentional for the stress-testing
+        // tool, but the code runs with full page privileges. Only use with trusted input.
+        if (typeof config.test !== 'string' || config.test.trim() === '') {
+          testPassed = false
+        } else {
+          const testFunction = new Function('response', `return ${config.test}`)
+          testPassed = testFunction(responseData)
+        }
       } catch {
         testPassed = false
       }

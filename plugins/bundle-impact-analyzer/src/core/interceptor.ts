@@ -192,19 +192,29 @@ export class BundleInterceptor {
   private interceptDynamicImports() {
     if (typeof window === 'undefined') return;
 
-    const originalImport = (window as any).__original_import__ || window.eval('(0, eval)("import")').bind(window);
-    
+    // eval() is required here to obtain a reference to the native dynamic import function,
+    // which is a language-level keyword and cannot be accessed as a regular property.
+    // This is the only reliable cross-browser way to intercept dynamic imports at runtime.
+    let originalImport: any;
+    try {
+      originalImport = (window as any).__original_import__ || window.eval('(0, eval)("import")').bind(window);
+    } catch {
+      // eval failed (e.g., blocked by CSP) - cannot intercept dynamic imports
+      return;
+    }
+
     if (!originalImport) return;
 
     (window as any).__original_import__ = originalImport;
-    
-    // Replace global import function
+
+    // Replace global import function using eval() because `import` is a keyword
+    // and cannot be overridden via standard property assignment in all environments.
     try {
       window.eval(`
         (function() {
           const originalImport = window.__original_import__;
           if (!originalImport) return;
-          
+
           window.import = function(specifier) {
             // Track the import
             window.__bundleInterceptor__?.trackDynamicImport?.(specifier);
@@ -212,14 +222,14 @@ export class BundleInterceptor {
           };
         })()
       `);
-      
+
       (window as any).__bundleInterceptor__ = {
         trackDynamicImport: (specifier: string) => {
           this.trackImport(specifier, true);
         }
       };
     } catch {
-      // console.warn('[Bundle Interceptor] Could not intercept dynamic imports:', error);
+      // eval failed (e.g., blocked by CSP) - dynamic import interception not available
     }
   }
 
@@ -362,12 +372,13 @@ export class BundleInterceptor {
     this.webpackInterceptor?.stop();
     this.viteInterceptor?.stop();
     
-    // Restore original functions
+    // Restore original import function. eval() is necessary here because `import`
+    // is a language-level keyword and cannot be reassigned via normal property access.
     if ((window as any).__original_import__) {
       try {
         window.eval(`window.import = window.__original_import__;`);
       } catch {
-        // Ignore eval errors
+        // eval failed (e.g., blocked by CSP) - original import could not be restored
       }
     }
     
