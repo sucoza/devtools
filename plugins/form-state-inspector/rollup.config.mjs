@@ -11,11 +11,13 @@ export default {
     {
       file: 'dist/index.js',
       format: 'cjs',
+      exports: 'named',
       sourcemap: true,
     },
     {
       file: 'dist/index.esm.js',
       format: 'esm',
+      exports: 'named',
       sourcemap: true,
     },
   ],

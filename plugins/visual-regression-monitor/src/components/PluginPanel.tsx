@@ -72,7 +72,7 @@ export function PluginPanel({ className }: PluginPanelProps) {
 
   if (!state.isPlaywrightConnected) {
     toolbarActions.push({
-      icon: Zap,
+      icon: <Zap size={16} />,
       label: 'Connect',
       onClick: client.connectPlaywright,
       variant: 'primary' as const,
@@ -81,13 +81,13 @@ export function PluginPanel({ className }: PluginPanelProps) {
 
   toolbarActions.push(
     {
-      icon: Camera,
+      icon: <Camera size={16} />,
       label: 'Capture',
       onClick: () => client.selectTab('screenshots'),
       disabled: state.isCapturing,
     },
     {
-      icon: GitCompare,
+      icon: <GitCompare size={16} />,
       label: 'Compare',
       onClick: () => client.selectTab('comparisons'),
       disabled: state.isAnalyzing,

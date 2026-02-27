@@ -53,7 +53,6 @@ export function VirtualList<T>({
   className,
   style,
   overscan = 3,
-  _estimatedItemHeight = 50,
   getItemKey,
   initialScrollOffset = 0,
   scrollToAlignment = 'auto',

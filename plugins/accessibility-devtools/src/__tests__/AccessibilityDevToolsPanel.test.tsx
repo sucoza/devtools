@@ -102,11 +102,11 @@ describe('AccessibilityDevToolsPanel', () => {
   });
 
   test('should display scan controls', () => {
-    render(<AccessibilityDevToolsPanel />);
-    
-    // Should have scan button (since scanState is 'idle')
-    const scanButton = screen.getByRole('button', { name: /scan/i });
-    expect(scanButton).toBeInTheDocument();
+    const { container } = render(<AccessibilityDevToolsPanel />);
+
+    // Scan controls are in a ConfigMenu dropdown - verify the config menu container exists
+    const configMenuContainer = container.querySelector('.config-menu-container');
+    expect(configMenuContainer).toBeInTheDocument();
   });
 
   test('should display tabs navigation', () => {

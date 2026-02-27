@@ -1,8 +1,21 @@
+import { copyFileSync, mkdirSync } from 'fs';
+import { dirname } from 'path';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
+
+function copyThemeCSS() {
+  return {
+    name: 'copy-theme-css',
+    writeBundle() {
+      const dest = 'dist/styles/theme.css';
+      mkdirSync(dirname(dest), { recursive: true });
+      copyFileSync('src/styles/theme.css', dest);
+    },
+  };
+}
 
 export default {
   input: 'src/index.ts',
@@ -70,5 +83,6 @@ export default {
       minimize: true,
       extensions: ['.css'],
     }),
+    copyThemeCSS(),
   ],
 };

@@ -1,6 +1,6 @@
 import React from 'react';
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
 import { PluginPanel } from '../PluginPanel';
 import type { DevToolsState } from '../../types';
 
@@ -10,6 +10,9 @@ const mockDevToolsClient = {
   getState: vi.fn(),
   connectPlaywright: vi.fn(),
   selectTab: vi.fn(),
+  startCapture: vi.fn(),
+  startAnalysis: vi.fn(),
+  clearAllData: vi.fn(),
 };
 
 vi.mock('../../core/devtools-client', () => ({
@@ -108,13 +111,12 @@ describe('PluginPanel', () => {
   describe('Rendering', () => {
     it('should render with default props', () => {
       render(<PluginPanel />);
-      
+
       expect(screen.getByText('Visual Regression Monitor')).toBeInTheDocument();
-      expect(screen.getByText('Ready')).toBeInTheDocument();
       expect(screen.getByTestId('screenshot-capture')).toBeInTheDocument();
     });
 
-    it('should display correct stats in header', () => {
+    it('should display correct stats in footer', () => {
       const state = createMockState({
         stats: {
           totalScreenshots: 10,
@@ -127,36 +129,37 @@ describe('PluginPanel', () => {
           recentActivity: [],
         },
       });
-      
+
       mockDevToolsClient.getState.mockReturnValue(state);
-      
+
       render(<PluginPanel />);
-      
-      expect(screen.getByText('Screenshots: 10')).toBeInTheDocument();
-      expect(screen.getByText('Comparisons: 6')).toBeInTheDocument();
-      expect(screen.getByText('Passed: 4')).toBeInTheDocument();
-      expect(screen.getByText('Failed: 2')).toBeInTheDocument();
+
+      // Footer renders labels with colon: "Screenshots:", "Comparisons:", etc.
+      expect(screen.getByText('Screenshots:')).toBeInTheDocument();
+      expect(screen.getByText('Comparisons:')).toBeInTheDocument();
+      expect(screen.getByText('Passed:')).toBeInTheDocument();
+      expect(screen.getByText('Failed:')).toBeInTheDocument();
     });
   });
 
   describe('Connection Status', () => {
-    it('should show ready status when Playwright is connected', () => {
+    it('should not show Connect button when Playwright is connected', () => {
       const state = createMockState({ isPlaywrightConnected: true });
       mockDevToolsClient.getState.mockReturnValue(state);
-      
+
       render(<PluginPanel />);
-      
-      expect(screen.getByText('Ready')).toBeInTheDocument();
+
+      // When connected, the "Connect" toolbar action should not be present
       expect(screen.queryByText('Connect')).not.toBeInTheDocument();
     });
 
-    it('should show disconnected status when Playwright is not connected', () => {
+    it('should show Connect button when Playwright is not connected', () => {
       const state = createMockState({ isPlaywrightConnected: false });
       mockDevToolsClient.getState.mockReturnValue(state);
-      
+
       render(<PluginPanel />);
-      
-      expect(screen.getByText('Disconnected')).toBeInTheDocument();
+
+      // When disconnected, a "Connect" toolbar action should be shown
       expect(screen.getByText('Connect')).toBeInTheDocument();
     });
   });

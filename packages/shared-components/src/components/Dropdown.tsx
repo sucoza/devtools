@@ -73,7 +73,6 @@ export function Dropdown<T = any>({
   disabled = false,
   loading = false,
   groups = false,
-  _virtualScroll = false,
   maxHeight = 300,
   maxSelections,
   async = false,

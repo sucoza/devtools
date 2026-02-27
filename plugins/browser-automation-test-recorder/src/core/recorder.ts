@@ -1082,12 +1082,7 @@ export class EventRecorder {
       
       const boundingRect = target.getBoundingClientRect();
 
-      return {
-        id: `${event.type}_${Date.now()}_${this.sequenceNumber}`,
-        type: event.type as any,
-        timestamp: Date.now(),
-        sequence: this.sequenceNumber,
-        target: {
+      const recordedTarget = {
           selector,
           xpath: '',
           textContent: target.textContent || '',
@@ -1105,10 +1100,17 @@ export class EventRecorder {
           },
           path: [],
           alternativeSelectors,
-        },
+        };
+
+      return {
+        id: `${event.type}_${Date.now()}_${this.sequenceNumber}`,
+        type: event.type as any,
+        timestamp: Date.now(),
+        sequence: this.sequenceNumber,
+        target: recordedTarget,
         data: this.extractEventDataFromEvent(event),
         context: this.createEventContext(),
-        metadata: await this.createEventMetadata(),
+        metadata: await this.createEventMetadata(recordedTarget),
       };
     } catch (error) {
       console.warn('Failed to create event data:', error);

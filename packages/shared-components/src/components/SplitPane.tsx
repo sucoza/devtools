@@ -52,8 +52,6 @@ export function SplitPane({
   children,
   direction = 'horizontal',
   defaultSize = '50%',
-  _minSize = 0,
-  _maxSize = '100%',
   size,
   onSizeChange,
   pane1MinSize = 50,

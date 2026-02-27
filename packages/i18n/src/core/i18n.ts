@@ -107,9 +107,16 @@ export class I18n implements I18nInstance {
     // Try to get translation
     let translation = this.getTranslationValue(key, locale, namespace);
 
-    // Handle pluralization
-    if (translation && typeof options.count === 'number' && this._config.pluralization?.enabled) {
-      translation = pluralize(translation, options.count, locale);
+    // Handle pluralization - look up plural key variant
+    if (typeof options.count === 'number' && this._config.pluralization?.enabled) {
+      const pluralSuffix = pluralize('', options.count, locale);
+      if (pluralSuffix) {
+        const pluralKey = `${key}${pluralSuffix}`;
+        const pluralTranslation = this.getTranslationValue(pluralKey, locale, namespace);
+        if (pluralTranslation) {
+          translation = pluralTranslation;
+        }
+      }
     }
 
     // Handle contextual translations
@@ -357,17 +364,17 @@ export class I18n implements I18nInstance {
   }
 
   /** Track translation usage */
-  private trackUsage(key: string, namespace?: string): void {
-    const usageKey = namespace ? `${namespace}:${key}` : key;
-    const existing = this._usage.get(usageKey);
+  private trackUsage(fullKey: string, namespace?: string): void {
+    // fullKey already includes namespace prefix (e.g., "common:test"), use it directly
+    const existing = this._usage.get(fullKey);
     const now = Date.now();
 
     if (existing) {
       existing.count++;
       existing.lastUsed = now;
     } else {
-      this._usage.set(usageKey, {
-        key,
+      this._usage.set(fullKey, {
+        key: fullKey,
         namespace,
         usedBy: [],
         count: 1,
@@ -417,12 +424,15 @@ export class I18n implements I18nInstance {
     }
   }
 
-  /** Clear all translations */
+  /** Clear all translations and reset state */
   clear(): void {
     this._translations = {};
     this._usage.clear();
     this._missing.clear();
     this._localeInfo.clear();
+    this._listeners.clear();
+    // Reset locale to the original default
+    this._config.locale = DEFAULT_CONFIG.locale;
     this.initializeDefaults();
   }
 
