@@ -54,9 +54,6 @@
     "react-dom": ">=18.0.0"
   },
   "dependencies": {
-    "@lingui/core": "catalog:",
-    "@lingui/macro": "catalog:",
-    "@lingui/react": "catalog:",
     "@sucoza/devtools-common": "workspace:*",
     "@sucoza/plugin-core": "workspace:*",
     "@sucoza/shared-components": "workspace:*",
@@ -72,8 +69,6 @@
     "zustand": "catalog:"
   },
   "devDependencies": {
-    "@babel/core": "catalog:",
-    "@lingui/cli": "catalog:",
     "@playwright/test": "catalog:",
     "@rollup/plugin-commonjs": "catalog:",
     "@rollup/plugin-node-resolve": "catalog:",
@@ -94,19 +89,13 @@
     "eslint": "catalog:",
     "eslint-plugin-react": "catalog:",
     "eslint-plugin-react-hooks": "catalog:",
-    "jest": "catalog:",
-    "jest-environment-jsdom": "catalog:",
-    "jest-html-reporters": "catalog:",
-    "jest-junit": "catalog:",
     "jsdom": "catalog:",
     "prettier": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "rollup": "catalog:",
-    "rollup-plugin-analyzer": "catalog:",
     "rollup-plugin-peer-deps-external": "catalog:",
     "rollup-plugin-postcss": "catalog:",
-    "ts-jest": "catalog:",
     "tslib": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",

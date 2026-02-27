@@ -46,13 +46,10 @@
     "clsx": "catalog:",
     "lucide-react": "catalog:",
     "react-error-boundary": "catalog:",
-    "source-map": "catalog:",
-    "stacktrace-parser": "catalog:",
     "use-sync-external-store": "catalog:",
     "zustand": "catalog:"
   },
   "devDependencies": {
-    "@babel/core": "catalog:",
     "@lingui/cli": "catalog:",
     "@rollup/plugin-commonjs": "catalog:",
     "@rollup/plugin-json": "catalog:",

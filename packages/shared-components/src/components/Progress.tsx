@@ -149,7 +149,7 @@ export function ProgressBar({
         )}
       </div>
       
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style>{`
         @keyframes progress-bar-stripes {
           from {
             background-position: 1rem 0;
@@ -158,7 +158,7 @@ export function ProgressBar({
             background-position: 0 0;
           }
         }
-        
+
         @keyframes progress-bar-indeterminate {
           0% {
             left: -30%;
@@ -167,7 +167,7 @@ export function ProgressBar({
             left: 100%;
           }
         }
-      ` }} />
+      `}</style>
     </div>
   );
 }
@@ -297,13 +297,13 @@ export function CircularProgress({
         </div>
       )}
       
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style>{`
         @keyframes circular-progress-rotate {
           100% {
             transform: rotate(270deg);
           }
         }
-        
+
         @keyframes circular-progress-dash {
           0% {
             stroke-dasharray: 1, 150;
@@ -318,7 +318,7 @@ export function CircularProgress({
             stroke-dashoffset: -124;
           }
         }
-      ` }} />
+      `}</style>
     </div>
   );
 }

@@ -437,7 +437,7 @@ export function Toolbar({
       </div>
       
       {/* Animation for refresh */}
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style>{`
         @keyframes spin {
           from {
             transform: rotate(0deg);
@@ -446,11 +446,11 @@ export function Toolbar({
             transform: rotate(360deg);
           }
         }
-        
+
         .animate-spin {
           animation: spin 1s linear infinite;
         }
-      ` }} />
+      `}</style>
     </div>
   );
 }

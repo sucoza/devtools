@@ -111,49 +111,62 @@ const THEMES: Record<string, SyntaxTheme> = {
   },
 };
 
+// Sanitize a CSS color value to prevent injection via customTheme props
+const sanitizeCSSValue = (value: string): string =>
+  value.replace(/[;"'<>&{}]/g, '');
+
 // Simple syntax highlighting
 const highlightSyntax = (code: string, language: string, theme: SyntaxTheme): string => {
   let highlighted = code;
-  
+
   // Escape HTML
   highlighted = highlighted
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
-  
+
+  // Sanitize theme color values to prevent CSS injection
+  const safeTheme = {
+    keyword: sanitizeCSSValue(theme.keyword),
+    string: sanitizeCSSValue(theme.string),
+    number: sanitizeCSSValue(theme.number),
+    comment: sanitizeCSSValue(theme.comment),
+    function: sanitizeCSSValue(theme.function),
+  };
+
   // Language-specific highlighting
   if (['javascript', 'typescript', 'jsx', 'tsx', 'js', 'ts'].includes(language)) {
     // Keywords
     highlighted = highlighted.replace(
       /\b(const|let|var|function|return|if|else|for|while|do|switch|case|break|continue|class|extends|import|export|default|from|async|await|try|catch|finally|throw|new|typeof|instanceof|in|of|this|super|static|get|set|constructor|render)\b/g,
-      `<span style="color: ${theme.keyword}">$1</span>`
+      `<span style="color: ${safeTheme.keyword}">$1</span>`
     );
-    
+
     // Strings
     highlighted = highlighted.replace(
       /(["'`])(?:(?=(\\?))\2.)*?\1/g,
-      `<span style="color: ${theme.string}">$&</span>`
+      `<span style="color: ${safeTheme.string}">$&</span>`
     );
-    
+
     // Numbers
     highlighted = highlighted.replace(
       /\b(\d+(\.\d+)?)\b/g,
-      `<span style="color: ${theme.number}">$1</span>`
+      `<span style="color: ${safeTheme.number}">$1</span>`
     );
-    
+
     // Comments
     highlighted = highlighted.replace(
       /(\/\/.*$|\/\*[\s\S]*?\*\/)/gm,
-      `<span style="color: ${theme.comment}">$1</span>`
+      `<span style="color: ${safeTheme.comment}">$1</span>`
     );
-    
+
     // Functions
     highlighted = highlighted.replace(
       /\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*(?=\()/g,
-      `<span style="color: ${theme.function}">$1</span>`
+      `<span style="color: ${safeTheme.function}">$1</span>`
     );
   }
-  
+
   return highlighted;
 };
 

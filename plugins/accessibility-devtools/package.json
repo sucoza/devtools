@@ -56,7 +56,6 @@
     "zustand": "catalog:"
   },
   "devDependencies": {
-    "@babel/core": "catalog:",
     "@lingui/cli": "catalog:",
     "@rollup/plugin-commonjs": "catalog:",
     "@rollup/plugin-json": "catalog:",
