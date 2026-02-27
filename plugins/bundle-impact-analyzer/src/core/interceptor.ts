@@ -265,6 +265,8 @@ export class BundleInterceptor {
             transferSize: size,
             encodedBodySize: size * 0.7, // Estimate gzip
           } as PerformanceResourceTiming);
+        }).catch(() => {
+          // Silently ignore size fetch failures for existing scripts
         });
       }
     });

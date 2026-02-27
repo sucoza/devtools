@@ -100,11 +100,11 @@ export class ValidationEngine {
     // Apply the operator
     switch (rule.operator) {
       case 'equals':
-        passed = actualValue == rule.expectedValue
+        passed = String(actualValue) === String(rule.expectedValue)
         break
-        
+
       case 'notEquals':
-        passed = actualValue != rule.expectedValue
+        passed = String(actualValue) !== String(rule.expectedValue)
         break
         
       case 'contains':
@@ -161,7 +161,7 @@ export class ValidationEngine {
       case 'jsonPath':
         try {
           const value = this.getJsonPath(response, rule.target || '')
-          passed = value == rule.expectedValue
+          passed = String(value) === String(rule.expectedValue)
           actualValue = value
         } catch (error: any) {
           throw new Error(`JSONPath error: ${error.message}`)

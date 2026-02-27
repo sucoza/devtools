@@ -345,9 +345,11 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
 
         case "component/register": {
           const component = action.payload;
-          set((state) => ({
-            components: new Map(state.components.set(component.id, component)),
-          }));
+          set((state) => {
+            const newComponents = new Map(state.components);
+            newComponents.set(component.id, component);
+            return { components: newComponents };
+          });
           break;
         }
 
@@ -363,11 +365,11 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
           const { id, updates } = action.payload;
           const existingComponent = state.components.get(id);
           if (existingComponent) {
-            set((state) => ({
-              components: new Map(
-                state.components.set(id, { ...existingComponent, ...updates }),
-              ),
-            }));
+            set((state) => {
+              const newComponents = new Map(state.components);
+              newComponents.set(id, { ...existingComponent, ...updates });
+              return { components: newComponents };
+            });
           }
           break;
         }
@@ -394,9 +396,11 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
 
         case "render/metrics/update": {
           const { componentId, metrics } = action.payload;
-          set((state) => ({
-            metrics: new Map(state.metrics.set(componentId, metrics)),
-          }));
+          set((state) => {
+            const newMetrics = new Map(state.metrics);
+            newMetrics.set(componentId, metrics);
+            return { metrics: newMetrics };
+          });
           break;
         }
 

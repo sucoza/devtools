@@ -228,8 +228,8 @@ export class TemplateEngine {
         switch (op) {
           case '===': return leftVal === rightVal;
           case '!==': return leftVal !== rightVal;
-          case '==': return leftVal == rightVal;
-          case '!=': return leftVal != rightVal;
+          case '==': return String(leftVal) === String(rightVal);
+          case '!=': return String(leftVal) !== String(rightVal);
           case '>=': return Number(leftVal) >= Number(rightVal);
           case '<=': return Number(leftVal) <= Number(rightVal);
           case '>': return Number(leftVal) > Number(rightVal);
