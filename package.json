@@ -71,7 +71,6 @@
     "nx": "22.0.4",
     "nx-cloud": "^19.1.0",
     "prettier": "catalog:",
-    "rollup-plugin-copy": "^3.5.0",
     "typescript": "catalog:"
   },
   "engines": {

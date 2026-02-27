@@ -187,11 +187,12 @@ function LoggerDevToolsPanelInner() {
     loggingEventClient.emit('logs-request', undefined);
     
     // Also request logs after a small delay in case there's a timing issue
-    setTimeout(() => {
+    const timerId = setTimeout(() => {
       loggingEventClient.emit('logs-request', undefined);
     }, 50);
 
     return () => {
+      clearTimeout(timerId);
       unsubscribeLog();
       unsubscribeBatch();
       unsubscribeConfig();

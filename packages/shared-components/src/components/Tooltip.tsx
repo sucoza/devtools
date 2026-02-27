@@ -421,7 +421,7 @@ export function Tooltip({
         </div>
       )}
       
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style>{`
         @keyframes tooltip-fade-in {
           from {
             opacity: 0;
@@ -432,7 +432,7 @@ export function Tooltip({
             transform: scale(1);
           }
         }
-      ` }} />
+      `}</style>
     </>
   );
 }

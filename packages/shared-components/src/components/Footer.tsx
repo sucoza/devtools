@@ -448,7 +448,7 @@ export function Footer({
       </div>
       
       {/* Animation for pulse */}
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style>{`
         @keyframes pulse {
           0%, 100% {
             opacity: 1;
@@ -457,11 +457,11 @@ export function Footer({
             opacity: 0.5;
           }
         }
-        
+
         .animate-pulse {
           animation: pulse 2s ease-in-out infinite;
         }
-      ` }} />
+      `}</style>
     </div>
   );
 }

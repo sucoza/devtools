@@ -317,9 +317,7 @@ export function VirtualList<T>({
               borderRadius: '50%',
               animation: 'spin 1s linear infinite',
             }} />
-            <style dangerouslySetInnerHTML={{ 
-              __html: `@keyframes spin { to { transform: rotate(360deg); } }` 
-            }} />
+            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
           </div>
         )}
       </ScrollableContainer>

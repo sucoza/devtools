@@ -382,7 +382,7 @@ function ToastItem({
       </div>
       
       {/* Animation styles */}
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style>{`
         @keyframes toast-slide-in {
           from {
             transform: translateX(100%);
@@ -393,11 +393,11 @@ function ToastItem({
             opacity: 1;
           }
         }
-        
+
         .animate-spin {
           animation: spin 1s linear infinite;
         }
-        
+
         @keyframes spin {
           from {
             transform: rotate(0deg);
@@ -406,7 +406,7 @@ function ToastItem({
             transform: rotate(360deg);
           }
         }
-      ` }} />
+      `}</style>
     </div>
   );
 }

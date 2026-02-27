@@ -366,7 +366,7 @@ export function Modal({
       </div>
       
       {/* Animations */}
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style>{`
         @keyframes backdrop-fade-in {
           from {
             opacity: 0;
@@ -375,7 +375,7 @@ export function Modal({
             opacity: 1;
           }
         }
-        
+
         @keyframes modal-fade-in {
           from {
             opacity: 0;
@@ -386,7 +386,7 @@ export function Modal({
             transform: ${position === 'center' ? 'translate(-50%, -50%) scale(1)' : 'translateX(-50%) scale(1)'};
           }
         }
-        
+
         @keyframes modal-slide-up {
           from {
             opacity: 0;
@@ -397,7 +397,7 @@ export function Modal({
             transform: translate(-50%, -50%);
           }
         }
-      ` }} />
+      `}</style>
     </>
   );
 }

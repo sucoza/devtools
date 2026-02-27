@@ -307,16 +307,16 @@ export function StatusIndicator({
   
   return (
     <div className={className} style={containerStyles} onClick={onClick}>
-      {pulseAnimation && <style dangerouslySetInnerHTML={{ __html: pulseAnimation }} />}
-      {loadingAnimation && <style dangerouslySetInnerHTML={{ __html: loadingAnimation }} />}
+      {pulseAnimation && <style>{pulseAnimation}</style>}
+      {loadingAnimation && <style>{loadingAnimation}</style>}
       {status === 'loading' && animate && variant === 'pill' && (
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style>{`
           @keyframes slide {
             to {
               left: 100%;
             }
           }
-        ` }} />
+        `}</style>
       )}
       
       {renderIndicator()}

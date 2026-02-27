@@ -116,7 +116,7 @@ export function Skeleton({
         />
       )}
       
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style>{`
         @keyframes skeleton-pulse {
           0% {
             opacity: 1;
@@ -128,7 +128,7 @@ export function Skeleton({
             opacity: 1;
           }
         }
-        
+
         @keyframes skeleton-wave {
           0% {
             transform: translateX(-100%);
@@ -137,7 +137,7 @@ export function Skeleton({
             transform: translateX(100%);
           }
         }
-      ` }} />
+      `}</style>
     </div>
   );
 }
