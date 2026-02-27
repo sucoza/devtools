@@ -19,7 +19,6 @@ import {
   StatusIndicator,
   EmptyState,
   ScrollableContainer,
-  SearchInput,
   ConfigMenu,
   ThemeProvider,
   type ConfigMenuItem

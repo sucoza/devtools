@@ -3,7 +3,7 @@
  * Integrates with @sucoza/i18n utility to capture translation usage and state
  */
 
-import type { I18nInstance, I18nEvents as SucozaI18nEvents } from '@sucoza/i18n';
+import type { I18nInstance } from '@sucoza/i18n';
 import { i18nEventClient } from '../core/i18n-event-client';
 import {
   I18nState,
@@ -11,7 +11,6 @@ import {
   Translation,
   LanguageInfo,
   NamespaceInfo,
-  TranslationUsage,
   I18nPerformanceMetrics
 } from '../types/i18n';
 
@@ -240,7 +239,7 @@ export class SucozaI18nAdapter {
     namespace: string,
     key: string,
     value: string,
-    interpolation?: Record<string, any>
+    _interpolation?: Record<string, any>
   ): void {
     this.i18n.addTranslations(this.i18n.locale, {
       [key]: value

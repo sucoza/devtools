@@ -12,7 +12,7 @@ export const ExperimentsTab: React.FC<ExperimentsTabProps> = ({
 }) => {
   const experiments = state.experiments;
 
-  const getStatusColor = (status: string) => {
+  const _getStatusColor = (status: string) => {
     switch (status) {
       case 'running': return 'var(--dt-status-success)';
       case 'paused': return 'var(--dt-status-warning)';
@@ -22,12 +22,12 @@ export const ExperimentsTab: React.FC<ExperimentsTabProps> = ({
     }
   };
 
-  const calculateConversionRate = (conversions: number, exposures: number) => {
+  const _calculateConversionRate = (conversions: number, exposures: number) => {
     if (exposures === 0) return 0;
     return ((conversions / exposures) * 100).toFixed(2);
   };
 
-  const getSignificanceLevel = (significance?: number) => {
+  const _getSignificanceLevel = (significance?: number) => {
     if (!significance) return 'No data';
     if (significance >= 0.95) return 'High';
     if (significance >= 0.80) return 'Medium';

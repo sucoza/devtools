@@ -965,7 +965,7 @@ class DevToolsLogger {
    * @param correlationId - Optional correlation ID
    */
   withCorrelation<T>(fn: () => T, correlationId?: string): T {
-    const id = this.startCorrelation(correlationId);
+    const _id = this.startCorrelation(correlationId);
     try {
       return fn();
     } finally {
@@ -979,7 +979,7 @@ class DevToolsLogger {
    * @param correlationId - Optional correlation ID
    */
   async withCorrelationAsync<T>(fn: () => Promise<T>, correlationId?: string): Promise<T> {
-    const id = this.startCorrelation(correlationId);
+    const _id = this.startCorrelation(correlationId);
     try {
       return await fn();
     } finally {
@@ -993,7 +993,7 @@ class DevToolsLogger {
    * @param traceId - Optional trace ID
    */
   withTrace<T>(fn: () => T, traceId?: string): T {
-    const id = this.startTrace(traceId);
+    const _id = this.startTrace(traceId);
     try {
       return fn();
     } finally {
@@ -1007,7 +1007,7 @@ class DevToolsLogger {
    * @param traceId - Optional trace ID
    */
   async withTraceAsync<T>(fn: () => Promise<T>, traceId?: string): Promise<T> {
-    const id = this.startTrace(traceId);
+    const _id = this.startTrace(traceId);
     try {
       return await fn();
     } finally {

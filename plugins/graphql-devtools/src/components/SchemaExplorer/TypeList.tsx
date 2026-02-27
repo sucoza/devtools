@@ -1,6 +1,6 @@
 import React from 'react';
 import { Search, Type, Database, Settings, Zap, List, Square } from 'lucide-react';
-import { COLORS, TYPOGRAPHY, SPACING, RADIUS, ScrollableContainer, Badge, COMPONENT_STYLES } from '@sucoza/shared-components';
+import { COLORS, TYPOGRAPHY, SPACING, RADIUS, ScrollableContainer, COMPONENT_STYLES } from '@sucoza/shared-components';
 import type { GraphQLTypeInfo } from '../../types';
 
 interface TypeListProps {

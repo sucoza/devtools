@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles, ScrollableContainer, Badge, EmptyState } from '@sucoza/shared-components';
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles } from '@sucoza/shared-components';
 
 import { 
   Keyboard, 
@@ -217,7 +217,7 @@ export function KeyboardNavVisualizer({ className }: KeyboardNavVisualizerProps)
       : <AlertTriangle style={{ width: '16px', height: '16px', color: COLORS.status.warning }} />;
   };
 
-  const getIssueColor = (severity: 'error' | 'warning') => {
+  const _getIssueColor = (severity: 'error' | 'warning') => {
     return severity === 'error' ? COLORS.status.error : COLORS.status.warning;
   };
 

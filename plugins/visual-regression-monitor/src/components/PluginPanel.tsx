@@ -6,8 +6,6 @@ import {
   Play, 
   Settings, 
   Zap,
-  AlertCircle,
-  CheckCircle,
   Activity
 } from 'lucide-react';
 import { useSyncExternalStore } from 'use-sync-external-store/shim';
@@ -15,14 +13,9 @@ import {
   PluginPanel as BasePluginPanel,
   ScrollableContainer,
   Tabs,
-  Badge,
-  StatusIndicator,
   Toolbar,
   Footer,
   Alert,
-  COLORS,
-  SPACING,
-  TYPOGRAPHY,
   ConfigMenu,
   type ConfigMenuItem,
 } from '@sucoza/shared-components';
@@ -109,7 +102,7 @@ export function PluginPanel({ className }: PluginPanelProps) {
     return { status: 'success' as const, label: 'Ready' };
   };
 
-  const { status, label } = getStatus();
+  const { status: _status, label: _label } = getStatus();
 
   // Footer stats
   const footerStats = [

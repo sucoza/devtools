@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, SHADOWS, mergeStyles, ScrollableContainer, Badge, Alert } from '@sucoza/shared-components';
+import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles, ScrollableContainer, Badge } from '@sucoza/shared-components';
 import { 
   Palette, 
   Eye, 
@@ -24,7 +24,7 @@ export interface ColorContrastAnalyzerProps {
 /**
  * Component for analyzing color contrast compliance
  */
-export function ColorContrastAnalyzer({ className }: ColorContrastAnalyzerProps) {
+export function ColorContrastAnalyzer({ className: _className }: ColorContrastAnalyzerProps) {
   const store = useAccessibilityDevToolsStore();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [sortBy, setSortBy] = useState<'ratio' | 'compliance'>('ratio');

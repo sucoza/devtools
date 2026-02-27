@@ -7,7 +7,7 @@ declare module "*.css" {
 }
 
 // React module augmentation
-import * as React from "react";
+import * as _React from "react";
 
 declare module "react" {
   namespace JSX {

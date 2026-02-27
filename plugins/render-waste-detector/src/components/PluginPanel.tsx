@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
 import {
   Activity,
@@ -7,26 +7,12 @@ import {
   Lightbulb,
   Clock,
   Settings,
-  Square,
-  Pause,
-  RotateCcw,
-  Download,
-  Upload,
 } from "lucide-react";
 import {
   PluginPanel as BasePluginPanel,
   ScrollableContainer,
-  Tabs,
-  Badge,
-  StatusIndicator,
-  Toolbar,
-  Footer,
   ConfigMenu,
   ThemeProvider,
-  COLORS,
-  SPACING,
-  TYPOGRAPHY,
-  RADIUS,
 } from '@sucoza/shared-components';
 import '@sucoza/shared-components/dist/styles/theme.css';
 
@@ -54,13 +40,13 @@ import SettingsTab from "./tabs/SettingsTab";
  */
 function PluginPanelInner({
   className,
-  style,
-  theme = "auto",
+  style: _style,
+  theme: _theme = "auto",
   compact = false,
   defaultTab: _defaultTab = "overview",
   defaultSettings,
   onTabChange,
-  onEvent,
+  onEvent: _onEvent,
   onComponentSelect,
   onSuggestionApply,
   children,

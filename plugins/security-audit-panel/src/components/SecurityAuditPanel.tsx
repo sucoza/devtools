@@ -14,8 +14,6 @@ import {
   PluginPanel,
   ScrollableContainer,
   Tabs,
-  Badge,
-  StatusIndicator,
   Toolbar,
   Footer,
   COLORS,

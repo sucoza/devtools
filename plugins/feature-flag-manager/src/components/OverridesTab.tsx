@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { FeatureFlagDevToolsState, FeatureFlagDevToolsClient } from '../types';
-import { getDisplayValue, formatDate } from '../utils';
 
 interface OverridesTabProps {
   state: FeatureFlagDevToolsState;
@@ -21,7 +20,7 @@ export const OverridesTab: React.FC<OverridesTabProps> = ({
     });
   }, [state.overrides, state.flags]);
 
-  const handleRemoveOverride = async (flagId: string) => {
+  const _handleRemoveOverride = async (flagId: string) => {
     try {
       await client.removeOverride(flagId);
     } catch (error) {
@@ -29,7 +28,7 @@ export const OverridesTab: React.FC<OverridesTabProps> = ({
     }
   };
 
-  const handleClearAllOverrides = async () => {
+  const _handleClearAllOverrides = async () => {
     if (confirm('Are you sure you want to clear all overrides?')) {
       try {
         await client.clearAllOverrides();

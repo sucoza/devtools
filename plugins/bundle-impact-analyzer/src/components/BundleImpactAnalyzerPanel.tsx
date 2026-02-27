@@ -6,9 +6,6 @@ import {
   BarChart3,
   TreePine,
   Settings,
-  Play,
-  Square,
-  Zap,
   Globe,
   FileText,
   TrendingUp,
@@ -17,26 +14,19 @@ import {
   PluginPanel,
   ScrollableContainer,
   Tabs,
-  Badge,
   StatusIndicator,
   SearchInput,
-  Toolbar,
-  ProgressBar,
-  Footer,
   ConfigMenu,
   type ConfigMenuItem,
   COLORS,
   SPACING,
   TYPOGRAPHY,
-  RADIUS,
 } from '@sucoza/shared-components';
 
-import type { BundleAnalyzerState } from '../types';
 import {
   createBundleAnalyzerEventClient,
   getBundleAnalyzerEventClient,
   startBundleInterception,
-  BundleAnalyzerDevToolsClient,
 } from '../core';
 
 // Tab components (we'll create these as placeholders for now)
@@ -83,9 +73,9 @@ const formatSize = (bytes: number) => {
  */
 export function BundleImpactAnalyzerPanel({
   className,
-  style,
-  theme = 'auto',
-  compact = false,
+  style: _style,
+  theme: _theme = 'auto',
+  compact: _compact = false,
   defaultTab = 'overview',
   onTabChange,
   onEvent: _onEvent,

@@ -1,11 +1,6 @@
 import React, { useMemo } from 'react';
 import { Trans, t } from '@lingui/macro';
 import {
-  Eye,
-  EyeOff,
-  Play,
-  Pause,
-  Square,
   Shield,
   AlertTriangle,
   Palette,
@@ -14,7 +9,7 @@ import {
   MapPin,
   BarChart3
 } from 'lucide-react';
-import { PluginPanel, PluginTab, PluginAction, PluginMetric, FilterSection, COLORS, COMPONENT_STYLES, ConfigMenu, ThemeProvider, type ConfigMenuItem } from '@sucoza/shared-components';
+import { PluginPanel, PluginTab, PluginMetric, FilterSection, COLORS, ConfigMenu, ThemeProvider, type ConfigMenuItem } from '@sucoza/shared-components';
 import '@sucoza/shared-components/dist/styles/theme.css';
 import { useAccessibilityAudit } from '../hooks/useAccessibilityAudit';
 import { IssueList } from './IssueList';
@@ -56,7 +51,7 @@ function AccessibilityDevToolsPanelInner({ className }: { className?: string }) 
   } = useAccessibilityAudit();
 
   const stats = getIssueStats();
-  const filteredStats = getFilteredStats();
+  const _filteredStats = getFilteredStats();
 
   // Convert actions into config menu items
   const configMenuItems: ConfigMenuItem[] = [

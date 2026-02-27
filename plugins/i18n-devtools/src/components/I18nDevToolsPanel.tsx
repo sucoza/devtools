@@ -17,13 +17,6 @@ import {
 } from 'lucide-react';
 import {
   PluginPanel,
-  Badge,
-  SearchInput,
-  Dropdown,
-  ScrollableContainer,
-  Alert,
-  StatusIndicator,
-  EmptyState,
   Skeleton,
   ConfigMenu,
   ThemeProvider,
@@ -118,20 +111,20 @@ function I18nDevToolsPanelInner() {
   const [selectedKey, setSelectedKey] = useState<string | null>(savedState.selectedKey || null);
   const [searchQuery, setSearchQuery] = useState(savedState.searchQuery || '');
   const [showOnlyMissing, setShowOnlyMissing] = useState(savedState.showOnlyMissing ?? false);
-  const [showOnlyUnused, setShowOnlyUnused] = useState(savedState.showOnlyUnused ?? false);
+  const [showOnlyUnused, _setShowOnlyUnused] = useState(savedState.showOnlyUnused ?? false);
   const [autoRefresh, setAutoRefresh] = useState(savedState.autoRefresh ?? true);
   const [debugMode, setDebugMode] = useState(savedState.debugMode ?? false);
   const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set(savedState.expandedKeys || []));
   const [expandedNamespaces, setExpandedNamespaces] = useState<Set<string>>(new Set(savedState.expandedNamespaces || []));
-  const [panelLayout, setPanelLayout] = useState<'horizontal' | 'vertical'>(savedState.panelLayout || 'horizontal');
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(savedState.sidebarCollapsed ?? false);
+  const [panelLayout, _setPanelLayout] = useState<'horizontal' | 'vertical'>(savedState.panelLayout || 'horizontal');
+  const [sidebarCollapsed, _setSidebarCollapsed] = useState(savedState.sidebarCollapsed ?? false);
   
   // Additional state
   const [searchResults, setSearchResults] = useState<TranslationKey[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [performanceMetrics, setPerformanceMetrics] = useState<I18nPerformanceMetrics | null>(null);
-  const [copySuccess, setCopySuccess] = useState<string | null>(null);
-  const [errors, setErrors] = useState<string[]>([]);
+  const [_copySuccess, setCopySuccess] = useState<string | null>(null);
+  const [_errors, setErrors] = useState<string[]>([]);
 
   // Effects
   useEffect(() => {
@@ -511,12 +504,12 @@ function I18nDevToolsPanelInner() {
     { label: 'Namespaces', value: stats.namespaces }
   ];
 
-  const namespaceOptions = [
+  const _namespaceOptions = [
     { value: '', label: 'All namespaces' },
     ...i18nState.namespaces.map(ns => ({ value: ns.name, label: ns.name }))
   ];
 
-  const languageOptions = [
+  const _languageOptions = [
     { value: '', label: `Current language (${i18nState.currentLanguage})` },
     ...i18nState.availableLanguages.map(lang => ({ value: lang.code, label: `${lang.name} (${lang.code})` }))
   ];
