@@ -87,6 +87,7 @@
   "author": "tyevco",
   "license": "MIT",
   "dependencies": {
+    "globals": "^17.3.0",
     "graphql": "^16.12.0"
   },
   "overrides": {
