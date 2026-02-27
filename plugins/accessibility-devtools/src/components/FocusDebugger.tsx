@@ -658,9 +658,9 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
             </div>
           ) : (
             <div>
-              {focusIssues.map((issue, index) => (
+              {focusIssues.map((issue) => (
                 <div
-                  key={index}
+                  key={`${issue.issue}-${issue.selector}`}
                   style={{
                     padding: SPACING['4xl'],
                     borderLeft: `4px solid ${getIssueColor(issue.severity)}`,
@@ -783,9 +783,9 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
             </div>
           ) : (
             <div>
-              {focusHistory.slice().reverse().map((entry, index) => (
+              {focusHistory.slice().reverse().map((entry) => (
                 <div
-                  key={index}
+                  key={entry.timestamp}
                   style={{
                     padding: SPACING['2xl'],
                     cursor: 'pointer',

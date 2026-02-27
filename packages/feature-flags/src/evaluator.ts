@@ -154,7 +154,7 @@ export class FlagEvaluator {
       if (!userSegment || !flag.targeting.userSegments.includes(userSegment)) {
         // Check if user matches any segment rules
         const matchedSegment = userSegments.find(segment => 
-          flag.targeting!.userSegments!.includes(segment.id) &&
+          flag.targeting.userSegments.includes(segment.id) &&
           this.matchesSegmentRules(segment, context)
         );
         

@@ -394,7 +394,7 @@ export class I18n implements I18nInstance {
     if (!this._listeners.has(event)) {
       this._listeners.set(event, new Set());
     }
-    this._listeners.get(event)!.add(listener);
+    this._listeners.get(event)?.add(listener);
 
     // Return unsubscribe function
     return () => {

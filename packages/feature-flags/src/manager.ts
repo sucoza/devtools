@@ -229,7 +229,7 @@ export class FeatureFlagManager {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
     }
-    this.listeners.get(event)!.add(listener);
+    this.listeners.get(event)?.add(listener);
   }
 
   off(event: string, listener: (data: any) => void): void {

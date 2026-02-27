@@ -345,19 +345,21 @@ function AccordionContent({
   
   useEffect(() => {
     if (!animate || !contentRef.current || !innerRef.current) return;
-    
+
+    let timerId: ReturnType<typeof setTimeout>;
+
     if (isExpanded) {
       // Expanding
       setIsAnimating(true);
       setHeight(0);
-      
+
       requestAnimationFrame(() => {
         if (innerRef.current) {
           setHeight(innerRef.current.scrollHeight);
         }
       });
-      
-      setTimeout(() => {
+
+      timerId = setTimeout(() => {
         setHeight('auto');
         setIsAnimating(false);
       }, 200);
@@ -366,16 +368,18 @@ function AccordionContent({
       if (innerRef.current) {
         setIsAnimating(true);
         setHeight(innerRef.current.scrollHeight);
-        
+
         requestAnimationFrame(() => {
           setHeight(0);
         });
-        
-        setTimeout(() => {
+
+        timerId = setTimeout(() => {
           setIsAnimating(false);
         }, 200);
       }
     }
+
+    return () => clearTimeout(timerId);
   }, [isExpanded, animate]);
   
   if (!animate) {

@@ -22,6 +22,7 @@ export function BundleAnalyzer({
   const [sortBy, setSortBy] = useState<'size' | 'keys' | 'duplicates' | 'unused'>('size');
   const [viewMode, setViewMode] = useState<'table' | 'chart' | 'treemap'>('table');
   const [isLoading, setIsLoading] = useState(false);
+  const isLoadingRef = React.useRef(false);
   const [showOptimizations, setShowOptimizations] = useState(false);
 
   // Initialize selections
@@ -36,7 +37,8 @@ export function BundleAnalyzer({
 
   const runAnalysis = async () => {
     setIsLoading(true);
-    
+    isLoadingRef.current = true;
+
     try {
       i18nEventClient.emit('i18n-bundle-analysis-request', {
         namespaces: selectedNamespaces.length > 0 ? selectedNamespaces : undefined,
@@ -46,14 +48,16 @@ export function BundleAnalyzer({
       const unsubscribe = i18nEventClient.on('i18n-bundle-analysis-response', (event) => {
         setAnalysisData(event.payload.analysis);
         setIsLoading(false);
+        isLoadingRef.current = false;
         unsubscribe();
       });
 
-      // Timeout and fallback
+      // Timeout and fallback - use ref to avoid stale closure
       setTimeout(() => {
-        if (isLoading) {
+        if (isLoadingRef.current) {
           generateFallbackAnalysis();
           setIsLoading(false);
+          isLoadingRef.current = false;
           unsubscribe();
         }
       }, 5000);
@@ -62,6 +66,7 @@ export function BundleAnalyzer({
       console.error('Bundle analysis failed:', error);
       generateFallbackAnalysis();
       setIsLoading(false);
+      isLoadingRef.current = false;
     }
   };
 

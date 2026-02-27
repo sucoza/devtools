@@ -1,3 +1,4 @@
+import type { AddressInfo } from "node:net";
 import net from "node:net";
 
 /**
@@ -11,7 +12,7 @@ export async function findAvailablePort(min: number, max: number): Promise<numbe
       server.unref();
       server.on("error", reject);
       server.listen(port, () => {
-        const { port: chosen } = server.address() as any;
+        const { port: chosen } = server.address() as AddressInfo;
         server.close(() => resolve(chosen));
       });
     });
