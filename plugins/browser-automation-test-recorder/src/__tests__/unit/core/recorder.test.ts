@@ -19,6 +19,7 @@ const mockDevToolsClient = {
   emit: vi.fn(),
   on: vi.fn(),
   off: vi.fn(),
+  addEvent: vi.fn(),
 } as any;
 
 describe('EventRecorder', () => {

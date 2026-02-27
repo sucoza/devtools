@@ -60,6 +60,7 @@ describe('Recording Workflow Integration', () => {
       emit: vi.fn(),
       on: vi.fn(),
       off: vi.fn(),
+      addEvent: vi.fn(),
     };
 
     // Create test element

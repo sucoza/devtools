@@ -52,7 +52,6 @@ export function ScrollableContainer({
   shadowIntensity = 'medium',
   shadowColor,
   enableBounce = false,
-  _bounceIntensity = 0.1,
   showScrollIndicator = false,
   onScrollPositionChange,
   onScroll,

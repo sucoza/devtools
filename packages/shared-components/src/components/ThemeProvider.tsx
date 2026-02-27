@@ -32,19 +32,27 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
     // Try to load from localStorage
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(storageKey);
-      if (stored === 'light' || stored === 'dark') {
-        return stored;
+    try {
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem(storageKey);
+        if (stored === 'light' || stored === 'dark') {
+          return stored;
+        }
       }
+    } catch {
+      // Ignore localStorage errors
     }
     return defaultTheme;
   });
 
   useEffect(() => {
     // Save to localStorage when theme changes
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(storageKey, theme);
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(storageKey, theme);
+      }
+    } catch {
+      // Ignore localStorage errors
     }
   }, [theme, storageKey]);
 

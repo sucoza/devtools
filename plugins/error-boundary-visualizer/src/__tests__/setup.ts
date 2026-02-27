@@ -1,42 +1,32 @@
+import React from 'react'
 import '@testing-library/jest-dom'
-import { vi, beforeEach, beforeAll } from 'vitest'
+import { vi, beforeEach } from 'vitest'
 
-// Mock window.matchMedia - ensure it's available globally
-const mockMatchMedia = vi.fn().mockImplementation((query?: string) => ({
-  matches: query === '(prefers-color-scheme: dark)',
-  media: query || '',
-  onchange: null,
-  addListener: vi.fn(),
-  removeListener: vi.fn(),
-  addEventListener: vi.fn(),
-  removeEventListener: vi.fn(),
-  dispatchEvent: vi.fn(),
+// Mock @lingui/macro since the babel transform doesn't run in vitest
+vi.mock('@lingui/macro', () => ({
+  t: (strings: TemplateStringsArray, ...values: unknown[]) =>
+    strings.reduce((result, str, i) => result + str + (values[i] ?? ''), ''),
+  Trans: ({ children }: { children?: React.ReactNode }) =>
+    React.createElement(React.Fragment, null, children),
+  Plural: ({ value, one, other }: { value: number; one: string; other: string }) =>
+    React.createElement(React.Fragment, null, value === 1 ? one : other),
 }));
 
-// Set up matchMedia immediately before any imports
-beforeAll(() => {
-  // Set up matchMedia on both window and global for jsdom
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    configurable: true,
-    value: mockMatchMedia,
-  });
-
-  Object.defineProperty(global, 'matchMedia', {
-    writable: true,
-    configurable: true,
-    value: mockMatchMedia,
-  });
+// Mock window.matchMedia for theme detection (use plain function to survive vi.clearAllMocks)
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  configurable: true,
+  value: (query: string) => ({
+    matches: query === '(prefers-color-scheme: dark)',
+    media: query || '',
+    onchange: null,
+    addListener: () => {},
+    removeListener: () => {},
+    addEventListener: () => {},
+    removeEventListener: () => {},
+    dispatchEvent: () => false,
+  }),
 });
-
-// Also set it up immediately for module initialization
-if (typeof window !== 'undefined') {
-  Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    configurable: true,
-    value: mockMatchMedia,
-  });
-}
 
 // Mock ResizeObserver
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
@@ -45,7 +35,7 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
   disconnect: vi.fn(),
 }))
 
-// Mock IntersectionObserver  
+// Mock IntersectionObserver
 global.IntersectionObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
@@ -75,8 +65,4 @@ console.warn = (message: any, ...args: any[]) => {
 // Set up fake timers if needed
 beforeEach(() => {
   vi.clearAllMocks();
-  // Ensure matchMedia is always available
-  if (!window.matchMedia) {
-    window.matchMedia = mockMatchMedia;
-  }
 });

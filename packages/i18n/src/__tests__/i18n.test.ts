@@ -122,9 +122,10 @@ describe('@sucoza/i18n', () => {
     });
 
     it('should format dates correctly', () => {
-      const date = new Date('2023-12-25');
+      // Use explicit UTC noon to avoid timezone-related date shifts
+      const date = new Date('2023-12-25T12:00:00');
       const formatted = formatDate(date, 'en-US');
-      expect(formatted).toContain('12'); // Month or day
+      expect(formatted).toContain('12'); // Month
       expect(formatted).toContain('25'); // Day
       expect(formatted).toContain('2023'); // Year
     });
@@ -140,13 +141,14 @@ describe('@sucoza/i18n', () => {
   describe('Performance and usage tracking', () => {
     it('should track translation usage', () => {
       i18n.addTranslations('en', { test: 'Test' });
-      
+
       i18n.t('test');
       i18n.t('test');
-      
+
       const stats = i18n.getUsageStats();
-      const testStat = stats.find(stat => stat.key === 'test');
-      
+      // The key stored includes the default namespace prefix (e.g., "common:test")
+      const testStat = stats.find(stat => stat.key === 'common:test');
+
       expect(testStat).toBeDefined();
       expect(testStat?.count).toBe(2);
     });
@@ -154,10 +156,11 @@ describe('@sucoza/i18n', () => {
     it('should track missing keys', () => {
       i18n.t('missing.key1');
       i18n.t('missing.key2');
-      
+
       const missingKeys = i18n.getMissingKeys();
-      expect(missingKeys).toContain('missing.key1');
-      expect(missingKeys).toContain('missing.key2');
+      // Missing keys include the default namespace prefix
+      expect(missingKeys).toContain('common:missing.key1');
+      expect(missingKeys).toContain('common:missing.key2');
     });
 
     it('should provide current state', () => {

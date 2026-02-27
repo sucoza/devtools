@@ -174,9 +174,9 @@ describe('PluginPanel', () => {
 
   it('should display recording status', () => {
     render(<PluginPanel />);
-    // Component should render without the specific "Recording:" text, 
-    // but should have recording controls
-    expect(screen.getByTitle(/Start Recording/i)).toBeInTheDocument();
+    // Component should show idle status when not recording
+    const idleElements = screen.getAllByText(/Idle/i);
+    expect(idleElements.length).toBeGreaterThan(0);
   });
 
   it('should show metrics section', () => {
