@@ -1,10 +1,11 @@
 // Main exports following TanStack DevTools plugin patterns
 export { AccessibilityDevToolsPanel } from './components/AccessibilityDevToolsPanel';
-export { 
-  createAccessibilityDevToolsEventClient, 
+export {
+  createAccessibilityDevToolsEventClient,
   getAccessibilityDevToolsEventClient,
   resetAccessibilityDevToolsEventClient,
-  AccessibilityDevToolsEventClient 
+  AccessibilityDevToolsClient,
+  AccessibilityDevToolsClient as AccessibilityDevToolsEventClient,
 } from './core/accessibility-event-client';
 
 // Component exports
