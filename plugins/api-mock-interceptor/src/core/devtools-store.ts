@@ -6,6 +6,9 @@ import { getRequestMatcher } from './matcher';
 import { getMockResponseEngine } from './mocker';
 import { getTimestamp } from '../utils';
 
+/** Maximum number of API call entries to retain in the store */
+const MAX_API_CALLS = 1000;
+
 /**
  * DevTools store for managing API interceptor state
  */
@@ -116,15 +119,32 @@ class DevToolsStore {
   private reduce(state: DevToolsState, action: DevToolsAction): DevToolsState {
     switch (action.type) {
       // API call actions
-      case 'api/call/add':
+      case 'api/call/add': {
+        let updatedCalls = {
+          ...state.apiCalls,
+          [action.payload.id]: action.payload,
+        };
+
+        // Enforce maximum API call entries to prevent unbounded growth
+        const callKeys = Object.keys(updatedCalls);
+        if (callKeys.length > MAX_API_CALLS) {
+          // Sort by timestamp (oldest first) and remove excess entries
+          const sortedKeys = callKeys.sort((a, b) => {
+            return updatedCalls[a].timestamp - updatedCalls[b].timestamp;
+          });
+          const keysToRemove = sortedKeys.slice(0, callKeys.length - MAX_API_CALLS);
+          updatedCalls = { ...updatedCalls };
+          for (const key of keysToRemove) {
+            delete updatedCalls[key];
+          }
+        }
+
         return {
           ...state,
-          apiCalls: {
-            ...state.apiCalls,
-            [action.payload.id]: action.payload,
-          },
+          apiCalls: updatedCalls,
           stats: this.updateStats(state.stats, action.payload),
         };
+      }
 
       case 'api/call/update': {
         const existingCall = state.apiCalls[action.payload.id];

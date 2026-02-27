@@ -5,20 +5,68 @@ import { devtoolsStore } from './devtools-store';
 export class AuthMockDevToolsClient {
   private listeners: Set<() => void> = new Set();
   private authInterceptor: ((authState: AuthState) => void) | null = null;
+  private isMonitoring = false;
+
+  // Store original Storage.prototype methods so they can be restored on cleanup
+  private originalSetItem: typeof Storage.prototype.setItem | null = null;
+  private originalRemoveItem: typeof Storage.prototype.removeItem | null = null;
+
+  // Store the bound event handler so it can be removed later
+  private authStateChangeHandler: ((event: Event) => void) | null = null;
 
   constructor() {
     // Initialize interceptor for auth state changes
+    this.startMonitoring();
+  }
+
+  startMonitoring() {
+    if (this.isMonitoring) {
+      return;
+    }
+    this.isMonitoring = true;
     this.setupInterceptor();
+  }
+
+  stopMonitoring() {
+    if (!this.isMonitoring) {
+      return;
+    }
+    this.isMonitoring = false;
+
+    // Restore original Storage.prototype methods
+    if (this.originalSetItem) {
+      Storage.prototype.setItem = this.originalSetItem;
+      this.originalSetItem = null;
+    }
+    if (this.originalRemoveItem) {
+      Storage.prototype.removeItem = this.originalRemoveItem;
+      this.originalRemoveItem = null;
+    }
+
+    // Remove the auth-state-change event listener
+    if (this.authStateChangeHandler) {
+      window.removeEventListener('auth-state-change', this.authStateChangeHandler);
+      this.authStateChangeHandler = null;
+    }
+  }
+
+  cleanup() {
+    this.stopMonitoring();
+    this.listeners.clear();
+    this.authInterceptor = null;
   }
 
   private setupInterceptor() {
     // Intercept localStorage and sessionStorage operations
-    const originalSetItem = Storage.prototype.setItem;
-    const originalRemoveItem = Storage.prototype.removeItem;
+    this.originalSetItem = Storage.prototype.setItem;
+    this.originalRemoveItem = Storage.prototype.removeItem;
+
+    const originalSetItem = this.originalSetItem;
+    const originalRemoveItem = this.originalRemoveItem;
 
     Storage.prototype.setItem = (key: string, value: string) => {
       originalSetItem.call(window.localStorage, key, value);
-      
+
       // Detect auth-related storage changes
       if (key.includes('auth') || key.includes('token') || key.includes('user')) {
         this.handleStorageChange(key, value);
@@ -27,7 +75,7 @@ export class AuthMockDevToolsClient {
 
     Storage.prototype.removeItem = (key: string) => {
       originalRemoveItem.call(window.localStorage, key);
-      
+
       // Detect auth-related storage removal
       if (key.includes('auth') || key.includes('token') || key.includes('user')) {
         this.handleStorageChange(key, null);
@@ -35,10 +83,11 @@ export class AuthMockDevToolsClient {
     };
 
     // Listen for auth state changes from the application
-    window.addEventListener('auth-state-change', (event: Event) => {
+    this.authStateChangeHandler = (event: Event) => {
       const customEvent = event as CustomEvent;
       this.handleAuthStateChange(customEvent.detail);
-    });
+    };
+    window.addEventListener('auth-state-change', this.authStateChangeHandler);
   }
 
   private handleStorageChange(key: string, value: string | null) {

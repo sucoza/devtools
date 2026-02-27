@@ -264,9 +264,13 @@ function AppContent() {
     }
 
     ws.onmessage = (event: MessageEvent) => {
-      const message = JSON.parse(event.data)
-      setWsMessages(prev => [`${message.type}: ${JSON.stringify(message.data)}`, ...prev.slice(0, 9)])
-      wsLogger.debug('WebSocket message received', { type: message.type, data: message.data })
+      try {
+        const message = JSON.parse(event.data)
+        setWsMessages(prev => [`${message.type}: ${JSON.stringify(message.data)}`, ...prev.slice(0, 9)])
+        wsLogger.debug('WebSocket message received', { type: message.type, data: message.data })
+      } catch {
+        setWsMessages(prev => [`${event.data}`, ...prev.slice(0, 9)])
+      }
     }
 
     ws.onclose = () => {

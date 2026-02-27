@@ -153,8 +153,13 @@ export class ValidationEngine {
         
       case 'regex':
         if (typeof actualValue === 'string') {
-          const regex = new RegExp(rule.expectedValue, 'i')
-          passed = regex.test(actualValue)
+          try {
+            const regex = new RegExp(rule.expectedValue, 'i')
+            passed = regex.test(actualValue)
+          } catch {
+            // Invalid regex pattern provided by user - treat as validation failure
+            throw new Error(`Invalid regex pattern: ${rule.expectedValue}`)
+          }
         }
         break
         
@@ -190,6 +195,18 @@ export class ValidationEngine {
     rule: ValidationRule
   ): ValidationResult {
     try {
+      // SECURITY NOTE: new Function() is used here to execute user-provided custom
+      // validation code in a devtools context. This is intentional for the validation
+      // engine, but the code runs with full page privileges. Only use with trusted input.
+      if (typeof rule.customCode !== 'string' || rule.customCode.trim() === '') {
+        return {
+          ruleId: rule.id,
+          ruleName: rule.name,
+          passed: false,
+          error: 'Custom validation code is empty or invalid'
+        }
+      }
+
       // Create a safe execution context
       const context = {
         response,
@@ -205,20 +222,31 @@ export class ValidationEngine {
         Date,
         RegExp
       }
-      
+
       // Create function from custom code
-      const func = new Function(
-        'response', 'status', 'headers', 'responseTime', 'responseSize',
-        'JSON', 'Array', 'Object', 'Math', 'Date', 'RegExp',
-        `
-        try {
-          ${rule.customCode}
-        } catch (error) {
-          return { passed: false, error: error.message };
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+      let func: Function
+      try {
+        func = new Function(
+          'response', 'status', 'headers', 'responseTime', 'responseSize',
+          'JSON', 'Array', 'Object', 'Math', 'Date', 'RegExp',
+          `
+          try {
+            ${rule.customCode}
+          } catch (error) {
+            return { passed: false, error: error.message };
+          }
+          `
+        )
+      } catch (syntaxError: any) {
+        return {
+          ruleId: rule.id,
+          ruleName: rule.name,
+          passed: false,
+          error: `Syntax error in custom validation code: ${syntaxError.message}`
         }
-        `
-      )
-      
+      }
+
       const result = func(
         context.response,
         context.status,
