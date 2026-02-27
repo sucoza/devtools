@@ -23,7 +23,7 @@ export const ErrorSimulator: React.FC = () => {
     delay: 1000,
   })
 
-  const theme = config.theme === 'auto' 
+  const _theme = config.theme === 'auto'
     ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
     : config.theme
 

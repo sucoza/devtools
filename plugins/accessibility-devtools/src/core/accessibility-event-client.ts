@@ -1,5 +1,6 @@
 import type {
   AccessibilityDevToolsState,
+  AccessibilityDevToolsEvents,
 } from '../types';
 import { useAccessibilityDevToolsStore } from './devtools-store';
 
@@ -9,11 +10,6 @@ import { useAccessibilityDevToolsStore } from './devtools-store';
 export interface DevToolsEventClient<TEvents extends Record<string, any>> {
   subscribe: (callback: (event: TEvents[keyof TEvents], type: keyof TEvents) => void) => () => void;
   getState: () => AccessibilityDevToolsState;
-}
-
-export interface AccessibilityDevToolsEvents {
-  'accessibility:state': AccessibilityDevToolsState;
-  'accessibility:error': { message: string; stack?: string };
 }
 
 /**

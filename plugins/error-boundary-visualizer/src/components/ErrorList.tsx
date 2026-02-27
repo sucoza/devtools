@@ -16,7 +16,7 @@ export const ErrorList: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState<ErrorCategory | 'all'>('all')
   const [severityFilter, setSeverityFilter] = useState<ErrorSeverity | 'all'>('all')
 
-  const theme = config.theme === 'auto' 
+  const _theme = config.theme === 'auto'
     ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
     : config.theme
 

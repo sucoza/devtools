@@ -1,9 +1,8 @@
 import React from 'react';
-import { Search, Filter, RefreshCw, Download, Upload, Settings, Trash2, Copy, MoreHorizontal } from 'lucide-react';
+import { RefreshCw, Download, Upload, Settings, Trash2 } from 'lucide-react';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../styles/plugin-styles';
 import { SearchInput } from './SearchInput';
 import { Dropdown } from './Dropdown';
-import { Badge } from './Badge';
 import { Tooltip } from './Tooltip';
 
 export interface ToolbarAction {

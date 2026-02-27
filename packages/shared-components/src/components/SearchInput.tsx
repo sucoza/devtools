@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Search, X, Filter, History, ArrowUp, ArrowDown } from 'lucide-react';
+import { Search, X, History } from 'lucide-react';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../styles/plugin-styles';
 
 export interface SearchInputProps {

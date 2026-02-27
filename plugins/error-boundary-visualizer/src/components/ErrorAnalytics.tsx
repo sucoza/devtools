@@ -12,7 +12,7 @@ export const ErrorAnalytics: React.FC = () => {
   
   const [timeRange, setTimeRange] = useState<'1h' | '24h' | '7d' | '30d'>('24h')
 
-  const theme = config.theme === 'auto' 
+  const _theme = config.theme === 'auto'
     ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
     : config.theme
 

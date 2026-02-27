@@ -23,8 +23,8 @@ interface ErrorBoundaryDevToolsPanelProps {
 
 function ErrorBoundaryDevToolsPanelInner() {
   const { 
-    errorBoundaries, 
-    isRecording, 
+    errorBoundaries: _errorBoundaries,
+    isRecording,
     clearErrors, 
     exportState,
     startRecording,

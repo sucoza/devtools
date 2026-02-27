@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertTriangle, CheckCircle } from 'lucide-react';
-import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles } from '@sucoza/shared-components';
+import { COLORS, SPACING, TYPOGRAPHY, RADIUS } from '@sucoza/shared-components';
 import { useDesignSystemInspector } from '../../hooks';
 
 export function SpacingTab() {

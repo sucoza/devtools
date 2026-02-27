@@ -21,7 +21,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
     maxRetries: 3,
   })
 
-  const theme = config.theme === 'auto' 
+  const _theme = config.theme === 'auto'
     ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
     : config.theme
 

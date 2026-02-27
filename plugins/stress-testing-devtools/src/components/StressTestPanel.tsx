@@ -5,7 +5,6 @@ import {
   ScrollableContainer,
   Tabs,
   Badge,
-  StatusIndicator,
   Footer,
   COLORS,
   SPACING,

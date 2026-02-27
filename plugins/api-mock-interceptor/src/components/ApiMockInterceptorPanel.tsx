@@ -1,9 +1,7 @@
 import React from 'react';
-import { Play, Pause, RotateCcw, Settings, Network, Database, List } from 'lucide-react';
+import { Settings, Network, Database, List } from 'lucide-react';
 import {
   PluginPanel,
-  StatusIndicator,
-  Badge,
   ConfigMenu,
   type ConfigMenuItem
 } from '@sucoza/shared-components';

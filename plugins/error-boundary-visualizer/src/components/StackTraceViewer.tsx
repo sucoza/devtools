@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { Trans } from '@lingui/macro'
 import { CodeBlock, Badge, Accordion, ScrollableContainer } from '@sucoza/shared-components'
-import { useErrorBoundaryDevTools } from '../core/store'
 import type { EnhancedStackFrame } from '../types'
 
 interface StackTraceViewerProps {

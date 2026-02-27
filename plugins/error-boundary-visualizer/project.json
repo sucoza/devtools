@@ -62,7 +62,7 @@
       ],
       "options": {
         "lintFilePatterns": [
-          "plugins/error-boundary-visualizer/**/*.{ts,tsx,js,jsx}"
+          "plugins/error-boundary-visualizer/src/**/*.{ts,tsx,js,jsx}"
         ]
       }
     },

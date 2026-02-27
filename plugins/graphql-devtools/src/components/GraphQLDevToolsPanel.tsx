@@ -7,8 +7,6 @@ import {
 } from 'lucide-react';
 import {
   PluginPanel,
-  Badge,
-  StatusIndicator,
   EmptyState,
   ConfigMenu,
   type ConfigMenuItem
@@ -146,7 +144,7 @@ export const GraphQLDevToolsPanel: React.FC = () => {
     event.target.value = '';
   };
 
-  const getTabIcon = (tab: string) => {
+  const _getTabIcon = (tab: string) => {
     switch (tab) {
       case 'schema':
         return <Database size={16} />;

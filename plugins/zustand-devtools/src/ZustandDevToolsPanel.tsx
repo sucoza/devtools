@@ -2,11 +2,8 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Toolbar,
   Tabs,
-  TabPanel,
-  TreeView,
   ScrollableContainer,
   Footer,
-  SearchInput,
   Badge,
   StatusIndicator,
   EmptyState,
@@ -76,7 +73,7 @@ function ZustandDevToolsPanelInner() {
   const [collapsedStores, setCollapsedStores] = useState<Set<string>>(new Set(savedState.collapsedStores || []));
   const [expandedTreeNodes, setExpandedTreeNodes] = useState<Set<string>>(new Set(savedState.expandedTreeNodes || []));
   const [copySuccess, setCopySuccess] = useState<string | null>(null);
-  const [isTimeTravel, setIsTimeTravel] = useState(false);
+  const [_isTimeTravel, setIsTimeTravel] = useState(false);
   const [showSnapshotDialog, setShowSnapshotDialog] = useState(false);
   const [snapshotName, setSnapshotName] = useState('');
 

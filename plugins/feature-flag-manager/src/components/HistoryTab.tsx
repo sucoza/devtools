@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { FeatureFlagDevToolsState, FeatureFlagDevToolsClient } from '../types';
-import { getDisplayValue } from '../utils';
 
 interface HistoryTabProps {
   state: FeatureFlagDevToolsState;
@@ -11,17 +10,17 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
   state,
   client: _client
 }) => {
-  const [selectedFlagFilter, setSelectedFlagFilter] = useState<string>('all');
-  const [selectedReasonFilter, setSelectedReasonFilter] = useState<string>('all');
+  const [selectedFlagFilter, _setSelectedFlagFilter] = useState<string>('all');
+  const [selectedReasonFilter, _setSelectedReasonFilter] = useState<string>('all');
   
   const evaluationHistory = state.evaluationHistory;
-  const flags = Array.from(state.flags.values());
-  
+  const _flags = Array.from(state.flags.values());
+
   // Get unique reasons for filter
-  const uniqueReasons = Array.from(new Set(evaluationHistory.map(e => e.reason)));
+  const _uniqueReasons = Array.from(new Set(evaluationHistory.map(e => e.reason)));
 
   // Filter evaluations
-  const filteredEvaluations = evaluationHistory.filter(evaluation => {
+  const _filteredEvaluations = evaluationHistory.filter(evaluation => {
     if (selectedFlagFilter !== 'all' && evaluation.flagId !== selectedFlagFilter) {
       return false;
     }
@@ -31,7 +30,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
     return true;
   });
 
-  const getReasonColor = (reason: string) => {
+  const _getReasonColor = (reason: string) => {
     switch (reason) {
       case 'default': return 'var(--dt-text-secondary)';
       case 'override': return 'var(--dt-status-warning)';
@@ -44,7 +43,7 @@ export const HistoryTab: React.FC<HistoryTabProps> = ({
     }
   };
 
-  const handleClearHistory = () => {
+  const _handleClearHistory = () => {
     if (confirm('Are you sure you want to clear the evaluation history?')) {
       // In a real implementation, this would call a method to clear history
       // console.log('Clear history requested');

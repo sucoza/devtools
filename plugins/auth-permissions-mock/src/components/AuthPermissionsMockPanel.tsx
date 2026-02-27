@@ -7,8 +7,6 @@ import {
   Lock,
   Unlock,
   Settings,
-  AlertTriangle,
-  X,
   Copy,
   Download,
   Upload,
@@ -34,7 +32,7 @@ function AuthPermissionsMockPanelInner() {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
   const [customToken, setCustomToken] = useState('');
-  const [showWarning, setShowWarning] = useState(true);
+  const [showWarning, _setShowWarning] = useState(true);
   const theme = useThemeOptional('light');
 
   const handleApplyScenario = (scenarioId: string) => {

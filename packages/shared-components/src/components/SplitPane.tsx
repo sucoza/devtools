@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { COLORS, SPACING, RADIUS } from '../styles/plugin-styles';
+import { COLORS } from '../styles/plugin-styles';
 
 export interface SplitPaneProps {
   children: [React.ReactNode, React.ReactNode];
@@ -52,8 +52,8 @@ export function SplitPane({
   children,
   direction = 'horizontal',
   defaultSize = '50%',
-  minSize = 0,
-  maxSize = '100%',
+  _minSize = 0,
+  _maxSize = '100%',
   size,
   onSizeChange,
   pane1MinSize = 50,
@@ -244,7 +244,7 @@ export function SplitPane({
 
   // Calculate pane sizes
   const containerSize = getContainerSize();
-  let pane1SizePx = isCollapsed 
+  const pane1SizePx = isCollapsed
     ? (collapseDirection === 'first' ? 0 : containerSize)
     : getSizeInPixels(size || paneSize, containerSize);
   

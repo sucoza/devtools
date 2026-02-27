@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { ChevronRight, ChevronDown, Folder, FolderOpen, File, FileText, FileCode, Image } from 'lucide-react';
-import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../styles/plugin-styles';
+import { COLORS, SPACING, TYPOGRAPHY } from '../styles/plugin-styles';
 import { ScrollableContainer } from './ScrollableContainer';
 
 export interface TreeNode<T = any> {

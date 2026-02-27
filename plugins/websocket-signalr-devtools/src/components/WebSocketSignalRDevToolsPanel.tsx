@@ -34,7 +34,7 @@ export function WebSocketSignalRDevToolsPanel({
   // Use selective subscriptions to avoid re-renders
   const selectedTab = useDevToolsSelector(state => state.ui.selectedTab);
   const showFilters = useDevToolsSelector(state => state.ui.showFilters);
-  const uiTheme = useDevToolsSelector(state => state.ui.theme);
+  const _uiTheme = useDevToolsSelector(state => state.ui.theme);
   const selectedConnectionId = useDevToolsSelector(state => state.ui.selectedConnectionId);
   const selectedMessageId = useDevToolsSelector(state => state.ui.selectedMessageId);
   const wsRecording = useDevToolsSelector(state => state.websocket.isRecording);

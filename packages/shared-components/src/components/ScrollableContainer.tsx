@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { COLORS, SPACING, RADIUS, SHADOWS } from '../styles/plugin-styles';
+import { COLORS, RADIUS } from '../styles/plugin-styles';
 
 export interface ScrollableContainerProps {
   children: React.ReactNode;
@@ -52,7 +52,7 @@ export function ScrollableContainer({
   shadowIntensity = 'medium',
   shadowColor,
   enableBounce = false,
-  bounceIntensity = 0.1,
+  _bounceIntensity = 0.1,
   showScrollIndicator = false,
   onScrollPositionChange,
   onScroll,

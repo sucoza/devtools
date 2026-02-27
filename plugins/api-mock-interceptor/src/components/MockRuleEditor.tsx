@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Save, X, Hash, Link, Globe, Clock } from 'lucide-react';
-import { COLORS, TYPOGRAPHY, SPACING, RADIUS, COMPONENT_STYLES, mergeStyles } from '@sucoza/shared-components';
+import { COLORS, TYPOGRAPHY, SPACING, COMPONENT_STYLES, mergeStyles } from '@sucoza/shared-components';
 import type { MockRule, HttpMethod, RequestMatcher, MockResponse } from '../types';
 import { generateId, getTimestamp } from '../utils';
 

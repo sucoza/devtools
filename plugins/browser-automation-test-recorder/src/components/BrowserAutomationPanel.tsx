@@ -3,9 +3,6 @@ import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import { clsx } from 'clsx';
 import {
   Play,
-  Square,
-  Pause,
-  RotateCcw,
   Settings,
   Code,
   MousePointer,

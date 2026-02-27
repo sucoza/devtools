@@ -1,14 +1,13 @@
 import React from 'react';
-import { 
-  Type, 
-  Database, 
-  Settings, 
-  Zap, 
-  List, 
+import {
+  Type,
+  Database,
+  Settings,
+  Zap,
+  List,
   Square,
   ArrowRight,
   AlertTriangle,
-  Info,
   Copy,
   Check
 } from 'lucide-react';

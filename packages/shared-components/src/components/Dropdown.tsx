@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { ChevronDown, Check, X, Search, Loader } from 'lucide-react';
+import { ChevronDown, Check, X, Loader } from 'lucide-react';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../styles/plugin-styles';
 
 export interface DropdownOption<T = any> {
@@ -73,7 +73,7 @@ export function Dropdown<T = any>({
   disabled = false,
   loading = false,
   groups = false,
-  virtualScroll = false,
+  _virtualScroll = false,
   maxHeight = 300,
   maxSelections,
   async = false,

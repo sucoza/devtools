@@ -121,7 +121,7 @@ export function DashboardTab() {
           color: COLORS.text.secondary,
           margin: 0
         }}>
-          Monitor your design system's health and consistency across your application.
+          Monitor your design system&apos;s health and consistency across your application.
         </p>
       </div>
 

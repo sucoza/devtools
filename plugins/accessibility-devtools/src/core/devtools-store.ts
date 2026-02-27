@@ -115,20 +115,31 @@ const initialState: AccessibilityDevToolsState = {
 interface AccessibilityDevToolsStore extends AccessibilityDevToolsState {
   // Actions
   dispatch: (action: AccessibilityDevToolsAction) => void;
-  
+
   // Scanner methods
   startScanning: (elementSelector?: string) => Promise<void>;
   stopScanning: () => void;
   pauseScanning: () => void;
   resumeScanning: () => void;
-  
+
+  // Convenience methods (used by event client)
+  toggleScanning: () => void;
+  runAudit: () => void;
+  selectAuditResult: (id: string | null) => void;
+  dismissViolation: (id: string) => void;
+  updateFilters: (filters: Partial<AccessibilityDevToolsState['filters']>) => void;
+  updateSettings: (settings: Partial<AccessibilityDevToolsState['settings']>) => void;
+  selectTab: (tab: AccessibilityDevToolsState['ui']['activeTab']) => void;
+  setTheme: (theme: 'light' | 'dark' | 'auto') => void;
+  toggleCompactMode: () => void;
+
   // Analysis methods
   runColorContrastAnalysis: () => void;
   runKeyboardNavAnalysis: () => void;
   runARIAValidation: () => void;
   runLandmarksAnalysis: () => void;
   runFocusAnalysis: () => void;
-  
+
   // Utility methods
   updateStats: (audit: AccessibilityAuditResult, metrics: ScanPerformanceMetrics) => void;
   addToHistory: (audit: AccessibilityAuditResult) => void;
@@ -465,12 +476,94 @@ export const useAccessibilityDevToolsStore = create<AccessibilityDevToolsStore>(
       pauseScanning: () => {
         get().dispatch({ type: 'scan/pause' });
       },
-      
+
       /**
        * Resume scanning
        */
       resumeScanning: () => {
         get().dispatch({ type: 'scan/resume' });
+      },
+
+      /**
+       * Toggle scanning on/off
+       */
+      toggleScanning: () => {
+        const state = get();
+        if (state.scanState.isScanning) {
+          get().stopScanning();
+        } else {
+          get().startScanning();
+        }
+      },
+
+      /**
+       * Run a full accessibility audit
+       */
+      runAudit: () => {
+        get().startScanning();
+      },
+
+      /**
+       * Select an audit result by ID
+       */
+      selectAuditResult: (id: string | null) => {
+        const state = get();
+        const issue = id && state.currentAudit
+          ? state.currentAudit.violations.find(v => v.id === id) ?? null
+          : null;
+        get().dispatch({ type: 'ui/issue/select', payload: issue });
+      },
+
+      /**
+       * Dismiss a violation by ID
+       */
+      dismissViolation: (id: string) => {
+        set(state => {
+          if (!state.currentAudit) return state;
+          return {
+            currentAudit: {
+              ...state.currentAudit,
+              violations: state.currentAudit.violations.filter(v => v.id !== id),
+            },
+          };
+        });
+      },
+
+      /**
+       * Update filter settings
+       */
+      updateFilters: (filters: Partial<AccessibilityDevToolsState['filters']>) => {
+        set(state => ({
+          filters: { ...state.filters, ...filters },
+        }));
+      },
+
+      /**
+       * Update settings
+       */
+      updateSettings: (settings: Partial<AccessibilityDevToolsState['settings']>) => {
+        get().dispatch({ type: 'settings/update', payload: settings });
+      },
+
+      /**
+       * Select a tab
+       */
+      selectTab: (tab: AccessibilityDevToolsState['ui']['activeTab']) => {
+        get().dispatch({ type: 'ui/tab/select', payload: tab });
+      },
+
+      /**
+       * Set theme
+       */
+      setTheme: (theme: 'light' | 'dark' | 'auto') => {
+        get().dispatch({ type: 'ui/theme/set', payload: theme });
+      },
+
+      /**
+       * Toggle compact mode
+       */
+      toggleCompactMode: () => {
+        get().dispatch({ type: 'ui/compact-mode/toggle' });
       },
       
       /**
