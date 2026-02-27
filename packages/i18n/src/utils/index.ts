@@ -189,7 +189,7 @@ export function formatNumber(
 ): string {
   try {
     return new Intl.NumberFormat(locale, options).format(num);
-  } catch (error) {
+  } catch {
     // Fallback to English if locale is not supported
     return new Intl.NumberFormat('en', options).format(num);
   }
@@ -219,7 +219,7 @@ export function formatDate(
 ): string {
   try {
     return new Intl.DateTimeFormat(locale, options).format(date);
-  } catch (error) {
+  } catch {
     // Fallback to English if locale is not supported
     return new Intl.DateTimeFormat('en', options).format(date);
   }
@@ -266,7 +266,7 @@ export function formatRelativeTime(
     }
     
     return formatter.format(0, 'second');
-  } catch (error) {
+  } catch {
     // Fallback for unsupported locales
     const diffInSeconds = Math.floor((date.getTime() - baseDate.getTime()) / 1000);
     const absDiff = Math.abs(diffInSeconds);

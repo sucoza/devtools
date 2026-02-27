@@ -14,7 +14,7 @@ import {
   type Tab
 } from '@sucoza/shared-components';
 import '@sucoza/shared-components/dist/styles/theme.css';
-import { Download, Trash2, Navigation } from 'lucide-react';
+import { Navigation } from 'lucide-react';
 import { routerEventClient } from '../core/router-event-client';
 import { 
   NavigationState, 

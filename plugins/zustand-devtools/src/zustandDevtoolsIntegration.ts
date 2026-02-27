@@ -200,7 +200,7 @@ class ZustandStoreRegistry {
   }
 
   private handleSaveSnapshot(payload: { name: string; stores: Record<string, unknown> }) {
-    const { name, stores } = payload;
+    const { name, stores: _stores } = payload;
 
     // Save current states of all stores
     const snapshot: Record<string, unknown> = {};

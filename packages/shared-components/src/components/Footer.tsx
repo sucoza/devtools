@@ -1,7 +1,6 @@
 import React from 'react';
-import { AlertCircle, CheckCircle, Info, Activity, Clock, Database, Cpu, HardDrive } from 'lucide-react';
-import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../styles/plugin-styles';
-import { Badge } from './Badge';
+import { AlertCircle, CheckCircle, Activity, Clock, Database, Cpu, HardDrive } from 'lucide-react';
+import { COLORS, SPACING, TYPOGRAPHY } from '../styles/plugin-styles';
 import { StatusIndicator } from './StatusIndicator';
 import { Tooltip } from './Tooltip';
 

@@ -12,18 +12,10 @@ import {
 } from 'lucide-react';
 import {
   PluginPanel,
-  SearchInput,
   ScrollableContainer,
-  DataTable,
   Badge,
   EmptyState,
   StatusIndicator,
-  Tabs,
-  SplitPane,
-  CodeBlock,
-  Alert,
-  Collapsible,
-  ProgressBar,
   ConfigMenu,
   type ConfigMenuItem
 } from '@sucoza/shared-components';
@@ -69,7 +61,7 @@ const loadUIState = (): Partial<FormStateUIState> => {
   }
 };
 
-const getValidationStateColor = (state: ValidationState): string => {
+const _getValidationStateColor = (state: ValidationState): string => {
   switch (state) {
     case 'valid': return '#10b981';
     case 'invalid': return '#ef4444';
@@ -79,7 +71,7 @@ const getValidationStateColor = (state: ValidationState): string => {
   }
 };
 
-const getFieldStateIndicator = (field: FieldState): string => {
+const _getFieldStateIndicator = (field: FieldState): string => {
   const indicators = [];
   if (field.isDirty) indicators.push('Dirty');
   if (field.isTouched) indicators.push('Touched');
@@ -93,7 +85,7 @@ export function FormStateDevToolsPanel() {
   const savedState = loadUIState();
   
   const [forms, setForms] = useState<Record<string, FormState>>({});
-  const [selectedFormId, setSelectedFormId] = useState<string | null>(savedState.selectedFormId || null);
+  const [selectedFormId, _setSelectedFormId] = useState<string | null>(savedState.selectedFormId || null);
   const [selectedFieldName, _setSelectedFieldName] = useState<string | null>(savedState.selectedFieldName || null);
   const [activeTab, setActiveTab] = useState<FormStateUIState['activeTab']>(savedState.activeTab || 'fields');
   const [showOnlyDirty, setShowOnlyDirty] = useState(savedState.showOnlyDirty ?? false);
@@ -217,7 +209,7 @@ export function FormStateDevToolsPanel() {
     );
   };
 
-  const toggleFieldExpanded = (fieldName: string) => {
+  const _toggleFieldExpanded = (fieldName: string) => {
     setExpandedFields(prev => 
       prev.includes(fieldName) 
         ? prev.filter(name => name !== fieldName)

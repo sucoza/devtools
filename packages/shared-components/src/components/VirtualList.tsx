@@ -53,7 +53,7 @@ export function VirtualList<T>({
   className,
   style,
   overscan = 3,
-  estimatedItemHeight = 50,
+  _estimatedItemHeight = 50,
   getItemKey,
   initialScrollOffset = 0,
   scrollToAlignment = 'auto',
@@ -183,7 +183,7 @@ export function VirtualList<T>({
   }, []);
 
   // Scroll to index function
-  const scrollToIndex = useCallback((index: number, alignment: 'start' | 'center' | 'end' | 'auto' = scrollToAlignment) => {
+  const _scrollToIndex = useCallback((index: number, alignment: 'start' | 'center' | 'end' | 'auto' = scrollToAlignment) => {
     if (!scrollElementRef.current || !itemMetadata[index]) return;
 
     const item = itemMetadata[index];

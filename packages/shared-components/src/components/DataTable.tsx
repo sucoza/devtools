@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { ChevronUp, ChevronDown, ChevronRight, ChevronsUpDown, Search, Filter, Download, Copy, MoreVertical } from 'lucide-react';
+import { ChevronUp, ChevronDown, ChevronRight, ChevronsUpDown, MoreVertical } from 'lucide-react';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../styles/plugin-styles';
 import { ScrollableContainer } from './ScrollableContainer';
 import { SearchInput } from './SearchInput';
@@ -103,8 +103,8 @@ export function DataTable<T = any>({
   searchable = false,
   selectable = false,
   expandable = false,
-  resizable = false,
-  virtualized = false,
+  _resizable = false,
+  _virtualized = false,
   selectedRows = new Set(),
   onSelectionChange,
   selectAll = true,
@@ -129,7 +129,7 @@ export function DataTable<T = any>({
   onRowClick,
   onRowDoubleClick,
   onSort,
-  onFilter,
+  _onFilter,
   onSearch,
   getRowKey = (_, index) => index,
   getRowClassName,
@@ -139,8 +139,8 @@ export function DataTable<T = any>({
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filters, setFilters] = useState<Record<string, any>>({});
-  const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
+  const [filters, _setFilters] = useState<Record<string, any>>({});
+  const [columnWidths, _setColumnWidths] = useState<Record<string, number>>({});
   
   // Handle sorting
   const handleSort = useCallback((column: Column<T>) => {
