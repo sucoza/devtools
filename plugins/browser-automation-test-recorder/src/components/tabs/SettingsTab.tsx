@@ -212,7 +212,6 @@ export default function SettingsTab({ state, dispatch, compact: _compact }: TabC
           <button
             onClick={() => {
               // This would trigger a file picker
-              // console.log('Import settings');
             }}
             className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors"
           >

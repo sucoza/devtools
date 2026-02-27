@@ -154,7 +154,7 @@ export class CodeGenerator {
           
           variants.push(test);
         } catch {
-          // // console.warn(`Failed to generate ${format}/${language} variant:`, _error);
+          // silently ignore
         }
       }
     }

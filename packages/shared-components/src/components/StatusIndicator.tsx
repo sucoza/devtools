@@ -135,14 +135,7 @@ export function StatusIndicator({
     }
   ` : '';
   
-  // Loading animation
-  const loadingAnimation = status === 'loading' && animate ? `
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-  ` : '';
+
   
   // Base container styles
   const containerStyles: React.CSSProperties = {
@@ -170,7 +163,7 @@ export function StatusIndicator({
           border: `2px solid ${COLORS.border.primary}`,
           borderTopColor: colors.bg,
           backgroundColor: 'transparent',
-          animation: 'spin 1s linear infinite',
+          animation: 'dt-spin 1s linear infinite',
         }),
       }}
     />
@@ -194,7 +187,7 @@ export function StatusIndicator({
         color: colors.bg,
         flexShrink: 0,
         ...(status === 'loading' && animate && {
-          animation: 'spin 1s linear infinite',
+          animation: 'dt-spin 1s linear infinite',
         }),
       }}
     >
@@ -263,7 +256,7 @@ export function StatusIndicator({
             alignItems: 'center',
             justifyContent: 'center',
             ...(status === 'loading' && animate && {
-              animation: 'spin 1s linear infinite',
+              animation: 'dt-spin 1s linear infinite',
             }),
           }}
         >
@@ -281,7 +274,7 @@ export function StatusIndicator({
           justifyContent: 'center',
           fontSize: dimensions.badge,
           ...(status === 'loading' && animate && {
-            animation: 'spin 1s linear infinite',
+            animation: 'dt-spin 1s linear infinite',
           }),
         }}
       >
@@ -308,7 +301,6 @@ export function StatusIndicator({
   return (
     <div className={className} style={containerStyles} onClick={onClick}>
       {pulseAnimation && <style>{pulseAnimation}</style>}
-      {loadingAnimation && <style>{loadingAnimation}</style>}
       {status === 'loading' && animate && variant === 'pill' && (
         <style>{`
           @keyframes slide {
