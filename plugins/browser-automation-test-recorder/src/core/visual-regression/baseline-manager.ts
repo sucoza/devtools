@@ -230,9 +230,13 @@ export class BaselineManager {
     if (this.config.type === 'local') {
       const stored = localStorage.getItem(`baseline_set_${id}`);
       if (stored) {
-        const set = JSON.parse(stored);
-        this.sets.set(id, set);
-        return set;
+        try {
+          const set = JSON.parse(stored);
+          this.sets.set(id, set);
+          return set;
+        } catch {
+          return null;
+        }
       }
     }
 
@@ -329,8 +333,14 @@ export class BaselineManager {
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key?.startsWith('baseline_')) {
-          const baseline = JSON.parse(localStorage.getItem(key)!);
-          baselines.push(baseline);
+          try {
+            const data = localStorage.getItem(key);
+            if (data) {
+              baselines.push(JSON.parse(data));
+            }
+          } catch {
+            // Skip corrupted localStorage entries
+          }
         }
       }
     }

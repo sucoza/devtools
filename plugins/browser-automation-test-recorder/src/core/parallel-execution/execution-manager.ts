@@ -266,6 +266,7 @@ export class ExecutionManager {
   private maxConcurrentJobs = 4;
   private jobIdCounter = 0;
   private workerIdCounter = 0;
+  private queueProcessorInterval: ReturnType<typeof setInterval> | null = null;
 
   private eventEmitter = new EventTarget();
 
@@ -494,7 +495,12 @@ export class ExecutionManager {
    */
   stop(): void {
     this.isRunning = false;
-    
+
+    if (this.queueProcessorInterval !== null) {
+      clearInterval(this.queueProcessorInterval);
+      this.queueProcessorInterval = null;
+    }
+
     // Cancel all running jobs
     this.queue.running.forEach(job => {
       this.cancelJob(job.id);
@@ -544,7 +550,7 @@ export class ExecutionManager {
    * Start queue processing loop
    */
   private startQueueProcessor(): void {
-    setInterval(() => {
+    this.queueProcessorInterval = setInterval(() => {
       if (this.isRunning) {
         this.processQueue();
       }

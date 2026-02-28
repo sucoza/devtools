@@ -103,7 +103,11 @@ export class CDPClient {
       };
 
       this.websocket.onmessage = (event) => {
-        this.handleMessage(JSON.parse(event.data));
+        try {
+          this.handleMessage(JSON.parse(event.data));
+        } catch {
+          // Skip malformed WebSocket messages
+        }
       };
 
       this.websocket.onclose = () => {

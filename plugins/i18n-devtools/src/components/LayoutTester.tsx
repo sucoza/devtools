@@ -3,7 +3,7 @@
  * Tests RTL/LTR layout compatibility and identifies potential issues
  */
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import type { LanguageInfo, LayoutTestResult } from '../types/i18n';
 import { i18nEventClient } from '../core/i18n-event-client';
 
@@ -20,6 +20,7 @@ export function LayoutTester({
   const [testSelector, setTestSelector] = useState<string>('');
   const [testResults, setTestResults] = useState<LayoutTestResult[]>([]);
   const [isTestingInProgress, setIsTestingInProgress] = useState(false);
+  const isTestingRef = useRef(false);
   const [_previewMode, _setPreviewMode] = useState<'side-by-side' | 'overlay' | 'animation'>('side-by-side');
 
   const rtlLanguages = languages.filter(lang => lang.isRTL);
@@ -27,7 +28,8 @@ export function LayoutTester({
 
   const runLayoutTest = async (language: string) => {
     setIsTestingInProgress(true);
-    
+    isTestingRef.current = true;
+
     try {
       i18nEventClient.emit('i18n-layout-test-request', {
         language,
@@ -40,14 +42,16 @@ export function LayoutTester({
           return [...existing, event.payload.result];
         });
         setIsTestingInProgress(false);
+        isTestingRef.current = false;
         unsubscribe();
       });
 
       // Timeout and generate fallback
       setTimeout(() => {
-        if (isTestingInProgress) {
+        if (isTestingRef.current) {
           generateFallbackTestResult(language);
           setIsTestingInProgress(false);
+          isTestingRef.current = false;
           unsubscribe();
         }
       }, 5000);

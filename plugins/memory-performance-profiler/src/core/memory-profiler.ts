@@ -464,6 +464,7 @@ export class MemoryProfiler {
   }
 
   private calculateTrend(oldValue: number, newValue: number): 'up' | 'down' | 'stable' {
+    if (oldValue === 0) return newValue > 0 ? 'up' : 'stable';
     const threshold = 0.05; // 5% threshold
     const change = (newValue - oldValue) / oldValue;
 

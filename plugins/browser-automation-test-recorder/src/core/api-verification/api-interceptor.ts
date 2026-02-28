@@ -725,8 +725,12 @@ export class APIInterceptor {
     const matchingAssertions: APIAssertion[] = [];
 
     for (const [pattern, assertions] of this.assertions.entries()) {
-      if (request.url.match(new RegExp(pattern))) {
-        matchingAssertions.push(...assertions.filter(a => a.enabled));
+      try {
+        if (request.url.match(new RegExp(pattern))) {
+          matchingAssertions.push(...assertions.filter(a => a.enabled));
+        }
+      } catch {
+        // Skip invalid regex patterns
       }
     }
 
@@ -816,12 +820,20 @@ export class APIInterceptor {
       case 'less_than':
         return { passed: Number(actualValue) < Number(condition.value), actualValue };
       case 'matches': {
-        const regex = new RegExp(condition.pattern!);
-        return { passed: regex.test(String(actualValue)), actualValue };
+        try {
+          const regex = new RegExp(condition.pattern!);
+          return { passed: regex.test(String(actualValue)), actualValue };
+        } catch {
+          return { passed: false, actualValue };
+        }
       }
       case 'not_matches': {
-        const notRegex = new RegExp(condition.pattern!);
-        return { passed: !notRegex.test(String(actualValue)), actualValue };
+        try {
+          const notRegex = new RegExp(condition.pattern!);
+          return { passed: !notRegex.test(String(actualValue)), actualValue };
+        } catch {
+          return { passed: false, actualValue };
+        }
       }
       default:
         return { passed: false, actualValue };

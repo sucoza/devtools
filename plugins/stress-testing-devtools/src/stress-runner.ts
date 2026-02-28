@@ -201,15 +201,20 @@ export class StressTestRunner {
 
     return new Promise((resolve) => {
       const interval = setInterval(async () => {
-        if (Date.now() >= endTime || this.abortController?.signal.aborted) {
+        try {
+          if (Date.now() >= endTime || this.abortController?.signal.aborted) {
+            clearInterval(interval)
+            resolve()
+            return
+          }
+
+          const config = configs[configIndex++ % configs.length]
+          const result = await this.executeRequest(config)
+          this.onResult(result)
+        } catch {
           clearInterval(interval)
           resolve()
-          return
         }
-
-        const config = configs[configIndex++ % configs.length]
-        const result = await this.executeRequest(config)
-        this.onResult(result)
       }, 1000 / ratePerSecond)
     })
   }
