@@ -449,17 +449,8 @@ export function Footer({
       
       {/* Animation for pulse */}
       <style>{`
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-
         .animate-pulse {
-          animation: pulse 2s ease-in-out infinite;
+          animation: dt-pulse 2s ease-in-out infinite;
         }
       `}</style>
     </div>

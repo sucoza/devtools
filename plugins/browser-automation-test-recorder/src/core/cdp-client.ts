@@ -94,13 +94,11 @@ export class CDPClient {
       this.websocket.onopen = () => {
         clearTimeout(timeout);
         this.isConnected = true;
-        // // console.log('CDPClient: Connected to DevTools Protocol');
         resolve();
       };
 
       this.websocket.onerror = (_error) => {
         clearTimeout(timeout);
-        // // // console.error('CDPClient: WebSocket error:', error);
         reject(new Error('Failed to connect to CDP'));
       };
 
@@ -111,7 +109,6 @@ export class CDPClient {
       this.websocket.onclose = () => {
         this.isConnected = false;
         this.cleanup();
-        // // // console.log('CDPClient: Connection closed');
       };
     });
   }
@@ -244,7 +241,7 @@ export class CDPClient {
 
       return null;
     } catch {
-      // // console.error('CDPClient: Error finding element');
+      // silently ignore
       return null;
     }
   }
@@ -264,7 +261,7 @@ export class CDPClient {
 
       return result.node;
     } catch {
-      // // console.error('CDPClient: Error getting node info');
+      // silently ignore
       return null;
     }
   }
@@ -279,7 +276,6 @@ export class CDPClient {
       // Find element
       const element = await this.findElement(selector);
       if (!element || !element.objectId) {
-        // // console.warn('CDPClient: Element not found for highlighting:', selector);
         return;
       }
 
@@ -310,7 +306,7 @@ export class CDPClient {
       }, 3000);
 
     } catch {
-      // // console.error('CDPClient: Error highlighting element');
+      // silently ignore
     }
   }
 
@@ -486,7 +482,7 @@ export class CDPClient {
           try {
             callback(message.params);
           } catch {
-            // // console.error('CDPClient: Error in event listener:', error);
+            // silently ignore
           }
         });
       }
@@ -499,17 +495,17 @@ export class CDPClient {
   private setupEventListeners(): void {
     // Handle console messages
     this.addEventListener('Runtime.consoleAPICalled', (_params: any) => {
-      // // console.log('CDP Console:', params);
+      // Handle console messages
     });
 
     // Handle JavaScript exceptions
     this.addEventListener('Runtime.exceptionThrown', (_params: any) => {
-      // // console.error('CDP Exception:', params.exceptionDetails);
+      // Handle JavaScript exceptions
     });
 
     // Handle network events
     this.addEventListener('Network.requestWillBeSent', (_params: any) => {
-      // // console.log('CDP Network Request:', params.request.url);
+      // Handle network events
     });
   }
 

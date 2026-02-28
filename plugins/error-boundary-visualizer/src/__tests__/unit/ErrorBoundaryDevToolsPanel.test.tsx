@@ -421,15 +421,15 @@ describe('ErrorBoundaryDevToolsPanel', () => {
       expect(wrapper).toBeInTheDocument();
     });
 
-    it('should include CSS animation keyframes for pulse', () => {
+    it('should not include unused inline CSS animations', () => {
       render(<ErrorBoundaryDevToolsPanel />);
 
-      // Check that at least one style tag with the pulse animation is rendered
+      // Pulse animation was removed as dead code - dt-pulse is available via theme.css
       const styleTags = document.querySelectorAll('style');
-      const hasPulseAnimation = Array.from(styleTags).some(
+      const hasInlinePulse = Array.from(styleTags).some(
         tag => tag.textContent?.includes('@keyframes pulse')
       );
-      expect(hasPulseAnimation).toBe(true);
+      expect(hasInlinePulse).toBe(false);
     });
 
     it('should position the config menu absolutely in top-right corner', () => {

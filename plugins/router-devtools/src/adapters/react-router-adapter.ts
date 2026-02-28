@@ -25,6 +25,10 @@ export class ReactRouterAdapter implements IRouterAdapter {
   private listeners: ((state: NavigationState) => void)[] = [];
   private router: unknown = null;
   private routes: unknown[] = [];
+  private popstateHandler: (() => void) | null = null;
+  private hashchangeHandler: (() => void) | null = null;
+  private originalPushState: typeof window.history.pushState | null = null;
+  private originalReplaceState: typeof window.history.replaceState | null = null;
 
   constructor() {
     this.initialize();
@@ -69,27 +73,52 @@ export class ReactRouterAdapter implements IRouterAdapter {
    */
   private setupRouterMonitoring(): void {
     // Monitor URL changes
-    const originalPushState = window.history.pushState;
-    const originalReplaceState = window.history.replaceState;
-    
-    window.history.pushState = (...args) => {
-      originalPushState.apply(window.history, args);
-      this.notifyListeners();
-    };
-    
-    window.history.replaceState = (...args) => {
-      originalReplaceState.apply(window.history, args);
-      this.notifyListeners();
+    this.originalPushState = window.history.pushState;
+    this.originalReplaceState = window.history.replaceState;
+
+    const self = this;
+    window.history.pushState = function (...args) {
+      self.originalPushState!.apply(window.history, args);
+      self.notifyListeners();
     };
 
-    window.addEventListener('popstate', () => {
-      this.notifyListeners();
-    });
+    window.history.replaceState = function (...args) {
+      self.originalReplaceState!.apply(window.history, args);
+      self.notifyListeners();
+    };
 
-    // Monitor hash changes
-    window.addEventListener('hashchange', () => {
+    this.popstateHandler = () => {
       this.notifyListeners();
-    });
+    };
+    window.addEventListener('popstate', this.popstateHandler);
+
+    this.hashchangeHandler = () => {
+      this.notifyListeners();
+    };
+    window.addEventListener('hashchange', this.hashchangeHandler);
+  }
+
+  /**
+   * Clean up all event listeners and restore original methods
+   */
+  destroy(): void {
+    if (this.popstateHandler) {
+      window.removeEventListener('popstate', this.popstateHandler);
+      this.popstateHandler = null;
+    }
+    if (this.hashchangeHandler) {
+      window.removeEventListener('hashchange', this.hashchangeHandler);
+      this.hashchangeHandler = null;
+    }
+    if (this.originalPushState) {
+      window.history.pushState = this.originalPushState;
+      this.originalPushState = null;
+    }
+    if (this.originalReplaceState) {
+      window.history.replaceState = this.originalReplaceState;
+      this.originalReplaceState = null;
+    }
+    this.listeners = [];
   }
 
   /**
@@ -186,7 +215,6 @@ export class ReactRouterAdapter implements IRouterAdapter {
     let newPath = currentPath;
     Object.entries(params).forEach(([key, value]) => {
       // Simple parameter replacement - in reality, you'd need proper route matching
-      const _paramPattern = new RegExp(`/([^/]*)`);
       if (currentPath.includes(`/:${key}`)) {
         newPath = currentPath.replace(`/:${key}`, `/${value}`);
       }

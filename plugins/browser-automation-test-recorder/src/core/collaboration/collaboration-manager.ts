@@ -124,8 +124,6 @@ export class CollaborationManager {
 
     this.initialized = true;
     this.connected = true;
-
-    // // console.log('Collaboration system initialized successfully');
   }
 
   /**
@@ -149,8 +147,6 @@ export class CollaborationManager {
     this.connected = false;
     this.currentUser = null;
     this.currentTeam = null;
-
-    // // console.log('Collaboration system shutdown');
   }
 
   /**
@@ -566,7 +562,7 @@ export class CollaborationManager {
       try {
         await this.performSync();
       } catch {
-        // // console.error('Sync error:', err);
+        // silently ignore
       }
     }, this.config.sync.interval);
 
@@ -576,17 +572,14 @@ export class CollaborationManager {
 
   private async performSync(): Promise<void> {
     // Implementation would sync with remote server
-    // // console.log('Performing collaboration sync...');
   }
 
   private async connectNotifications(): Promise<void> {
     // Implementation would connect to real-time notification service
-    // // console.log('Connecting to notifications...');
   }
 
   private async disconnectNotifications(): Promise<void> {
     // Implementation would disconnect from notification service
-    // // console.log('Disconnecting from notifications...');
   }
 
   private emitNotification(notification: CollaborationNotification): void {
@@ -596,7 +589,7 @@ export class CollaborationManager {
         try {
           handler(notification);
         } catch {
-          // // console.error('Error in notification handler:', err);
+          // silently ignore
         }
       });
     }

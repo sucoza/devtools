@@ -611,7 +611,7 @@ class AnnotationEventBus {
         try {
           callback(data);
         } catch {
-          // // console.error('Error in annotation event listener:', error);
+          // silently ignore
         }
       });
     }

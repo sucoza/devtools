@@ -130,8 +130,6 @@ export class EventRecorder {
     
     // Record initial page state
     await this.recordPageState();
-    
-    // // console.log(`EventRecorder: Started recording session ${this.sessionId}`);
   }
 
   /**
@@ -154,8 +152,7 @@ export class EventRecorder {
     // Return recorded events
     const events = [...this.eventBuffer];
     this.eventBuffer = [];
-    
-    // // console.log(`EventRecorder: Stopped recording, captured ${events.length} events`);
+
     return events;
   }
 
@@ -165,7 +162,6 @@ export class EventRecorder {
   pauseRecording(): void {
     if (!this._isRecording) return;
     this._isPaused = true;
-    // // console.log('EventRecorder: Recording paused');
   }
 
   /**
@@ -174,7 +170,6 @@ export class EventRecorder {
   resumeRecording(): void {
     if (!this._isRecording) return;
     this._isPaused = false;
-    // // console.log('EventRecorder: Recording resumed');
   }
 
   /**
@@ -406,7 +401,7 @@ export class EventRecorder {
       this.lastEventTime = Date.now();
       
     } catch {
-      // console.error('EventRecorder: Error processing event');
+      // silently ignore
     }
   }
 
@@ -882,7 +877,7 @@ export class EventRecorder {
         data: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==', // Minimal PNG
       };
     } catch {
-      // console.error('EventRecorder: Failed to capture screenshot');
+      // silently ignore
       return undefined;
     }
   }

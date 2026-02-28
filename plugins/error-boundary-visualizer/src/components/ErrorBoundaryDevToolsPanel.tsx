@@ -120,12 +120,7 @@ function ErrorBoundaryDevToolsPanelInner() {
 
   return (
     <>
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
-      `}</style>
+
       <div style={{ position: 'relative', height: '100%' }}>
         <PluginPanel
           title={<Trans>Error Boundary DevTools</Trans>}

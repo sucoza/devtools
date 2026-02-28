@@ -78,12 +78,7 @@
 .running-indicator {
   color: var(--dt-status-success);
   font-weight: 500;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  animation: dt-pulse 2s infinite;
 }
 
 /* Test Runner */

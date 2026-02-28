@@ -262,7 +262,7 @@ export function setupComponentObserver(): { disconnect: () => void } {
 
   // Start observing when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startObserving);
+    document.addEventListener('DOMContentLoaded', startObserving, { once: true });
   } else {
     startObserving();
   }
@@ -273,6 +273,7 @@ export function setupComponentObserver(): { disconnect: () => void } {
         observer.disconnect();
         isObserving = false;
       }
+      document.removeEventListener('DOMContentLoaded', startObserving);
     },
   };
 }

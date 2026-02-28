@@ -151,7 +151,8 @@ describe('Form State Inspector Index', () => {
       
       expect(mockDocument.addEventListener).toHaveBeenCalledWith(
         'DOMContentLoaded',
-        expect.any(Function)
+        expect.any(Function),
+        { once: true }
       );
       
       // Simulate DOMContentLoaded event

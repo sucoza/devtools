@@ -315,9 +315,9 @@ export function VirtualList<T>({
               border: `2px solid ${COLORS.border.primary}`,
               borderTopColor: COLORS.text.accent,
               borderRadius: '50%',
-              animation: 'spin 1s linear infinite',
+              animation: 'dt-spin 1s linear infinite',
             }} />
-            <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+
           </div>
         )}
       </ScrollableContainer>

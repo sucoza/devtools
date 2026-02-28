@@ -200,7 +200,7 @@ export class BaselineManager {
       this.cache.delete(id);
       return true;
     } catch {
-      // // console.error('Failed to delete baseline');
+      // silently ignore
       return false;
     }
   }
@@ -362,18 +362,15 @@ export class BaselineManager {
    */
   private async storeInCloud(_baseline: BaselineImage): Promise<void> {
     // Implement cloud storage logic based on provider
-    // // console.log('Storing baseline in cloud:', baseline.id);
   }
 
   private async loadFromCloud(_id: string, _environment?: string): Promise<BaselineImage | null> {
     // Implement cloud loading logic
-    // // console.log('Loading baseline from cloud:', id);
     return null;
   }
 
   private async removeFromCloud(_id: string): Promise<void> {
     // Implement cloud removal logic
-    // // console.log('Removing baseline from cloud:', id);
   }
 
   /**
@@ -381,18 +378,15 @@ export class BaselineManager {
    */
   private async storeInGit(_baseline: BaselineImage): Promise<void> {
     // Implement git storage logic
-    // // console.log('Storing baseline in git:', baseline.id);
   }
 
   private async loadFromGit(_id: string, _environment?: string): Promise<BaselineImage | null> {
     // Implement git loading logic
-    // // console.log('Loading baseline from git:', id);
     return null;
   }
 
   private async removeFromGit(_id: string): Promise<void> {
     // Implement git removal logic
-    // // console.log('Removing baseline from git:', id);
   }
 
   /**

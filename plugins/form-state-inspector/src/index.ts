@@ -72,7 +72,7 @@ export function initializeFormStateInspector() {
           const formId = formElement.id || formElement.name || `form-${index}`;
           trackHTMLForm(formElement, formId);
         });
-      });
+      }, { once: true });
     }
 
     // console.log('🔍 Form State Inspector initialized');

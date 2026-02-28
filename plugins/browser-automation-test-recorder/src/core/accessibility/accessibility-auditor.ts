@@ -262,7 +262,7 @@ export class AccessibilityAuditor {
         getRules: this.mockAxeGetRules.bind(this),
       } as AxeCoreApi;
     } catch {
-      // // console.warn('Failed to initialize axe-core');
+      // silently ignore
     }
   }
 
