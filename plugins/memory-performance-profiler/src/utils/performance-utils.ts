@@ -109,7 +109,7 @@ export function analyzePerformanceTrends(
     if (values.length >= 3) {
       const firstValue = values[0];
       const lastValue = values[values.length - 1];
-      const changeRate = (lastValue - firstValue) / firstValue;
+      const changeRate = firstValue === 0 ? 0 : (lastValue - firstValue) / firstValue;
       
       let trend: 'improving' | 'declining' | 'stable' = 'stable';
       

@@ -81,16 +81,27 @@ export function Modal({
 }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
-  
+  const closeCompleteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup close timer on unmount
+  useEffect(() => {
+    return () => {
+      if (closeCompleteTimer.current !== null) {
+        clearTimeout(closeCompleteTimer.current);
+      }
+    };
+  }, []);
+
   // Handle close
   const handleClose = useCallback(() => {
     if (preventClose) return;
-    
+
     onClose?.();
     onOpenChange?.(false);
-    
+
     if (animate) {
-      setTimeout(() => {
+      closeCompleteTimer.current = setTimeout(() => {
+        closeCompleteTimer.current = null;
         onCloseComplete?.();
       }, 200);
     } else {
@@ -118,24 +129,33 @@ export function Modal({
   useEffect(() => {
     if (open) {
       previousActiveElement.current = document.activeElement as HTMLElement;
-      
+
       // Focus the modal
-      setTimeout(() => {
+      const focusTimer = setTimeout(() => {
         modalRef.current?.focus();
       }, 100);
-      
+
       // Call open complete
+      let openCompleteTimer: ReturnType<typeof setTimeout> | undefined;
       if (animate) {
-        setTimeout(() => {
+        openCompleteTimer = setTimeout(() => {
           onOpenComplete?.();
         }, 200);
       } else {
         onOpenComplete?.();
       }
+
+      return () => {
+        clearTimeout(focusTimer);
+        if (openCompleteTimer !== undefined) {
+          clearTimeout(openCompleteTimer);
+        }
+      };
     } else {
       // Restore focus
       previousActiveElement.current?.focus();
     }
+    return undefined;
   }, [open, animate, onOpenComplete]);
   
   // Prevent body scroll when open

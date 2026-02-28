@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { Trans } from '@lingui/macro';
 import {
   FeatureFlagDevToolsClient,
@@ -45,6 +45,7 @@ const FeatureFlagManagerPanelInner: React.FC<FeatureFlagManagerPanelProps & { re
   const [activeTab, setActiveTab] = useState<PanelTab>(defaultTab);
   const [showUserContext, setShowUserContext] = useState(false);
   const [notifications, setNotifications] = useState<Array<{ id: string; type: 'info' | 'success' | 'warning' | 'error'; message: string }>>([]);
+  const notificationTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
   const COLORS = useMemo(() => getColors(resolvedTheme), [resolvedTheme]);
 
@@ -57,16 +58,26 @@ const FeatureFlagManagerPanelInner: React.FC<FeatureFlagManagerPanelProps & { re
     return () => unsubscribe();
   }, [client]);
 
+  // Cleanup notification timers on unmount
+  useEffect(() => {
+    return () => {
+      notificationTimers.current.forEach(timer => clearTimeout(timer));
+      notificationTimers.current.clear();
+    };
+  }, []);
+
   // Add notification
-  const addNotification = (type: 'info' | 'success' | 'warning' | 'error', message: string) => {
+  const addNotification = useCallback((type: 'info' | 'success' | 'warning' | 'error', message: string) => {
     const id = Date.now().toString();
     setNotifications(prev => [...prev, { id, type, message }]);
 
     // Auto remove after 5 seconds
-    setTimeout(() => {
+    const timer = setTimeout(() => {
+      notificationTimers.current.delete(id);
       setNotifications(prev => prev.filter(n => n.id !== id));
     }, 5000);
-  };
+    notificationTimers.current.set(id, timer);
+  }, []);
 
   // Remove notification
   const removeNotification = (id: string) => {

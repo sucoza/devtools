@@ -42,9 +42,13 @@ export class RequestMatcherEngine {
 
         // Support wildcard matching in header values
         if (value.includes('*')) {
-          const regexPattern = value.replace(/\*/g, '.*');
-          const regex = new RegExp(`^${regexPattern}$`, 'i');
-          if (!regex.test(requestHeaderValue)) {
+          try {
+            const regexPattern = value.replace(/\*/g, '.*');
+            const regex = new RegExp(`^${regexPattern}$`, 'i');
+            if (!regex.test(requestHeaderValue)) {
+              return false;
+            }
+          } catch {
             return false;
           }
         } else if (requestHeaderValue.toLowerCase() !== value.toLowerCase()) {

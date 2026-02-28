@@ -313,8 +313,13 @@ export class ReactRouterAdapter implements IRouterAdapter {
     const pattern = path
       .replace(/:[^/]+/g, '[^/]+') // Replace :param with match pattern
       .replace(/\*/g, '.*'); // Replace * with match-all
-    
-    return new RegExp(`^${pattern}$`);
+
+    try {
+      return new RegExp(`^${pattern}$`);
+    } catch {
+      // Fallback to exact match if pattern produces invalid regex
+      return new RegExp(`^${path.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`);
+    }
   }
 
   /**

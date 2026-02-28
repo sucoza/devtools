@@ -18,6 +18,8 @@ export interface SecurityScanner {
 export class SecurityScanEngine {
   private scanners: Map<string, SecurityScanner> = new Map();
   private config: SecurityAuditConfig;
+  private domChangeObserver: MutationObserver | null = null;
+  private domChangeTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(config: SecurityAuditConfig) {
     this.config = config;
@@ -159,20 +161,35 @@ export class SecurityScanEngine {
     }
 
     if (this.config.autoScanOnDomChange) {
-      let timeoutId: NodeJS.Timeout;
-      const observer = new MutationObserver(() => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(async () => {
+      this.domChangeObserver = new MutationObserver(() => {
+        if (this.domChangeTimeout !== null) {
+          clearTimeout(this.domChangeTimeout);
+        }
+        this.domChangeTimeout = setTimeout(async () => {
           const results = await this.runScan();
           callback(results);
         }, 2000);
       });
 
-      observer.observe(document.body, {
+      this.domChangeObserver.observe(document.body, {
         childList: true,
         subtree: true,
         attributes: true,
       });
+    }
+  }
+
+  /**
+   * Cleanup auto-scan resources
+   */
+  stopAutoScan(): void {
+    if (this.domChangeObserver) {
+      this.domChangeObserver.disconnect();
+      this.domChangeObserver = null;
+    }
+    if (this.domChangeTimeout !== null) {
+      clearTimeout(this.domChangeTimeout);
+      this.domChangeTimeout = null;
     }
   }
 
