@@ -209,29 +209,29 @@ export function VirtualList<T>({
 
   // Render visible items
   const visibleItems = useMemo(() => {
-    const items: React.ReactNode[] = [];
+    const rendered: React.ReactNode[] = [];
 
     for (let i = visibleRange.startIndex; i <= visibleRange.endIndex; i++) {
-      const item = itemMetadata[i];
-      if (!item) continue;
+      const meta = itemMetadata[i];
+      if (!meta) continue;
 
-      const key = getItemKey ? getItemKey(items[i] as T, i) : i;
+      const key = getItemKey ? getItemKey(items[i], i) : i;
       const itemStyle: React.CSSProperties = {
         position: 'absolute',
-        top: item.offset,
+        top: meta.offset,
         left: 0,
         right: 0,
-        height: item.height,
+        height: meta.height,
       };
 
-      items.push(
+      rendered.push(
         <div key={key} style={itemStyle}>
-          {renderItem(items[i] as T, i, itemStyle)}
+          {renderItem(items[i], i, itemStyle)}
         </div>
       );
     }
 
-    return items;
+    return rendered;
   }, [visibleRange, itemMetadata, getItemKey, items, renderItem]);
 
   // Container styles

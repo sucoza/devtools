@@ -233,7 +233,7 @@ export function ModulesTab({ state, eventClient }: ModulesTabProps) {
                     </button>
                     <button
                       className="detail-action-btn"
-                      onClick={() => navigator.clipboard.writeText(module.path)}
+                      onClick={() => { navigator.clipboard.writeText(module.path).catch(() => {}); }}
                     >
                       <FileText size={14} />
                       Copy Path

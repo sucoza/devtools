@@ -307,7 +307,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
                   key={key}
                   style={secondaryButtonStyles}
                   onClick={() => {
-                    navigator.clipboard.writeText(template)
+                    navigator.clipboard.writeText(template).catch(() => {})
                   }}
                 >
                   Copy {key.charAt(0).toUpperCase() + key.slice(1)}

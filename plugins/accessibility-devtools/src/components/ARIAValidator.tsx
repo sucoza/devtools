@@ -12,6 +12,19 @@ import {
 } from 'lucide-react';
 import type { ARIAValidationIssue } from '../types';
 
+const VALID_ARIA_ROLES = new Set([
+  'alert', 'alertdialog', 'application', 'article', 'banner', 'button', 'cell', 'checkbox',
+  'columnheader', 'combobox', 'complementary', 'contentinfo', 'definition', 'dialog',
+  'directory', 'document', 'feed', 'figure', 'form', 'grid', 'gridcell', 'group',
+  'heading', 'img', 'link', 'list', 'listbox', 'listitem', 'log', 'main', 'marquee',
+  'math', 'menu', 'menubar', 'menuitem', 'menuitemcheckbox', 'menuitemradio', 'navigation',
+  'none', 'note', 'option', 'presentation', 'progressbar', 'radio', 'radiogroup',
+  'region', 'row', 'rowgroup', 'rowheader', 'scrollbar', 'search', 'searchbox',
+  'separator', 'slider', 'spinbutton', 'status', 'switch', 'tab', 'table', 'tablist',
+  'tabpanel', 'term', 'textbox', 'timer', 'toolbar', 'tooltip', 'tree', 'treegrid',
+  'treeitem'
+]);
+
 export interface ARIAValidatorProps {
   className?: string;
 }
@@ -30,19 +43,6 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
     // Get all elements with ARIA attributes or roles
     const elementsWithAria = document.querySelectorAll('[role], [aria-label], [aria-labelledby], [aria-describedby], [aria-expanded], [aria-checked], [aria-selected], [aria-hidden], [aria-live], [aria-atomic], [aria-relevant], [aria-busy], [aria-controls], [aria-owns], [aria-flowto], [aria-activedescendant], [aria-current], [aria-details], [aria-errormessage], [aria-haspopup], [aria-invalid], [aria-keyshortcuts], [aria-orientation], [aria-placeholder], [aria-pressed], [aria-readonly], [aria-required], [aria-roledescription], [aria-sort], [aria-valuemax], [aria-valuemin], [aria-valuenow], [aria-valuetext]');
 
-    const validRoles = new Set([
-      'alert', 'alertdialog', 'application', 'article', 'banner', 'button', 'cell', 'checkbox',
-      'columnheader', 'combobox', 'complementary', 'contentinfo', 'definition', 'dialog',
-      'directory', 'document', 'feed', 'figure', 'form', 'grid', 'gridcell', 'group',
-      'heading', 'img', 'link', 'list', 'listbox', 'listitem', 'log', 'main', 'marquee',
-      'math', 'menu', 'menubar', 'menuitem', 'menuitemcheckbox', 'menuitemradio', 'navigation',
-      'none', 'note', 'option', 'presentation', 'progressbar', 'radio', 'radiogroup',
-      'region', 'row', 'rowgroup', 'rowheader', 'scrollbar', 'search', 'searchbox',
-      'separator', 'slider', 'spinbutton', 'status', 'switch', 'tab', 'table', 'tablist',
-      'tabpanel', 'term', 'textbox', 'timer', 'toolbar', 'tooltip', 'tree', 'treegrid',
-      'treeitem'
-    ]);
-
     elementsWithAria.forEach((element) => {
       const selector = generateSelector(element);
       
@@ -51,7 +51,7 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
       if (role) {
         const roles = role.split(' ');
         roles.forEach(r => {
-          if (!validRoles.has(r.toLowerCase())) {
+          if (!VALID_ARIA_ROLES.has(r.toLowerCase())) {
             issues.push({
               element,
               selector,

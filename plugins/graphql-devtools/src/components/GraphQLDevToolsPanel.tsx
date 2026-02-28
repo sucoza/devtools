@@ -49,7 +49,7 @@ export const GraphQLDevToolsPanel: React.FC = () => {
   };
 
   const handleCopyOperation = (operation: any) => {
-    navigator.clipboard.writeText(operation.query);
+    navigator.clipboard.writeText(operation.query).catch(() => {});
   };
 
   const handleReplayOperation = async (_operation: any) => {
@@ -212,7 +212,7 @@ export const GraphQLDevToolsPanel: React.FC = () => {
           onValidateQuery={handleValidateQuery}
           onResetBuilder={handleResetBuilder}
           onExecuteQuery={handleExecuteQuery}
-          onCopyQuery={(query) => navigator.clipboard.writeText(query)}
+          onCopyQuery={(query) => { navigator.clipboard.writeText(query).catch(() => {}); }}
           validationErrors={state.queryBuilder.validationErrors}
         />
       )

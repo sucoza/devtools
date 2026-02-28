@@ -88,8 +88,8 @@ interface I18nDevToolsPanelProps {
 }
 
 function I18nDevToolsPanelInner() {
-  // Load saved UI state
-  const savedState = loadUIState();
+  // Load saved UI state (lazy initializer — runs only on first render)
+  const [savedState] = useState(loadUIState);
   
   // Core state
   const [i18nState, setI18nState] = useState<I18nState>({

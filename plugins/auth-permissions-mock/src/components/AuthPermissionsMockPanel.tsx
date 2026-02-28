@@ -79,7 +79,7 @@ function AuthPermissionsMockPanelInner() {
   };
 
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text).catch(() => {});
   };
 
   const configMenuItems: ConfigMenuItem[] = [
