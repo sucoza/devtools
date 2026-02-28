@@ -147,14 +147,15 @@ export class FlagEvaluator {
     if (!flag.targeting) return { matched: true };
 
     // Check user segments
-    if (flag.targeting.userSegments && flag.targeting.userSegments.length > 0) {
+    const targetSegments = flag.targeting.userSegments;
+    if (targetSegments && targetSegments.length > 0) {
       const userSegments = this.options.getUserSegments ? this.options.getUserSegments() : [];
       const userSegment = context.userSegment;
-      
-      if (!userSegment || !flag.targeting.userSegments.includes(userSegment)) {
+
+      if (!userSegment || !targetSegments.includes(userSegment)) {
         // Check if user matches any segment rules
-        const matchedSegment = userSegments.find(segment => 
-          flag.targeting.userSegments.includes(segment.id) &&
+        const matchedSegment = userSegments.find(segment =>
+          targetSegments.includes(segment.id) &&
           this.matchesSegmentRules(segment, context)
         );
         
