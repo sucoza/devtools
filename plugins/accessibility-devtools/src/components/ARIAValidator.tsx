@@ -689,9 +689,9 @@ export function ARIAValidator({ className }: ARIAValidatorProps) {
           </div>
         ) : (
           <div>
-            {filteredIssues.map((issue, index) => (
+            {filteredIssues.map((issue) => (
               <div
-                key={index}
+                key={`${issue.rule}-${issue.selector}`}
                 style={{
                   padding: SPACING['4xl'],
                   borderBottom: `1px solid ${COLORS.border.primary}`,

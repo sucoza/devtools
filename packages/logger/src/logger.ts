@@ -130,12 +130,13 @@ export class Logger {
       trace: console.trace.bind(console),
     };
 
-    console.log = (...args) => this.interceptConsoleCall('info', args, this.originalConsole!.log);
-    console.debug = (...args) => this.interceptConsoleCall('debug', args, this.originalConsole!.debug);
-    console.info = (...args) => this.interceptConsoleCall('info', args, this.originalConsole!.info);
-    console.warn = (...args) => this.interceptConsoleCall('warn', args, this.originalConsole!.warn);
-    console.error = (...args) => this.interceptConsoleCall('error', args, this.originalConsole!.error);
-    console.trace = (...args) => this.interceptConsoleCall('trace', args, this.originalConsole!.trace);
+    const orig = this.originalConsole;
+    console.log = (...args) => this.interceptConsoleCall('info', args, orig.log);
+    console.debug = (...args) => this.interceptConsoleCall('debug', args, orig.debug);
+    console.info = (...args) => this.interceptConsoleCall('info', args, orig.info);
+    console.warn = (...args) => this.interceptConsoleCall('warn', args, orig.warn);
+    console.error = (...args) => this.interceptConsoleCall('error', args, orig.error);
+    console.trace = (...args) => this.interceptConsoleCall('trace', args, orig.trace);
 
     this.consoleIntercepted = true;
   }
@@ -652,7 +653,7 @@ export class Logger {
     if (!this.listeners.has(event)) {
       this.listeners.set(event, new Set());
     }
-    this.listeners.get(event)!.add(listener);
+    this.listeners.get(event)?.add(listener);
   }
 
   off(event: string, listener: (data: any) => void): void {
