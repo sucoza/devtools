@@ -66,7 +66,7 @@ export class Logger {
 
   private flushTimer: any = null;
   private metricsTimer: any = null;
-  private recentLogs: { timestamp: number }[] = [];
+  private recentLogs: { timestamp: number; level: LogLevel }[] = [];
   private totalLogSize = 0;
   private originalConsole: {
     log: typeof console.log;
@@ -171,8 +171,8 @@ export class Logger {
       }, 1000);
 
       if (this.consoleCallCount > 500) {
-        console.error('[Logger] Disabling console interception due to excessive calls');
         this.disableConsoleIntercept();
+        console.error('[Logger] Disabling console interception due to excessive calls');
         originalMethod(...args);
         return;
       }
@@ -283,13 +283,12 @@ export class Logger {
     this.metrics.peakLogsPerSecond = Math.max(this.metrics.peakLogsPerSecond, logsPerSecond);
     
     const totalRecent = this.recentLogs.length || 1;
-    const recentErrors = this.recentLogs.filter((_, i) => {
-      const level = this.logBuffer[i]?.level;
-      return level === 'error' || level === 'fatal';
-    }).length;
-    const recentWarnings = this.recentLogs.filter((_, i) => {
-      return this.logBuffer[i]?.level === 'warn';
-    }).length;
+    const recentErrors = this.recentLogs.filter(log =>
+      log.level === 'error' || log.level === 'fatal'
+    ).length;
+    const recentWarnings = this.recentLogs.filter(log =>
+      log.level === 'warn'
+    ).length;
     
     this.metrics.errorRate = (recentErrors / totalRecent) * 100;
     this.metrics.warningRate = (recentWarnings / totalRecent) * 100;
@@ -376,7 +375,7 @@ export class Logger {
       this.metrics.logsByCategory[entry.category] = 
         (this.metrics.logsByCategory[entry.category] || 0) + 1;
     }
-    this.recentLogs.push({ timestamp: entry.timestamp });
+    this.recentLogs.push({ timestamp: entry.timestamp, level: entry.level });
     this.totalLogSize += JSON.stringify(entry).length;
 
     if (this.config.output.console) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, createContext, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useRef, createContext, useContext } from 'react';
 import { X, CheckCircle, AlertCircle, AlertTriangle, Info, Loader } from 'lucide-react';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../styles/plugin-styles';
 
@@ -160,10 +160,11 @@ function ToastItem({
   const [isExiting, setIsExiting] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(100);
-  
+  const removeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     if (duration <= 0 || isPaused || toast.type === 'loading') return undefined;
-    
+
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev <= 0) {
@@ -173,13 +174,21 @@ function ToastItem({
         return prev - (100 / (duration / 100));
       });
     }, 100);
-    
+
     return () => clearInterval(interval);
   }, [duration, isPaused, toast.type]);
-  
+
+  useEffect(() => {
+    return () => {
+      if (removeTimeoutRef.current !== null) {
+        clearTimeout(removeTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const handleRemove = () => {
     setIsExiting(true);
-    setTimeout(onRemove, 200);
+    removeTimeoutRef.current = setTimeout(onRemove, 200);
   };
   
   // Get icon based on type

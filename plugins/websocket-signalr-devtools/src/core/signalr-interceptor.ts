@@ -142,6 +142,7 @@ export class SignalRInterceptor extends EventEmitter<{
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const interceptor = this;
     const connection = this.connectionData.get(connectionId);
+    if (!connection) return;
 
     // Wrap start method
     const originalStart = (hubConnection as { start: () => Promise<void> }).start.bind(hubConnection);
@@ -327,6 +328,7 @@ export class SignalRInterceptor extends EventEmitter<{
 
   private wrapConnectionEvents(hubConnection: unknown, connectionId: string): void {
     const connection = this.connectionData.get(connectionId);
+    if (!connection) return;
 
     // Handle reconnecting event
     (hubConnection as { onreconnecting?: (error?: Error) => void }).onreconnecting = (error?: Error) => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { clsx } from 'clsx';
 import { X, Search, Calendar, Filter } from 'lucide-react';
 
@@ -39,6 +39,13 @@ export function FilterPanel({
     start: filter.timeRange ? new Date(filter.timeRange.start).toISOString().slice(0, 16) : '',
     end: filter.timeRange ? new Date(filter.timeRange.end).toISOString().slice(0, 16) : '',
   });
+
+  useEffect(() => {
+    setTempTimeRange({
+      start: filter.timeRange ? new Date(filter.timeRange.start).toISOString().slice(0, 16) : '',
+      end: filter.timeRange ? new Date(filter.timeRange.end).toISOString().slice(0, 16) : '',
+    });
+  }, [filter.timeRange?.start, filter.timeRange?.end]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
