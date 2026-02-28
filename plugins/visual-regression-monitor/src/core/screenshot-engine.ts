@@ -905,7 +905,7 @@ export class ScreenshotEngine {
             });
           });
           
-          Promise.all(promises).then(resolve);
+          Promise.all(promises).then(resolve).catch(resolve);
           setTimeout(resolve, 10000); // Overall timeout
         })
       `);
