@@ -132,17 +132,11 @@ const StressTestPanelInner: React.FC<StressTestPanelProps> = () => {
 
   const handleClearTest = useCallback((id: string) => {
     stressTestStore.clearResults(id)
-    const index = state.testRuns.findIndex(run => run.id === id)
-    if (index !== -1) {
-      const newTestRuns = [...state.testRuns]
-      newTestRuns.splice(index, 1)
-      // Update the store state directly for test run removal
-      stressTestStore.getState().testRuns = newTestRuns
-      if (state.activeTestId === id) {
-        stressTestStore.setActiveTest(null)
-      }
+    stressTestStore.removeTestRun(id)
+    if (state.activeTestId === id) {
+      stressTestStore.setActiveTest(null)
     }
-  }, [state.testRuns, state.activeTestId])
+  }, [state.activeTestId])
 
   const handleClearAllData = useCallback(() => {
     if (confirm('Are you sure you want to clear all test data?')) {
@@ -150,7 +144,7 @@ const StressTestPanelInner: React.FC<StressTestPanelProps> = () => {
       state.testRuns.forEach(run => {
         stressTestStore.clearResults(run.id)
       })
-      stressTestStore.getState().testRuns = []
+      stressTestStore.clearAllTestRuns()
       stressTestStore.setActiveTest(null)
     }
   }, [state.testRuns])

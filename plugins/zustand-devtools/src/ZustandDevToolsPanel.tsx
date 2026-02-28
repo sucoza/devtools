@@ -451,8 +451,8 @@ function ZustandDevToolsPanelInner() {
 
   // Helper functions for ConfigMenu
   const handleToggleRecording = useCallback(() => {
-    setAutoRefresh(!autoRefresh);
-  }, [autoRefresh]);
+    setAutoRefresh(prev => !prev);
+  }, []);
 
   const handleTakeSnapshot = useCallback(() => {
     // Force a state request to capture current snapshot

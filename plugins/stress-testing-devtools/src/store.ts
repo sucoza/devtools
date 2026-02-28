@@ -57,7 +57,7 @@ class StressTestStore {
   private listeners = new Set<() => void>()
 
   getState(): StressTestState {
-    return this.state
+    return { ...this.state }
   }
 
   subscribe(listener: () => void): () => void {
@@ -70,29 +70,35 @@ class StressTestStore {
   }
 
   addTestRun(testRun: TestRun) {
-    this.state.testRuns.push(testRun)
-    this.state.results[testRun.id] = []
+    this.state = {
+      ...this.state,
+      testRuns: [...this.state.testRuns, testRun],
+      results: { ...this.state.results, [testRun.id]: [] },
+    }
     this.notify()
   }
 
   updateTestRun(id: string, updates: Partial<TestRun>) {
     const index = this.state.testRuns.findIndex(run => run.id === id)
     if (index !== -1) {
-      this.state.testRuns[index] = { ...this.state.testRuns[index], ...updates }
+      const newTestRuns = [...this.state.testRuns]
+      newTestRuns[index] = { ...newTestRuns[index], ...updates }
+      this.state = { ...this.state, testRuns: newTestRuns }
       this.notify()
     }
   }
 
   setActiveTest(id: string | null) {
-    this.state.activeTestId = id
+    this.state = { ...this.state, activeTestId: id }
     this.notify()
   }
 
   addResult(testId: string, result: RequestResult) {
-    if (!this.state.results[testId]) {
-      this.state.results[testId] = []
+    const existing = this.state.results[testId] || []
+    this.state = {
+      ...this.state,
+      results: { ...this.state.results, [testId]: [...existing, result] },
     }
-    this.state.results[testId].push(result)
     this.updateMetrics(testId)
     this.notify()
   }
@@ -133,7 +139,10 @@ class StressTestStore {
       errorsByType
     }
 
-    this.state.metrics[testId] = metrics
+    this.state = {
+      ...this.state,
+      metrics: { ...this.state.metrics, [testId]: metrics },
+    }
   }
 
   private percentile(sorted: number[], p: number): number {
@@ -142,13 +151,34 @@ class StressTestStore {
   }
 
   updateConfigs(configs: StressTestConfig[]) {
-    this.state.configs = configs
+    this.state = { ...this.state, configs }
+    this.notify()
+  }
+
+  removeTestRun(id: string) {
+    this.state = {
+      ...this.state,
+      testRuns: this.state.testRuns.filter(run => run.id !== id),
+    }
+    this.notify()
+  }
+
+  clearAllTestRuns() {
+    this.state = {
+      ...this.state,
+      testRuns: [],
+    }
     this.notify()
   }
 
   clearResults(testId: string) {
-    delete this.state.results[testId]
-    delete this.state.metrics[testId]
+    const { [testId]: _removedResults, ...remainingResults } = this.state.results
+    const { [testId]: _removedMetrics, ...remainingMetrics } = this.state.metrics
+    this.state = {
+      ...this.state,
+      results: remainingResults,
+      metrics: remainingMetrics,
+    }
     this.notify()
   }
 }

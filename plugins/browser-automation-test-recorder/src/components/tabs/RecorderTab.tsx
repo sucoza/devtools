@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { clsx } from 'clsx';
 import { Play, Square, Pause, RotateCcw, Camera, Wifi } from 'lucide-react';
 
@@ -15,24 +15,16 @@ export default function RecorderTab({ state, dispatch, compact: _compact }: TabC
   const [realTimeEventCount, setRealTimeEventCount] = useState(0);
   const [lastEventTime, setLastEventTime] = useState<number | null>(null);
   
-  // Get event client instance
-  const eventClient = createBrowserAutomationEventClient();
+  // Get event client instance (singleton — stable reference)
+  const eventClient = useMemo(() => createBrowserAutomationEventClient(), []);
 
   // Set up real-time updates
   useEffect(() => {
-    let previousEventCount = state.events.length;
-
     const unsubscribe = eventClient.subscribe((event, type) => {
       if (type === 'browser-automation:state') {
-        // Type guard to check if event is BrowserAutomationState
         if ('events' in event && Array.isArray(event.events)) {
-          const currentState = event;
-          // Check if events were added
-          if (currentState.events.length > previousEventCount) {
-            setRealTimeEventCount(currentState.events.length);
-            setLastEventTime(Date.now());
-            previousEventCount = currentState.events.length;
-          }
+          setRealTimeEventCount(event.events.length);
+          setLastEventTime(Date.now());
         }
       }
     });
@@ -45,7 +37,7 @@ export default function RecorderTab({ state, dispatch, compact: _compact }: TabC
     });
 
     return unsubscribe;
-  }, [eventClient, state.events.length]);
+  }, [eventClient]);
 
   const handleStartRecording = async () => {
     setIsLoading(true);

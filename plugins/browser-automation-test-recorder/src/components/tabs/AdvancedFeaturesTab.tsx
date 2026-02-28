@@ -70,8 +70,8 @@ export const AdvancedFeaturesTab: React.FC<TabComponentProps> = ({ state: _state
   }, []);
 
   const handleToggleExecution = useCallback(() => {
-    setIsRunning(!isRunning);
-  }, [isRunning]);
+    setIsRunning(prev => !prev);
+  }, []);
 
   return (
     <div className="advanced-features-tab">

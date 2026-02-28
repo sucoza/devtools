@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../styles/plugin-styles';
 
@@ -67,9 +67,12 @@ export function Accordion({
     new Set(defaultExpanded)
   );
   
-  const expandedSet = controlledExpanded !== undefined 
-    ? new Set(controlledExpanded)
-    : internalExpanded;
+  const controlledSet = useMemo(
+    () => controlledExpanded !== undefined ? new Set(controlledExpanded) : null,
+    [controlledExpanded]
+  );
+
+  const expandedSet = controlledSet ?? internalExpanded;
   
   // Handle expansion
   const handleToggle = useCallback((itemId: string) => {
