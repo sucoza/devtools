@@ -635,7 +635,7 @@ export function FormatPreview({
             <button
               onClick={() => {
                 const results = examples.map(e => `${e.locale}: ${e.output}`).join('\n');
-                navigator.clipboard.writeText(results);
+                navigator.clipboard.writeText(results).catch(() => {});
               }}
               style={{
                 padding: '6px 12px',

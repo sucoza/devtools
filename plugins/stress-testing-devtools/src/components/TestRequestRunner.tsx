@@ -132,13 +132,13 @@ export const TestRequestRunner: React.FC<TestRequestRunnerProps> = ({
 
   const copyAsJson = () => {
     if (testResult) {
-      navigator.clipboard.writeText(JSON.stringify(testResult.response, null, 2))
+      navigator.clipboard.writeText(JSON.stringify(testResult.response, null, 2)).catch(() => {})
     }
   }
 
   const copyHeaders = () => {
     if (testResult) {
-      navigator.clipboard.writeText(JSON.stringify(testResult.headers, null, 2))
+      navigator.clipboard.writeText(JSON.stringify(testResult.headers, null, 2)).catch(() => {})
     }
   }
 

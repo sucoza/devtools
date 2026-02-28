@@ -59,8 +59,8 @@ interface ZustandDevToolsPanelProps {
 }
 
 function ZustandDevToolsPanelInner() {
-  // Load saved UI state
-  const savedState = loadUIState();
+  // Load saved UI state (lazy initializer — runs only on first render)
+  const [savedState] = useState(loadUIState);
   
   const [stores, setStores] = useState<Record<string, ZustandStoreState>>({});
   const [selectedStore, setSelectedStore] = useState<string | null>(savedState.selectedStore || null);

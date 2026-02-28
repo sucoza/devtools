@@ -158,7 +158,7 @@ export function NavigationTimeline({
       icon: <Copy size={12} />,
       onClick: (row: NavigationHistoryEntry) => {
         const url = row.location.pathname + row.location.search + row.location.hash;
-        navigator.clipboard.writeText(url);
+        navigator.clipboard.writeText(url).catch(() => {});
       }
     },
     {

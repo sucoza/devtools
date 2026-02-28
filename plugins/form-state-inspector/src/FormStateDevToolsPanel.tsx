@@ -82,7 +82,7 @@ const _getFieldStateIndicator = (field: FieldState): string => {
 };
 
 export function FormStateDevToolsPanel() {
-  const savedState = loadUIState();
+  const [savedState] = useState(loadUIState);
   
   const [forms, setForms] = useState<Record<string, FormState>>({});
   const [selectedFormId, _setSelectedFormId] = useState<string | null>(savedState.selectedFormId || null);

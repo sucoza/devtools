@@ -78,8 +78,8 @@ interface RouterDevToolsPanelProps {
 }
 
 function RouterDevToolsPanelInner() {
-  // Load saved UI state
-  const savedState = loadUIState();
+  // Load saved UI state (lazy initializer — runs only on first render)
+  const [savedState] = useState(loadUIState);
 
   const [state, setState] = useState<RouterDevToolsState>({
     currentState: null,

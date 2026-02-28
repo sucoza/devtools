@@ -522,7 +522,7 @@ function TokenDetails({
   const [activeSection, setActiveSection] = useState<'overview' | 'usage' | 'issues'>('overview');
   
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text).catch(() => {});
   };
 
   const sections = [

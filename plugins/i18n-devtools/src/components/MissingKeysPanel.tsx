@@ -584,7 +584,7 @@ export function MissingKeysPanel({
             onClick={() => {
               // Export missing keys functionality would go here
               const exportData = JSON.stringify(missingKeys, null, 2);
-              navigator.clipboard.writeText(exportData);
+              navigator.clipboard.writeText(exportData).catch(() => {});
             }}
             style={{
               padding: '6px 12px',
