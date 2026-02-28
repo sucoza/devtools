@@ -93,14 +93,16 @@ export default function PlaybackTab({ state, dispatch, compact }: TabComponentPr
   }, [dispatch, events, playback.status.currentStep]);
   
   const toggleBreakpoint = useCallback((eventId: string) => {
-    const newBreakpoints = new Set(breakpoints);
-    if (newBreakpoints.has(eventId)) {
-      newBreakpoints.delete(eventId);
-    } else {
-      newBreakpoints.add(eventId);
-    }
-    setBreakpoints(newBreakpoints);
-  }, [breakpoints]);
+    setBreakpoints(prev => {
+      const next = new Set(prev);
+      if (next.has(eventId)) {
+        next.delete(eventId);
+      } else {
+        next.add(eventId);
+      }
+      return next;
+    });
+  }, []);
   
   const getCurrentEvent = useCallback(() => {
     return events[playback.status.currentStep] || null;

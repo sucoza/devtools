@@ -615,9 +615,11 @@ export const useAccessibilityDevToolsStore = create<AccessibilityDevToolsStore>(
        */
       updateStats: (audit: AccessibilityAuditResult, metrics: ScanPerformanceMetrics) => {
         set(state => {
-          const newTotalScans = state.stats.totalScans + 1;
-          const newAverageScanTime = 
-            (state.stats.averageScanTime * state.stats.totalScans + metrics.scanDuration) / newTotalScans;
+          // totalScans was already incremented by 'scan/complete' dispatch, so use it directly
+          const currentTotalScans = state.stats.totalScans;
+          const newAverageScanTime = currentTotalScans > 0
+            ? (state.stats.averageScanTime * (currentTotalScans - 1) + metrics.scanDuration) / currentTotalScans
+            : metrics.scanDuration;
           
           // Update rule frequency
           const ruleFrequency = new Map(state.stats.mostFrequentRules.map(r => [r.rule, r.count]));
@@ -642,7 +644,6 @@ export const useAccessibilityDevToolsStore = create<AccessibilityDevToolsStore>(
           return {
             stats: {
               ...state.stats,
-              totalScans: newTotalScans,
               averageScanTime: newAverageScanTime,
               mostFrequentRules,
               improvementTrend,
