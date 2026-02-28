@@ -663,12 +663,16 @@ export const useBrowserAutomationStore = create<BrowserAutomationStore>()(
 
         case 'collaboration/notification/add': {
           const notification = action.payload as CollaborationNotification;
-          set(state => ({
-            collaboration: {
-              ...state.collaboration,
-              notifications: [notification, ...state.collaboration.notifications],
-            },
-          }));
+          const MAX_NOTIFICATIONS = 100;
+          set(state => {
+            const updated = [notification, ...state.collaboration.notifications];
+            return {
+              collaboration: {
+                ...state.collaboration,
+                notifications: updated.length > MAX_NOTIFICATIONS ? updated.slice(0, MAX_NOTIFICATIONS) : updated,
+              },
+            };
+          });
           break;
         }
 

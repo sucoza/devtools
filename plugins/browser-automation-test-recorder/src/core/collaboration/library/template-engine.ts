@@ -715,15 +715,15 @@ export class TemplateEngine {
   }
 
   private generateTemplateId(): string {
-    return `template_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `template_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 
   private generateRecordingId(): string {
-    return `recording_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `recording_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 
   private generateShareId(): string {
-    return Math.random().toString(36).substr(2, 16);
+    return Math.random().toString(36).substring(2, 18);
   }
 }
 

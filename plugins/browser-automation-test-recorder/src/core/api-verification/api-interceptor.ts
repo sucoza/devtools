@@ -229,6 +229,17 @@ export class APIInterceptor {
   }
 
   /**
+   * Restore original fetch and XHR methods
+   */
+  destroy(): void {
+    this.isRecording = false;
+    this.isValidating = false;
+    window.fetch = this.originalFetch;
+    XMLHttpRequest.prototype.open = this.originalXHROpen;
+    XMLHttpRequest.prototype.send = this.originalXHRSend;
+  }
+
+  /**
    * Stop API recording
    */
   stopRecording(): void {
@@ -405,7 +416,7 @@ export class APIInterceptor {
         method,
         url: url.toString(),
         startTime: performance.now(),
-        requestId: `xhr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        requestId: `xhr_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       };
       
       return this.constructor.prototype.open.call(this, method, url, async, user, password);

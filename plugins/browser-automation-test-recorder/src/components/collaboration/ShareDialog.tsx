@@ -80,7 +80,7 @@ export const ShareDialog: React.FC<ShareDialogProps> = ({
       const sharedTest: SharedTestRecording = {
         id: `shared_${Date.now()}`,
         originalId: `original_${Date.now()}`,
-        shareId: Math.random().toString(36).substr(2, 16),
+        shareId: Math.random().toString(36).substring(2, 18),
         name: formData.name,
         description: formData.description,
         events,

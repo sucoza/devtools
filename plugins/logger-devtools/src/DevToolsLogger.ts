@@ -132,11 +132,11 @@ class DevToolsLogger {
 
   private generateUniqueId(): string {
     // Include counter and random component to ensure uniqueness
-    return `${Date.now()}-${++this.logIdCounter}-${Math.random().toString(36).substr(2, 9)}`;
+    return `${Date.now()}-${++this.logIdCounter}-${Math.random().toString(36).substring(2, 11)}`;
   }
 
   private generateCorrelationId(): string {
-    return `corr-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `corr-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
   }
 
   private generateTraceId(): string {
@@ -202,6 +202,8 @@ class DevToolsLogger {
   private consoleIntercepted = false;
   private interceptingConsole = false; // Flag to prevent recursion
   private consoleCallCount = 0; // Track console calls to detect runaway situations
+  private consoleCallResetTimer: ReturnType<typeof setTimeout> | null = null;
+  private eventClientUnsubscribers: (() => void)[] = [];
 
   private constructor() {
     this.startFlushTimer();
@@ -227,31 +229,39 @@ class DevToolsLogger {
   }
 
   private setupConfigListener() {
-    loggingEventClient.on('config-update', (event: any) => {
-      this.updateConfig(event.payload);
-    });
+    this.eventClientUnsubscribers.push(
+      loggingEventClient.on('config-update', (event: any) => {
+        this.updateConfig(event.payload);
+      })
+    );
 
-    loggingEventClient.on('config-request', () => {
-      loggingEventClient.emit('config-response', this.config);
-    });
+    this.eventClientUnsubscribers.push(
+      loggingEventClient.on('config-request', () => {
+        loggingEventClient.emit('config-response', this.config);
+      })
+    );
 
-    loggingEventClient.on('logs-request', () => {
-      // Combine history and buffer, removing duplicates
-      const logsMap = new Map<string, LogEntry>();
-      
-      // Add history logs first
-      this.logHistory.forEach(log => logsMap.set(log.id, log));
-      
-      // Add buffer logs (will overwrite if duplicate ID exists)
-      this.logBuffer.forEach(log => logsMap.set(log.id, log));
-      
-      const allLogs = Array.from(logsMap.values());
-      loggingEventClient.emit('logs-response', allLogs);
-    });
+    this.eventClientUnsubscribers.push(
+      loggingEventClient.on('logs-request', () => {
+        // Combine history and buffer, removing duplicates
+        const logsMap = new Map<string, LogEntry>();
 
-    loggingEventClient.on('clear-logs', () => {
-      this.clearLogs();
-    });
+        // Add history logs first
+        this.logHistory.forEach(log => logsMap.set(log.id, log));
+
+        // Add buffer logs (will overwrite if duplicate ID exists)
+        this.logBuffer.forEach(log => logsMap.set(log.id, log));
+
+        const allLogs = Array.from(logsMap.values());
+        loggingEventClient.emit('logs-response', allLogs);
+      })
+    );
+
+    this.eventClientUnsubscribers.push(
+      loggingEventClient.on('clear-logs', () => {
+        this.clearLogs();
+      })
+    );
   }
 
   private updateConfig(updates: Partial<LoggerConfig>) {
@@ -332,14 +342,16 @@ class DevToolsLogger {
     // Safety check: if we're getting too many console calls rapidly, disable interception
     this.consoleCallCount++;
     if (this.consoleCallCount > 100) {
-      // Reset counter every second
-      setTimeout(() => {
-        this.consoleCallCount = Math.max(0, this.consoleCallCount - 50);
-      }, 1000);
+      // Reset counter every second (only one timer at a time)
+      if (!this.consoleCallResetTimer) {
+        this.consoleCallResetTimer = setTimeout(() => {
+          this.consoleCallCount = 0;
+          this.consoleCallResetTimer = null;
+        }, 1000);
+      }
 
       if (this.consoleCallCount > 500) {
         // Disable console interception if we hit too many calls
-        // console.error('[Logger] Disabling console interception due to excessive calls');
         this.disableConsoleIntercept();
         originalMethod(...args);
         return;
@@ -1122,6 +1134,27 @@ class DevToolsLogger {
   // Force flush all pending logs
   forceFlush() {
     this.flush();
+  }
+
+  // Clean up all resources
+  destroy() {
+    if (this.flushTimer) {
+      clearInterval(this.flushTimer);
+      this.flushTimer = null;
+    }
+    if (this.metricsTimer) {
+      clearInterval(this.metricsTimer);
+      this.metricsTimer = null;
+    }
+    if (this.consoleCallResetTimer) {
+      clearTimeout(this.consoleCallResetTimer);
+      this.consoleCallResetTimer = null;
+    }
+    this.disableConsoleIntercept();
+    this.eventClientUnsubscribers.forEach(unsub => unsub());
+    this.eventClientUnsubscribers = [];
+    this.flush();
+    DevToolsLogger.instance = null;
   }
 
   // Console interception methods

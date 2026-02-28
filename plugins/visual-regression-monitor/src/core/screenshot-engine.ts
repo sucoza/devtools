@@ -1068,8 +1068,12 @@ export class ScreenshotEngine {
    * Cleanup resources
    */
   async cleanup(): Promise<void> {
-    // Cleanup any open browser instances or resources
-    // Cleaning up screenshot engine resources
+    try {
+      await this.mcpAdapter.close();
+    } catch {
+      // Browser may already be closed
+    }
+    screenshotEngineInstance = null;
   }
 }
 

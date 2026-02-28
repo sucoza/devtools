@@ -156,8 +156,12 @@ export default function TestGeneratorTab({ state, dispatch, compact: _compact }:
       : previewState.generatedFiles.find(f => f.filename === previewState.activeFile);
       
     if (file) {
-      await navigator.clipboard.writeText(file.content);
-      // Show success feedback
+      try {
+        await navigator.clipboard.writeText(file.content);
+        // Show success feedback
+      } catch {
+        // Clipboard write may fail (e.g., permissions denied)
+      }
     }
   };
 

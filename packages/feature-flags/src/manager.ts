@@ -58,9 +58,9 @@ export class FeatureFlagManager {
   private getDefaultContext(): EvaluationContext {
     return {
       userId: typeof window !== 'undefined' ? 
-        `user-${Math.random().toString(36).substr(2, 9)}` : undefined,
+        `user-${Math.random().toString(36).substring(2, 11)}` : undefined,
       sessionId: typeof window !== 'undefined' ? 
-        `session-${Math.random().toString(36).substr(2, 9)}` : undefined,
+        `session-${Math.random().toString(36).substring(2, 11)}` : undefined,
       environment: 'development',
       attributes: {}
     };

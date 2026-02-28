@@ -108,27 +108,35 @@ export class WebSocketInterceptor extends EventEmitter<{
         this.setupEventListeners();
       }
 
+      private _listenerMap = new Map<EventListenerOrEventListenerObject, EventListenerOrEventListenerObject>();
+
       private setupEventListeners(): void {
         const originalAddEventListener = this.addEventListener.bind(this);
-        const _originalRemoveEventListener = this.removeEventListener.bind(this);
+        const originalRemoveEventListener = this.removeEventListener.bind(this);
 
         // Override addEventListener to intercept events
         this.addEventListener = (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) => {
+          let wrappedListener: EventListenerOrEventListenerObject;
           if (type === 'open') {
-            const wrappedListener = this.wrapOpenListener(listener);
-            originalAddEventListener(type, wrappedListener, options);
+            wrappedListener = this.wrapOpenListener(listener);
           } else if (type === 'message') {
-            const wrappedListener = this.wrapMessageListener(listener);
-            originalAddEventListener(type, wrappedListener, options);
+            wrappedListener = this.wrapMessageListener(listener);
           } else if (type === 'close') {
-            const wrappedListener = this.wrapCloseListener(listener);
-            originalAddEventListener(type, wrappedListener, options);
+            wrappedListener = this.wrapCloseListener(listener);
           } else if (type === 'error') {
-            const wrappedListener = this.wrapErrorListener(listener);
-            originalAddEventListener(type, wrappedListener, options);
+            wrappedListener = this.wrapErrorListener(listener);
           } else {
-            originalAddEventListener(type, listener, options);
+            wrappedListener = listener;
           }
+          this._listenerMap.set(listener, wrappedListener);
+          originalAddEventListener(type, wrappedListener, options);
+        };
+
+        // Override removeEventListener to look up the wrapped listener
+        this.removeEventListener = (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions) => {
+          const wrappedListener = this._listenerMap.get(listener) || listener;
+          this._listenerMap.delete(listener);
+          originalRemoveEventListener(type, wrappedListener, options);
         };
 
         // Set up default event handlers for monitoring
@@ -281,12 +289,12 @@ export class WebSocketInterceptor extends EventEmitter<{
           error: 'WebSocket error occurred',
         };
 
-        connection.errors.push(error);
+        connection.errors = [...connection.errors, error].slice(-100);
         connection.lastActivity = now;
 
         interceptor.emit('errorOccurred', error);
-        interceptor.emit('connectionUpdated', { 
-          id: this.connectionId, 
+        interceptor.emit('connectionUpdated', {
+          id: this.connectionId,
           updates: { errors: connection.errors, lastActivity: now }
         });
 

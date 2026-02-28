@@ -652,6 +652,14 @@ class VisualRegressionStore {
   }
 
   /**
+   * Destroy the store and release all resources
+   */
+  destroy(): void {
+    this.listeners.clear();
+    storeInstance = null;
+  }
+
+  /**
    * Load persisted state from storage
    */
   private loadPersistedState(): void {
@@ -730,8 +738,8 @@ class VisualRegressionStore {
 
     // Update average diff time (assuming diff has a processingTime property we could add)
     // For now, we'll use a placeholder calculation
-    const totalTime = currentStats.averageDiffTime * (currentStats.totalDiffs - 1);
-    newStats.averageDiffTime = Math.round((totalTime + 100) / currentStats.totalDiffs); // 100ms placeholder
+    const totalTime = currentStats.averageDiffTime * currentStats.totalDiffs;
+    newStats.averageDiffTime = Math.round((totalTime + 100) / newStats.totalDiffs); // 100ms placeholder
 
     return newStats;
   }

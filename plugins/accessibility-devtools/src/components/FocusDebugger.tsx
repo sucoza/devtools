@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { COLORS, COMPONENT_STYLES, SPACING, TYPOGRAPHY, RADIUS, mergeStyles } from '@sucoza/shared-components';
 
 import { 
@@ -189,32 +189,39 @@ export function FocusDebugger({ className }: FocusDebuggerProps) {
            focusStyles.borderColor !== focusStyles.backgroundColor;
   };
 
-  const attachFocusListeners = () => {
-    document.addEventListener('focusin', handleFocusIn);
-    document.addEventListener('focusout', handleFocusOut);
-  };
+  const handleFocusInRef = useRef<((event: FocusEvent) => void) | undefined>(undefined);
+  const handleFocusOutRef = useRef<((event: FocusEvent) => void) | undefined>(undefined);
 
-  const detachFocusListeners = () => {
-    document.removeEventListener('focusin', handleFocusIn);
-    document.removeEventListener('focusout', handleFocusOut);
-  };
-
-  const handleFocusIn = (event: FocusEvent) => {
+  handleFocusInRef.current = (event: FocusEvent) => {
     const element = event.target as Element;
     setCurrentFocusedElement(element);
-    
+
     if (settings.trackFocusHistory) {
       setFocusHistory(prev => [
         ...prev.slice(-19), // Keep last 20 items
         { element, timestamp: Date.now() }
       ]);
     }
-    
+
     highlightFocusedElement(element);
   };
 
-  const handleFocusOut = (_event: FocusEvent) => {
+  handleFocusOutRef.current = (_event: FocusEvent) => {
     removeHighlights();
+  };
+
+  // Stable handler references for addEventListener/removeEventListener
+  const stableFocusIn = useRef((e: Event) => handleFocusInRef.current?.(e as FocusEvent));
+  const stableFocusOut = useRef((e: Event) => handleFocusOutRef.current?.(e as FocusEvent));
+
+  const attachFocusListeners = () => {
+    document.addEventListener('focusin', stableFocusIn.current);
+    document.addEventListener('focusout', stableFocusOut.current);
+  };
+
+  const detachFocusListeners = () => {
+    document.removeEventListener('focusin', stableFocusIn.current);
+    document.removeEventListener('focusout', stableFocusOut.current);
   };
 
   const highlightFocusedElement = (element: Element) => {

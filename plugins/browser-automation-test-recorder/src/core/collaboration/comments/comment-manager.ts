@@ -484,7 +484,7 @@ export class CommentManager {
   }
 
   private generateCommentId(): string {
-    return `comment_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `comment_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 }
 
@@ -746,7 +746,7 @@ class AttachmentManager {
   }
 
   private generateAttachmentId(): string {
-    return `attachment_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `attachment_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 }
 

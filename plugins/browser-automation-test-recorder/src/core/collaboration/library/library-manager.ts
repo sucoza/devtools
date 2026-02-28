@@ -246,7 +246,7 @@ export class LibraryManager {
 
     // Create library test entry
     const libraryTest: LibraryTest = {
-      id: `lib_test_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `lib_test_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       name: sharedTest.name,
       description: options.description || sharedTest.description,
       recording: sharedTest,
@@ -472,7 +472,7 @@ export class LibraryManager {
 
     const newCategory: TestCategory = {
       ...category,
-      id: `cat_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+      id: `cat_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
       testCount: 0
     };
 
@@ -511,7 +511,7 @@ export class LibraryManager {
     const patterns = this.extractEventPatterns(recording.events);
 
     const template: TestTemplate = {
-      id: `template_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `template_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       name: templateData.name,
       description: templateData.description,
       pattern: patterns,

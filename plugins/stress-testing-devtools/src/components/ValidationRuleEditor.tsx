@@ -45,7 +45,7 @@ export const ValidationRuleEditor: React.FC<ValidationRuleEditorProps> = ({
   const duplicateRule = (rule: ValidationRule) => {
     const newRule = {
       ...rule,
-      id: `${rule.type}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `${rule.type}-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
       name: `${rule.name} (Copy)`
     }
     onRulesChange([...rules, newRule])

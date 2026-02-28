@@ -43,7 +43,7 @@ const StressTestPanelInner: React.FC<StressTestPanelProps> = () => {
     config: any
   ): TestRun => {
     return {
-      id: `test-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      id: `test-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
       name: `${type === 'fixed' ? 'Fixed Count' : 'Timed Rate'} Test - ${new Date().toLocaleTimeString()}`,
       startTime: Date.now(),
       type,

@@ -128,21 +128,32 @@ export function Dropdown<T = any>({
   // Load async options
   useEffect(() => {
     if (!async || !loadOptions || !isOpen) return undefined;
-    
+
+    let stale = false;
+
     const loadData = async () => {
       setAsyncLoading(true);
       try {
         const newOptions = await loadOptions(searchQuery);
-        setOptions(newOptions);
+        if (!stale) {
+          setOptions(newOptions);
+        }
       } catch (error) {
-        console.error('Failed to load options:', error);
+        if (!stale) {
+          console.error('Failed to load options:', error);
+        }
       } finally {
-        setAsyncLoading(false);
+        if (!stale) {
+          setAsyncLoading(false);
+        }
       }
     };
-    
+
     const debounceTimer = setTimeout(loadData, 300);
-    return () => clearTimeout(debounceTimer);
+    return () => {
+      stale = true;
+      clearTimeout(debounceTimer);
+    };
   }, [async, loadOptions, searchQuery, isOpen]);
   
   // Handle value change
@@ -310,9 +321,9 @@ export function Dropdown<T = any>({
       
       return (
         <div style={{ display: 'flex', gap: SPACING.xs, flexWrap: 'wrap' }}>
-          {selectedOptions.map((opt, i) => (
+          {selectedOptions.map((opt) => (
             <span
-              key={i}
+              key={String(opt.value)}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -530,15 +541,15 @@ export function Dropdown<T = any>({
                   </div>
                 ) : null}
                 
-                {groupOptions.map((option, index) => {
+                {groupOptions.map((option) => {
                   const isSelected = isValueSelected(option.value);
                   const globalIndex = filteredOptions.indexOf(option);
                   const isHighlighted = globalIndex === highlightedIndex;
-                  
+
                   if (renderOption) {
                     return (
                       <div
-                        key={index}
+                        key={String(option.value)}
                         onClick={() => handleValueChange(option)}
                         style={{ cursor: option.disabled ? 'not-allowed' : 'pointer' }}
                       >
@@ -546,10 +557,10 @@ export function Dropdown<T = any>({
                       </div>
                     );
                   }
-                  
+
                   return (
                     <div
-                      key={index}
+                      key={String(option.value)}
                       onClick={() => handleValueChange(option)}
                       onMouseEnter={() => setHighlightedIndex(globalIndex)}
                       style={{

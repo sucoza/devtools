@@ -193,8 +193,8 @@ export const UserContextPanel: React.FC<UserContextPanelProps> = ({
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 const input = e.target as HTMLInputElement;
-                const valueInput = input.nextElementSibling as HTMLInputElement;
-                if (input.value && valueInput.value) {
+                const valueInput = input.nextElementSibling as HTMLInputElement | null;
+                if (input.value && valueInput?.value) {
                   handleAttributeChange(input.value, valueInput.value);
                   input.value = '';
                   valueInput.value = '';
@@ -210,8 +210,8 @@ export const UserContextPanel: React.FC<UserContextPanelProps> = ({
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 const valueInput = e.target as HTMLInputElement;
-                const nameInput = valueInput.previousElementSibling as HTMLInputElement;
-                if (nameInput.value && valueInput.value) {
+                const nameInput = valueInput.previousElementSibling as HTMLInputElement | null;
+                if (nameInput?.value && valueInput.value) {
                   let parsedValue: any = valueInput.value;
                   try {
                     if (valueInput.value === 'true' || valueInput.value === 'false') {

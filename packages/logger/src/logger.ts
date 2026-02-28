@@ -42,7 +42,7 @@ export class Logger {
   private listeners = new Map<string, Set<(data: any) => void>>();
   
   private generateUniqueId(): string {
-    return `${Date.now()}-${++this.logIdCounter}-${Math.random().toString(36).substr(2, 9)}`;
+    return `${Date.now()}-${++this.logIdCounter}-${Math.random().toString(36).substring(2, 11)}`;
   }
 
   private metrics: LogMetrics = {

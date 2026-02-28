@@ -598,7 +598,7 @@ export class AccessibilityAuditor {
    */
   private processAxeResult(axeResult: AxeResult): AccessibilityAuditResult {
     const violations = axeResult.violations.map((violation: Record<string, unknown>) => ({
-      id: `violation_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `violation_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       ruleId: violation.id as string,
       impact: violation.impact as 'minor' | 'moderate' | 'serious' | 'critical',
       description: violation.description as string,
@@ -618,7 +618,7 @@ export class AccessibilityAuditor {
     }));
 
     const passes = axeResult.passes.map((pass: Record<string, unknown>) => ({
-      id: `pass_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `pass_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       ruleId: pass.id as string,
       description: pass.description as string,
       help: pass.help as string,

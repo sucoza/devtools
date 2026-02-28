@@ -536,7 +536,7 @@ export class DataExtractor {
     sensitive = false
   ): ExtractedParameter {
     return {
-      id: `param_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `param_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       name: this.sanitizeParameterName(name),
       type,
       category,
@@ -778,7 +778,7 @@ export class DataExtractor {
       case 'date':
         return new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
       default:
-        return `generated_${Math.random().toString(36).substr(2, 8)}`;
+        return `generated_${Math.random().toString(36).substring(2, 10)}`;
     }
   }
 

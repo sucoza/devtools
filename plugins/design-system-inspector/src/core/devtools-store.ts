@@ -433,8 +433,9 @@ class DesignSystemDevToolsStore {
    * Merge component props usage
    */
   private mergeProps(existingProps: any[], newProps: any[]) {
-    const propsMap = new Map(existingProps.map(p => [p.name, p]));
-    
+    // Clone existing props to avoid mutating Zustand state
+    const propsMap = new Map(existingProps.map(p => [p.name, { ...p, values: p.values.map((v: any) => ({ ...v })) }]));
+
     for (const newProp of newProps) {
       const existing = propsMap.get(newProp.name);
       if (existing) {
@@ -446,20 +447,45 @@ class DesignSystemDevToolsStore {
           if (existingValue) {
             (existingValue as any).count += (newValue as any).count;
           } else {
-            existing.values.push(newValue);
+            existing.values = [...existing.values, newValue];
+            valueMap.set(newValue.value, newValue);
           }
         }
         // Recalculate percentages
         const totalCount = existing.values.reduce((sum: number, v: any) => sum + v.count, 0);
-        existing.values.forEach((v: any) => {
-          v.percentage = (v.count / totalCount) * 100;
-        });
+        existing.values = existing.values.map((v: any) => ({
+          ...v,
+          percentage: (v.count / totalCount) * 100,
+        }));
       } else {
-        propsMap.set(newProp.name, newProp);
+        propsMap.set(newProp.name, { ...newProp, values: newProp.values.map((v: any) => ({ ...v })) });
       }
     }
-    
+
     return Array.from(propsMap.values());
+  }
+
+  /**
+   * Destroy the store and release all resources
+   */
+  destroy(): void {
+    if (this.realTimeObserver) {
+      this.realTimeObserver.disconnect();
+      this.realTimeObserver = undefined;
+    }
+
+    if (this.mutationTimeout) {
+      clearTimeout(this.mutationTimeout);
+      this.mutationTimeout = undefined;
+    }
+
+    if (this.analysisWorker) {
+      this.analysisWorker.terminate();
+      this.analysisWorker = undefined;
+    }
+
+    this.listeners.clear();
+    storeInstance = null;
   }
 
   /**

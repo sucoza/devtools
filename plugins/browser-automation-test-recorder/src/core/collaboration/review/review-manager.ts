@@ -615,15 +615,15 @@ export class ReviewManager {
   }
 
   private generateReviewId(): string {
-    return `review_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `review_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 
   private generateChangeId(): string {
-    return `change_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `change_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 
   private generateChecklistId(): string {
-    return `checklist_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `checklist_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 }
 

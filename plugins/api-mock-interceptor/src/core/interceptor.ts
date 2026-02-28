@@ -202,7 +202,7 @@ export class ApiInterceptor {
         if (!request.headers) {
           request.headers = {};
         }
-        request.headers[name] = value;
+        request.headers[name.toLowerCase()] = value;
         return originalSetRequestHeader.call(this, name, value);
       };
 
@@ -234,7 +234,7 @@ export class ApiInterceptor {
 
         // Handle response
         const originalOnReadyStateChange = xhr.onreadystatechange;
-        xhr.onreadystatechange = function() {
+        xhr.onreadystatechange = function(ev: Event) {
           if (xhr.readyState === 4) {
             const endTime = getTimestamp();
             const duration = endTime - startTime;
@@ -290,7 +290,7 @@ export class ApiInterceptor {
           }
 
           if (originalOnReadyStateChange) {
-            return originalOnReadyStateChange.call(this, new Event('readystatechange'));
+            return originalOnReadyStateChange.call(this, ev);
           }
         };
 

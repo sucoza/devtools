@@ -453,7 +453,7 @@ export function SearchInput({
             
             return (
               <div
-                key={index}
+                key={item}
                 onClick={() => handleItemSelect(item)}
                 style={{
                   padding: `${SPACING.sm} ${SPACING.md}`,

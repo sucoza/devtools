@@ -221,7 +221,7 @@ export class EventProcessor {
     const event = this.processedEvents.find(e => e.id === eventId);
     if (event) {
       const newAnnotation: EventAnnotation = {
-        id: `annotation_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: `annotation_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
         ...annotation,
       };
       event.metadata.annotations.push(newAnnotation);
@@ -232,7 +232,7 @@ export class EventProcessor {
    * Create event group
    */
   createEventGroup(eventIds: string[], groupName: string, description?: string): string {
-    const groupId = `group_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const groupId = `group_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
     
     const group: EventGroup = {
       id: groupId,
@@ -260,7 +260,7 @@ export class EventProcessor {
    * Add timeline marker
    */
   addTimelineMarker(marker: Omit<TimelineMarker, 'id'>): string {
-    const markerId = `marker_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const markerId = `marker_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
     
     const timelineMarker: TimelineMarker = {
       id: markerId,
@@ -598,7 +598,7 @@ export class EventProcessor {
    */
   private createWaitEvent(duration: number, reason: string, timestamp: number): RecordedEvent {
     return {
-      id: `wait_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `wait_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
       type: 'wait',
       timestamp,
       sequence: 0, // Will be set properly during processing

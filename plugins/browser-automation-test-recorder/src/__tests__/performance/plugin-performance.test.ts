@@ -39,7 +39,7 @@ describe('Plugin Performance Tests', () => {
       generateSelector: vi.fn().mockImplementation(async () => {
         // Simulate selector generation time
         await new Promise(resolve => setTimeout(resolve, 1));
-        return '#test-element-' + Math.random().toString(36).substr(2, 9);
+        return '#test-element-' + Math.random().toString(36).substring(2, 11);
       }),
       generateAlternativeSelectors: vi.fn().mockImplementation(async () => {
         await new Promise(resolve => setTimeout(resolve, 0.5));

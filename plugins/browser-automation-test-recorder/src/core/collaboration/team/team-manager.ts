@@ -680,7 +680,7 @@ export class TeamManager {
   }
 
   private generateTeamId(): string {
-    return `team_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `team_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 }
 
@@ -932,11 +932,11 @@ class InvitationManager {
   }
 
   private generateInvitationId(): string {
-    return `invitation_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `invitation_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 
   private generateInvitationToken(): string {
-    return Math.random().toString(36).substr(2, 32);
+    return Math.random().toString(36).substring(2, 34);
   }
 }
 

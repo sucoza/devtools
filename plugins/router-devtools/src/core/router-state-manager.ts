@@ -18,6 +18,7 @@ export class RouterStateManager {
   private routeTree: RouteInfo[] = [];
   private navigationHistory: NavigationHistoryEntry[] = [];
   private unsubscribeAdapter: (() => void) | null = null;
+  private eventListenerCleanups: (() => void)[] = [];
   private config: RouterDevToolsConfig;
 
   constructor(config: RouterDevToolsConfig = {}) {
@@ -149,7 +150,7 @@ export class RouterStateManager {
     // Create navigation history entry
     if (previousState) {
       const historyEntry: NavigationHistoryEntry = {
-        id: `nav-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: `nav-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
         timestamp: Date.now(),
         location: state.location,
         matches: state.matches,
@@ -207,28 +208,36 @@ export class RouterStateManager {
    */
   private setupEventListeners(): void {
     // Listen for state requests from the DevTools panel
-    routerEventClient.on('router-state-request', () => {
-      routerEventClient.emit('router-state-response', {
-        state: this.currentState,
-        routeTree: this.routeTree,
-        history: this.navigationHistory
-      });
-    });
+    this.eventListenerCleanups.push(
+      routerEventClient.on('router-state-request', () => {
+        routerEventClient.emit('router-state-response', {
+          state: this.currentState,
+          routeTree: this.routeTree,
+          history: this.navigationHistory
+        });
+      })
+    );
 
     // Listen for navigation requests from the DevTools panel
-    routerEventClient.on('router-navigate', (event) => {
-      this.navigate(event.payload.to, event.payload.options);
-    });
+    this.eventListenerCleanups.push(
+      routerEventClient.on('router-navigate', (event) => {
+        this.navigate(event.payload.to, event.payload.options);
+      })
+    );
 
     // Listen for parameter update requests
-    routerEventClient.on('router-update-params', (event) => {
-      this.updateParams(event.payload.params);
-    });
+    this.eventListenerCleanups.push(
+      routerEventClient.on('router-update-params', (event) => {
+        this.updateParams(event.payload.params);
+      })
+    );
 
     // Listen for search update requests
-    routerEventClient.on('router-update-search', (event) => {
-      this.updateSearch(event.payload.search);
-    });
+    this.eventListenerCleanups.push(
+      routerEventClient.on('router-update-search', (event) => {
+        this.updateSearch(event.payload.search);
+      })
+    );
   }
 
   /**
@@ -238,7 +247,8 @@ export class RouterStateManager {
     if (this.unsubscribeAdapter) {
       this.unsubscribeAdapter();
     }
-    routerEventClient.destroy();
+    this.eventListenerCleanups.forEach(unsub => unsub());
+    this.eventListenerCleanups = [];
   }
 }
 

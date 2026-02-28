@@ -20,6 +20,8 @@ export class SecurityScanEngine {
   private config: SecurityAuditConfig;
   private domChangeObserver: MutationObserver | null = null;
   private domChangeTimeout: ReturnType<typeof setTimeout> | null = null;
+  private initialScanTimeout: ReturnType<typeof setTimeout> | null = null;
+  private domContentLoadedHandler: (() => void) | null = null;
 
   constructor(config: SecurityAuditConfig) {
     this.config = config;
@@ -143,20 +145,23 @@ export class SecurityScanEngine {
    * Enable auto-scan if configured
    */
   setupAutoScan(callback: (results: SecurityScanResult[]) => void): void {
+    // Clean up any previous auto-scan to prevent duplicate observers
+    this.stopAutoScan();
+
+    const scanAndCallback = () => {
+      this.runScan()
+        .then(results => callback(results))
+        .catch(error => console.error('[SecurityScanner] Auto-scan failed:', error));
+    };
+
     if (this.config.autoScanOnPageLoad) {
-      // Run scan after page load
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-          setTimeout(async () => {
-            const results = await this.runScan();
-            callback(results);
-          }, 1000);
-        });
+        this.domContentLoadedHandler = () => {
+          this.initialScanTimeout = setTimeout(scanAndCallback, 1000);
+        };
+        document.addEventListener('DOMContentLoaded', this.domContentLoadedHandler);
       } else {
-        setTimeout(async () => {
-          const results = await this.runScan();
-          callback(results);
-        }, 1000);
+        this.initialScanTimeout = setTimeout(scanAndCallback, 1000);
       }
     }
 
@@ -165,10 +170,7 @@ export class SecurityScanEngine {
         if (this.domChangeTimeout !== null) {
           clearTimeout(this.domChangeTimeout);
         }
-        this.domChangeTimeout = setTimeout(async () => {
-          const results = await this.runScan();
-          callback(results);
-        }, 2000);
+        this.domChangeTimeout = setTimeout(scanAndCallback, 2000);
       });
 
       this.domChangeObserver.observe(document.body, {
@@ -183,6 +185,14 @@ export class SecurityScanEngine {
    * Cleanup auto-scan resources
    */
   stopAutoScan(): void {
+    if (this.domContentLoadedHandler) {
+      document.removeEventListener('DOMContentLoaded', this.domContentLoadedHandler);
+      this.domContentLoadedHandler = null;
+    }
+    if (this.initialScanTimeout !== null) {
+      clearTimeout(this.initialScanTimeout);
+      this.initialScanTimeout = null;
+    }
     if (this.domChangeObserver) {
       this.domChangeObserver.disconnect();
       this.domChangeObserver = null;

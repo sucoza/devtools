@@ -75,6 +75,7 @@ export class GraphQLDevToolsStore {
   private listeners: Set<() => void> = new Set();
   private schemaManager: SchemaManager;
   private interceptor: GraphQLInterceptor;
+  private subscriptionCleanups: (() => void)[] = [];
 
   constructor() {
     // Initialize schema manager
@@ -100,16 +101,20 @@ export class GraphQLDevToolsStore {
    */
   private setupSubscriptions(): void {
     // Subscribe to schema changes
-    this.schemaManager.subscribe((schemaInfo) => {
-      if (schemaInfo) {
-        this.dispatch({ type: 'schema/load/success', payload: schemaInfo });
-      }
-    });
+    this.subscriptionCleanups.push(
+      this.schemaManager.subscribe((schemaInfo) => {
+        if (schemaInfo) {
+          this.dispatch({ type: 'schema/load/success', payload: schemaInfo });
+        }
+      })
+    );
 
     // Subscribe to intercepted operations
-    this.interceptor.subscribe((operation) => {
-      this.dispatch({ type: 'operations/add', payload: operation });
-    });
+    this.subscriptionCleanups.push(
+      this.interceptor.subscribe((operation) => {
+        this.dispatch({ type: 'operations/add', payload: operation });
+      })
+    );
   }
 
   /**
@@ -572,6 +577,8 @@ export class GraphQLDevToolsStore {
    * Cleanup resources
    */
   cleanup(): void {
+    this.subscriptionCleanups.forEach(unsub => unsub());
+    this.subscriptionCleanups = [];
     this.interceptor.uninstall();
     this.listeners.clear();
   }

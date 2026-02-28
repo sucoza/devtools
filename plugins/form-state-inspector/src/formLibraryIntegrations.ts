@@ -124,11 +124,12 @@ export function trackHTMLForm(formElement: HTMLFormElement, formId?: string) {
   
   // Track all form inputs
   const inputs = formElement.querySelectorAll('input, textarea, select');
-  
+  const fieldCleanups: (() => void)[] = [];
+
   inputs.forEach((input: Element) => {
     const field = input as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
     const fieldName = field.name || field.id || `field-${Date.now()}`;
-    
+
     // Initialize field state
     updateField(id, fieldName, {
       value: field.value,
@@ -143,9 +144,9 @@ export function trackHTMLForm(formElement: HTMLFormElement, formId?: string) {
         message: field.validationMessage
       }
     });
-    
+
     // Track changes
-    field.addEventListener('input', (e) => {
+    const inputHandler = (e: Event) => {
       const target = e.target as HTMLInputElement;
       updateField(id, fieldName, {
         value: target.value,
@@ -157,14 +158,16 @@ export function trackHTMLForm(formElement: HTMLFormElement, formId?: string) {
           message: target.validationMessage
         }
       });
-    });
-    
+    };
+    field.addEventListener('input', inputHandler);
+
     // Track focus/blur
-    field.addEventListener('focus', () => {
+    const focusHandler = () => {
       updateField(id, fieldName, { isTouched: true });
-    });
-    
-    field.addEventListener('blur', () => {
+    };
+    field.addEventListener('focus', focusHandler);
+
+    const blurHandler = () => {
       // Run validation on blur
       validateField(id, fieldName, (_value) => {
         const isValid = field.checkValidity();
@@ -173,12 +176,22 @@ export function trackHTMLForm(formElement: HTMLFormElement, formId?: string) {
           message: field.validationMessage
         };
       });
+    };
+    field.addEventListener('blur', blurHandler);
+
+    fieldCleanups.push(() => {
+      field.removeEventListener('input', inputHandler);
+      field.removeEventListener('focus', focusHandler);
+      field.removeEventListener('blur', blurHandler);
     });
   });
-  
+
   return {
     formId: id,
-    unregister: () => formStateRegistry.unregisterForm(id)
+    unregister: () => {
+      fieldCleanups.forEach(cleanup => cleanup());
+      formStateRegistry.unregisterForm(id);
+    }
   };
 }
 

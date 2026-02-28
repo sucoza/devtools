@@ -180,10 +180,10 @@ export class SignalRInterceptor extends EventEmitter<{
           error: error instanceof Error ? error.message : String(error),
         };
 
-        connection.errors.push(errorObj);
+        connection.errors = [...connection.errors, errorObj].slice(-100);
         interceptor.emit('errorOccurred', errorObj);
-        
-        interceptor.updateConnection(connectionId, { 
+
+        interceptor.updateConnection(connectionId, {
           state: 'Disconnected',
           errors: connection.errors,
           lastActivity: Date.now()
@@ -226,7 +226,7 @@ export class SignalRInterceptor extends EventEmitter<{
           error: error instanceof Error ? error.message : String(error),
         };
 
-        connection.errors.push(errorObj);
+        connection.errors = [...connection.errors, errorObj].slice(-100);
         interceptor.emit('errorOccurred', errorObj);
         throw error;
       }
@@ -275,7 +275,7 @@ export class SignalRInterceptor extends EventEmitter<{
           invocationId,
         };
 
-        connection.errors.push(errorObj);
+        connection.errors = [...connection.errors, errorObj].slice(-100);
         interceptor.emit('errorOccurred', errorObj);
 
         interceptor.addMessage(connectionId, {
@@ -347,7 +347,7 @@ export class SignalRInterceptor extends EventEmitter<{
           error: error.message,
         };
 
-        connection.errors.push(errorObj);
+        connection.errors = [...connection.errors, errorObj].slice(-100);
         this.emit('errorOccurred', errorObj);
       }
     };
@@ -384,7 +384,7 @@ export class SignalRInterceptor extends EventEmitter<{
           error: error.message,
         };
 
-        connection.errors.push(errorObj);
+        connection.errors = [...connection.errors, errorObj].slice(-100);
         this.emit('errorOccurred', errorObj);
       }
 

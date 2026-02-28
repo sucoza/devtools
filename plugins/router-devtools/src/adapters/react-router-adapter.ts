@@ -417,7 +417,7 @@ export class ReactRouterAdapter implements IRouterAdapter {
    * Generate a unique location key
    */
   private generateLocationKey(): string {
-    return `location-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    return `location-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
   }
 }
 

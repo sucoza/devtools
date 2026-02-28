@@ -208,7 +208,9 @@ export function CodeBlock({
   
   // Handle copy
   const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(code);
+    navigator.clipboard.writeText(code).catch(() => {
+      // Clipboard write may fail (e.g., permissions denied)
+    });
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
     if (onCopy) onCopy(code);
@@ -391,7 +393,7 @@ export function CodeBlock({
               
               return (
                 <tr
-                  key={index}
+                  key={startLineNumber + index}
                   style={{
                     backgroundColor: isHighlighted ? syntaxTheme.lineHighlight : 'transparent',
                     cursor: onLineClick ? 'pointer' : 'default',

@@ -535,7 +535,7 @@ export const useBundleAnalyzerStore = create<BundleAnalyzerStore>()(
      * Analysis jobs
      */
     startJob: (job: Omit<AnalysisJob, 'id' | 'startTime'>): string => {
-      const id = `job_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const id = `job_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
       const newJob: AnalysisJob = {
         ...job,
         id,

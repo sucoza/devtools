@@ -265,16 +265,16 @@ export class SucozaI18nAdapter {
   /**
    * Test layout with different languages
    */
-  testLayout(languages: string[]): void {
+  async testLayout(languages: string[]): Promise<void> {
     // This would trigger layout testing functionality
-    languages.forEach(async (lang) => {
+    for (const lang of languages) {
       await this.changeLanguage(lang);
-      
+
       i18nEventClient.emit('i18n:layout-test', {
         language: lang,
         results: [] // Would be populated with actual test results
       });
-    });
+    }
   }
 
   /**

@@ -5,6 +5,7 @@ type AnyStore = UseBoundStore<StoreApi<any>>;
 
 class ZustandStoreRegistry {
   private stores = new Map<string, AnyStore>();
+  private storeSubscriptions = new Map<string, () => void>();
   private storeStates = new Map<string, unknown>();
   private actionHistory: Array<{
     storeName: string;
@@ -14,27 +15,47 @@ class ZustandStoreRegistry {
     timestamp: number;
   }> = [];
   private snapshots = new Map<string, Record<string, unknown>>();
+  private eventClientUnsubscribers: (() => void)[] = [];
 
   constructor() {
     // Listen for state requests from the DevTools panel
-    zustandEventClient.on('zustand-state-request', () => {
-      this.handleStateRequest();
-    });
+    this.eventClientUnsubscribers.push(
+      zustandEventClient.on('zustand-state-request', () => {
+        this.handleStateRequest();
+      })
+    );
 
     // Listen for state restoration requests
-    zustandEventClient.on('zustand-restore-state', (event: any) => {
-      this.handleRestoreState(event.payload);
-    });
+    this.eventClientUnsubscribers.push(
+      zustandEventClient.on('zustand-restore-state', (event: any) => {
+        this.handleRestoreState(event.payload);
+      })
+    );
 
     // Listen for snapshot save requests
-    zustandEventClient.on('zustand-save-snapshot', (event: any) => {
-      this.handleSaveSnapshot(event.payload);
-    });
+    this.eventClientUnsubscribers.push(
+      zustandEventClient.on('zustand-save-snapshot', (event: any) => {
+        this.handleSaveSnapshot(event.payload);
+      })
+    );
 
     // Listen for snapshot load requests
-    zustandEventClient.on('zustand-load-snapshot', (event: any) => {
-      this.handleLoadSnapshot(event.payload);
-    });
+    this.eventClientUnsubscribers.push(
+      zustandEventClient.on('zustand-load-snapshot', (event: any) => {
+        this.handleLoadSnapshot(event.payload);
+      })
+    );
+  }
+
+  destroy() {
+    this.eventClientUnsubscribers.forEach(unsub => unsub());
+    this.eventClientUnsubscribers = [];
+    this.storeSubscriptions.forEach(unsub => unsub());
+    this.storeSubscriptions.clear();
+    this.stores.clear();
+    this.storeStates.clear();
+    this.actionHistory = [];
+    this.snapshots.clear();
   }
 
   private handleStateRequest() {
@@ -128,10 +149,18 @@ class ZustandStoreRegistry {
     // Initial state emission
     this.emitStateUpdate();
 
+    // Store the unsubscribe function for cleanup
+    this.storeSubscriptions.set(name, unsubscribe);
+
     return unsubscribe;
   }
 
   unregisterStore(name: string) {
+    const unsubscribe = this.storeSubscriptions.get(name);
+    if (unsubscribe) {
+      unsubscribe();
+      this.storeSubscriptions.delete(name);
+    }
     this.stores.delete(name);
     this.storeStates.delete(name);
     this.emitStateUpdate();

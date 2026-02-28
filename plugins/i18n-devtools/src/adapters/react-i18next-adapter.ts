@@ -23,6 +23,7 @@ export class ReactI18nextAdapter {
   private usageTracker: Map<string, TranslationUsage> = new Map();
   private performanceMetrics: I18nPerformanceMetrics;
   private isInitialized: boolean = false;
+  private eventClientUnsubscribers: (() => void)[] = [];
 
   constructor(i18nInstance: I18nextInstance) {
     this.i18n = i18nInstance;
@@ -239,47 +240,59 @@ export class ReactI18nextAdapter {
 
   private subscribeToDevToolsEvents(): void {
     // Language change request
-    i18nEventClient.on('i18n-language-change-request', (event) => {
-      this.i18n.changeLanguage(event.payload.language);
-    });
+    this.eventClientUnsubscribers.push(
+      i18nEventClient.on('i18n-language-change-request', (event) => {
+        this.i18n.changeLanguage(event.payload.language);
+      })
+    );
 
     // Translation editing
-    i18nEventClient.on('i18n-edit-translation', (event) => {
-      const { key, namespace, language, value } = event.payload;
-      this.i18n.addResource(language, namespace, key, value);
-    });
+    this.eventClientUnsubscribers.push(
+      i18nEventClient.on('i18n-edit-translation', (event) => {
+        const { key, namespace, language, value } = event.payload;
+        this.i18n.addResource(language, namespace, key, value);
+      })
+    );
 
     // Add new translation
-    i18nEventClient.on('i18n-add-translation', (event) => {
-      const { key, namespace, languages } = event.payload;
-      Object.entries(languages).forEach(([lang, value]) => {
-        this.i18n.addResource(lang, namespace, key, value);
-      });
-    });
+    this.eventClientUnsubscribers.push(
+      i18nEventClient.on('i18n-add-translation', (event) => {
+        const { key, namespace, languages } = event.payload;
+        Object.entries(languages).forEach(([lang, value]) => {
+          this.i18n.addResource(lang, namespace, key, value);
+        });
+      })
+    );
 
     // Delete translation
-    i18nEventClient.on('i18n-delete-translation', (event) => {
-      const { key, namespace, languages } = event.payload;
-      const langsToDelete = languages || Object.keys(this.i18n.options.resources || {});
-      
-      langsToDelete.forEach(lang => {
-        this.i18n.removeResourceBundle(lang, namespace);
-        // Re-add without the deleted key
-        const resources = this.i18n.getResourceBundle(lang, namespace) || {};
-        delete resources[key];
-        this.i18n.addResourceBundle(lang, namespace, resources, true, true);
-      });
-    });
+    this.eventClientUnsubscribers.push(
+      i18nEventClient.on('i18n-delete-translation', (event) => {
+        const { key, namespace, languages } = event.payload;
+        const langsToDelete = languages || Object.keys(this.i18n.options.resources || {});
+
+        langsToDelete.forEach(lang => {
+          this.i18n.removeResourceBundle(lang, namespace);
+          // Re-add without the deleted key
+          const resources = this.i18n.getResourceBundle(lang, namespace) || {};
+          delete resources[key];
+          this.i18n.addResourceBundle(lang, namespace, resources, true, true);
+        });
+      })
+    );
 
     // State request
-    i18nEventClient.on('i18n-state-request', () => {
-      this.sendStateUpdate();
-    });
+    this.eventClientUnsubscribers.push(
+      i18nEventClient.on('i18n-state-request', () => {
+        this.sendStateUpdate();
+      })
+    );
 
     // Performance metrics request
-    i18nEventClient.on('i18n-performance-metrics', () => {
-      this.updatePerformanceMetrics();
-    });
+    this.eventClientUnsubscribers.push(
+      i18nEventClient.on('i18n-performance-metrics', () => {
+        this.updatePerformanceMetrics();
+      })
+    );
   }
 
   private sendStateUpdate(): void {
@@ -633,6 +646,10 @@ export class ReactI18nextAdapter {
     this.i18n.off('added', this.onResourceAdded);
     this.i18n.off('removed', this.onResourceRemoved);
 
+    // Unsubscribe from event client events
+    this.eventClientUnsubscribers.forEach(unsub => unsub());
+    this.eventClientUnsubscribers = [];
+
     // Restore original functions
     this.i18n.t = this.originalT;
 
@@ -640,7 +657,6 @@ export class ReactI18nextAdapter {
     this.usageTracker.clear();
 
     this.isInitialized = false;
-    // console.log('[I18n DevTools] React-i18next adapter destroyed');
   }
 }
 

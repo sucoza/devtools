@@ -147,10 +147,10 @@ export class BundleInterceptor {
    */
   private isTreeShakeable(url: string): boolean {
     // Heuristics for tree-shakeable modules
-    return url.includes('.mjs') || 
+    return url.includes('.mjs') ||
            url.includes('.esm') ||
-           !url.includes('umd') &&
-           !url.includes('cjs');
+           (!url.includes('umd') &&
+           !url.includes('cjs'));
   }
 
   /**
@@ -395,7 +395,9 @@ export class BundleInterceptor {
  */
 class WebpackInterceptor {
   private eventClient: ReturnType<typeof createBundleAnalyzerEventClient>;
-  
+  private originalChunkPush?: (...args: any[]) => number;
+  private chunkLoadingGlobal?: any[];
+
   constructor(eventClient: ReturnType<typeof createBundleAnalyzerEventClient>) {
     this.eventClient = eventClient;
   }
@@ -406,7 +408,18 @@ class WebpackInterceptor {
   }
 
   stop() {
-    // Cleanup webpack interception
+    // Restore original chunk loading push method
+    if (this.chunkLoadingGlobal && this.originalChunkPush) {
+      this.chunkLoadingGlobal.push = this.originalChunkPush;
+    }
+    this.originalChunkPush = undefined;
+    this.chunkLoadingGlobal = undefined;
+
+    // Remove webpack require interception flag
+    const webpackRequire = (window as any).__webpack_require__;
+    if (webpackRequire?.__intercepted__) {
+      delete webpackRequire.__intercepted__;
+    }
   }
 
   private trackWebpackChunks() {
@@ -414,14 +427,17 @@ class WebpackInterceptor {
     if (!webpackRequire) return;
 
     // Access webpack chunk loading
-    const chunkLoadingGlobal = (window as any)[webpackRequire.chunkName] || 
+    const chunkLoadingGlobal = (window as any)[webpackRequire.chunkName] ||
                               (window as any).webpackChunk ||
                               [];
 
     if (Array.isArray(chunkLoadingGlobal)) {
-      const originalPush = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
+      this.chunkLoadingGlobal = chunkLoadingGlobal;
+      this.originalChunkPush = chunkLoadingGlobal.push.bind(chunkLoadingGlobal);
+      const originalPush = this.originalChunkPush;
+      const self = this;
       chunkLoadingGlobal.push = (...args: any[]) => {
-        this.handleChunkLoad(args[0]);
+        self.handleChunkLoad(args[0]);
         return originalPush(...args);
       };
     }

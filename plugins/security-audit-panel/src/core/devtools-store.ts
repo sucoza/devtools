@@ -505,6 +505,14 @@ class SecurityAuditDevToolsStore {
   }
 
   /**
+   * Destroy the store and release all resources
+   */
+  destroy(): void {
+    this.listeners.clear();
+    storeInstance = null;
+  }
+
+  /**
    * Load persisted state from storage
    */
   private loadPersistedState(): void {
