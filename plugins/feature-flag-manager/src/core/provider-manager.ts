@@ -169,17 +169,25 @@ export class ProviderManager {
   }
 
   cleanup(): void {
-    // Cleanup all providers
-    this.providers.forEach(async (provider) => {
+    // Cleanup all providers - fire cleanup calls then clear synchronously
+    const cleanupPromises: Promise<void>[] = [];
+    for (const provider of this.providers.values()) {
       if (provider.client && typeof provider.client.cleanup === 'function') {
-        try {
-          await provider.client.cleanup();
-        } catch (error) {
-          console.error(`Error cleaning up provider ${provider.name}:`, error);
-        }
+        cleanupPromises.push(
+          provider.client.cleanup().catch((error: unknown) => {
+            console.error(`Error cleaning up provider ${provider.name}:`, error);
+          })
+        );
       }
-    });
-    
+    }
     this.providers.clear();
+
+    // Best-effort: wait for all cleanup promises (callers can't await void, but
+    // at least individual failures are caught above)
+    if (cleanupPromises.length > 0) {
+      Promise.all(cleanupPromises).catch(() => {
+        // individual errors already logged above
+      });
+    }
   }
 }

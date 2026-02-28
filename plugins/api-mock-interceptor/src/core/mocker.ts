@@ -4,6 +4,8 @@ import type { ApiRequest, MockResponse, NetworkConditions } from '../types';
  * Mock response generator and network condition simulator
  */
 export class MockResponseEngine {
+  private pendingTimeouts: Set<ReturnType<typeof setTimeout>> = new Set();
+
   /**
    * Create a mock Response object from MockResponse configuration
    */
@@ -106,9 +108,7 @@ export class MockResponseEngine {
         };
 
         // Trigger readystatechange event
-        if (xhr.onreadystatechange) {
-          xhr.onreadystatechange(new Event('readystatechange'));
-        }
+        xhr.onreadystatechange?.(new Event('readystatechange'));
 
         // Trigger load event
         if (xhr.onload) {
@@ -125,7 +125,21 @@ export class MockResponseEngine {
     };
 
     // Start async mock response
-    setTimeout(applyMock, 0);
+    const timeoutId = setTimeout(() => {
+      this.pendingTimeouts.delete(timeoutId);
+      applyMock();
+    }, 0);
+    this.pendingTimeouts.add(timeoutId);
+  }
+
+  /**
+   * Cleanup all pending timeouts
+   */
+  cleanup(): void {
+    for (const timeoutId of this.pendingTimeouts) {
+      clearTimeout(timeoutId);
+    }
+    this.pendingTimeouts.clear();
   }
 
   /**
@@ -234,13 +248,13 @@ export class MockResponseEngine {
       case 'request_url':
         return request.url;
       case 'random_id':
-        return Math.random().toString(36).substr(2, 9);
+        return Math.random().toString(36).substring(2, 11);
       case 'random_uuid':
         return this.generateUUID();
       case 'random_number':
         return Math.floor(Math.random() * 1000);
       case 'random_string':
-        return Math.random().toString(36).substr(2, 10);
+        return Math.random().toString(36).substring(2, 12);
       default:
         // Try to extract from request data
         if (variable.startsWith('request.')) {

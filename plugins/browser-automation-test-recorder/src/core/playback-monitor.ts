@@ -165,11 +165,21 @@ export class PlaybackMonitor {
     this.log('info', `Starting playback monitoring for ${totalEvents} events`);
     this.emitEvent('monitoring-started', { totalEvents });
     
+    // Clear any existing intervals before starting new ones
+    if (this.performanceInterval) {
+      clearInterval(this.performanceInterval);
+      this.performanceInterval = null;
+    }
+    if (this.monitoringInterval) {
+      clearInterval(this.monitoringInterval);
+      this.monitoringInterval = null;
+    }
+
     // Start performance monitoring
     if (this.config.collectPerformance) {
       this.startPerformanceMonitoring();
     }
-    
+
     // Start screenshot monitoring
     if (this.config.collectScreenshots) {
       this.startScreenshotMonitoring();

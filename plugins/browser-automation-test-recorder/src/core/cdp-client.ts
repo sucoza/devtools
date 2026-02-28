@@ -344,15 +344,16 @@ export class CDPClient {
 
     // Wait for navigation to complete
     return new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        reject(new Error('Navigation timeout'));
-      }, 30000);
-
       const onLoadEventFired = () => {
         clearTimeout(timeout);
         this.removeEventListener('Page.loadEventFired', onLoadEventFired);
         resolve();
       };
+
+      const timeout = setTimeout(() => {
+        this.removeEventListener('Page.loadEventFired', onLoadEventFired);
+        reject(new Error('Navigation timeout'));
+      }, 30000);
 
       this.addEventListener('Page.loadEventFired', onLoadEventFired);
     });

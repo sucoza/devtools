@@ -76,7 +76,7 @@ export const ConfigEditor: React.FC<ConfigEditorProps> = ({ configs, onSave }) =
       name: `${config.name} (Copy)`,
       validationRules: config.validationRules?.map(rule => ({
         ...rule,
-        id: `${rule.type}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+        id: `${rule.type}-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`
       }))
     }
     const newConfigs = [...configs, duplicated]

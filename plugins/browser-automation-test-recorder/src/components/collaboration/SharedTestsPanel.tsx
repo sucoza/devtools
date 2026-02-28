@@ -110,7 +110,11 @@ export const SharedTestsPanel: React.FC<SharedTestsPanelProps> = ({
       case 'copy-link': {
         // Copy share link
         const shareUrl = `${window.location.origin}/shared/${test.shareId}`;
-        await navigator.clipboard.writeText(shareUrl);
+        try {
+          await navigator.clipboard.writeText(shareUrl);
+        } catch {
+          // Clipboard write may fail (e.g., permissions denied)
+        }
         // Show toast notification
         break;
       }

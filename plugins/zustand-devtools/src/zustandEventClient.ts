@@ -44,13 +44,13 @@ export type ZustandEventMap = {
   };
 };
 
-export class ZustandEventClient extends EventClient<ZustandEventMap> {
+export class ZustandEventClient extends EventClient<ZustandEventMap, string> {
   private static instance: ZustandEventClient | null = null;
 
   private constructor() {
     super({
       pluginId: 'zustand-devtools',
-    } as any);
+    });
   }
 
   static getInstance(): ZustandEventClient {
@@ -61,4 +61,4 @@ export class ZustandEventClient extends EventClient<ZustandEventMap> {
   }
 }
 
-export const zustandEventClient = ZustandEventClient.getInstance() as any;
+export const zustandEventClient: ZustandEventClient = ZustandEventClient.getInstance();

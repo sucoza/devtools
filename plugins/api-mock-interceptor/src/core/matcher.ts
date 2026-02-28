@@ -43,7 +43,9 @@ export class RequestMatcherEngine {
         // Support wildcard matching in header values
         if (value.includes('*')) {
           try {
-            const regexPattern = value.replace(/\*/g, '.*');
+            const regexPattern = value
+              .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+              .replace(/\*/g, '.*');
             const regex = new RegExp(`^${regexPattern}$`, 'i');
             if (!regex.test(requestHeaderValue)) {
               return false;

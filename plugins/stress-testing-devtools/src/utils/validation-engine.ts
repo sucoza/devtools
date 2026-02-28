@@ -434,7 +434,7 @@ export class ValidationEngine {
    * Create a default validation rule
    */
   static createDefaultRule(type: ValidationRule['type']): ValidationRule {
-    const id = `${type}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    const id = `${type}-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`
     
     const defaults: Record<ValidationRule['type'], Partial<ValidationRule>> = {
       status: {

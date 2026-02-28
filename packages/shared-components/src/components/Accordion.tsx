@@ -347,7 +347,7 @@ function AccordionContent({
   const innerRef = React.useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    if (!animate || !contentRef.current || !innerRef.current) return;
+    if (!animate || !contentRef.current || !innerRef.current) return undefined;
 
     let timerId: ReturnType<typeof setTimeout>;
 

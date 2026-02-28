@@ -376,17 +376,25 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
 
         case "render/event/add": {
           const renderEvent = action.payload;
-          set((state) => ({
-            renderEvents: [...state.renderEvents, renderEvent],
-          }));
+          set((state) => {
+            const updated = [...state.renderEvents, renderEvent];
+            const max = state.settings.maxEvents;
+            return {
+              renderEvents: updated.length > max ? updated.slice(-max) : updated,
+            };
+          });
           break;
         }
 
         case "render/event/batch": {
           const renderEvents = action.payload;
-          set((state) => ({
-            renderEvents: [...state.renderEvents, ...renderEvents],
-          }));
+          set((state) => {
+            const updated = [...state.renderEvents, ...renderEvents];
+            const max = state.settings.maxEvents;
+            return {
+              renderEvents: updated.length > max ? updated.slice(-max) : updated,
+            };
+          });
           break;
         }
 
@@ -486,9 +494,10 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
           set((state) => ({
             ui: {
               ...state.ui,
-              expandedComponents: new Set(
-                state.ui.expandedComponents.add(componentIdToExpand),
-              ),
+              expandedComponents: new Set([
+                ...state.ui.expandedComponents,
+                componentIdToExpand,
+              ]),
             },
           }));
           break;
@@ -723,7 +732,7 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
 
     createSession: (name?: string): RecordingSession => {
       const session: RecordingSession = {
-        id: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
         name: name || `Session ${new Date().toLocaleTimeString()}`,
         startTime: Date.now(),
         isRecording: true,

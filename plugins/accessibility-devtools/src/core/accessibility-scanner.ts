@@ -17,6 +17,7 @@ export class AccessibilityScanner {
   private isScanning = false;
   private scanAbortController?: AbortController;
   private mutationObserver?: MutationObserver;
+  private scanDebounceTimeout: ReturnType<typeof setTimeout> | null = null;
   
   constructor(config: AccessibilityConfig = {
     wcagLevel: 'AA',
@@ -224,7 +225,10 @@ export class AccessibilityScanner {
     if (options.continuous) {
       this.mutationObserver = new MutationObserver(() => {
         // Debounce the scan
-        setTimeout(performScan, options.debounceMs || 1000);
+        if (this.scanDebounceTimeout !== null) {
+          clearTimeout(this.scanDebounceTimeout);
+        }
+        this.scanDebounceTimeout = setTimeout(performScan, options.debounceMs || 1000);
       });
       
       this.mutationObserver.observe(document.body, {
@@ -240,11 +244,16 @@ export class AccessibilityScanner {
    * Stop continuous scanning
    */
   stopContinuousScanning(): void {
+    if (this.scanDebounceTimeout !== null) {
+      clearTimeout(this.scanDebounceTimeout);
+      this.scanDebounceTimeout = null;
+    }
+
     if (this.mutationObserver) {
       this.mutationObserver.disconnect();
       this.mutationObserver = undefined;
     }
-    
+
     if (this.scanAbortController) {
       this.scanAbortController.abort();
     }

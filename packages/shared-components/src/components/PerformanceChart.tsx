@@ -53,12 +53,12 @@ export function PerformanceChart({
   const allDataPoints = series.flatMap(s => s.data);
   const allValues = allDataPoints.map(p => p.value);
   const allTimestamps = allDataPoints.map(p => p.timestamp);
-  
-  const minValue = Math.min(...allValues, 0);
-  const maxValue = Math.max(...allValues);
-  const minTime = timeRange?.start || Math.min(...allTimestamps);
-  const maxTime = timeRange?.end || Math.max(...allTimestamps);
-  
+
+  const minValue = allValues.length > 0 ? Math.min(...allValues, 0) : 0;
+  const maxValue = allValues.length > 0 ? Math.max(...allValues) : 1;
+  const minTime = timeRange?.start || (allTimestamps.length > 0 ? Math.min(...allTimestamps) : 0);
+  const maxTime = timeRange?.end || (allTimestamps.length > 0 ? Math.max(...allTimestamps) : 1);
+
   const valueRange = maxValue - minValue || 1;
   const timeRange_ = maxTime - minTime || 1;
   
@@ -190,7 +190,7 @@ export function PerformanceChart({
               {/* Data points */}
               {s.data.map((point, idx) => (
                 <circle
-                  key={idx}
+                  key={point.timestamp ?? idx}
                   cx={((point.timestamp - minTime) / timeRange_) * chartWidth}
                   cy={chartHeight - ((point.value - minValue) / valueRange) * chartHeight}
                   r={2}

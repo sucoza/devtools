@@ -321,7 +321,7 @@ export class UrlGenerator {
       hash = ((hash << 5) - hash) + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
-    return Math.abs(hash).toString(36).substr(0, 8);
+    return Math.abs(hash).toString(36).substring(0, 8);
   }
 }
 

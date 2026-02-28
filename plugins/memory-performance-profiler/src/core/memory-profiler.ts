@@ -29,6 +29,8 @@ export class MemoryProfiler {
   private lastGCTime = 0;
   private memoryHistory: MemoryMeasurement[] = [];
   private readonly maxHistoryEntries = 1000;
+  private originalOnCommitFiberRoot?: ((...args: any[]) => void) | null;
+  private originalOnCommitFiberUnmount?: ((...args: any[]) => void) | null;
 
   private callbacks: {
     onMemoryUpdate?: (measurement: MemoryMeasurement) => void;
@@ -73,7 +75,22 @@ export class MemoryProfiler {
 
     this.observers.forEach(observer => observer.disconnect());
     this.observers = [];
-    
+
+    // Restore React DevTools hooks
+    if (typeof window !== 'undefined') {
+      const devToolsHook = (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__;
+      if (devToolsHook) {
+        if (this.originalOnCommitFiberRoot !== undefined) {
+          devToolsHook.onCommitFiberRoot = this.originalOnCommitFiberRoot;
+          this.originalOnCommitFiberRoot = undefined;
+        }
+        if (this.originalOnCommitFiberUnmount !== undefined) {
+          devToolsHook.onCommitFiberUnmount = this.originalOnCommitFiberUnmount;
+          this.originalOnCommitFiberUnmount = undefined;
+        }
+      }
+    }
+
     console.log('Memory profiler stopped');
   }
 
@@ -197,14 +214,22 @@ export class MemoryProfiler {
     if (typeof window !== 'undefined' && (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__) {
       const devToolsHook = (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__;
       
+      // Save originals for restoration
+      this.originalOnCommitFiberRoot = devToolsHook.onCommitFiberRoot || null;
+      this.originalOnCommitFiberUnmount = devToolsHook.onCommitFiberUnmount || null;
+
       // Listen for fiber commits
+      const prevOnCommitFiberRoot = this.originalOnCommitFiberRoot;
       devToolsHook.onCommitFiberRoot = (id: number, root: any) => {
         this.analyzeReactFiberTree(root);
+        prevOnCommitFiberRoot?.(id, root);
       };
 
       // Listen for fiber unmounts
+      const prevOnCommitFiberUnmount = this.originalOnCommitFiberUnmount;
       devToolsHook.onCommitFiberUnmount = (id: number, fiber: any) => {
         this.handleComponentUnmount(fiber);
+        prevOnCommitFiberUnmount?.(id, fiber);
       };
     }
 

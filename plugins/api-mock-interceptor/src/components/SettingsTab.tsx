@@ -55,6 +55,9 @@ export function SettingsTab() {
         setImportData(content);
         setShowImportDialog(true);
       };
+      reader.onerror = () => {
+        alert('Failed to read file');
+      };
       reader.readAsText(file);
     }
   };

@@ -207,7 +207,7 @@ export function generateShortId(): string {
  * Generate a timestamp-based ID with random suffix
  */
 export function generateTimestampId(): string {
-  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
 }
 
 /**

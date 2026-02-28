@@ -15,7 +15,7 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src --ext .ts,.tsx",
+    "lint": "eslint src",
     "format": "prettier --write src/**/*.{ts,tsx}"
   },
   "keywords": [
@@ -36,13 +36,16 @@
     "@typescript-eslint/eslint-plugin": "catalog:",
     "@typescript-eslint/parser": "catalog:",
     "@vitejs/plugin-react": "catalog:",
+    "@eslint/js": "catalog:",
     "eslint": "catalog:",
+    "globals": "catalog:",
     "jsdom": "catalog:",
     "prettier": "catalog:",
     "rollup": "catalog:",
     "rollup-plugin-peer-deps-external": "catalog:",
     "tslib": "catalog:",
     "typescript": "catalog:",
+    "typescript-eslint": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
   },

@@ -544,11 +544,11 @@ export class SharingManager {
    * Helper methods
    */
   private generateId(): string {
-    return `test_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `test_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 
   private generateShareId(): string {
-    return Math.random().toString(36).substr(2, 16);
+    return Math.random().toString(36).substring(2, 18);
   }
 
   private calculateDuration(events: RecordedEvent[]): number {

@@ -19,6 +19,8 @@ export class ProfilerIntegration {
   private previousContext = new Map<string, any>();
   private renderCounts = new Map<string, number>();
   private isActive = false;
+  private originalOnCommitFiberRoot?: ((...args: any[]) => void) | null;
+  private originalOnCommitFiberUnmount?: ((...args: any[]) => void) | null;
 
   constructor(eventClient: RenderWasteDetectorDevToolsClient) {
     this.eventClient = eventClient;
@@ -76,8 +78,10 @@ export class ProfilerIntegration {
       // In a real implementation, this would be much more complex and would need to
       // handle different React versions and fiber structures
 
-      const originalOnCommitFiberRoot = reactDevTools.onCommitFiberRoot;
-      const originalOnCommitFiberUnmount = reactDevTools.onCommitFiberUnmount;
+      this.originalOnCommitFiberRoot = reactDevTools.onCommitFiberRoot || null;
+      this.originalOnCommitFiberUnmount = reactDevTools.onCommitFiberUnmount || null;
+      const originalOnCommitFiberRoot = this.originalOnCommitFiberRoot;
+      const originalOnCommitFiberUnmount = this.originalOnCommitFiberUnmount;
 
       // Hook into commit phase
       reactDevTools.onCommitFiberRoot = (
@@ -255,7 +259,7 @@ export class ProfilerIntegration {
 
     // Create render event
     const renderEvent: RenderEvent = {
-      id: `render_${componentId}_${timestamp}_${Math.random().toString(36).substr(2, 9)}`,
+      id: `render_${componentId}_${timestamp}_${Math.random().toString(36).substring(2, 11)}`,
       componentId,
       componentName,
       timestamp,
@@ -582,12 +586,18 @@ export class ProfilerIntegration {
     this.previousContext.clear();
     this.renderCounts.clear();
 
-    // Reset React DevTools hooks if we modified them
+    // Restore React DevTools hooks
     if (typeof window !== "undefined") {
       const reactDevTools = (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__;
       if (reactDevTools) {
-        // In a real implementation, we would restore original callbacks
-        console.log("Restored React DevTools hooks");
+        if (this.originalOnCommitFiberRoot !== undefined) {
+          reactDevTools.onCommitFiberRoot = this.originalOnCommitFiberRoot;
+          this.originalOnCommitFiberRoot = undefined;
+        }
+        if (this.originalOnCommitFiberUnmount !== undefined) {
+          reactDevTools.onCommitFiberUnmount = this.originalOnCommitFiberUnmount;
+          this.originalOnCommitFiberUnmount = undefined;
+        }
       }
     }
   }

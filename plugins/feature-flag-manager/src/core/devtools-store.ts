@@ -44,8 +44,8 @@ export class FeatureFlagDevToolsStore extends EventEmitter {
 
   private getDefaultContext(): EvaluationContext {
     return {
-      userId: 'dev-user-' + Math.random().toString(36).substr(2, 9),
-      sessionId: 'session-' + Math.random().toString(36).substr(2, 9),
+      userId: 'dev-user-' + Math.random().toString(36).substring(2, 11),
+      sessionId: 'session-' + Math.random().toString(36).substring(2, 11),
       userSegment: 'developer',
       attributes: {
         plan: 'free',

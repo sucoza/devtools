@@ -63,22 +63,23 @@ export class AuthMockDevToolsClient {
 
     const originalSetItem = this.originalSetItem;
     const originalRemoveItem = this.originalRemoveItem;
+    const self = this;
 
-    Storage.prototype.setItem = (key: string, value: string) => {
-      originalSetItem.call(window.localStorage, key, value);
+    Storage.prototype.setItem = function(key: string, value: string) {
+      originalSetItem.call(this, key, value);
 
       // Detect auth-related storage changes
       if (key.includes('auth') || key.includes('token') || key.includes('user')) {
-        this.handleStorageChange(key, value);
+        self.handleStorageChange(key, value);
       }
     };
 
-    Storage.prototype.removeItem = (key: string) => {
-      originalRemoveItem.call(window.localStorage, key);
+    Storage.prototype.removeItem = function(key: string) {
+      originalRemoveItem.call(this, key);
 
       // Detect auth-related storage removal
       if (key.includes('auth') || key.includes('token') || key.includes('user')) {
-        this.handleStorageChange(key, null);
+        self.handleStorageChange(key, null);
       }
     };
 

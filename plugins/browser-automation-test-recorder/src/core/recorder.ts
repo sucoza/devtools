@@ -85,7 +85,11 @@ export class EventRecorder {
   
   // Debounce timers
   private debounceTimers = new Map<string, number>();
-  
+
+  // Original history methods for restoration
+  private originalPushState?: typeof history.pushState;
+  private originalReplaceState?: typeof history.replaceState;
+
   // Performance monitoring
   private performanceObserver?: PerformanceObserver;
   private mutationObserver?: MutationObserver;
@@ -112,7 +116,7 @@ export class EventRecorder {
     // Initialize recording state
     this._isRecording = true;
     this._isPaused = false;
-    this.sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    this.sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
     this.sequenceNumber = 0;
     this.eventBuffer = [];
     this.lastEventTime = Date.now();
@@ -258,8 +262,10 @@ export class EventRecorder {
    */
   private setupNavigationListener(): void {
     // Override history methods to capture navigation
-    const originalPushState = history.pushState;
-    const originalReplaceState = history.replaceState;
+    this.originalPushState = history.pushState;
+    this.originalReplaceState = history.replaceState;
+    const originalPushState = this.originalPushState;
+    const originalReplaceState = this.originalReplaceState;
 
     const navigationListener = (type: 'pushstate' | 'replacestate', url: string) => {
       this.recordNavigationEvent({
@@ -947,7 +953,17 @@ export class EventRecorder {
     }
     
     this.eventListeners.clear();
-    
+
+    // Restore history methods
+    if (this.originalPushState) {
+      history.pushState = this.originalPushState;
+      this.originalPushState = undefined;
+    }
+    if (this.originalReplaceState) {
+      history.replaceState = this.originalReplaceState;
+      this.originalReplaceState = undefined;
+    }
+
     // Clear debounce timers
     for (const timer of this.debounceTimers.values()) {
       clearTimeout(timer);

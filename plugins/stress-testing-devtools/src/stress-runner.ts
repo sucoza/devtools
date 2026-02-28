@@ -64,11 +64,18 @@ export class StressTestRunner {
 
   private substituteTokens(obj: any): any {
     const str = JSON.stringify(obj)
-    return JSON.parse(
-      str
-        .replace(/{{tenantId}}/g, this.authContext.tenantId || '')
-        .replace(/{{regionId}}/g, this.authContext.regionId || '')
-    )
+    // Escape replacement values for safe insertion into JSON strings
+    const escapeForJson = (value: string) =>
+      value.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    try {
+      return JSON.parse(
+        str
+          .replace(/{{tenantId}}/g, escapeForJson(this.authContext.tenantId || ''))
+          .replace(/{{regionId}}/g, escapeForJson(this.authContext.regionId || ''))
+      )
+    } catch {
+      return obj;
+    }
   }
 
   async executeRequest(config: StressTestConfig): Promise<RequestResult> {
@@ -193,6 +200,9 @@ export class StressTestRunner {
     durationMinutes: number,
     ratePerSecond: number
   ): Promise<void> {
+    if (ratePerSecond <= 0) {
+      throw new Error('Rate per second must be greater than 0')
+    }
     this.abortController = new AbortController()
     await this.fetchUserInfo()
 

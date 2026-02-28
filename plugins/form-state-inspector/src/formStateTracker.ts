@@ -16,6 +16,7 @@ class FormStateRegistry {
   private forms: Map<string, FormState> = new Map();
   private performanceObserver: PerformanceObserver | null = null;
   private fieldObservers: Map<string, MutationObserver> = new Map();
+  private submitHandlers: Map<string, { element: HTMLFormElement; handler: (event: Event) => void }> = new Map();
 
   constructor() {
     this.initializePerformanceTracking();
@@ -144,9 +145,11 @@ class FormStateRegistry {
     this.fieldObservers.set(formId, observer);
 
     // Setup form submission tracking
-    formElement.addEventListener('submit', (event) => {
+    const submitHandler = (event: SubmitEvent) => {
       this.handleFormSubmit(formId, event);
-    });
+    };
+    formElement.addEventListener('submit', submitHandler);
+    this.submitHandlers.set(formId, { element: formElement, handler: submitHandler });
   }
 
   // Update field state
@@ -540,6 +543,12 @@ class FormStateRegistry {
       this.fieldObservers.delete(formId);
     }
 
+    const submitEntry = this.submitHandlers.get(formId);
+    if (submitEntry) {
+      submitEntry.element.removeEventListener('submit', submitEntry.handler);
+      this.submitHandlers.delete(formId);
+    }
+
     this.forms.delete(formId);
     this.broadcastFormsState();
   }
@@ -552,6 +561,12 @@ class FormStateRegistry {
 
     this.fieldObservers.forEach(observer => observer.disconnect());
     this.fieldObservers.clear();
+
+    this.submitHandlers.forEach(({ element, handler }) => {
+      element.removeEventListener('submit', handler);
+    });
+    this.submitHandlers.clear();
+
     this.forms.clear();
   }
 }

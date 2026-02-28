@@ -101,6 +101,19 @@ interface ErrorBoundaryDevToolsActions {
   importState: (stateJson: string) => void
 }
 
+// Track pending simulation timeouts for cleanup
+const pendingSimulationTimeouts: Set<ReturnType<typeof setTimeout>> = new Set();
+
+/**
+ * Clear all pending simulation timeouts
+ */
+export function clearSimulationTimeouts(): void {
+  for (const timeoutId of pendingSimulationTimeouts) {
+    clearTimeout(timeoutId);
+  }
+  pendingSimulationTimeouts.clear();
+}
+
 export const useErrorBoundaryDevTools = create<
   ErrorBoundaryDevToolsState & ErrorBoundaryDevToolsActions
 >()(
@@ -284,7 +297,7 @@ export const useErrorBoundaryDevTools = create<
         if (simulation) {
           // Create a simulated error based on the simulation configuration
           const simulatedError: ErrorInfo = {
-            id: `simulated-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            id: `simulated-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
             timestamp: Date.now(),
             message: simulation.errorMessage,
             category: simulation.errorType,
@@ -316,7 +329,11 @@ export const useErrorBoundaryDevTools = create<
               break
             case 'delayed':
               if (simulation.delay && simulation.delay > 0) {
-                setTimeout(triggerError, simulation.delay)
+                const timeoutId = setTimeout(() => {
+                  pendingSimulationTimeouts.delete(timeoutId)
+                  triggerError()
+                }, simulation.delay)
+                pendingSimulationTimeouts.add(timeoutId)
               } else {
                 triggerError()
               }

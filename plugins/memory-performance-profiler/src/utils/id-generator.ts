@@ -12,7 +12,7 @@ export {
  */
 export function generateId(prefix: string = ''): string {
   const timestamp = Date.now().toString(36);
-  const randomPart = Math.random().toString(36).substr(2, 9);
+  const randomPart = Math.random().toString(36).substring(2, 11);
   return prefix ? `${prefix}_${timestamp}_${randomPart}` : `${timestamp}_${randomPart}`;
 }
 
@@ -56,7 +56,7 @@ export function generateLeakPatternId(): string {
  */
 export function generateComponentId(componentName: string, fiberKey?: string | number): string {
   const baseId = componentName.toLowerCase().replace(/[^a-z0-9]/g, '-');
-  const suffix = fiberKey ? `_${fiberKey}` : `_${Math.random().toString(36).substr(2, 6)}`;
+  const suffix = fiberKey ? `_${fiberKey}` : `_${Math.random().toString(36).substring(2, 8)}`;
   return `component_${baseId}${suffix}`;
 }
 
@@ -116,7 +116,7 @@ export function generateShortHash(input: string = ''): string {
     hash = hash & hash; // Convert to 32-bit integer
   }
   
-  return Math.abs(hash).toString(36).substr(0, 6);
+  return Math.abs(hash).toString(36).substring(0, 6);
 }
 
 /**

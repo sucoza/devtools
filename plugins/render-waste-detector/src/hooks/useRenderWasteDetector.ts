@@ -42,14 +42,14 @@ export function useRenderWasteDetector(
   );
 
   // Auto-start recording if requested
-  (React as any).useMemo(() => {
+  (React as any).useEffect(() => {
     if (autoStart && !state.recording.isRecording) {
       eventClient.startRecording(settings);
     }
   }, [autoStart, eventClient, settings, state.recording.isRecording]);
 
   // Set up event listeners
-  (React as any).useMemo(() => {
+  (React as any).useEffect(() => {
     if (onRenderEvent || onSuggestion) {
       const unsubscribe = eventClient.subscribe((event: RenderWasteDetectorEvents[keyof RenderWasteDetectorEvents], type: keyof RenderWasteDetectorEvents) => {
         if (type === "render-waste:render-event" && onRenderEvent) {
