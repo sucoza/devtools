@@ -344,7 +344,7 @@ export const ErrorSimulator: React.FC = () => {
                 <input
                   type="number"
                   value={newSimulation.delay || 1000}
-                  onChange={(e) => setNewSimulation({ ...newSimulation, delay: parseInt(e.target.value) })}
+                  onChange={(e) => setNewSimulation({ ...newSimulation, delay: parseInt(e.target.value) || 0 })}
                   style={inputStyles}
                 />
               </div>

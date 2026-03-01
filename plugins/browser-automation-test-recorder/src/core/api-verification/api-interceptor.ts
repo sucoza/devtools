@@ -669,7 +669,12 @@ export class APIInterceptor {
       }
 
       // Simple path matching - would need more sophisticated matching for path params
-      return pathname === endpoint.path || pathname.match(new RegExp(endpoint.path.replace(/\{[^}]+\}/g, '[^/]+')));
+      if (pathname === endpoint.path) return true;
+      try {
+        return !!pathname.match(new RegExp(endpoint.path.replace(/\{[^}]+\}/g, '[^/]+')));
+      } catch {
+        return false;
+      }
     }) || null;
   }
 

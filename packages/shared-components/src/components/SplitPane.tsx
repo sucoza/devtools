@@ -92,7 +92,8 @@ export function SplitPane({
       return sizeValue;
     }
     if (typeof sizeValue === 'string' && sizeValue.endsWith('%')) {
-      return (parseFloat(sizeValue) / 100) * containerSize;
+      const parsed = parseFloat(sizeValue);
+      return (isNaN(parsed) ? 0 : parsed / 100) * containerSize;
     }
     return parseFloat(sizeValue) || 0;
   }, []);

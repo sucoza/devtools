@@ -277,7 +277,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
               <input
                 type="number"
                 value={newStrategy.retryDelay || 1000}
-                onChange={(e) => setNewStrategy({ ...newStrategy, retryDelay: parseInt(e.target.value) })}
+                onChange={(e) => setNewStrategy({ ...newStrategy, retryDelay: parseInt(e.target.value) || 0 })}
                 style={inputStyles}
                 min={0}
               />
@@ -290,7 +290,7 @@ export const RecoveryStrategyEditor: React.FC = () => {
               <input
                 type="number"
                 value={newStrategy.maxRetries || 0}
-                onChange={(e) => setNewStrategy({ ...newStrategy, maxRetries: parseInt(e.target.value) })}
+                onChange={(e) => setNewStrategy({ ...newStrategy, maxRetries: parseInt(e.target.value) || 0 })}
                 style={inputStyles}
                 min={0}
               />
