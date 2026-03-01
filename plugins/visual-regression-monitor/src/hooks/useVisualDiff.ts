@@ -318,19 +318,25 @@ export function useVisualDiff() {
 
         const blob = new Blob([csvContent], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `visual-diff-results-${Date.now()}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
+        try {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `visual-diff-results-${Date.now()}.csv`;
+          a.click();
+        } finally {
+          URL.revokeObjectURL(url);
+        }
       } else {
         const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `visual-diff-results-${Date.now()}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
+        try {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `visual-diff-results-${Date.now()}.json`;
+          a.click();
+        } finally {
+          URL.revokeObjectURL(url);
+        }
       }
     },
 

@@ -199,11 +199,14 @@ function PluginPanelInner({
             type: "application/json",
           });
           const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `render-waste-session-${Date.now()}.json`;
-          a.click();
-          URL.revokeObjectURL(url);
+          try {
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `render-waste-session-${Date.now()}.json`;
+            a.click();
+          } finally {
+            URL.revokeObjectURL(url);
+          }
         }
       },
       disabled: !hasData,

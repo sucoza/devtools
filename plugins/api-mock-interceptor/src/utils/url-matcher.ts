@@ -19,8 +19,12 @@ export function matchUrl(url: string, pattern: string): boolean {
       .replace(/[.+?^${}()|[\]\\]/g, '\\$&') // escape regex special chars
       .replace(/\*/g, '.*'); // replace * with .*
     
-    const regex = new RegExp(`^${regexPattern}$`);
-    return regex.test(url);
+    try {
+      const regex = new RegExp(`^${regexPattern}$`);
+      return regex.test(url);
+    } catch {
+      return false;
+    }
   }
 
   // Regex pattern match (if pattern starts and ends with /)

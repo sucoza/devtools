@@ -669,7 +669,12 @@ export class APIInterceptor {
       }
 
       // Simple path matching - would need more sophisticated matching for path params
-      return pathname === endpoint.path || pathname.match(new RegExp(endpoint.path.replace(/\{[^}]+\}/g, '[^/]+')));
+      if (pathname === endpoint.path) return true;
+      try {
+        return !!pathname.match(new RegExp(endpoint.path.replace(/\{[^}]+\}/g, '[^/]+')));
+      } catch {
+        return false;
+      }
     }) || null;
   }
 
@@ -826,10 +831,16 @@ export class APIInterceptor {
         return { passed: actualValue !== undefined && actualValue !== null, actualValue };
       case 'not_exists':
         return { passed: actualValue === undefined || actualValue === null, actualValue };
-      case 'greater_than':
-        return { passed: Number(actualValue) > Number(condition.value), actualValue };
-      case 'less_than':
-        return { passed: Number(actualValue) < Number(condition.value), actualValue };
+      case 'greater_than': {
+        const numActual = Number(actualValue);
+        const numExpected = Number(condition.value);
+        return { passed: !isNaN(numActual) && !isNaN(numExpected) && numActual > numExpected, actualValue };
+      }
+      case 'less_than': {
+        const numActual = Number(actualValue);
+        const numExpected = Number(condition.value);
+        return { passed: !isNaN(numActual) && !isNaN(numExpected) && numActual < numExpected, actualValue };
+      }
       case 'matches': {
         try {
           const regex = new RegExp(condition.pattern!);

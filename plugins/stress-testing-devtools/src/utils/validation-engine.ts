@@ -131,21 +131,26 @@ export class ValidationEngine {
         }
         break
         
-      case 'greaterThan':
-        passed = Number(actualValue) > Number(rule.expectedValue)
+      case 'greaterThan': {
+        const numA = Number(actualValue), numE = Number(rule.expectedValue)
+        passed = !isNaN(numA) && !isNaN(numE) && numA > numE
         break
-        
-      case 'lessThan':
-        passed = Number(actualValue) < Number(rule.expectedValue)
+      }
+      case 'lessThan': {
+        const numA = Number(actualValue), numE = Number(rule.expectedValue)
+        passed = !isNaN(numA) && !isNaN(numE) && numA < numE
         break
-        
-      case 'greaterThanOrEqual':
-        passed = Number(actualValue) >= Number(rule.expectedValue)
+      }
+      case 'greaterThanOrEqual': {
+        const numA = Number(actualValue), numE = Number(rule.expectedValue)
+        passed = !isNaN(numA) && !isNaN(numE) && numA >= numE
         break
-        
-      case 'lessThanOrEqual':
-        passed = Number(actualValue) <= Number(rule.expectedValue)
+      }
+      case 'lessThanOrEqual': {
+        const numA = Number(actualValue), numE = Number(rule.expectedValue)
+        passed = !isNaN(numA) && !isNaN(numE) && numA <= numE
         break
+      }
         
       case 'exists':
         passed = actualValue !== undefined && actualValue !== null

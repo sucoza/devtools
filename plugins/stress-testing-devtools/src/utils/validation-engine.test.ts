@@ -435,6 +435,87 @@ describe('ValidationEngine', () => {
   });
 
   // ---------------------------------------------------------------
+  // NaN guard for numeric comparisons
+  // ---------------------------------------------------------------
+  describe('numeric comparison NaN guards', () => {
+    it('greaterThan returns false when actual is non-numeric', () => {
+      const rule = makeRule({
+        type: 'body',
+        operator: 'greaterThan',
+        expectedValue: 50,
+      });
+
+      const result = ValidationEngine.validateResponse(
+        'not-a-number',
+        status,
+        headers,
+        responseTime,
+        responseSize,
+        [rule],
+      );
+
+      expect(result.results[0].passed).toBe(false);
+    });
+
+    it('lessThan returns false when expected is non-numeric', () => {
+      const rule = makeRule({
+        type: 'responseTime',
+        operator: 'lessThan',
+        expectedValue: 'abc' as unknown as number,
+      });
+
+      const result = ValidationEngine.validateResponse(
+        null,
+        status,
+        headers,
+        100,
+        responseSize,
+        [rule],
+      );
+
+      expect(result.results[0].passed).toBe(false);
+    });
+
+    it('greaterThanOrEqual returns false for NaN operands', () => {
+      const rule = makeRule({
+        type: 'body',
+        operator: 'greaterThanOrEqual',
+        expectedValue: 'xyz' as unknown as number,
+      });
+
+      const result = ValidationEngine.validateResponse(
+        'abc',
+        status,
+        headers,
+        responseTime,
+        responseSize,
+        [rule],
+      );
+
+      expect(result.results[0].passed).toBe(false);
+    });
+
+    it('lessThanOrEqual returns false for NaN operands', () => {
+      const rule = makeRule({
+        type: 'body',
+        operator: 'lessThanOrEqual',
+        expectedValue: undefined as unknown as number,
+      });
+
+      const result = ValidationEngine.validateResponse(
+        null,
+        status,
+        headers,
+        responseTime,
+        responseSize,
+        [rule],
+      );
+
+      expect(result.results[0].passed).toBe(false);
+    });
+  });
+
+  // ---------------------------------------------------------------
   // Disabled rules and overall result
   // ---------------------------------------------------------------
   describe('overall validation', () => {

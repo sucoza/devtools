@@ -449,11 +449,14 @@ function LoggerDevToolsPanelInner() {
 
     const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `logs-${Date.now()}.${extension}`;
-    a.click();
-    URL.revokeObjectURL(url);
+    try {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `logs-${Date.now()}.${extension}`;
+      a.click();
+    } finally {
+      URL.revokeObjectURL(url);
+    }
   }, [filteredLogs]);
 
   // Parse console-style formatting like "%c[Performance] LCP", "color: green", "1060ms (good)"
@@ -813,13 +816,16 @@ function LoggerDevToolsPanelInner() {
     const dataStr = JSON.stringify(exportData, null, 2);
     const blob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `logger-export-${Date.now()}.json`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    try {
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `logger-export-${Date.now()}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } finally {
+      URL.revokeObjectURL(url);
+    }
   }, [filteredLogs, config, metrics]);
 
   const handleToggleLogging = useCallback(() => {

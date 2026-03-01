@@ -175,13 +175,16 @@ export function PluginPanel({ className }: PluginPanelProps) {
         const dataStr = JSON.stringify(data, null, 2);
         const blob = new Blob([dataStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `visual-regression-results-${Date.now()}.json`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        try {
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `visual-regression-results-${Date.now()}.json`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        } finally {
+          URL.revokeObjectURL(url);
+        }
       },
       disabled: state.stats.totalScreenshots === 0,
       shortcut: 'Ctrl+E'
