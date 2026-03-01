@@ -3,6 +3,8 @@
  * Integrates with axe-core for comprehensive accessibility testing during automation
  */
 
+import { escapeCsvField } from '@sucoza/devtools-common';
+
 // Axe-core interface types
 interface AxeCoreApi {
   run: (context: unknown, options: Record<string, unknown>) => Promise<unknown>;
@@ -1085,12 +1087,12 @@ export class AccessibilityAuditor {
     const headers = ['Rule ID', 'Impact', 'Description', 'Help URL', 'Element', 'Message'];
     const rows = result.violations.flatMap(violation =>
       violation.nodes.map(node => [
-        violation.ruleId,
-        violation.impact,
-        violation.description,
-        violation.helpUrl,
-        node.html,
-        node.message,
+        escapeCsvField(violation.ruleId),
+        escapeCsvField(violation.impact),
+        escapeCsvField(violation.description),
+        escapeCsvField(violation.helpUrl),
+        escapeCsvField(node.html),
+        escapeCsvField(node.message),
       ])
     );
 

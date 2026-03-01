@@ -5,6 +5,7 @@ import type {
   SecurityAuditConfig
 } from '../types';
 import { getTimestamp } from '../utils';
+import { escapeCsvField } from '@sucoza/devtools-common';
 
 export interface SecurityScanner {
   id: string;
@@ -245,13 +246,13 @@ export class SecurityScanEngine {
   private exportToCsv(vulnerabilities: SecurityVulnerability[]): string {
     const headers = ['ID', 'Category', 'Title', 'Severity', 'CWE ID', 'Scanner', 'Detected At'];
     const rows = vulnerabilities.map(vuln => [
-      vuln.id,
-      vuln.category,
-      vuln.title,
-      vuln.severity,
-      vuln.cweId || '',
-      vuln.scannerName,
-      new Date(vuln.detectedAt).toISOString(),
+      escapeCsvField(vuln.id),
+      escapeCsvField(vuln.category),
+      escapeCsvField(vuln.title),
+      escapeCsvField(vuln.severity),
+      escapeCsvField(vuln.cweId || ''),
+      escapeCsvField(vuln.scannerName),
+      escapeCsvField(new Date(vuln.detectedAt).toISOString()),
     ]);
 
     return [headers, ...rows].map(row => row.join(',')).join('\n');

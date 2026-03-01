@@ -24,17 +24,19 @@ export function formatBytes(bytes: number, decimals: number = 2): string {
  * Format milliseconds to human readable duration
  */
 export function formatDuration(ms: number): string {
+  if (ms < 0) return `-${formatDuration(-ms)}`;
+
   if (ms < 1000) {
     return `${ms}ms`;
   }
-  
+
   if (ms < 60000) {
     return `${(ms / 1000).toFixed(1)}s`;
   }
-  
+
   const minutes = Math.floor(ms / 60000);
   const seconds = ((ms % 60000) / 1000).toFixed(0);
-  
+
   return `${minutes}m ${seconds}s`;
 }
 
@@ -218,4 +220,16 @@ export function generateTimestampId(): string {
  */
 export function getTimestamp(): number {
   return Date.now();
+}
+
+/**
+ * Escape a value for safe inclusion in a CSV field.
+ * Wraps in double quotes and escapes internal double quotes per RFC 4180.
+ */
+export function escapeCsvField(value: unknown): string {
+  const str = String(value ?? '');
+  if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
 }

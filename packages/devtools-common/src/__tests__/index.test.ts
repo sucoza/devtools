@@ -19,6 +19,7 @@ import {
   generateShortId,
   generateTimestampId,
   getTimestamp,
+  escapeCsvField,
   // Validators
   validateEmail,
   validateUrl,
@@ -139,6 +140,55 @@ describe('generateUUID', () => {
   it('generates valid UUID format', () => {
     const uuid = generateUUID();
     expect(uuid).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+  });
+});
+
+describe('escapeCsvField', () => {
+  it('returns plain values unchanged', () => {
+    expect(escapeCsvField('hello')).toBe('hello');
+    expect(escapeCsvField('123')).toBe('123');
+  });
+
+  it('wraps values containing commas in double quotes', () => {
+    expect(escapeCsvField('hello, world')).toBe('"hello, world"');
+  });
+
+  it('wraps values containing double quotes and escapes them', () => {
+    expect(escapeCsvField('say "hi"')).toBe('"say ""hi"""');
+  });
+
+  it('wraps values containing newlines', () => {
+    expect(escapeCsvField('line1\nline2')).toBe('"line1\nline2"');
+    expect(escapeCsvField('line1\r\nline2')).toBe('"line1\r\nline2"');
+  });
+
+  it('handles values with commas, quotes, and newlines together', () => {
+    expect(escapeCsvField('a "b", c\nd')).toBe('"a ""b"", c\nd"');
+  });
+
+  it('converts non-string values to strings', () => {
+    expect(escapeCsvField(42)).toBe('42');
+    expect(escapeCsvField(true)).toBe('true');
+    expect(escapeCsvField(null)).toBe('');
+    expect(escapeCsvField(undefined)).toBe('');
+  });
+
+  it('handles empty string', () => {
+    expect(escapeCsvField('')).toBe('');
+  });
+});
+
+describe('formatDuration negative values', () => {
+  it('handles negative milliseconds', () => {
+    expect(formatDuration(-500)).toBe('-500ms');
+  });
+
+  it('handles negative seconds', () => {
+    expect(formatDuration(-2500)).toBe('-2.5s');
+  });
+
+  it('handles negative minutes', () => {
+    expect(formatDuration(-90000)).toBe('-1m 30s');
   });
 });
 
