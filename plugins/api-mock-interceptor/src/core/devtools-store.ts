@@ -540,8 +540,8 @@ class DevToolsStore {
 
     // Update average response time
     if (apiCall.duration) {
-      const totalTime = currentStats.averageResponseTime * (currentStats.totalCalls - 1) + apiCall.duration;
-      newStats.averageResponseTime = Math.round(totalTime / currentStats.totalCalls);
+      const totalTime = currentStats.averageResponseTime * (newStats.totalCalls - 1) + apiCall.duration;
+      newStats.averageResponseTime = Math.round(totalTime / newStats.totalCalls);
     }
 
     return newStats;
