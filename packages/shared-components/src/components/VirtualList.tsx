@@ -109,9 +109,9 @@ export function VirtualList<T>({
 
     while (startIndex < endIndex) {
       const middleIndex = Math.floor((startIndex + endIndex) / 2);
-      const middleOffset = itemMetadata[middleIndex].offset;
+      const middleItem = itemMetadata[middleIndex];
 
-      if (middleOffset < scrollOffset) {
+      if (middleItem.offset + middleItem.height <= scrollOffset) {
         startIndex = middleIndex + 1;
       } else {
         endIndex = middleIndex;

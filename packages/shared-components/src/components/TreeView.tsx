@@ -212,7 +212,8 @@ export function TreeView<T = any>({
   const highlightText = (text: string) => {
     if (!searchQuery || !highlightMatches) return text;
     
-    const parts = text.split(new RegExp(`(${searchQuery})`, 'gi'));
+    const escapedQuery = searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const parts = text.split(new RegExp(`(${escapedQuery})`, 'gi'));
     return (
       <>
         {parts.map((part, i) => 

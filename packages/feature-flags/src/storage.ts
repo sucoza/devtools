@@ -86,7 +86,7 @@ export class MemoryStorageAdapter implements StorageAdapter {
   private storage = new Map<string, any>();
 
   getItem<T>(key: string): T | null {
-    return this.storage.get(key) || null;
+    return this.storage.has(key) ? (this.storage.get(key) as T) : null;
   }
 
   setItem(key: string, value: any): void {

@@ -330,11 +330,23 @@ export class SignalRInterceptor extends EventEmitter<{
     const connection = this.connectionData.get(connectionId);
     if (!connection) return;
 
+    const hub = hubConnection as {
+      onreconnecting?: (error?: Error) => void;
+      onreconnected?: (connectionIdString?: string) => void;
+      onclose?: (error?: Error) => void;
+      connectionId?: string;
+    };
+
+    // Save original callbacks
+    const originalOnReconnecting = hub.onreconnecting;
+    const originalOnReconnected = hub.onreconnected;
+    const originalOnClose = hub.onclose;
+
     // Handle reconnecting event
-    (hubConnection as { onreconnecting?: (error?: Error) => void }).onreconnecting = (error?: Error) => {
+    hub.onreconnecting = (error?: Error) => {
       connection.reconnectAttempts++;
-      
-      this.updateConnection(connectionId, { 
+
+      this.updateConnection(connectionId, {
         state: 'Reconnecting',
         reconnectAttempts: connection.reconnectAttempts,
         lastActivity: Date.now()
@@ -352,13 +364,15 @@ export class SignalRInterceptor extends EventEmitter<{
         connection.errors = [...connection.errors, errorObj].slice(-100);
         this.emit('errorOccurred', errorObj);
       }
+
+      originalOnReconnecting?.(error);
     };
 
     // Handle reconnected event
-    (hubConnection as { onreconnected?: (connectionIdString?: string) => void }).onreconnected = (connectionIdString?: string) => {
-      this.updateConnection(connectionId, { 
+    hub.onreconnected = (connectionIdString?: string) => {
+      this.updateConnection(connectionId, {
         state: 'Connected',
-        connectionId: connectionIdString || (hubConnection as { connectionId?: string }).connectionId,
+        connectionId: connectionIdString || hub.connectionId,
         lastActivity: Date.now()
       });
 
@@ -367,11 +381,13 @@ export class SignalRInterceptor extends EventEmitter<{
         direction: 'send',
         size: 0,
       });
+
+      originalOnReconnected?.(connectionIdString);
     };
 
     // Handle close event
-    (hubConnection as { onclose?: (error?: Error) => void }).onclose = (error?: Error) => {
-      this.updateConnection(connectionId, { 
+    hub.onclose = (error?: Error) => {
+      this.updateConnection(connectionId, {
         state: 'Disconnected',
         disconnectedAt: Date.now(),
         lastActivity: Date.now()
@@ -395,6 +411,8 @@ export class SignalRInterceptor extends EventEmitter<{
         direction: 'receive',
         size: 0,
       });
+
+      originalOnClose?.(error);
     };
   }
 

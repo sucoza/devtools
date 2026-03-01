@@ -423,7 +423,7 @@ export class Logger {
     this.processLogEntry(entry);
   }
 
-  private cleanData(data: any): any {
+  private cleanData(data: any, seen = new WeakSet(), depth = 0): any {
     if (data === null || data === undefined) return data;
     if (typeof data === 'function') return '[Function]';
     if (typeof data === 'symbol') return '[Symbol]';
@@ -435,21 +435,28 @@ export class Logger {
         stack: data.stack,
       };
     }
-    
-    if (Array.isArray(data)) {
-      return data.map(item => this.cleanData(item));
+
+    if (depth > 10) return '[Max Depth]';
+
+    if (typeof data === 'object') {
+      if (seen.has(data)) return '[Circular]';
+      seen.add(data);
     }
-    
+
+    if (Array.isArray(data)) {
+      return data.map(item => this.cleanData(item, seen, depth + 1));
+    }
+
     if (typeof data === 'object') {
       const cleaned: any = {};
       for (const key in data) {
         if (Object.prototype.hasOwnProperty.call(data, key)) {
-          cleaned[key] = this.cleanData(data[key]);
+          cleaned[key] = this.cleanData(data[key], seen, depth + 1);
         }
       }
       return cleaned;
     }
-    
+
     return data;
   }
 
