@@ -480,7 +480,7 @@ export class SignalRInterceptor extends EventEmitter<{
 
     if (endTime) {
       const executionTime = endTime - startTime;
-      method.averageExecutionTime = (method.averageExecutionTime + executionTime) / 2;
+      method.averageExecutionTime += (executionTime - method.averageExecutionTime) / method.invocationCount;
     }
 
     this.emit('hubMethodCalled', { connectionId, method });

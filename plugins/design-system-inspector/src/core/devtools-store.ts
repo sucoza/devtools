@@ -455,7 +455,7 @@ class DesignSystemDevToolsStore {
         const totalCount = existing.values.reduce((sum: number, v: any) => sum + v.count, 0);
         existing.values = existing.values.map((v: any) => ({
           ...v,
-          percentage: (v.count / totalCount) * 100,
+          percentage: totalCount > 0 ? (v.count / totalCount) * 100 : 0,
         }));
       } else {
         propsMap.set(newProp.name, { ...newProp, values: newProp.values.map((v: any) => ({ ...v })) });

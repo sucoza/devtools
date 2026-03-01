@@ -289,7 +289,7 @@ export class BundleInterceptor {
     try {
       const response = await fetch(url, { method: 'HEAD' });
       const contentLength = response.headers.get('Content-Length');
-      return contentLength ? parseInt(contentLength, 10) : 0;
+      return contentLength ? (parseInt(contentLength, 10) || 0) : 0;
     } catch {
       return 0;
     }

@@ -131,12 +131,18 @@ export const useBundleAnalyzerStore = create<BundleAnalyzerStore>()(
      * Core analysis methods
      */
     startAnalysis: () => {
+      // Clear any existing analysis interval to prevent leaks
+      if (analysisInterval) {
+        clearInterval(analysisInterval);
+        analysisInterval = null;
+      }
+
       const jobId = get().startJob({
         type: 'full-analysis',
         status: 'running',
         progress: 0,
       });
-      
+
       set(() => ({
         isAnalyzing: true,
         lastAnalysisTime: Date.now(),
