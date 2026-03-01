@@ -195,7 +195,8 @@ export default function TestGeneratorTab({ state, dispatch, compact: _compact }:
     if (!availableLanguages.includes(selectedLanguage)) {
       setSelectedLanguage(availableLanguages[0]);
     }
-  }, [selectedFramework, selectedLanguage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedFramework]);
 
   return (
     <div className="test-generator-tab">

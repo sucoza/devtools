@@ -599,7 +599,8 @@ export class TemplateEngine {
     
     // Replace parameter placeholders like {{paramName}}
     for (const [name, value] of Object.entries(parameters)) {
-      const pattern = new RegExp(`\\{\\{${name}\\}\\}`, 'g');
+      const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const pattern = new RegExp(`\\{\\{${escapedName}\\}\\}`, 'g');
       result = result.replace(pattern, String(value));
     }
     

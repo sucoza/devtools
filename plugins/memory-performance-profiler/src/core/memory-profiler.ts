@@ -221,14 +221,22 @@ export class MemoryProfiler {
       // Listen for fiber commits
       const prevOnCommitFiberRoot = this.originalOnCommitFiberRoot;
       devToolsHook.onCommitFiberRoot = (id: number, root: any) => {
-        this.analyzeReactFiberTree(root);
+        try {
+          this.analyzeReactFiberTree(root);
+        } catch {
+          // Don't let analysis errors break React DevTools
+        }
         prevOnCommitFiberRoot?.(id, root);
       };
 
       // Listen for fiber unmounts
       const prevOnCommitFiberUnmount = this.originalOnCommitFiberUnmount;
       devToolsHook.onCommitFiberUnmount = (id: number, fiber: any) => {
-        this.handleComponentUnmount(fiber);
+        try {
+          this.handleComponentUnmount(fiber);
+        } catch {
+          // Don't let analysis errors break React DevTools
+        }
         prevOnCommitFiberUnmount?.(id, fiber);
       };
     }
