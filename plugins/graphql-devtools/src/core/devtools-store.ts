@@ -581,6 +581,7 @@ export class GraphQLDevToolsStore {
     this.subscriptionCleanups = [];
     this.interceptor.uninstall();
     this.listeners.clear();
+    storeInstance = null;
   }
 }
 

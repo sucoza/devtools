@@ -17,6 +17,7 @@ class FormStateRegistry {
   private performanceObserver: PerformanceObserver | null = null;
   private fieldObservers: Map<string, MutationObserver> = new Map();
   private submitHandlers: Map<string, { element: HTMLFormElement; handler: (event: Event) => void }> = new Map();
+  private eventUnsubscribers: Array<() => void> = [];
 
   constructor() {
     this.initializePerformanceTracking();
@@ -41,14 +42,18 @@ class FormStateRegistry {
 
   private setupEventListeners() {
     // Listen for form state requests
-    formStateEventClient.on('form-state-request', () => {
-      this.broadcastFormsState();
-    });
+    this.eventUnsubscribers.push(
+      formStateEventClient.on('form-state-request', () => {
+        this.broadcastFormsState();
+      })
+    );
 
     // Listen for field history requests
-    formStateEventClient.on('field-history-request', (event) => {
-      this.handleFieldHistoryRequest(event.payload.formId, event.payload.fieldName);
-    });
+    this.eventUnsubscribers.push(
+      formStateEventClient.on('field-history-request', (event) => {
+        this.handleFieldHistoryRequest(event.payload.formId, event.payload.fieldName);
+      })
+    );
   }
 
   private broadcastFormsState() {
@@ -555,6 +560,9 @@ class FormStateRegistry {
 
   // Cleanup all tracking
   destroy() {
+    this.eventUnsubscribers.forEach(unsub => unsub());
+    this.eventUnsubscribers = [];
+
     if (this.performanceObserver) {
       this.performanceObserver.disconnect();
     }

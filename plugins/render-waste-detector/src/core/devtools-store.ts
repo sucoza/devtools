@@ -694,6 +694,7 @@ export const useRenderWasteDetectorStore = create<RenderWasteDetectorStore>()(
           }
         }).catch((error) => {
           console.warn('Failed to start profiler integration:', error);
+          get().dispatch({ type: "recording/stop" });
         });
       }
     },

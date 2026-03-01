@@ -221,6 +221,7 @@ export function trackComponentUsage(element: Element): void {
 export function setupComponentObserver(): { disconnect: () => void } {
   let isObserving = false;
   let observer: MutationObserver;
+  let initTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
   const startObserving = () => {
     if (isObserving) return;
@@ -234,7 +235,7 @@ export function setupComponentObserver(): { disconnect: () => void } {
             if (node.nodeType === Node.ELEMENT_NODE) {
               const element = node as Element;
               trackComponentUsage(element);
-              
+
               // Check child elements too
               const childComponents = element.querySelectorAll('*');
               for (const child of Array.from(childComponents)) {
@@ -252,7 +253,8 @@ export function setupComponentObserver(): { disconnect: () => void } {
     });
 
     // Also track existing components on first run
-    setTimeout(() => {
+    initTimeoutId = setTimeout(() => {
+      initTimeoutId = null;
       const allElements = document.querySelectorAll('*');
       for (const element of Array.from(allElements)) {
         trackComponentUsage(element);
@@ -269,6 +271,10 @@ export function setupComponentObserver(): { disconnect: () => void } {
 
   return {
     disconnect: () => {
+      if (initTimeoutId !== null) {
+        clearTimeout(initTimeoutId);
+        initTimeoutId = null;
+      }
       if (observer) {
         observer.disconnect();
         isObserving = false;
