@@ -104,6 +104,9 @@ class ZustandStoreRegistry {
   registerStore(name: string, store: AnyStore) {
     if (this.stores.has(name)) {
       console.warn(`Store "${name}" is already registered. Overwriting.`);
+      // Clean up old subscription to prevent leak
+      const oldUnsub = this.storeSubscriptions.get(name);
+      if (oldUnsub) oldUnsub();
     }
 
     this.stores.set(name, store);

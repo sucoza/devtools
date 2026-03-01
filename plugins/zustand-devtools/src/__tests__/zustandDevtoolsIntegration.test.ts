@@ -5,7 +5,9 @@ import { zustandEventClient } from '../zustandEventClient';
 
 describe('Zustand DevTools Integration - State Restoration', () => {
   beforeEach(() => {
-    // Clear any registered stores before each test
+    // Clean up old subscriptions before clearing
+    zustandRegistry['storeSubscriptions'].forEach((unsub: () => void) => unsub());
+    zustandRegistry['storeSubscriptions'].clear();
     zustandRegistry['stores'].clear();
     zustandRegistry['storeStates'].clear();
     zustandRegistry['actionHistory'] = [];
@@ -377,6 +379,66 @@ describe('Zustand DevTools Integration - State Restoration', () => {
     test('should get action history', () => {
       const history = zustandRegistry.getActionHistory();
       expect(Array.isArray(history)).toBe(true);
+    });
+  });
+
+  describe('Subscription Cleanup on Re-registration', () => {
+    test('should clean up old subscription when re-registering same store name', () => {
+      interface TestStore {
+        value: number;
+        setValue: (v: number) => void;
+      }
+
+      const useStore = create<TestStore>((set) => ({
+        value: 0,
+        setValue: (v: number) => set({ value: v }),
+      }));
+
+      // First registration
+      zustandRegistry.registerStore('myStore', useStore as any);
+
+      // Re-register the same store name (simulating hot reload or re-mount)
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      zustandRegistry.registerStore('myStore', useStore as any);
+      consoleSpy.mockRestore();
+
+      // Clear history to count only new actions
+      zustandRegistry.clearActionHistory();
+
+      // Trigger a state change
+      useStore.getState().setValue(42);
+
+      // Should only have ONE action entry (not two from duplicate subscriptions)
+      return new Promise<void>((resolve) => {
+        setTimeout(() => {
+          const history = zustandRegistry.getActionHistory();
+          const storeActions = history.filter(h => h.storeName === 'myStore');
+          expect(storeActions).toHaveLength(1);
+          resolve();
+        }, 20);
+      });
+    });
+
+    test('should unsubscribe old store subscription before overwriting', () => {
+      interface TestStore {
+        count: number;
+      }
+
+      const useStore1 = create<TestStore>(() => ({ count: 1 }));
+      const useStore2 = create<TestStore>(() => ({ count: 2 }));
+
+      // Register first store
+      zustandRegistry.registerStore('shared', useStore1 as any);
+
+      // Re-register with a different store instance
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      zustandRegistry.registerStore('shared', useStore2 as any);
+      consoleSpy.mockRestore();
+
+      // The registry should track the new store's state
+      const stores = zustandRegistry.getStores();
+      const shared = stores.find(s => s.name === 'shared');
+      expect(shared?.state).toMatchObject({ count: 2 });
     });
   });
 });

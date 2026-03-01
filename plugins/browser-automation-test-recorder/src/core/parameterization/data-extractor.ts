@@ -4,6 +4,7 @@
  */
 
 import type { RecordedEvent } from '../../types';
+import { escapeCsvField } from '@sucoza/devtools-common';
 
 export interface ExtractedParameter {
   id: string;
@@ -794,15 +795,10 @@ export class DataExtractor {
     if (dataSet.combinations.length === 0) return '';
 
     const paramNames = dataSet.parameters.map(p => p.name);
-    const header = paramNames.join(',');
-    
-    const rows = dataSet.combinations.map(combo => 
-      paramNames.map(name => {
-        const value = combo.values[name];
-        return typeof value === 'string' && value.includes(',') 
-          ? `"${value.replace(/"/g, '""')}"` 
-          : String(value);
-      }).join(',')
+    const header = paramNames.map(name => escapeCsvField(name)).join(',');
+
+    const rows = dataSet.combinations.map(combo =>
+      paramNames.map(name => escapeCsvField(String(combo.values[name] ?? ''))).join(',')
     );
 
     return [header, ...rows].join('\n');

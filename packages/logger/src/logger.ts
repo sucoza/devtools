@@ -638,7 +638,7 @@ export class Logger {
           log.category || '',
           log.message,
           JSON.stringify(log.data || ''),
-        ]);
+        ].map(field => this.escapeCsvField(field)));
         return [headers, ...rows].map(row => row.join(',')).join('\n');
       }
       
@@ -652,6 +652,13 @@ export class Logger {
       default:
         return '';
     }
+  }
+
+  private escapeCsvField(value: string): string {
+    if (value.includes(',') || value.includes('"') || value.includes('\n') || value.includes('\r')) {
+      return `"${value.replace(/"/g, '""')}"`;
+    }
+    return value;
   }
 
   // Event handling
