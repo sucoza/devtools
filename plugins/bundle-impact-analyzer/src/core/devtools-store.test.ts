@@ -86,6 +86,32 @@ describe('BundleAnalyzerStore – interval and division-by-zero fixes', () => {
     expect(progressAfterMoreTime).toBe(progressAtStop);
   });
 
+  // --- Double-start guard: calling startAnalysis twice should not leak intervals ---
+
+  it('calling startAnalysis twice clears the previous interval', () => {
+    const { startAnalysis } = useBundleAnalyzerStore.getState();
+
+    // Start first analysis
+    startAnalysis();
+    const firstJobCount = useBundleAnalyzerStore.getState().jobs.length;
+
+    // Advance a couple ticks
+    vi.advanceTimersByTime(400);
+
+    // Start second analysis without stopping the first
+    startAnalysis();
+
+    // Advance enough time for the first analysis to have completed
+    // if it were still running (10 ticks * 200ms = 2000ms + buffer)
+    vi.advanceTimersByTime(2200);
+
+    const state = useBundleAnalyzerStore.getState();
+    // The second analysis should have completed normally
+    expect(state.isAnalyzing).toBe(false);
+    // We should have 2 jobs total (first was abandoned, second completed)
+    expect(state.jobs.length).toBe(firstJobCount + 1);
+  });
+
   // --- Division by zero guard: empty exports array ---
 
   it('analyzeImportImpact does not produce Infinity for module with empty exports', () => {
