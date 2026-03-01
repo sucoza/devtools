@@ -114,6 +114,8 @@ export class ValidationEngine {
           passed = actualValue.includes(rule.expectedValue)
         } else if (typeof actualValue === 'object' && actualValue !== null) {
           passed = JSON.stringify(actualValue).includes(rule.expectedValue)
+        } else {
+          passed = String(actualValue).includes(String(rule.expectedValue))
         }
         break
         
@@ -124,6 +126,8 @@ export class ValidationEngine {
           passed = !actualValue.includes(rule.expectedValue)
         } else if (typeof actualValue === 'object' && actualValue !== null) {
           passed = !JSON.stringify(actualValue).includes(rule.expectedValue)
+        } else {
+          passed = !String(actualValue).includes(String(rule.expectedValue))
         }
         break
         

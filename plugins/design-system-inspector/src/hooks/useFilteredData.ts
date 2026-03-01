@@ -141,7 +141,7 @@ export function useTokenStats(tokens: DesignToken[]) {
     const validTokens = tokens.filter(token => token.isValid);
     const tokensWithIssues = tokens.filter(token => token.violations && token.violations.length > 0);
 
-    const mostUsedTokens = tokens
+    const mostUsedTokens = [...tokens]
       .sort((a, b) => b.usageCount - a.usageCount)
       .slice(0, 10);
 

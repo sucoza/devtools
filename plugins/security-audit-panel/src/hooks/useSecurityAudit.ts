@@ -86,7 +86,7 @@ export function useFilteredVulnerabilities(): SecurityVulnerability[] {
   });
   
   // Apply sorting
-  const sortedVulnerabilities = filteredVulnerabilities.sort((a: SecurityVulnerability, b: SecurityVulnerability) => {
+  const sortedVulnerabilities = [...filteredVulnerabilities].sort((a: SecurityVulnerability, b: SecurityVulnerability) => {
     let comparison = 0;
     
     switch (state.ui.sortBy) {

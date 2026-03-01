@@ -84,6 +84,12 @@ export function LandmarkMapper({ className }: LandmarkMapperProps) {
     runAnalysis();
   }, [runAnalysis]);
 
+  useEffect(() => {
+    return () => {
+      removeLandmarkOverlays();
+    };
+  }, []);
+
   const createLandmarkInfo = (element: Element, role: string, level: number): LandmarkInfo | null => {
     const selector = generateSelector(element);
     const label = getLandmarkLabel(element);

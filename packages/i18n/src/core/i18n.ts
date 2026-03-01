@@ -413,7 +413,7 @@ export class I18n implements I18nInstance {
   /** Emit event */
   emit<K extends keyof I18nEvents>(event: K, data: I18nEvents[K]): void {
     const listeners = this._listeners.get(event);
-    if (listeners && this._config.devtools) {
+    if (listeners) {
       listeners.forEach(listener => {
         try {
           listener(data);
