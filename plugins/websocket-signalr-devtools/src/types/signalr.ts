@@ -88,6 +88,7 @@ export interface SignalRMetrics {
   activeConnections: number;
   totalInvocations: number;
   totalMessages: number;
+  totalBytes: number;
   averageLatency: number;
   reconnectionRate: number;
   errorRate: number;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   Toolbar,
   Tabs,
@@ -73,6 +73,7 @@ function ZustandDevToolsPanelInner() {
   const [collapsedStores, setCollapsedStores] = useState<Set<string>>(new Set(savedState.collapsedStores || []));
   const [expandedTreeNodes, setExpandedTreeNodes] = useState<Set<string>>(new Set(savedState.expandedTreeNodes || []));
   const [copySuccess, setCopySuccess] = useState<string | null>(null);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [_isTimeTravel, setIsTimeTravel] = useState(false);
   const [showSnapshotDialog, setShowSnapshotDialog] = useState(false);
   const [snapshotName, setSnapshotName] = useState('');
@@ -116,6 +117,7 @@ function ZustandDevToolsPanelInner() {
       unsubscribeRegister();
       unsubscribeAction();
       unsubscribeRestored();
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
     };
   }, [autoRefresh]);
 
@@ -150,11 +152,13 @@ function ZustandDevToolsPanelInner() {
     try {
       await navigator.clipboard.writeText(JSON.stringify(data, null, 2));
       setCopySuccess(label);
-      setTimeout(() => setCopySuccess(null), 2000);
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+      copyTimeoutRef.current = setTimeout(() => setCopySuccess(null), 2000);
     } catch (err) {
       console.error('Failed to copy to clipboard:', err);
       setCopySuccess('Failed to copy');
-      setTimeout(() => setCopySuccess(null), 2000);
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+      copyTimeoutRef.current = setTimeout(() => setCopySuccess(null), 2000);
     }
   }, []);
 
