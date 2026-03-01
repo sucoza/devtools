@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { loggingEventClient } from './loggingEventClient';
 import type { LogEntry, LogLevel, LoggerConfig, LogMetrics } from './loggingEventClient';
 import { Footer, type FooterStat, ConfigMenu, ThemeProvider, type ConfigMenuItem } from '@sucoza/shared-components';
+import { escapeCsvField } from '@sucoza/devtools-common';
 import '@sucoza/shared-components/dist/styles/theme.css';
 
 const LOG_COLORS: Record<LogLevel, string> = {
@@ -430,7 +431,7 @@ function LoggerDevToolsPanelInner() {
           log.category || '',
           log.message,
           JSON.stringify(log.data || ''),
-        ]);
+        ].map(field => escapeCsvField(field)));
         content = [headers, ...rows].map(row => row.join(',')).join('\n');
         mimeType = 'text/csv';
         extension = 'csv';

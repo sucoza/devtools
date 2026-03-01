@@ -24,7 +24,9 @@ export class StressTestRunner {
       .find(row => row.startsWith('XSRF-TOKEN-WEBAPI='))
     
     if (xsrfCookie) {
-      this.authContext.xsrfToken = xsrfCookie.split('=')[1]
+      // Use substring to preserve '=' chars in the value (e.g. base64 tokens)
+      const eqIndex = xsrfCookie.indexOf('=')
+      this.authContext.xsrfToken = eqIndex >= 0 ? xsrfCookie.substring(eqIndex + 1) : null
     }
   }
 

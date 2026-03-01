@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Logger } from './logger';
 
 describe('Logger.cleanData', () => {
@@ -150,5 +150,65 @@ describe('Logger.cleanData', () => {
     expect(result.name).toBe('a');
     expect(result.ref.name).toBe('b');
     expect(result.ref.ref).toBe('[Circular]');
+  });
+});
+
+describe('Logger.exportLogs CSV escaping', () => {
+  let logger: Logger;
+
+  beforeEach(() => {
+    logger = Logger.getInstance();
+    logger.updateConfig({ output: { console: false }, level: 'trace' });
+    logger.clearLogs();
+    logger.clearMetrics();
+  });
+
+  afterEach(() => {
+    logger.disableConsoleCapture();
+    logger.destroy();
+    (Logger as any).instance = null;
+  });
+
+  it('escapes commas in CSV message field', () => {
+    logger.info('hello, world');
+    logger.forceFlush();
+
+    const csv = logger.exportLogs('csv');
+    const lines = csv.split('\n');
+
+    // Header + 1 data row
+    expect(lines.length).toBe(2);
+
+    // The message "hello, world" should be quoted
+    expect(lines[1]).toContain('"hello, world"');
+  });
+
+  it('escapes double quotes in CSV message field', () => {
+    logger.info('say "hi"');
+    logger.forceFlush();
+
+    const csv = logger.exportLogs('csv');
+    // "say ""hi""" - the message should have doubled internal quotes
+    expect(csv).toContain('"say ""hi"""');
+  });
+
+  it('escapes newlines in CSV message field', () => {
+    logger.info('line1\nline2');
+    logger.forceFlush();
+
+    const csv = logger.exportLogs('csv');
+    // The message should be wrapped in quotes due to newline
+    expect(csv).toContain('"line1\nline2"');
+  });
+
+  it('does not escape simple values', () => {
+    logger.info('simple');
+    logger.forceFlush();
+
+    const csv = logger.exportLogs('csv');
+    const lines = csv.split('\n');
+
+    // Simple value should not be quoted
+    expect(lines[1]).toContain(',simple,');
   });
 });

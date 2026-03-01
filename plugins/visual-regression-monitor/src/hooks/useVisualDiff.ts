@@ -2,6 +2,7 @@ import { useSyncExternalStore } from 'use-sync-external-store/shim';
 import type { VisualDiff, DiffRequest, Screenshot } from '../types';
 import { createVisualRegressionDevToolsClient } from '../core/devtools-client';
 import { getDiffAlgorithm } from '../core/diff-algorithm';
+import { escapeCsvField } from '@sucoza/devtools-common';
 
 /**
  * Hook for managing visual diffs and comparisons
@@ -313,7 +314,7 @@ export function useVisualDiff() {
         const headers = Object.keys(results[0] || {});
         const csvContent = [
           headers.join(','),
-          ...results.map(row => headers.map(header => row[header as keyof typeof row]).join(','))
+          ...results.map(row => headers.map(header => escapeCsvField(String(row[header as keyof typeof row] ?? ''))).join(','))
         ].join('\n');
 
         const blob = new Blob([csvContent], { type: 'text/csv' });
