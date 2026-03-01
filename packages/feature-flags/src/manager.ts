@@ -33,8 +33,8 @@ export class FeatureFlagManager {
     this.options = {
       persistOverrides: true,
       autoRefresh: false,
-      refreshInterval: 30000,
-      ...options
+      ...options,
+      refreshInterval: options.refreshInterval ?? 30000,
     };
 
     this.storage = options.storage || 

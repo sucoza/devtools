@@ -488,4 +488,29 @@ describe('FeatureFlagManager', () => {
       newManager.destroy();
     });
   });
+
+  describe('refreshInterval safety (the fix)', () => {
+    it('defaults refreshInterval to 30000 when explicitly passed as undefined', () => {
+      const mgr = new FeatureFlagManager({
+        storage,
+        autoRefresh: false,
+        refreshInterval: undefined,
+      });
+
+      // Access internal options via any cast
+      expect((mgr as any).options.refreshInterval).toBe(30000);
+      mgr.destroy();
+    });
+
+    it('uses provided refreshInterval when valid', () => {
+      const mgr = new FeatureFlagManager({
+        storage,
+        autoRefresh: false,
+        refreshInterval: 5000,
+      });
+
+      expect((mgr as any).options.refreshInterval).toBe(5000);
+      mgr.destroy();
+    });
+  });
 });
