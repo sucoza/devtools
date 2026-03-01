@@ -31,7 +31,7 @@ export function ProgressBar({
   max = 100,
   label,
   showValue = false,
-  valueFormat = (v, m) => `${Math.round((v / m) * 100)}%`,
+  valueFormat = (v, m) => m > 0 ? `${Math.round((v / m) * 100)}%` : '0%',
   size = 'md',
   variant = 'default',
   striped = false,
@@ -42,7 +42,7 @@ export function ProgressBar({
   barClassName,
   barStyle,
 }: ProgressBarProps) {
-  const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
+  const percentage = max > 0 ? Math.min(Math.max((value / max) * 100, 0), 100) : 0;
   
   // Get size styles
   const getSizeStyles = () => {
@@ -200,7 +200,7 @@ export function CircularProgress({
   size = 40,
   strokeWidth = 4,
   showValue = false,
-  valueFormat = (v, m) => `${Math.round((v / m) * 100)}%`,
+  valueFormat = (v, m) => m > 0 ? `${Math.round((v / m) * 100)}%` : '0%',
   variant = 'default',
   indeterminate = false,
   className,
@@ -208,7 +208,7 @@ export function CircularProgress({
   trackColor = COLORS.background.secondary,
   color,
 }: CircularProgressProps) {
-  const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
+  const percentage = max > 0 ? Math.min(Math.max((value / max) * 100, 0), 100) : 0;
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;

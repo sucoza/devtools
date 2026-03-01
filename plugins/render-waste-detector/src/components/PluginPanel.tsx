@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
 import {
   Activity,
@@ -52,18 +52,17 @@ function PluginPanelInner({
   children,
 }: RenderWasteDetectorPanelProps) {
   // Create or get event client
-  const eventClient = (() => {
-    const client =
-      getRenderWasteDetectorDevToolsClient() ||
-      createRenderWasteDetectorDevToolsClient();
+  const eventClient = useMemo(() => {
+    return getRenderWasteDetectorDevToolsClient() || createRenderWasteDetectorDevToolsClient();
+  }, []);
 
-    // Apply default settings if provided
+  // Apply default settings on mount only
+  useEffect(() => {
     if (defaultSettings) {
-      client.updateSettings(defaultSettings);
+      eventClient.updateSettings(defaultSettings);
     }
-
-    return client;
-  })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Subscribe to state changes
   const state = useSyncExternalStore<RenderWasteDetectorState>(

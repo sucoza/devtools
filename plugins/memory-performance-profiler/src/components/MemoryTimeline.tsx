@@ -21,7 +21,7 @@ export function MemoryTimeline({ timeline, warnings: _warnings, className }: Mem
 
     const chartData = timeline.map((point, index) => ({
       ...point,
-      x: (index / (timeline.length - 1)) * 100,
+      x: timeline.length <= 1 ? 50 : (index / (timeline.length - 1)) * 100,
       y: range > 0 ? ((maxMem - point.usedMemory) / range) * 80 + 10 : 50
     }));
 

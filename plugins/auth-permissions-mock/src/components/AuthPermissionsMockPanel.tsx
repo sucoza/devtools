@@ -482,7 +482,7 @@ function AuthPermissionsMockPanelInner() {
                       <span className="operation-key">{op.key}</span>
                       {op.value && (
                         <span className="operation-value" title={op.value}>
-                          {op.value.substring(0, 50)}...
+                          {op.value.length > 50 ? `${op.value.substring(0, 50)}...` : op.value}
                         </span>
                       )}
                     </div>
