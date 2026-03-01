@@ -271,12 +271,8 @@ export class FeatureFlagDevToolsStore extends EventEmitter {
   }
 
   addEvaluation(evaluation: FlagEvaluation): void {
-    this.state.evaluationHistory.unshift(evaluation);
-    
-    // Keep only recent evaluations
-    if (this.state.evaluationHistory.length > this.state.settings.maxHistorySize) {
-      this.state.evaluationHistory = this.state.evaluationHistory.slice(0, this.state.settings.maxHistorySize);
-    }
+    this.state.evaluationHistory = [evaluation, ...this.state.evaluationHistory]
+      .slice(0, this.state.settings.maxHistorySize);
 
     this.addEvent({
       id: generateId(),
@@ -292,12 +288,8 @@ export class FeatureFlagDevToolsStore extends EventEmitter {
   }
 
   private addEvent(event: FlagEvent): void {
-    this.state.events.unshift(event);
-    
-    // Keep only recent events
-    if (this.state.events.length > this.state.settings.maxHistorySize * 2) {
-      this.state.events = this.state.events.slice(0, this.state.settings.maxHistorySize * 2);
-    }
+    this.state.events = [event, ...this.state.events]
+      .slice(0, this.state.settings.maxHistorySize * 2);
   }
 
   // UI state mutations
@@ -338,9 +330,9 @@ export class FeatureFlagDevToolsStore extends EventEmitter {
   updateExperiment(experiment: Experiment): void {
     const index = this.state.experiments.findIndex(e => e.id === experiment.id);
     if (index >= 0) {
-      this.state.experiments[index] = experiment;
+      this.state.experiments = this.state.experiments.map((e, i) => i === index ? experiment : e);
     } else {
-      this.state.experiments.push(experiment);
+      this.state.experiments = [...this.state.experiments, experiment];
     }
     this.emit('experiment-updated', experiment);
     this.emit('state-changed', this.state);
