@@ -81,6 +81,11 @@ const FeatureFlagManagerPanelInner: React.FC<FeatureFlagManagerPanelProps & { re
 
   // Remove notification
   const removeNotification = (id: string) => {
+    const timer = notificationTimers.current.get(id);
+    if (timer) {
+      clearTimeout(timer);
+      notificationTimers.current.delete(id);
+    }
     setNotifications(prev => prev.filter(n => n.id !== id));
   };
 

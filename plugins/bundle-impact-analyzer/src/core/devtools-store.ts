@@ -13,6 +13,8 @@ import type {
   AnalysisJob,
 } from '../types';
 
+let analysisInterval: ReturnType<typeof setInterval> | null = null;
+
 /**
  * Initial state for bundle impact analyzer DevTools
  */
@@ -147,13 +149,19 @@ export const useBundleAnalyzerStore = create<BundleAnalyzerStore>()(
           get().updateJob(jobId, { progress: job.progress + 10 });
         } else {
           clearInterval(interval);
+          analysisInterval = null;
           get().completeJob(jobId, { message: 'Analysis complete' });
           set(() => ({ isAnalyzing: false }));
         }
       }, 200);
+      analysisInterval = interval;
     },
 
     stopAnalysis: () => {
+      if (analysisInterval) {
+        clearInterval(analysisInterval);
+        analysisInterval = null;
+      }
       set(state => ({
         isAnalyzing: false,
         jobs: state.jobs.map(job => 
@@ -346,7 +354,7 @@ export const useBundleAnalyzerStore = create<BundleAnalyzerStore>()(
       };
       calculateDependencies(module);
 
-      const treeshakingPotential = module.isTreeShakeable && module.unusedExports 
+      const treeshakingPotential = module.isTreeShakeable && module.unusedExports && module.exports.length > 0
         ? (module.unusedExports.length / module.exports.length) * module.size
         : 0;
 
