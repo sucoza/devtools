@@ -3,7 +3,7 @@
  * Integrates with axe-core for comprehensive accessibility testing during automation
  */
 
-import { escapeCsvField } from '@sucoza/devtools-common';
+import { escapeCsvField, escapeHtml } from '@sucoza/devtools-common';
 
 // Axe-core interface types
 interface AxeCoreApi {
@@ -1067,14 +1067,14 @@ export class AccessibilityAuditor {
         </div>
         <h2>Violations</h2>
         ${result.violations.map(v => `
-          <div class="violation ${v.impact}">
-            <h3>${v.help}</h3>
-            <p><strong>Impact:</strong> ${v.impact}</p>
-            <p><strong>Description:</strong> ${v.description}</p>
-            <p><strong>Help:</strong> <a href="${v.helpUrl}" target="_blank">${v.helpUrl}</a></p>
+          <div class="violation ${escapeHtml(v.impact)}">
+            <h3>${escapeHtml(v.help)}</h3>
+            <p><strong>Impact:</strong> ${escapeHtml(v.impact)}</p>
+            <p><strong>Description:</strong> ${escapeHtml(v.description)}</p>
+            <p><strong>Help:</strong> <a href="${escapeHtml(v.helpUrl)}" target="_blank">${escapeHtml(v.helpUrl)}</a></p>
             <h4>Affected Elements:</h4>
             <ul>
-              ${v.nodes.map(n => `<li><code>${n.html}</code> - ${n.message}</li>`).join('')}
+              ${v.nodes.map(n => `<li><code>${escapeHtml(n.html)}</code> - ${escapeHtml(n.message)}</li>`).join('')}
             </ul>
           </div>
         `).join('')}

@@ -5,7 +5,7 @@ import type {
   SecurityAuditConfig
 } from '../types';
 import { getTimestamp } from '../utils';
-import { escapeCsvField } from '@sucoza/devtools-common';
+import { escapeCsvField, escapeHtml } from '@sucoza/devtools-common';
 
 export interface SecurityScanner {
   id: string;
@@ -279,10 +279,10 @@ export class SecurityScanEngine {
 <body>
   <div class="header">
     <h1>Security Audit Report</h1>
-    <p>Generated: ${new Date().toLocaleString()}</p>
-    <p>URL: ${window.location.href}</p>
+    <p>Generated: ${escapeHtml(new Date().toLocaleString())}</p>
+    <p>URL: ${escapeHtml(window.location.href)}</p>
   </div>
-  
+
   <div class="summary">
     <div class="metric">
       <h3>Total Vulnerabilities</h3>
@@ -293,15 +293,15 @@ export class SecurityScanEngine {
       <div>${scanResults.length}</div>
     </div>
   </div>
-  
+
   <h2>Vulnerabilities</h2>
   ${vulnerabilities.map(vuln => `
-    <div class="vulnerability ${vuln.severity}">
-      <h3>${vuln.title}</h3>
-      <p><strong>Category:</strong> ${vuln.category}</p>
-      <p><strong>Severity:</strong> ${vuln.severity}</p>
-      <p><strong>Description:</strong> ${vuln.description}</p>
-      <p><strong>Recommendation:</strong> ${vuln.recommendation}</p>
+    <div class="vulnerability ${escapeHtml(vuln.severity)}">
+      <h3>${escapeHtml(vuln.title)}</h3>
+      <p><strong>Category:</strong> ${escapeHtml(vuln.category)}</p>
+      <p><strong>Severity:</strong> ${escapeHtml(vuln.severity)}</p>
+      <p><strong>Description:</strong> ${escapeHtml(vuln.description)}</p>
+      <p><strong>Recommendation:</strong> ${escapeHtml(vuln.recommendation)}</p>
     </div>
   `).join('')}
 </body>

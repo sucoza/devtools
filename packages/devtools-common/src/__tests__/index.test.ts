@@ -20,6 +20,7 @@ import {
   generateTimestampId,
   getTimestamp,
   escapeCsvField,
+  escapeHtml,
   // Validators
   validateEmail,
   validateUrl,
@@ -175,6 +176,37 @@ describe('escapeCsvField', () => {
 
   it('handles empty string', () => {
     expect(escapeCsvField('')).toBe('');
+  });
+});
+
+describe('escapeHtml', () => {
+  it('returns plain text unchanged', () => {
+    expect(escapeHtml('hello world')).toBe('hello world');
+  });
+
+  it('escapes ampersands', () => {
+    expect(escapeHtml('a & b')).toBe('a &amp; b');
+  });
+
+  it('escapes angle brackets', () => {
+    expect(escapeHtml('<script>alert("xss")</script>')).toBe(
+      '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;'
+    );
+  });
+
+  it('escapes quotes', () => {
+    expect(escapeHtml('say "hello" & \'bye\'')).toBe(
+      'say &quot;hello&quot; &amp; &#39;bye&#39;'
+    );
+  });
+
+  it('handles null and undefined', () => {
+    expect(escapeHtml(null)).toBe('');
+    expect(escapeHtml(undefined)).toBe('');
+  });
+
+  it('handles numbers', () => {
+    expect(escapeHtml(42)).toBe('42');
   });
 });
 

@@ -233,3 +233,17 @@ export function escapeCsvField(value: unknown): string {
   }
   return str;
 }
+
+/**
+ * Escape a string for safe inclusion in HTML content.
+ * Prevents XSS by encoding &, <, >, ", and ' characters.
+ */
+export function escapeHtml(value: unknown): string {
+  const str = String(value ?? '');
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
