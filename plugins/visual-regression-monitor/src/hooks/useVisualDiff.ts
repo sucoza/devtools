@@ -134,7 +134,7 @@ export function useVisualDiff() {
         }
       });
 
-      return this.batchCompareScreenshots(baseline.id, comparisons.map(s => s.id));
+      return actions.batchCompareScreenshots(baseline.id, comparisons.map(s => s.id));
     },
 
     /**

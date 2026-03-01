@@ -81,11 +81,12 @@ export function ScrollableContainer({
     const color = shadowColor || COLORS.background.elevated;
     const intensity = getShadowIntensityValue();
     
+    const alphaHex = Math.round(intensity * 255).toString(16).padStart(2, '0');
     const gradients = {
-      top: `linear-gradient(to bottom, ${color}${Math.round(intensity * 255).toString(16)}, transparent)`,
-      bottom: `linear-gradient(to top, ${color}${Math.round(intensity * 255).toString(16)}, transparent)`,
-      left: `linear-gradient(to right, ${color}${Math.round(intensity * 255).toString(16)}, transparent)`,
-      right: `linear-gradient(to left, ${color}${Math.round(intensity * 255).toString(16)}, transparent)`,
+      top: `linear-gradient(to bottom, ${color}${alphaHex}, transparent)`,
+      bottom: `linear-gradient(to top, ${color}${alphaHex}, transparent)`,
+      left: `linear-gradient(to right, ${color}${alphaHex}, transparent)`,
+      right: `linear-gradient(to left, ${color}${alphaHex}, transparent)`,
     };
     
     return gradients[direction];

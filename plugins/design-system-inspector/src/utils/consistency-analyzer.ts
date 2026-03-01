@@ -327,7 +327,9 @@ function analyzeBatchConsistency(context: any): ConsistencyIssue[] {
   // Create issues for repeated values that aren't tokenized
   for (const [key, data] of valueOccurrences) {
     if (data.elements.length >= 3) { // Appears 3 or more times
-      const [property, value] = key.split(':');
+      const colonIndex = key.indexOf(':');
+      const property = key.substring(0, colonIndex);
+      const value = key.substring(colonIndex + 1);
       
       if (!isTokenizedValue(value, context.tokens)) {
         issues.push(createConsistencyIssue({

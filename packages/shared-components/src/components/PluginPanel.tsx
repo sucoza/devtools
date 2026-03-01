@@ -509,10 +509,12 @@ function formatMetricValue(value: string | number, format?: string): string {
 
 function formatBytes(bytes: number): string {
   if (bytes === 0) return '0 B';
+  const sign = bytes < 0 ? '-' : '';
+  const absBytes = Math.abs(bytes);
   const k = 1024;
   const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+  const i = Math.floor(Math.log(absBytes) / Math.log(k));
+  return `${sign}${parseFloat((absBytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
 }
 
 function formatDuration(ms: number): string {

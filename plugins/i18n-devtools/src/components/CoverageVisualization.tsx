@@ -203,7 +203,7 @@ export function CoverageVisualization({
         </h5>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {languages
+          {[...languages]
             .sort((a, b) => b.completeness - a.completeness)
             .map(lang => (
               <div key={lang.code} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

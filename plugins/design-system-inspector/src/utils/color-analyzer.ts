@@ -135,11 +135,12 @@ function normalizeColor(value: string): string {
   const div = document.createElement('div');
   div.style.color = value;
   document.body.appendChild(div);
-  
-  const computed = window.getComputedStyle(div).color;
-  document.body.removeChild(div);
-  
-  return computed || value;
+  try {
+    const computed = window.getComputedStyle(div).color;
+    return computed || value;
+  } finally {
+    document.body.removeChild(div);
+  }
 }
 
 /**
