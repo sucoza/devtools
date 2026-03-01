@@ -59,7 +59,7 @@ export interface TreeViewProps<T = any> {
 
 export function TreeView<T = any>({
   data,
-  selectedIds = [],
+  selectedIds: controlledSelectedIds,
   multiSelect = false,
   onSelect,
   onMultiSelect,
@@ -87,7 +87,7 @@ export function TreeView<T = any>({
     new Set(defaultExpandedIds)
   );
   const [internalSelectedIds, setInternalSelectedIds] = useState<Set<string>>(
-    new Set(selectedIds)
+    new Set(controlledSelectedIds)
   );
   
   const expandedSet = useMemo(() => 
@@ -97,9 +97,11 @@ export function TreeView<T = any>({
     [controlledExpandedIds, internalExpandedIds]
   );
   
-  const selectedSet = useMemo(() => 
-    new Set(selectedIds.length > 0 ? selectedIds : internalSelectedIds),
-    [selectedIds, internalSelectedIds]
+  const selectedSet = useMemo(() =>
+    controlledSelectedIds !== undefined
+      ? new Set(controlledSelectedIds)
+      : internalSelectedIds,
+    [controlledSelectedIds, internalSelectedIds]
   );
   
   // Toggle expansion

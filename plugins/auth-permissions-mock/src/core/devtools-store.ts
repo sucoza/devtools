@@ -219,12 +219,7 @@ class AuthMockDevToolsStore {
   }
 
   recordStorageOperation(operation: StorageOperation) {
-    this.state.storageOperations.push(operation);
-    
-    // Keep only last 100 operations
-    if (this.state.storageOperations.length > 100) {
-      this.state.storageOperations = this.state.storageOperations.slice(-100);
-    }
+    this.state.storageOperations = [...this.state.storageOperations, operation].slice(-100);
     
     this.notifyListeners();
   }
@@ -258,17 +253,17 @@ class AuthMockDevToolsStore {
   }
 
   addScenario(scenario: MockScenario) {
-    this.state.scenarios.push(scenario);
+    this.state.scenarios = [...this.state.scenarios, scenario];
     this.notifyListeners();
   }
 
   addRole(role: Role) {
-    this.state.roles.push(role);
+    this.state.roles = [...this.state.roles, role];
     this.notifyListeners();
   }
 
   addPermission(permission: Permission) {
-    this.state.permissions.push(permission);
+    this.state.permissions = [...this.state.permissions, permission];
     this.notifyListeners();
   }
 

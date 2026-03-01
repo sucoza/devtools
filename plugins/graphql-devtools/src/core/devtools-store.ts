@@ -468,10 +468,13 @@ export class GraphQLDevToolsStore {
 
     // Update execution time metrics
     if (operation.executionTime !== undefined) {
-      const allOperations = this.state.operations.filter(op => op.executionTime !== undefined);
+      // Include the current operation since this.state.operations is the pre-add snapshot
+      const allOperations = [...this.state.operations, operation].filter(op => op.executionTime !== undefined);
       const executionTimes = allOperations.map(op => op.executionTime as number);
-      
-      updated.averageExecutionTime = executionTimes.reduce((sum, time) => sum + time, 0) / executionTimes.length;
+
+      updated.averageExecutionTime = executionTimes.length > 0
+        ? executionTimes.reduce((sum, time) => sum + time, 0) / executionTimes.length
+        : 0;
       
       if (!updated.slowestOperation || operation.executionTime > (updated.slowestOperation.executionTime || 0)) {
         updated.slowestOperation = operation;

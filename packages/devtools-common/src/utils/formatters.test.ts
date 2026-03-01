@@ -45,4 +45,16 @@ describe('formatBytes', () => {
   it('treats negative decimals as zero', () => {
     expect(formatBytes(1536, -1)).toBe('2 KB');
   });
+
+  it('handles sub-byte fractional values without undefined unit (the fix)', () => {
+    const result = formatBytes(0.0001);
+    expect(result).not.toContain('undefined');
+    expect(result).toContain('B');
+  });
+
+  it('handles very small positive values', () => {
+    const result = formatBytes(0.5);
+    expect(result).toContain('B');
+    expect(result).not.toContain('undefined');
+  });
 });
