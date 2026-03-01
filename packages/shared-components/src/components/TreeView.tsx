@@ -126,12 +126,24 @@ export function TreeView<T = any>({
     }
   }, [expandedSet, controlledExpandedIds, onExpand]);
   
+  // Find node by ID
+  const findNodeById = useCallback((nodes: TreeNode<T>[], id: string): TreeNode<T> | null => {
+    for (const n of nodes) {
+      if (n.id === id) return n;
+      if (n.children) {
+        const found = findNodeById(n.children, id);
+        if (found) return found;
+      }
+    }
+    return null;
+  }, []);
+
   // Handle selection
   const handleSelect = useCallback((node: TreeNode<T>, event: React.MouseEvent) => {
     if (node.disabled) return;
-    
+
     const isSelected = selectedSet.has(node.id);
-    
+
     if (multiSelect && (event.ctrlKey || event.metaKey)) {
       // Multi-select with Ctrl/Cmd
       const newSelectedIds = new Set(selectedSet);
@@ -141,9 +153,9 @@ export function TreeView<T = any>({
         newSelectedIds.add(node.id);
       }
       setInternalSelectedIds(newSelectedIds);
-      
+
       if (onMultiSelect) {
-        const selectedNodes = Array.from(newSelectedIds).map(id => 
+        const selectedNodes = Array.from(newSelectedIds).map(id =>
           findNodeById(data, id)
         ).filter(Boolean) as TreeNode<T>[];
         onMultiSelect(selectedNodes);
@@ -151,33 +163,21 @@ export function TreeView<T = any>({
     } else {
       // Single select
       setInternalSelectedIds(new Set([node.id]));
-      
+
       if (onSelect) {
         onSelect(node, !isSelected);
       }
     }
-    
+
     // Expand on select
     if (expandOnSelect && node.children && node.children.length > 0) {
       toggleExpanded(node);
     }
-    
+
     if (onNodeClick) {
       onNodeClick(node, event);
     }
-  }, [selectedSet, multiSelect, data, onSelect, onMultiSelect, expandOnSelect, toggleExpanded, onNodeClick]);
-  
-  // Find node by ID
-  const findNodeById = (nodes: TreeNode<T>[], id: string): TreeNode<T> | null => {
-    for (const node of nodes) {
-      if (node.id === id) return node;
-      if (node.children) {
-        const found = findNodeById(node.children, id);
-        if (found) return found;
-      }
-    }
-    return null;
-  };
+  }, [selectedSet, multiSelect, data, onSelect, onMultiSelect, expandOnSelect, toggleExpanded, onNodeClick, findNodeById]);
   
   // Default icon based on type
   const getDefaultIcon = (node: TreeNode<T>, expanded: boolean) => {

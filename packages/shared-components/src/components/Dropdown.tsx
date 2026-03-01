@@ -397,6 +397,10 @@ export function Dropdown<T = any>({
       
       {/* Trigger */}
       <div
+        role="combobox"
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        aria-disabled={disabled || undefined}
         onClick={() => !disabled && setIsOpen(!isOpen)}
         onKeyDown={handleKeyDown}
         tabIndex={disabled ? -1 : 0}
@@ -491,6 +495,7 @@ export function Dropdown<T = any>({
       {isOpen && (
         <div
           ref={dropdownRef}
+          role="listbox"
           className={dropdownClassName}
           style={{
             position: 'absolute',
@@ -550,6 +555,8 @@ export function Dropdown<T = any>({
                     return (
                       <div
                         key={String(option.value)}
+                        role="option"
+                        aria-selected={isSelected}
                         onClick={() => handleValueChange(option)}
                         style={{ cursor: option.disabled ? 'not-allowed' : 'pointer' }}
                       >
@@ -561,6 +568,8 @@ export function Dropdown<T = any>({
                   return (
                     <div
                       key={String(option.value)}
+                      role="option"
+                      aria-selected={isSelected}
                       onClick={() => handleValueChange(option)}
                       onMouseEnter={() => setHighlightedIndex(globalIndex)}
                       style={{

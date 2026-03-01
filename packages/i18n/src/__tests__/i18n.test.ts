@@ -166,11 +166,39 @@ describe('@sucoza/i18n', () => {
     it('should provide current state', () => {
       i18n.addTranslations('en', { test: 'Test' });
       i18n.t('test');
-      
+
       const state = i18n.getState();
       expect(state.locale).toBe('en');
       expect(state.translations).toBeDefined();
       expect(state.usage).toHaveLength(1);
+    });
+  });
+
+  describe('clear() preserves instance config', () => {
+    it('should restore configured locale after clear()', () => {
+      const customI18n = createI18n({ locale: 'de', fallbackLocale: 'en' });
+      customI18n.addTranslations('de', { greeting: 'Hallo' });
+      expect(customI18n.locale).toBe('de');
+
+      customI18n.clear();
+      expect(customI18n.locale).toBe('de');
+    });
+
+    it('should not reset to en when instance was created with different locale', () => {
+      const customI18n = createI18n({ locale: 'fr' });
+      customI18n.clear();
+      expect(customI18n.locale).not.toBe('en');
+      expect(customI18n.locale).toBe('fr');
+    });
+
+    it('should reset translations but keep locale', () => {
+      const customI18n = createI18n({ locale: 'ja' });
+      customI18n.addTranslations('ja', { hello: 'こんにちは' });
+      customI18n.clear();
+
+      expect(customI18n.locale).toBe('ja');
+      // Translation should be gone after clear
+      expect(customI18n.t('hello')).not.toBe('こんにちは');
     });
   });
 });

@@ -253,6 +253,7 @@ function ToastItem({
   return (
     <div
       style={{
+        position: 'relative',
         pointerEvents: 'auto',
         minWidth: '300px',
         maxWidth: '400px',
@@ -298,16 +299,19 @@ function ToastItem({
         gap: SPACING.md,
       }}>
         {/* Icon */}
-        {getIcon() && (
-          <div style={{
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'flex-start',
-            paddingTop: '2px',
-          }}>
-            {getIcon()}
-          </div>
-        )}
+        {(() => {
+          const icon = getIcon();
+          return icon ? (
+            <div style={{
+              flexShrink: 0,
+              display: 'flex',
+              alignItems: 'flex-start',
+              paddingTop: '2px',
+            }}>
+              {icon}
+            </div>
+          ) : null;
+        })()}
         
         {/* Content */}
         <div style={{ flex: 1 }}>

@@ -1,4 +1,5 @@
 import { loggingEventClient, LogLevel, LogEntry, LoggerConfig, LogMetrics, StructuredFields } from './loggingEventClient';
+import { escapeCsvField } from '@sucoza/devtools-common';
 
 const LOG_LEVELS: Record<LogLevel, number> = {
   trace: 0,
@@ -1196,11 +1197,11 @@ class DevToolsLogger {
       case 'csv': {
         const headers = ['timestamp', 'level', 'category', 'message', 'data'];
         const rows = logs.map(log => [
-          new Date(log.timestamp).toISOString(),
-          log.level,
-          log.category || '',
-          log.message,
-          JSON.stringify(log.data || ''),
+          escapeCsvField(new Date(log.timestamp).toISOString()),
+          escapeCsvField(log.level),
+          escapeCsvField(log.category || ''),
+          escapeCsvField(log.message),
+          escapeCsvField(JSON.stringify(log.data || '')),
         ]);
         return [headers, ...rows].map(row => row.join(',')).join('\n');
       }

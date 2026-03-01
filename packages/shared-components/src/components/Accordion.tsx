@@ -216,6 +216,8 @@ export function Accordion({
             {/* Header */}
             <button
               className={headerClassName}
+              aria-expanded={isExpanded}
+              aria-controls={`accordion-content-${item.id}`}
               onClick={() => handleToggle(item.id)}
               disabled={item.disabled}
               style={{
@@ -296,6 +298,8 @@ export function Accordion({
               isExpanded={isExpanded}
               animate={animate}
               className={contentClassName}
+              id={`accordion-content-${item.id}`}
+              role="region"
               style={{
                 ...variantStyles.content,
                 ...contentStyle,
@@ -329,6 +333,8 @@ interface AccordionContentProps {
   animate: boolean;
   children: React.ReactNode;
   className?: string;
+  id?: string;
+  role?: string;
   style?: React.CSSProperties;
   contentStyle?: React.CSSProperties;
 }
@@ -338,6 +344,8 @@ function AccordionContent({
   animate,
   children,
   className,
+  id,
+  role,
   style,
   contentStyle,
 }: AccordionContentProps) {
@@ -387,17 +395,19 @@ function AccordionContent({
   
   if (!animate) {
     return isExpanded ? (
-      <div className={className} style={style}>
+      <div id={id} role={role} className={className} style={style}>
         <div style={contentStyle}>
           {children}
         </div>
       </div>
     ) : null;
   }
-  
+
   return (
     <div
       ref={contentRef}
+      id={id}
+      role={role}
       className={className}
       style={{
         height: isExpanded || isAnimating ? height : 0,

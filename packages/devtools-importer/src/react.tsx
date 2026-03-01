@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense, useEffect, useMemo, Component, ErrorInfo, ReactNode } from 'react';
+import React, { useState, useRef, lazy, Suspense, useEffect, useMemo, Component, ErrorInfo, ReactNode } from 'react';
 
 import { logger } from '@sucoza/logger';
 
@@ -213,6 +213,10 @@ export const DevToolsManager: React.FC<DevToolsManagerProps> = ({
   onPluginLoad
 }) => {
   const [loadError, setLoadError] = useState<Error | null>(null);
+  const onErrorRef = useRef(onError);
+  onErrorRef.current = onError;
+  const onPluginLoadRef = useRef(onPluginLoad);
+  onPluginLoadRef.current = onPluginLoad;
 
   useEffect(() => {
     devToolsLogger.info('Component mounted');
@@ -220,13 +224,14 @@ export const DevToolsManager: React.FC<DevToolsManagerProps> = ({
     devToolsLogger.info('pluginLoaders:', pluginLoaders);
   }, []);
 
-  // Memoize the lazy component to prevent recreation
+  // Memoize the lazy component — only recreate when className changes
+  // Use refs for callbacks to avoid unnecessary lazy component recreation
   const LazyDevTools = useMemo(() => {
     return createLazyDevTools(className, (error) => {
       setLoadError(error);
-      onError?.(error);
-    }, onPluginLoad);
-  }, [className, onError, onPluginLoad]);
+      onErrorRef.current?.(error);
+    }, (id) => onPluginLoadRef.current?.(id));
+  }, [className]);
 
   // Only render when enabled
   if (!devtoolsConfig?.enabled) {
