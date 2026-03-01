@@ -55,11 +55,14 @@ function AuthPermissionsMockPanelInner() {
     const config = client.exportConfig();
     const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'auth-mock-config.json';
-    a.click();
-    URL.revokeObjectURL(url);
+    try {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'auth-mock-config.json';
+      a.click();
+    } finally {
+      URL.revokeObjectURL(url);
+    }
   };
 
   const handleImportConfig = (event: React.ChangeEvent<HTMLInputElement>) => {

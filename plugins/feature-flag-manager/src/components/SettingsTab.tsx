@@ -101,13 +101,16 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
     });
     
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `feature-flag-settings-${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    try {
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `feature-flag-settings-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } finally {
+      URL.revokeObjectURL(url);
+    }
   };
 
   return (
@@ -140,7 +143,7 @@ export const SettingsTab: React.FC<SettingsTabProps> = ({
                 max="300"
                 value={settings.refreshInterval / 1000}
                 onChange={(e) => handleSettingsUpdate({ 
-                  refreshInterval: Math.max(1000, parseInt(e.target.value) * 1000) 
+                  refreshInterval: Math.max(1000, (parseInt(e.target.value) || 1) * 1000)
                 })}
                 className="setting-input"
                 disabled={!settings.autoRefresh}

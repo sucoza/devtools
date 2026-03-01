@@ -243,11 +243,14 @@ export function Settings() {
                     const data = client.exportConfiguration();
                     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                     const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = `visual-regression-config-${Date.now()}.json`;
-                    a.click();
-                    URL.revokeObjectURL(url);
+                    try {
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `visual-regression-config-${Date.now()}.json`;
+                      a.click();
+                    } finally {
+                      URL.revokeObjectURL(url);
+                    }
                   }}
                   className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-500 text-white rounded hover:bg-gray-600"
                 >

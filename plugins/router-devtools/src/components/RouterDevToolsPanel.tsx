@@ -226,13 +226,14 @@ function RouterDevToolsPanelInner() {
     const dataStr = JSON.stringify(exportData, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
-    
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `router-devtools-export-${new Date().toISOString().slice(0, 10)}.json`;
-    link.click();
-    
-    URL.revokeObjectURL(url);
+    try {
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `router-devtools-export-${new Date().toISOString().slice(0, 10)}.json`;
+      link.click();
+    } finally {
+      URL.revokeObjectURL(url);
+    }
   }, [state.routeTree, state.navigationHistory, state.currentState]);
 
   // ConfigMenu items

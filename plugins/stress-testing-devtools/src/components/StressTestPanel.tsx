@@ -165,13 +165,16 @@ const StressTestPanelInner: React.FC<StressTestPanelProps> = () => {
     const dataStr = JSON.stringify(exportData, null, 2)
     const blob = new Blob([dataStr], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `stress-test-results-${Date.now()}.json`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
+    try {
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `stress-test-results-${Date.now()}.json`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    } finally {
+      URL.revokeObjectURL(url)
+    }
   }, [state.activeTestId, activeMetrics, state.testRuns, state.results])
 
   const handleResetTest = useCallback(() => {

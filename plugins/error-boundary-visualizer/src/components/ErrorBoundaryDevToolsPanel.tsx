@@ -37,13 +37,16 @@ function ErrorBoundaryDevToolsPanelInner() {
     const data = exportState()
     const blob = new Blob([data], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `error-boundary-data-${Date.now()}.json`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
+    try {
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `error-boundary-data-${Date.now()}.json`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+    } finally {
+      URL.revokeObjectURL(url)
+    }
   }
 
   const handleToggleRecording = () => {
