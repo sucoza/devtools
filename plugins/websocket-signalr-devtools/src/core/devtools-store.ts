@@ -173,11 +173,8 @@ class DevToolsStore {
       }
 
       case 'websocket/message/add': {
-        const messages = [...state.websocket.messages, action.payload];
-        // Keep only the most recent messages
-        if (messages.length > state.websocket.maxMessages) {
-          messages.splice(0, messages.length - state.websocket.maxMessages);
-        }
+        const messages = [...state.websocket.messages, action.payload]
+          .slice(-state.websocket.maxMessages);
 
         return {
           ...state,
@@ -275,11 +272,8 @@ class DevToolsStore {
       }
 
       case 'signalr/message/add': {
-        const messages = [...state.signalr.messages, action.payload];
-        // Keep only the most recent messages
-        if (messages.length > state.signalr.maxMessages) {
-          messages.splice(0, messages.length - state.signalr.maxMessages);
-        }
+        const messages = [...state.signalr.messages, action.payload]
+          .slice(-state.signalr.maxMessages);
 
         return {
           ...state,

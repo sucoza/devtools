@@ -831,10 +831,16 @@ export class APIInterceptor {
         return { passed: actualValue !== undefined && actualValue !== null, actualValue };
       case 'not_exists':
         return { passed: actualValue === undefined || actualValue === null, actualValue };
-      case 'greater_than':
-        return { passed: Number(actualValue) > Number(condition.value), actualValue };
-      case 'less_than':
-        return { passed: Number(actualValue) < Number(condition.value), actualValue };
+      case 'greater_than': {
+        const numActual = Number(actualValue);
+        const numExpected = Number(condition.value);
+        return { passed: !isNaN(numActual) && !isNaN(numExpected) && numActual > numExpected, actualValue };
+      }
+      case 'less_than': {
+        const numActual = Number(actualValue);
+        const numExpected = Number(condition.value);
+        return { passed: !isNaN(numActual) && !isNaN(numExpected) && numActual < numExpected, actualValue };
+      }
       case 'matches': {
         try {
           const regex = new RegExp(condition.pattern!);

@@ -60,7 +60,7 @@ export function IssueList({ showOverview = false, className }: IssueListProps) {
 
   const handleIssueSelect = (issue: AccessibilityIssue) => {
     selectIssue(issue);
-    if (issue.nodes.length > 0) {
+    if (issue.nodes.length > 0 && issue.nodes[0].target.length > 0) {
       const firstTarget = issue.nodes[0].target[0];
       highlightElement(firstTarget);
     }
@@ -601,7 +601,7 @@ function IssueItem({
                           wordBreak: 'break-all',
                           fontFamily: 'monospace'
                         }}>
-                          {node.target[0]}
+                          {node.target[0] ?? ''}
                         </code>
                         <button
                           style={{
