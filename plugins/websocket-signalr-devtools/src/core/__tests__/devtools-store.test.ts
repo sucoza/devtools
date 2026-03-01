@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { devToolsStore } from '../devtools-store';
-import type { WebSocketConnection, SignalRConnection } from '../../types';
+import type { WebSocketConnection, WebSocketMessage, SignalRConnection } from '../../types';
 
 describe('DevToolsStore', () => {
   beforeEach(() => {
@@ -200,6 +200,46 @@ describe('DevToolsStore', () => {
       // Weighted average: (100 * 10 + 200 * 30) / 40 = (1000 + 6000) / 40 = 175
       expect(sendMethod!.averageExecutionTime).toBe(175);
       expect(sendMethod!.errorCount).toBe(1);
+    });
+  });
+
+  describe('WebSocket message trimming', () => {
+    it('uses immutable .slice() to trim messages to maxMessages', () => {
+      // Add a connection first
+      const connection: WebSocketConnection = {
+        id: 'ws-trim-test',
+        url: 'ws://localhost:8080',
+        protocols: [],
+        state: 'OPEN',
+        createdAt: Date.now(),
+        messageCount: { sent: 0, received: 0 },
+        bytesTransferred: { sent: 0, received: 0 },
+        errors: [],
+        lastActivity: Date.now(),
+      };
+      devToolsStore.dispatch({ type: 'websocket/connection/add', payload: connection });
+
+      // Get messages array reference before adding
+      const stateBefore = devToolsStore.getSnapshot();
+      const messagesBefore = stateBefore.websocket.messages;
+
+      // Add a message
+      const message: WebSocketMessage = {
+        id: 'msg-1',
+        connectionId: 'ws-trim-test',
+        timestamp: Date.now(),
+        type: 'text',
+        data: 'hello',
+        size: 5,
+        binary: false,
+      };
+      devToolsStore.dispatch({ type: 'websocket/message/add', payload: message });
+
+      const stateAfter = devToolsStore.getSnapshot();
+      // Messages array should be a new reference (immutable update)
+      expect(stateAfter.websocket.messages).not.toBe(messagesBefore);
+      expect(stateAfter.websocket.messages).toHaveLength(1);
+      expect(stateAfter.websocket.messages[0].id).toBe('msg-1');
     });
   });
 
