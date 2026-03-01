@@ -39,7 +39,8 @@ export function CoverageVisualization({
     
     const completeLanguages = languages.filter(lang => lang.completeness >= 95).length;
     const completeNamespaces = namespaces.filter(ns => {
-      const avgCoverage = Object.values(ns.translationCoverage).reduce((sum, cov) => sum + cov, 0) / Object.values(ns.translationCoverage).length;
+      const coverageValues = Object.values(ns.translationCoverage);
+      const avgCoverage = coverageValues.length > 0 ? coverageValues.reduce((sum, cov) => sum + cov, 0) / coverageValues.length : 0;
       return avgCoverage >= 95;
     }).length;
     
@@ -263,14 +264,17 @@ export function CoverageVisualization({
         </h5>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {namespaces
+          {[...namespaces]
             .sort((a, b) => {
-              const aAvg = Object.values(a.translationCoverage).reduce((sum, cov) => sum + cov, 0) / Object.values(a.translationCoverage).length;
-              const bAvg = Object.values(b.translationCoverage).reduce((sum, cov) => sum + cov, 0) / Object.values(b.translationCoverage).length;
+              const aVals = Object.values(a.translationCoverage);
+              const bVals = Object.values(b.translationCoverage);
+              const aAvg = aVals.length > 0 ? aVals.reduce((sum, cov) => sum + cov, 0) / aVals.length : 0;
+              const bAvg = bVals.length > 0 ? bVals.reduce((sum, cov) => sum + cov, 0) / bVals.length : 0;
               return bAvg - aAvg;
             })
             .map(ns => {
-              const averageCoverage = Object.values(ns.translationCoverage).reduce((sum, cov) => sum + cov, 0) / Object.values(ns.translationCoverage).length;
+              const coverageValues = Object.values(ns.translationCoverage);
+              const averageCoverage = coverageValues.length > 0 ? coverageValues.reduce((sum, cov) => sum + cov, 0) / coverageValues.length : 0;
               
               return (
                 <div key={ns.name} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -421,7 +425,8 @@ export function CoverageVisualization({
         </thead>
         <tbody>
           {namespaces.map(ns => {
-            const averageCoverage = Object.values(ns.translationCoverage).reduce((sum, cov) => sum + cov, 0) / Object.values(ns.translationCoverage).length;
+            const coverageValues = Object.values(ns.translationCoverage);
+            const averageCoverage = coverageValues.length > 0 ? coverageValues.reduce((sum, cov) => sum + cov, 0) / coverageValues.length : 0;
             
             return (
               <tr key={ns.name} style={{ 

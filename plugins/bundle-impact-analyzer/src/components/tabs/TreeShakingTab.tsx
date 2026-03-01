@@ -55,7 +55,7 @@ export function TreeShakingTab({ state }: TreeShakingTabProps) {
               <div className="module-header">
                 <div className="module-name">{module.name}</div>
                 <div className="unused-ratio">
-                  {module.unusedExports ? 
+                  {module.unusedExports && module.exports.length > 0 ?
                     `${((module.unusedExports.length / module.exports.length) * 100).toFixed(0)}% unused`
                     : 'N/A'
                   }
