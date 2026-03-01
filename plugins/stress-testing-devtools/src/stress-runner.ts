@@ -73,7 +73,8 @@ export class StressTestRunner {
           .replace(/{{tenantId}}/g, escapeForJson(this.authContext.tenantId || ''))
           .replace(/{{regionId}}/g, escapeForJson(this.authContext.regionId || ''))
       )
-    } catch {
+    } catch (e) {
+      console.warn('Token substitution produced invalid JSON, using original:', e);
       return obj;
     }
   }
