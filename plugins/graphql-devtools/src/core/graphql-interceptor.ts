@@ -430,9 +430,9 @@ export class GraphQLInterceptor {
     }
     
     headerString.split('\r\n').forEach(line => {
-      const parts = line.split(': ');
-      if (parts.length === 2) {
-        headers[parts[0].toLowerCase()] = parts[1];
+      const colonIndex = line.indexOf(': ');
+      if (colonIndex > 0) {
+        headers[line.substring(0, colonIndex).toLowerCase()] = line.substring(colonIndex + 2);
       }
     });
     

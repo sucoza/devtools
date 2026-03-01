@@ -189,7 +189,7 @@ class DevToolsLogger {
 
   private flushTimer: any = null;
   private metricsTimer: any = null;
-  private recentLogs: { timestamp: number }[] = [];
+  private recentLogs: { timestamp: number; level: string }[] = [];
   private totalLogSize = 0;
   private originalConsole: {
     log: typeof console.log;
@@ -449,7 +449,7 @@ class DevToolsLogger {
       this.metrics.logsByLevel[level]++;
       this.metrics.lastLogTime = entry.timestamp;
       this.metrics.logsByCategory['Console'] = (this.metrics.logsByCategory['Console'] || 0) + 1;
-      this.recentLogs.push({ timestamp: entry.timestamp });
+      this.recentLogs.push({ timestamp: entry.timestamp, level: entry.level });
       this.totalLogSize += JSON.stringify(entry).length;
 
       // Add to buffer for DevTools (bypass normal logging to prevent console output)
@@ -495,13 +495,12 @@ class DevToolsLogger {
     
     // Calculate error and warning rates
     const totalRecent = this.recentLogs.length || 1;
-    const recentErrors = this.recentLogs.filter((_, i) => {
-      const level = this.logBuffer[i]?.level;
-      return level === 'error' || level === 'fatal';
-    }).length;
-    const recentWarnings = this.recentLogs.filter((_, i) => {
-      return this.logBuffer[i]?.level === 'warn';
-    }).length;
+    const recentErrors = this.recentLogs.filter(
+      log => log.level === 'error' || log.level === 'fatal'
+    ).length;
+    const recentWarnings = this.recentLogs.filter(
+      log => log.level === 'warn'
+    ).length;
     
     this.metrics.errorRate = (recentErrors / totalRecent) * 100;
     this.metrics.warningRate = (recentWarnings / totalRecent) * 100;
@@ -656,7 +655,7 @@ class DevToolsLogger {
     if (category) {
       this.metrics.logsByCategory[category] = (this.metrics.logsByCategory[category] || 0) + 1;
     }
-    this.recentLogs.push({ timestamp: entry.timestamp });
+    this.recentLogs.push({ timestamp: entry.timestamp, level: entry.level });
     this.totalLogSize += JSON.stringify(entry).length;
 
     // Output to console if enabled

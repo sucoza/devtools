@@ -1423,6 +1423,9 @@ importers:
       '@rollup/plugin-typescript':
         specifier: 'catalog:'
         version: 12.3.0(rollup@4.59.0)(tslib@2.8.1)(typescript@5.9.3)
+      '@testing-library/react':
+        specifier: 'catalog:'
+        version: 16.3.0(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.6))(@types/react@19.2.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@types/node':
         specifier: 'catalog:'
         version: 24.10.1

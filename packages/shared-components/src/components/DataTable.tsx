@@ -95,6 +95,8 @@ export interface DataTableProps<T> {
   style?: React.CSSProperties;
 }
 
+const EMPTY_SET: Set<number> = new Set();
+
 export function DataTable<T = any>({
   data,
   columns,
@@ -103,10 +105,10 @@ export function DataTable<T = any>({
   searchable = false,
   selectable = false,
   expandable = false,
-  selectedRows = new Set(),
+  selectedRows = EMPTY_SET,
   onSelectionChange,
   selectAll = true,
-  expandedRows = new Set(),
+  expandedRows = EMPTY_SET,
   onExpansionChange,
   renderExpandedRow,
   paginated = false,

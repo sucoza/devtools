@@ -61,6 +61,7 @@
     "tslib": "catalog:",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:",
+    "@testing-library/react": "catalog:",
     "vitest": "catalog:"
   }
 }

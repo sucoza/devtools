@@ -24,6 +24,13 @@ export class ReactI18nextAdapter {
   private performanceMetrics: I18nPerformanceMetrics;
   private isInitialized: boolean = false;
   private eventClientUnsubscribers: (() => void)[] = [];
+  private currentLanguage: string = '';
+  private boundOnResourcesLoaded = this.onResourcesLoaded.bind(this);
+  private boundOnFailedLoading = this.onResourcesFailedLoading.bind(this);
+  private boundOnLanguageChanged = this.onLanguageChanged.bind(this);
+  private boundOnMissingKey = this.onMissingKey.bind(this);
+  private boundOnResourceAdded = this.onResourceAdded.bind(this);
+  private boundOnResourceRemoved = this.onResourceRemoved.bind(this);
 
   constructor(i18nInstance: I18nextInstance) {
     this.i18n = i18nInstance;
@@ -49,12 +56,12 @@ export class ReactI18nextAdapter {
     const startTime = performance.now();
 
     // Hook into i18next events
-    this.i18n.on('loaded', this.onResourcesLoaded.bind(this));
-    this.i18n.on('failedLoading', this.onResourcesFailedLoading.bind(this));
-    this.i18n.on('languageChanged', this.onLanguageChanged.bind(this));
-    this.i18n.on('missingKey', this.onMissingKey.bind(this));
-    this.i18n.on('added', this.onResourceAdded.bind(this));
-    this.i18n.on('removed', this.onResourceRemoved.bind(this));
+    this.i18n.on('loaded', this.boundOnResourcesLoaded);
+    this.i18n.on('failedLoading', this.boundOnFailedLoading);
+    this.i18n.on('languageChanged', this.boundOnLanguageChanged);
+    this.i18n.on('missingKey', this.boundOnMissingKey);
+    this.i18n.on('added', this.boundOnResourceAdded);
+    this.i18n.on('removed', this.boundOnResourceRemoved);
 
     // Wrap the translation function
     this.wrapTranslationFunction();
@@ -67,6 +74,7 @@ export class ReactI18nextAdapter {
 
     this.performanceMetrics.initTime = performance.now() - startTime;
     this.isInitialized = true;
+    this.currentLanguage = this.i18n.language || '';
 
     // console.log('[I18n DevTools] React-i18next adapter initialized');
   }
@@ -193,7 +201,8 @@ export class ReactI18nextAdapter {
   }
 
   private onLanguageChanged(language: string): void {
-    const previousLanguage = this.i18n.language;
+    const previousLanguage = this.currentLanguage;
+    this.currentLanguage = language;
     
     i18nEventClient.emit('i18n-language-changed', {
       from: previousLanguage,
@@ -639,12 +648,12 @@ export class ReactI18nextAdapter {
    */
   destroy(): void {
     // Remove event listeners
-    this.i18n.off('loaded', this.onResourcesLoaded);
-    this.i18n.off('failedLoading', this.onResourcesFailedLoading);
-    this.i18n.off('languageChanged', this.onLanguageChanged);
-    this.i18n.off('missingKey', this.onMissingKey);
-    this.i18n.off('added', this.onResourceAdded);
-    this.i18n.off('removed', this.onResourceRemoved);
+    this.i18n.off('loaded', this.boundOnResourcesLoaded);
+    this.i18n.off('failedLoading', this.boundOnFailedLoading);
+    this.i18n.off('languageChanged', this.boundOnLanguageChanged);
+    this.i18n.off('missingKey', this.boundOnMissingKey);
+    this.i18n.off('added', this.boundOnResourceAdded);
+    this.i18n.off('removed', this.boundOnResourceRemoved);
 
     // Unsubscribe from event client events
     this.eventClientUnsubscribers.forEach(unsub => unsub());

@@ -255,7 +255,7 @@ export class StorageEngine {
       const screenshots = this.loadScreenshots();
       const screenshotEntries = Object.entries(screenshots)
         .sort(([, a], [, b]) => b.timestamp - a.timestamp)
-        .slice(100);
+        .slice(0, 100);
       
       if (screenshotEntries.length > 0) {
         const cleanedScreenshots = Object.fromEntries(screenshotEntries);
@@ -266,7 +266,7 @@ export class StorageEngine {
       const diffs = this.loadVisualDiffs();
       const diffEntries = Object.entries(diffs)
         .sort(([, a], [, b]) => b.timestamp - a.timestamp)
-        .slice(50);
+        .slice(0, 50);
       
       if (diffEntries.length > 0) {
         const cleanedDiffs = Object.fromEntries(diffEntries);

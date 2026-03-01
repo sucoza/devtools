@@ -2,6 +2,7 @@ import { StressTestConfig, RequestResult, AuthContext } from './types'
 
 export class StressTestRunner {
   private abortController: AbortController | null = null
+  private timedTestInterval: ReturnType<typeof setInterval> | null = null
   private authContext: AuthContext = {
     tenantId: null,
     regionId: null,
@@ -215,6 +216,7 @@ export class StressTestRunner {
         try {
           if (Date.now() >= endTime || this.abortController?.signal.aborted) {
             clearInterval(interval)
+            this.timedTestInterval = null
             resolve()
             return
           }
@@ -224,13 +226,19 @@ export class StressTestRunner {
           this.onResult(result)
         } catch {
           clearInterval(interval)
+          this.timedTestInterval = null
           resolve()
         }
       }, 1000 / ratePerSecond)
+      this.timedTestInterval = interval
     })
   }
 
   stop() {
+    if (this.timedTestInterval) {
+      clearInterval(this.timedTestInterval)
+      this.timedTestInterval = null
+    }
     if (this.abortController) {
       this.abortController.abort()
     }
