@@ -228,12 +228,7 @@ class FormStateRegistry {
       action
     };
 
-    form.fieldHistory.push(historyEntry);
-    
-    // Keep history limited to prevent memory issues
-    if (form.fieldHistory.length > 100) {
-      form.fieldHistory = form.fieldHistory.slice(-100);
-    }
+    form.fieldHistory = [...form.fieldHistory, historyEntry].slice(-100);
   }
 
   // Validate a specific field

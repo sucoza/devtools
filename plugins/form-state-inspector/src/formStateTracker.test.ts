@@ -114,4 +114,35 @@ describe('FormStateRegistry', () => {
       expect(formStateRegistry.getFormState('form-2')).toBeUndefined();
     });
   });
+
+  describe('addFieldHistoryEntry — immutable update (the fix)', () => {
+    it('creates a new fieldHistory array reference on field change', () => {
+      formStateRegistry.registerForm('history-form');
+
+      // Register a field so updateField can track it
+      formStateRegistry.updateField('history-form', 'email', {
+        name: 'email',
+        value: '',
+        type: 'text',
+        dirty: false,
+        touched: false,
+        valid: true,
+      });
+
+      const stateBefore = formStateRegistry.getFormState('history-form');
+      const historyBefore = stateBefore!.fieldHistory;
+
+      // Update the field value to trigger addFieldHistoryEntry
+      formStateRegistry.updateField('history-form', 'email', {
+        value: 'test@example.com',
+      });
+
+      const stateAfter = formStateRegistry.getFormState('history-form');
+      // Array reference must differ — immutable update
+      expect(stateAfter!.fieldHistory).not.toBe(historyBefore);
+      expect(stateAfter!.fieldHistory.length).toBe(1);
+      expect(stateAfter!.fieldHistory[0].fieldName).toBe('email');
+      expect(stateAfter!.fieldHistory[0].value).toBe('test@example.com');
+    });
+  });
 });

@@ -158,13 +158,9 @@ export class RouterStateManager {
         loadingState: state.navigation.state,
       };
 
-      // Add to history
-      this.navigationHistory.push(historyEntry);
-
-      // Trim history to max size
-      if (this.navigationHistory.length > (this.config.maxHistoryEntries ?? 50)) {
-        this.navigationHistory = this.navigationHistory.slice(-(this.config.maxHistoryEntries ?? 50));
-      }
+      // Add to history (immutable to avoid stale-reference bugs)
+      const maxEntries = this.config.maxHistoryEntries ?? 50;
+      this.navigationHistory = [...this.navigationHistory, historyEntry].slice(-maxEntries);
 
       // Emit navigation event
       routerEventClient.emit('router-navigation', {
