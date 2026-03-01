@@ -227,7 +227,9 @@ export const useErrorBoundaryDevTools = create<
           if (node.hasErrorBoundary) {
             coveredComponents++
           }
-          node.children.forEach(traverse)
+          if (Array.isArray(node.children)) {
+            node.children.forEach(traverse)
+          }
         }
         
         traverse(state.componentTree)

@@ -146,8 +146,9 @@ class StressTestStore {
   }
 
   private percentile(sorted: number[], p: number): number {
-    const index = Math.floor((p / 100) * sorted.length)
-    return sorted[index] || 0
+    if (sorted.length === 0) return 0
+    const index = Math.max(0, Math.ceil((p / 100) * sorted.length) - 1)
+    return sorted[index]
   }
 
   updateConfigs(configs: StressTestConfig[]) {

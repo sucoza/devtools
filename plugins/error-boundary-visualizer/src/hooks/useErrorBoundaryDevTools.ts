@@ -257,6 +257,8 @@ export function useErrorBoundaryDevToolsHook(options: UseErrorBoundaryDevToolsOp
       fiberRootRef.current = root
 
       throttledUpdate(() => {
+        if (!root.current) return
+
         if (autoDetectBoundaries) {
           detectAndRegisterErrorBoundaries(root.current)
         }
