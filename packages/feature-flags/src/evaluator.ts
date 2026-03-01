@@ -268,7 +268,9 @@ export class FlagEvaluator {
         stickinessValue = context.sessionId || 'no-session';
         break;
       default:
-        stickinessValue = Math.random().toString();
+        // Use available context for stable rollout instead of Math.random()
+        // which would produce different results on every evaluation
+        stickinessValue = context.userId || context.sessionId || 'anonymous';
     }
 
     const hash = this.hashString(flag.id + stickinessValue);

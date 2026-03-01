@@ -34,6 +34,7 @@ const DEFAULT_CONFIG: I18nConfig = {
 /** I18n class implementation */
 export class I18n implements I18nInstance {
   private _config: I18nConfig;
+  private readonly _initialConfig: Partial<I18nConfig>;
   private _translations: Translations = {};
   private _localeInfo: Map<string, LanguageInfo> = new Map();
   private _usage: Map<string, TranslationUsage> = new Map();
@@ -41,6 +42,7 @@ export class I18n implements I18nInstance {
   private _listeners: Map<string, Set<EventListener>> = new Map();
 
   constructor(config: Partial<I18nConfig> = {}) {
+    this._initialConfig = config;
     this._config = { ...DEFAULT_CONFIG, ...config };
     this.initializeDefaults();
   }
@@ -431,8 +433,8 @@ export class I18n implements I18nInstance {
     this._missing.clear();
     this._localeInfo.clear();
     this._listeners.clear();
-    // Reset locale to the original default
-    this._config.locale = DEFAULT_CONFIG.locale;
+    // Reset to the instance's original config, not the module default
+    this._config = { ...DEFAULT_CONFIG, ...this._initialConfig };
     this.initializeDefaults();
   }
 

@@ -450,4 +450,54 @@ describe('FlagEvaluator', () => {
       expect(result1.value).toBe(result2.value);
     });
   });
+
+  describe('Rollout stickiness', () => {
+    it('should produce deterministic results with default stickiness', async () => {
+      flags.set('rollout-flag', {
+        id: 'rollout-flag',
+        name: 'Rollout Flag',
+        description: 'Test rollout',
+        type: 'boolean',
+        value: true,
+        enabled: true,
+        environment: 'test',
+        tags: [],
+        rollout: {
+          percentage: 50,
+          stickiness: 'default' as any,
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      // With same context, default stickiness should return same result
+      const result1 = await evaluator.evaluate('rollout-flag', context);
+      const result2 = await evaluator.evaluate('rollout-flag', context);
+
+      expect(result1.value).toBe(result2.value);
+    });
+
+    it('should produce same result for same userId with userId stickiness', async () => {
+      flags.set('user-sticky', {
+        id: 'user-sticky',
+        name: 'User Sticky',
+        description: 'Test',
+        type: 'boolean',
+        value: true,
+        enabled: true,
+        environment: 'test',
+        tags: [],
+        rollout: {
+          percentage: 50,
+          stickiness: 'userId',
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      const r1 = await evaluator.evaluate('user-sticky', context);
+      const r2 = await evaluator.evaluate('user-sticky', context);
+      expect(r1.value).toBe(r2.value);
+    });
+  });
 });

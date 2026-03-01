@@ -73,7 +73,8 @@ export function useFiltering<T extends Record<string, any>>({
       if (key === 'searchText' || key === 'timeRange') return;
       
       const filterValue = filter[key];
-      if (filterValue === undefined || filterValue === null) return;
+      if (filterValue === undefined || filterValue === null || filterValue === '') return;
+      if (Array.isArray(filterValue) && filterValue.length === 0) return;
 
       filtered = filtered.filter(item => {
         const itemValue = item[key];

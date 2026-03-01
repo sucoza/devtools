@@ -158,7 +158,7 @@ export function PerformanceChart({
                   y1={chartHeight - ratio * chartHeight}
                   x2={chartWidth}
                   y2={chartHeight - ratio * chartHeight}
-                  stroke="#gray"
+                  stroke="#888888"
                   strokeWidth={0.5}
                 />
               ))}
@@ -170,7 +170,7 @@ export function PerformanceChart({
                   y1={0}
                   x2={ratio * chartWidth}
                   y2={chartHeight}
-                  stroke="#gray"
+                  stroke="#888888"
                   strokeWidth={0.5}
                 />
               ))}

@@ -150,4 +150,16 @@ describe('Logger', () => {
     expect(childLog).toBeDefined();
     expect(childLog!.category).toBe('TestCategory');
   });
+
+  it('allows re-creation after destroy()', () => {
+    loggerInstance.destroy();
+
+    // getInstance should create a fresh instance after destroy
+    const newInstance = Logger.getInstance();
+    expect(newInstance).toBeInstanceOf(Logger);
+    expect(newInstance).not.toBe(loggerInstance);
+
+    // Clean up the new instance
+    newInstance.destroy();
+  });
 });

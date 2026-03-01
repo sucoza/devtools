@@ -691,6 +691,7 @@ export class Logger {
     }
     this.disableConsoleIntercept();
     this.listeners.clear();
+    Logger.instance = null;
   }
 }
 
