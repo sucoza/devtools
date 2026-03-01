@@ -255,11 +255,11 @@ export function Tooltip({
   useEffect(() => {
     if (isOpen) {
       calculatePosition();
-      window.addEventListener('scroll', calculatePosition);
+      window.addEventListener('scroll', calculatePosition, true);
       window.addEventListener('resize', calculatePosition);
-      
+
       return () => {
-        window.removeEventListener('scroll', calculatePosition);
+        window.removeEventListener('scroll', calculatePosition, true);
         window.removeEventListener('resize', calculatePosition);
       };
     }

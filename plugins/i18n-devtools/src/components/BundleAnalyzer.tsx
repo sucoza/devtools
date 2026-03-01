@@ -104,7 +104,7 @@ export function BundleAnalyzer({
 
   // Process and sort data
   const processedData = useMemo(() => {
-    return analysisData.sort((a, b) => {
+    return [...analysisData].sort((a, b) => {
       switch (sortBy) {
         case 'size':
           return b.size - a.size;

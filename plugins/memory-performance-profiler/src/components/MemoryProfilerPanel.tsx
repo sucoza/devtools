@@ -59,10 +59,11 @@ function MemoryProfilerPanelInner() {
 
   // Auto-start profiling when component mounts (if supported)
   useEffect(() => {
-    if (isSupported && !isRunning) {
+    if (isSupported) {
       start();
     }
-  }, [isSupported, isRunning, start]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSupported]);
 
   if (!isSupported) {
     return (

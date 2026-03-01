@@ -76,7 +76,7 @@ export function TimelineTab({
                             key={event.id}
                             className={`timeline-event ${event.reason}`}
                             style={{
-                              left: `${(event.timestamp - renderEvents[0]?.timestamp || 0) / 10}px`,
+                              left: `${(event.timestamp - (renderEvents[0]?.timestamp ?? 0)) / 10}px`,
                               width: `${Math.max(2, event.duration / 2)}px`,
                             }}
                             title={`${event.componentName}: ${event.reason} (${event.duration.toFixed(1)}ms)`}

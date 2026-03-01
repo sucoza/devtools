@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Copy, Check, Maximize2, Minimize2, Download, WrapText } from 'lucide-react';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../styles/plugin-styles';
 
@@ -195,27 +195,40 @@ export function CodeBlock({
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [wrapText, setWrapText] = useState(wrap);
-  
+  const copiedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clean up copy timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (copiedTimeoutRef.current) {
+        clearTimeout(copiedTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const syntaxTheme = customTheme || THEMES[theme] || THEMES.dark;
-  
+
   // Split code into lines
   const lines = useMemo(() => code.split('\n'), [code]);
-  
+
   // Highlight syntax for each line
   const highlightedLines = useMemo(() => {
     return lines.map(line => highlightSyntax(line, language, syntaxTheme));
   }, [lines, language, syntaxTheme]);
-  
+
   // Handle copy
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(code).catch(() => {
       // Clipboard write may fail (e.g., permissions denied)
     });
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (copiedTimeoutRef.current) {
+      clearTimeout(copiedTimeoutRef.current);
+    }
+    copiedTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
     if (onCopy) onCopy(code);
   }, [code, onCopy]);
-  
+
   // Handle download
   const handleDownload = useCallback(() => {
     const blob = new Blob([code], { type: 'text/plain' });
@@ -223,10 +236,13 @@ export function CodeBlock({
     const a = document.createElement('a');
     a.href = url;
     a.download = filename || `code.${language}`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    try {
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } finally {
+      URL.revokeObjectURL(url);
+    }
     if (onDownload) onDownload(code, filename);
   }, [code, filename, language, onDownload]);
   

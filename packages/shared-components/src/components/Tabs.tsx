@@ -78,6 +78,14 @@ export function Tabs({
   
   const activeTabId = controlledActiveTab !== undefined ? controlledActiveTab : internalActiveTab;
   const activeTabData = tabs.find(tab => tab.id === activeTabId);
+
+  // Auto-select first tab when active tab no longer exists (e.g., after closing)
+  useEffect(() => {
+    if (controlledActiveTab !== undefined) return;
+    if (tabs.length > 0 && !tabs.some(t => t.id === internalActiveTab)) {
+      setInternalActiveTab(tabs[0].id);
+    }
+  }, [tabs, internalActiveTab, controlledActiveTab]);
   
   // Handle tab change
   const handleTabChange = useCallback((tabId: string) => {

@@ -14,6 +14,7 @@ import { formStateEventClient } from './formEventClient';
 // Global registry for tracked forms
 class FormStateRegistry {
   private forms: Map<string, FormState> = new Map();
+  private validationCounts: Map<string, number> = new Map();
   private performanceObserver: PerformanceObserver | null = null;
   private fieldObservers: Map<string, MutationObserver> = new Map();
   private submitHandlers: Map<string, { element: HTMLFormElement; handler: (event: Event) => void }> = new Map();
@@ -87,7 +88,10 @@ class FormStateRegistry {
 
     const metrics = form.performanceMetrics;
     metrics.lastValidationTime = validationTime;
-    metrics.averageValidationTime = (metrics.averageValidationTime + validationTime) / 2;
+    const prevCount = this.validationCounts.get(formId) || 0;
+    const newCount = prevCount + 1;
+    this.validationCounts.set(formId, newCount);
+    metrics.averageValidationTime = (metrics.averageValidationTime * prevCount + validationTime) / newCount;
     
     formStateEventClient.emit('performance-update', { formId, metrics });
     this.broadcastFormsState();
@@ -555,6 +559,7 @@ class FormStateRegistry {
     }
 
     this.forms.delete(formId);
+    this.validationCounts.delete(formId);
     this.broadcastFormsState();
   }
 
@@ -576,6 +581,7 @@ class FormStateRegistry {
     this.submitHandlers.clear();
 
     this.forms.clear();
+    this.validationCounts.clear();
   }
 }
 

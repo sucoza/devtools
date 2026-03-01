@@ -140,12 +140,7 @@ export function SettingsTab({
                   min="1"
                   max="100"
                   value={settings.minRenderThreshold}
-                  onChange={(e) =>
-                    handleSettingChange(
-                      "minRenderThreshold",
-                      parseInt(e.target.value),
-                    )
-                  }
+                  onChange={(e) => { const v = parseInt(e.target.value); if (!isNaN(v)) handleSettingChange("minRenderThreshold", v); }}
                 />
               </label>
               <p className="setting-description">
@@ -162,12 +157,7 @@ export function SettingsTab({
                   max="3600000"
                   step="1000"
                   value={settings.maxRecordingTime}
-                  onChange={(e) =>
-                    handleSettingChange(
-                      "maxRecordingTime",
-                      parseInt(e.target.value),
-                    )
-                  }
+                  onChange={(e) => { const v = parseInt(e.target.value); if (!isNaN(v)) handleSettingChange("maxRecordingTime", v); }}
                 />
               </label>
               <p className="setting-description">
@@ -185,7 +175,7 @@ export function SettingsTab({
                   step="100"
                   value={settings.maxEvents}
                   onChange={(e) =>
-                    handleSettingChange("maxEvents", parseInt(e.target.value))
+                    { const v = parseInt(e.target.value); if (!isNaN(v)) handleSettingChange("maxEvents", v); }
                   }
                 />
               </label>
@@ -204,7 +194,7 @@ export function SettingsTab({
                   step="10"
                   value={settings.debounceMs}
                   onChange={(e) =>
-                    handleSettingChange("debounceMs", parseInt(e.target.value))
+                    { const v = parseInt(e.target.value); if (!isNaN(v)) handleSettingChange("debounceMs", v); }
                   }
                 />
               </label>
