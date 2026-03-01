@@ -38,6 +38,7 @@ class DevToolsStore {
         activeConnections: 0,
         totalInvocations: 0,
         totalMessages: 0,
+        totalBytes: 0,
         averageLatency: 0,
         reconnectionRate: 0,
         errorRate: 0,
@@ -322,6 +323,7 @@ class DevToolsStore {
               activeConnections: 0,
               totalInvocations: 0,
               totalMessages: 0,
+              totalBytes: 0,
               averageLatency: 0,
               reconnectionRate: 0,
               errorRate: 0,
@@ -426,6 +428,10 @@ class DevToolsStore {
     const activeConnections = connectionsArray.filter(c => c.state === 'Connected').length;
     const totalMessages = messages.length;
     const totalInvocations = messages.filter(m => m.type === 'Invocation').length;
+    const totalBytes = connectionsArray.reduce(
+      (sum, conn) => sum + conn.bytesTransferred.sent + conn.bytesTransferred.received,
+      0
+    );
 
     // Calculate reconnection rate
     const totalReconnects = connectionsArray.reduce((sum, conn) => sum + conn.reconnectAttempts, 0);
@@ -441,9 +447,13 @@ class DevToolsStore {
       conn.hubMethods.forEach((method, name) => {
         if (hubMethodStats.has(name)) {
           const existing = hubMethodStats.get(name);
-          existing.invocationCount += method.invocationCount;
+          const prevCount = existing.invocationCount;
+          const newCount = prevCount + method.invocationCount;
+          existing.averageExecutionTime = newCount > 0
+            ? (existing.averageExecutionTime * prevCount + method.averageExecutionTime * method.invocationCount) / newCount
+            : 0;
+          existing.invocationCount = newCount;
           existing.errorCount += method.errorCount;
-          existing.averageExecutionTime = (existing.averageExecutionTime + method.averageExecutionTime) / 2;
           existing.lastInvoked = Math.max(existing.lastInvoked, method.lastInvoked);
         } else {
           hubMethodStats.set(name, { ...method });
@@ -459,6 +469,7 @@ class DevToolsStore {
       activeConnections,
       totalInvocations,
       totalMessages,
+      totalBytes,
       averageLatency,
       reconnectionRate,
       errorRate,

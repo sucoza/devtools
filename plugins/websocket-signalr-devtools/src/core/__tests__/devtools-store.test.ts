@@ -109,6 +109,98 @@ describe('DevToolsStore', () => {
       expect(state.signalr.connections.get('test-sr-1')).toEqual(connection);
       expect(state.signalr.metrics.totalConnections).toBe(1);
     });
+
+    it('should calculate totalBytes from SignalR connections', () => {
+      const connection1: SignalRConnection = {
+        id: 'sr-bytes-1',
+        hubUrl: 'https://localhost:5001/hub',
+        state: 'Connected',
+        createdAt: Date.now(),
+        hubMethods: new Map(),
+        messageCount: { sent: 5, received: 10 },
+        bytesTransferred: { sent: 1000, received: 2000 },
+        errors: [],
+        reconnectAttempts: 0,
+        lastActivity: Date.now(),
+      };
+
+      const connection2: SignalRConnection = {
+        id: 'sr-bytes-2',
+        hubUrl: 'https://localhost:5001/hub2',
+        state: 'Connected',
+        createdAt: Date.now(),
+        hubMethods: new Map(),
+        messageCount: { sent: 3, received: 7 },
+        bytesTransferred: { sent: 500, received: 1500 },
+        errors: [],
+        reconnectAttempts: 0,
+        lastActivity: Date.now(),
+      };
+
+      devToolsStore.dispatch({ type: 'signalr/connection/add', payload: connection1 });
+      devToolsStore.dispatch({ type: 'signalr/connection/add', payload: connection2 });
+
+      const state = devToolsStore.getSnapshot();
+      // totalBytes = (1000 + 2000) + (500 + 1500) = 5000
+      expect(state.signalr.metrics.totalBytes).toBe(5000);
+    });
+
+    it('should calculate weighted average for hub method execution times', () => {
+      const hubMethods1 = new Map();
+      hubMethods1.set('SendMessage', {
+        name: 'SendMessage',
+        invocationCount: 10,
+        averageExecutionTime: 100,
+        errorCount: 0,
+        lastInvoked: Date.now(),
+      });
+
+      const hubMethods2 = new Map();
+      hubMethods2.set('SendMessage', {
+        name: 'SendMessage',
+        invocationCount: 30,
+        averageExecutionTime: 200,
+        errorCount: 1,
+        lastInvoked: Date.now(),
+      });
+
+      const connection1: SignalRConnection = {
+        id: 'sr-hub-1',
+        hubUrl: 'https://localhost:5001/hub',
+        state: 'Connected',
+        createdAt: Date.now(),
+        hubMethods: hubMethods1,
+        messageCount: { sent: 0, received: 0 },
+        bytesTransferred: { sent: 0, received: 0 },
+        errors: [],
+        reconnectAttempts: 0,
+        lastActivity: Date.now(),
+      };
+
+      const connection2: SignalRConnection = {
+        id: 'sr-hub-2',
+        hubUrl: 'https://localhost:5001/hub',
+        state: 'Connected',
+        createdAt: Date.now(),
+        hubMethods: hubMethods2,
+        messageCount: { sent: 0, received: 0 },
+        bytesTransferred: { sent: 0, received: 0 },
+        errors: [],
+        reconnectAttempts: 0,
+        lastActivity: Date.now(),
+      };
+
+      devToolsStore.dispatch({ type: 'signalr/connection/add', payload: connection1 });
+      devToolsStore.dispatch({ type: 'signalr/connection/add', payload: connection2 });
+
+      const state = devToolsStore.getSnapshot();
+      const sendMethod = state.signalr.metrics.hubMethodStats.find(m => m.name === 'SendMessage');
+      expect(sendMethod).toBeTruthy();
+      expect(sendMethod!.invocationCount).toBe(40);
+      // Weighted average: (100 * 10 + 200 * 30) / 40 = (1000 + 6000) / 40 = 175
+      expect(sendMethod!.averageExecutionTime).toBe(175);
+      expect(sendMethod!.errorCount).toBe(1);
+    });
   });
 
   describe('UI state management', () => {

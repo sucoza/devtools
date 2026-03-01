@@ -30,8 +30,8 @@ export function createStressTestPlugin(config: StressTestPluginConfig = {}) {
           if (config.initialConfigs) {
             stressTestStore.updateConfigs(config.initialConfigs)
           }
-        }).catch(() => {
-          // Silently ignore store import failures during initialization
+        }).catch((err) => {
+          console.error('Failed to initialize stress testing store:', err);
         })
       }
     },

@@ -104,6 +104,7 @@ export function SearchInput({
   
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   const value = controlledValue !== undefined ? controlledValue : internalValue;
   
@@ -268,7 +269,10 @@ export function SearchInput({
   const handleBlur = useCallback(() => {
     setIsFocused(false);
     // Delay to allow dropdown item click
-    setTimeout(() => setShowDropdown(false), 200);
+    if (blurTimeoutRef.current) {
+      clearTimeout(blurTimeoutRef.current);
+    }
+    blurTimeoutRef.current = setTimeout(() => setShowDropdown(false), 200);
     if (onBlur) onBlur();
   }, [onBlur]);
   
@@ -285,6 +289,9 @@ export function SearchInput({
     return () => {
       if (debounceTimeoutRef.current) {
         clearTimeout(debounceTimeoutRef.current);
+      }
+      if (blurTimeoutRef.current) {
+        clearTimeout(blurTimeoutRef.current);
       }
     };
   }, []);

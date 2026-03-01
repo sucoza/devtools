@@ -137,8 +137,12 @@ export function PerformancePanel() {
       conn.hubMethods.forEach(method => {
         const existing = methodStats.get(method.name);
         if (existing) {
-          existing.invocations += method.invocationCount;
-          existing.avgTime = (existing.avgTime + method.averageExecutionTime) / 2;
+          const prevCount = existing.invocations;
+          const newCount = prevCount + method.invocationCount;
+          existing.avgTime = newCount > 0
+            ? (existing.avgTime * prevCount + method.averageExecutionTime * method.invocationCount) / newCount
+            : 0;
+          existing.invocations = newCount;
           existing.errors += method.errorCount;
         } else {
           methodStats.set(method.name, {
@@ -203,10 +207,11 @@ export function PerformancePanel() {
         <div className="metric-card">
           <h4>Data Transferred</h4>
           <div className="metric-value">
-            {Math.round((websocketMetrics.totalBytes + 0) / 1024)}KB
+            {Math.round((websocketMetrics.totalBytes + signalrMetrics.totalBytes) / 1024)}KB
           </div>
           <div className="metric-breakdown">
             <span>WS: {Math.round(websocketMetrics.totalBytes / 1024)}KB</span>
+            <span>SR: {Math.round(signalrMetrics.totalBytes / 1024)}KB</span>
           </div>
         </div>
       </div>

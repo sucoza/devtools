@@ -74,7 +74,7 @@ export function ApiCallDetails({ call }: ApiCallDetailsProps) {
   };
 
   const formatDuration = (duration?: number) => {
-    if (!duration) return '-';
+    if (duration == null) return '-';
     if (duration < 1000) return `${duration}ms`;
     return `${(duration / 1000).toFixed(2)}s`;
   };

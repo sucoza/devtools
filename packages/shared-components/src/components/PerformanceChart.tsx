@@ -56,8 +56,8 @@ export function PerformanceChart({
 
   const minValue = allValues.length > 0 ? Math.min(...allValues, 0) : 0;
   const maxValue = allValues.length > 0 ? Math.max(...allValues) : 1;
-  const minTime = timeRange?.start || (allTimestamps.length > 0 ? Math.min(...allTimestamps) : 0);
-  const maxTime = timeRange?.end || (allTimestamps.length > 0 ? Math.max(...allTimestamps) : 1);
+  const minTime = timeRange?.start ?? (allTimestamps.length > 0 ? Math.min(...allTimestamps) : 0);
+  const maxTime = timeRange?.end ?? (allTimestamps.length > 0 ? Math.max(...allTimestamps) : 1);
 
   const valueRange = maxValue - minValue || 1;
   const timeRange_ = maxTime - minTime || 1;
