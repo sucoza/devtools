@@ -333,6 +333,12 @@ export function DataTable<T = any>({
           {columns.map((column) => (
             <th
               key={column.key}
+              scope="col"
+              aria-sort={
+                sortColumn === column.key && sortDirection
+                  ? sortDirection === 'asc' ? 'ascending' : 'descending'
+                  : (column.sortable || sortable) ? 'none' : undefined
+              }
               className={column.headerClassName}
               style={{
                 padding: cellPadding,
@@ -592,11 +598,11 @@ export function DataTable<T = any>({
               <Badge variant="primary" size="sm">
                 {selectedRows.size} selected
               </Badge>
-              {bulkActions.map((action, i) => (
+              {bulkActions.map((action, actionIndex) => (
                 <button
-                  key={i}
+                  key={action.label || actionIndex}
                   onClick={() => {
-                    const selected = Array.from(selectedRows).map(i => data[i]);
+                    const selected = Array.from(selectedRows).map(rowIndex => data[rowIndex]);
                     action.onClick(selected);
                   }}
                   disabled={action.disabled}
