@@ -82,6 +82,7 @@ export function Modal({
   const modalRef = useRef<HTMLDivElement>(null);
   const previousActiveElement = useRef<HTMLElement | null>(null);
   const closeCompleteTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const modalId = useRef(`modal-${Math.random().toString(36).substring(2, 9)}`).current;
 
   // Cleanup close timer on unmount
   useEffect(() => {
@@ -254,8 +255,8 @@ export function Modal({
         className={className}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? 'modal-title' : undefined}
-        aria-describedby={description ? 'modal-description' : undefined}
+        aria-labelledby={title ? `${modalId}-title` : undefined}
+        aria-describedby={description ? `${modalId}-description` : undefined}
         tabIndex={-1}
         style={{
           position: 'fixed',
@@ -300,7 +301,7 @@ export function Modal({
               <div style={{ flex: 1 }}>
                 {title && (
                   <h2
-                    id="modal-title"
+                    id={`${modalId}-title`}
                     style={{
                       margin: 0,
                       fontSize: TYPOGRAPHY.fontSize.lg,
@@ -313,7 +314,7 @@ export function Modal({
                 )}
                 {description && (
                   <p
-                    id="modal-description"
+                    id={`${modalId}-description`}
                     style={{
                       margin: 0,
                       marginTop: SPACING.xs,

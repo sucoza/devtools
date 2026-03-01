@@ -162,15 +162,17 @@ function ToastItem({
   const [progress, setProgress] = useState(100);
   const removeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const handleRemove = useCallback(() => {
+    setIsExiting(true);
+    removeTimeoutRef.current = setTimeout(onRemove, 200);
+  }, [onRemove]);
+
   useEffect(() => {
     if (duration <= 0 || isPaused || toast.type === 'loading') return undefined;
 
     const interval = setInterval(() => {
       setProgress(prev => {
-        if (prev <= 0) {
-          handleRemove();
-          return 0;
-        }
+        if (prev <= 0) return 0;
         return prev - (100 / (duration / 100));
       });
     }, 100);
@@ -179,17 +181,18 @@ function ToastItem({
   }, [duration, isPaused, toast.type]);
 
   useEffect(() => {
+    if (progress <= 0 && duration > 0 && !isPaused && toast.type !== 'loading') {
+      handleRemove();
+    }
+  }, [progress, duration, isPaused, toast.type, handleRemove]);
+
+  useEffect(() => {
     return () => {
       if (removeTimeoutRef.current !== null) {
         clearTimeout(removeTimeoutRef.current);
       }
     };
   }, []);
-
-  const handleRemove = () => {
-    setIsExiting(true);
-    removeTimeoutRef.current = setTimeout(onRemove, 200);
-  };
   
   // Get icon based on type
   const getIcon = () => {

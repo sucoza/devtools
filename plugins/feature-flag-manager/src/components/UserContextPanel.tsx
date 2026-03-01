@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { EvaluationContext, UserSegment } from '../types';
 
 interface UserContextPanelProps {
@@ -13,6 +13,10 @@ export const UserContextPanel: React.FC<UserContextPanelProps> = ({
   onChange
 }) => {
   const [editedContext, setEditedContext] = useState(context);
+
+  useEffect(() => {
+    setEditedContext(context);
+  }, [context]);
 
   const handleFieldChange = (field: keyof EvaluationContext, value: any) => {
     const newContext = { ...editedContext, [field]: value };

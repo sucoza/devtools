@@ -29,7 +29,7 @@ export function interpolateString(
   suffix = '}}'
 ): string {
   return template.replace(
-    new RegExp(`${escapeRegExp(prefix)}\\s*([^${escapeRegExp(suffix)}]+)\\s*${escapeRegExp(suffix)}`, 'g'),
+    new RegExp(`${escapeRegExp(prefix)}\\s*(.+?)\\s*${escapeRegExp(suffix)}`, 'g'),
     (match, key) => {
       const trimmedKey = key.trim();
       const value = variables[trimmedKey];

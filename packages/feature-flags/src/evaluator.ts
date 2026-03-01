@@ -19,7 +19,17 @@ export interface EvaluatorOptions {
 export class FlagEvaluator {
   constructor(private options: EvaluatorOptions) {}
 
-  async evaluate(flagId: string, context: EvaluationContext): Promise<FlagEvaluation> {
+  async evaluate(
+    flagId: string,
+    context: EvaluationContext,
+    _evaluating?: Set<string>
+  ): Promise<FlagEvaluation> {
+    const evaluating = _evaluating || new Set<string>();
+    if (evaluating.has(flagId)) {
+      return { flagId, value: false, reason: 'error' };
+    }
+    evaluating.add(flagId);
+
     const flag = this.options.getFlag(flagId);
     if (!flag) {
       return {
@@ -46,7 +56,7 @@ export class FlagEvaluator {
 
     // Check dependencies
     if (flag.dependencies && flag.dependencies.length > 0) {
-      const dependencyResult = await this.evaluateDependencies(flag, context);
+      const dependencyResult = await this.evaluateDependencies(flag, context, evaluating);
       if (!dependencyResult.satisfied) {
         return {
           flagId,
@@ -105,8 +115,9 @@ export class FlagEvaluator {
   }
 
   private async evaluateDependencies(
-    flag: FeatureFlag, 
-    context: EvaluationContext
+    flag: FeatureFlag,
+    context: EvaluationContext,
+    evaluating: Set<string>
   ): Promise<{ satisfied: boolean; failedDependency?: string }> {
     if (!flag.dependencies) return { satisfied: true };
 
@@ -116,7 +127,7 @@ export class FlagEvaluator {
         return { satisfied: false, failedDependency: dependency.flagId };
       }
 
-      const dependentEvaluation = await this.evaluate(dependency.flagId, context);
+      const dependentEvaluation = await this.evaluate(dependency.flagId, context, evaluating);
       
       switch (dependency.condition) {
         case 'enabled':
