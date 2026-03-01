@@ -145,13 +145,14 @@ function downloadFile(content: string, filename: string, mimeType: string): void
   link.href = url;
   link.download = filename;
   link.style.display = 'none';
-  
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  
-  // Clean up the object URL
-  setTimeout(() => URL.revokeObjectURL(url), 100);
+
+  try {
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }
 
 /**
